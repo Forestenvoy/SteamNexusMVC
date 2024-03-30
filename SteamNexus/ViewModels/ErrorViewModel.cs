@@ -1,4 +1,4 @@
-namespace SteamNexus.Models
+namespace SteamNexus.ViewModels
 {
     public class ErrorViewModel
     {

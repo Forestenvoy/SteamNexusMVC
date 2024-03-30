@@ -12,6 +12,13 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
+
+// DataBase Connection String
+var SteamNexusConnectionString = builder.Configuration.GetConnectionString("SteamNexus");
+// Add SteamNexusDbContext
+builder.Services.AddDbContext<SteamNexusDbContext>(options => options.UseSqlServer(SteamNexusConnectionString));
+
+
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();

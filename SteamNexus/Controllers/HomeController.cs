@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using SteamNexus.Models;
+using SteamNexus.ViewModels;
 using System.Diagnostics;
 
 namespace SteamNexus.Controllers
