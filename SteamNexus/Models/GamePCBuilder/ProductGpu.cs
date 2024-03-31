@@ -2,18 +2,22 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace SteamNexus.Models;
 
-public partial class ProductGpu
+public partial class ProductGPU
 {
-    public int ProductGpuid { get; set; }
+    [Key]
+    public int ProductGPUId { get; set; }
 
+    [Required]
     public int ProductInformationId { get; set; }
 
-    public int Gpuid { get; set; }
+    [Required]
+    public int GPUId { get; set; }
 
-    public virtual GPU Gpu { get; set; }
+    public virtual GPU GPU { get; set; }
 
     public virtual ProductInformation ProductInformation { get; set; }
 }

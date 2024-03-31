@@ -2,30 +2,38 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace SteamNexus.Models;
 
 public partial class ProductInformation
 {
+    [Key]
     public int ProductInformationId { get; set; }
 
+    [Required]
     public int ProductCategoryId { get; set; }
 
+    [Required]
+    [MaxLength(200)]
     public string Name { get; set; }
 
-    public string Specification { get; set; }
+    [MaxLength(300)]
+    public string? Specification { get; set; }
 
-    public int Price { get; set; }
+    [Required]
+    public int Price { get; set; } = 0;
 
-    public int Wattage { get; set; }
+    [Required]
+    public int Wattage { get; set; } = 0;
 
-    public int? Recommend { get; set; }
+    public int? Recommend { get; set; } = 0;
 
     public virtual ProductCategory ProductCategory { get; set; }
 
-    public virtual ICollection<ProductCpu> ProductCpus { get; set; } = new List<ProductCpu>();
+    public virtual ICollection<ProductCPU> ProductCPUs { get; set; } = new List<ProductCPU>();
 
-    public virtual ICollection<ProductGpu> ProductGpus { get; set; } = new List<ProductGpu>();
+    public virtual ICollection<ProductGPU> ProductGPUs { get; set; } = new List<ProductGPU>();
 
-    public virtual ICollection<ProductRam> ProductRams { get; set; } = new List<ProductRam>();
+    public virtual ICollection<ProductRAM> ProductRAMs { get; set; } = new List<ProductRAM>();
 }

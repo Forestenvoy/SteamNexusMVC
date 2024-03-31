@@ -22,6 +22,6 @@ public partial class CPU
 
     public virtual ICollection<RecommendedRequirement> RecommendedRequirements { get; set; } = new List<RecommendedRequirement>();
 
-    public virtual ICollection<ProductCpu> ProductCpus { get; set; } = new List<ProductCpu>();
+    public virtual ICollection<ProductCPU> ProductCPUs { get; set; } = new List<ProductCPU>();
 
 }

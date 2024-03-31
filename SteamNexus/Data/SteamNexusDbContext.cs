@@ -39,6 +39,16 @@ namespace SteamNexus.Data
 
         public virtual DbSet<PlayersHistory> PlayersHistories { get; set; }
 
+        public virtual DbSet<ProductCategory> ProductCategories { get; set; }
+
+        public virtual DbSet<ProductInformation> ProductInformations { get; set; }
+
+        public virtual DbSet<ProductRAM> ProductRAMs { get; set; }
+
+        public virtual DbSet<ProductGPU> ProductGPUs { get; set; }
+
+        public virtual DbSet<ProductCPU> ProductCPUs { get; set; }
+
         // Model 屬性設定
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -229,6 +239,87 @@ namespace SteamNexus.Data
                     .HasForeignKey(d => d.TagId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_TagGroups_Tags");
+            });
+
+            modelBuilder.Entity<ProductCategory>(entity =>
+            {
+                // 主鍵設定
+                // ValueGeneratedOnAdd 插入新的實體時，值自動生成
+                // UseIdentityColumn(10000, 1) 識別碼起始值和增量
+                entity.Property(e => e.ProductCategoryId)
+                    .ValueGeneratedOnAdd()
+                    .UseIdentityColumn(10000, 1);
+            });
+
+            modelBuilder.Entity<ProductInformation>(entity =>
+            {
+                // 主鍵設定
+                // ValueGeneratedOnAdd 插入新的實體時，值自動生成
+                // UseIdentityColumn(10000, 1) 識別碼起始值和增量
+                entity.Property(e => e.ProductInformationId)
+                    .ValueGeneratedOnAdd()
+                    .UseIdentityColumn(10000, 1);
+
+                entity.HasOne(d => d.ProductCategory).WithMany(p => p.ProductInformations)
+                    .HasForeignKey(d => d.ProductCategoryId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ProductInformations_ProductCategories");
+            });
+
+            modelBuilder.Entity<ProductRAM>(entity =>
+            {
+                // 主鍵設定
+                // ValueGeneratedOnAdd 插入新的實體時，值自動生成
+                // UseIdentityColumn(10000, 1) 識別碼起始值和增量
+                entity.Property(e => e.ProductRAMId)
+                    .ValueGeneratedOnAdd()
+                    .UseIdentityColumn(10000, 1);
+
+                entity.HasOne(d => d.ProductInformation).WithMany(p => p.ProductRAMs)
+                    .HasForeignKey(d => d.ProductInformationId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ProductRAMs_ProductInformations");
+            });
+
+            modelBuilder.Entity<ProductGPU>(entity =>
+            {
+                // 主鍵設定
+                // ValueGeneratedOnAdd 插入新的實體時，值自動生成
+                // UseIdentityColumn(10000, 1) 識別碼起始值和增量
+                entity.Property(e => e.ProductGPUId)
+                    .ValueGeneratedOnAdd()
+                    .UseIdentityColumn(10000, 1);
+
+                entity.HasOne(d => d.GPU).WithMany(p => p.ProductGPUs)
+                    .HasForeignKey(d => d.GPUId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ProductGPUs_GPUs");
+
+                entity.HasOne(d => d.ProductInformation).WithMany(p => p.ProductGPUs)
+                    .HasForeignKey(d => d.ProductInformationId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ProductGPUs_ProductInformations");
+            });
+
+            modelBuilder.Entity<ProductCPU>(entity =>
+            {
+                // 主鍵設定
+                // ValueGeneratedOnAdd 插入新的實體時，值自動生成
+                // UseIdentityColumn(10000, 1) 識別碼起始值和增量
+                entity.Property(e => e.ProductCPUId)
+                    .ValueGeneratedOnAdd()
+                    .UseIdentityColumn(10000, 1);
+
+
+                entity.HasOne(d => d.CPU).WithMany(p => p.ProductCPUs)
+                    .HasForeignKey(d => d.CPUId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ProductCPUs_CPUs");
+
+                entity.HasOne(d => d.ProductInformation).WithMany(p => p.ProductCPUs)
+                    .HasForeignKey(d => d.ProductInformationId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ProductCPUs_ProductInformations");
             });
         }
 

@@ -22,6 +22,6 @@ public partial class GPU
 
     public virtual ICollection<RecommendedRequirement> RecommendedRequirements { get; set; } = new List<RecommendedRequirement>();
 
-    public virtual ICollection<ProductGpu> ProductGpus { get; set; } = new List<ProductGpu>();
+    public virtual ICollection<ProductGPU> ProductGPUs { get; set; } = new List<ProductGPU>();
 
 }

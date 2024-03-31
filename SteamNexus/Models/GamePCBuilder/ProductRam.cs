@@ -2,15 +2,19 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace SteamNexus.Models;
 
-public partial class ProductRam
+public partial class ProductRAM
 {
-    public int ProductRamid { get; set; }
+    [Key]
+    public int ProductRAMId { get; set; }
 
+    [Required]
     public int ProductInformationId { get; set; }
 
+    [Required]
     public int Size { get; set; }
 
     public virtual ProductInformation ProductInformation { get; set; }
