@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SteamNexus.Data;
+using SteamNexus.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,8 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
 var SteamNexusConnectionString = builder.Configuration.GetConnectionString("SteamNexus");
 // Add SteamNexusDbContext
 builder.Services.AddDbContext<SteamNexusDbContext>(options => options.UseSqlServer(SteamNexusConnectionString));
+
+// Add WebScrabing Service
 
 
 builder.Services.AddControllersWithViews();
