@@ -16,11 +16,17 @@ public partial class RecommendedRequirement
     [Required]
     public int CPUId { get; set; } = 10000;
 
+    public virtual CPU CPU { get; set; }
+
     [Required]
     public int GPUId { get; set; } = 10000;
 
+    public virtual GPU GPU { get; set; }
+
     [Required]
     public int RAM { get; set; } = 4;
+
+    #nullable enable
 
     [MaxLength(100)]
     public string? OS { get; set; }
@@ -40,9 +46,6 @@ public partial class RecommendedRequirement
     [MaxLength(500)]
     public string? Note { get; set; }
 
-    public virtual CPU CPU { get; set; }
-
     public virtual ICollection<Game> Games { get; set; } = new List<Game>();
 
-    public virtual GPU GPU { get; set; }
 }

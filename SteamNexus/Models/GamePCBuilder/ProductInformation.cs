@@ -14,9 +14,13 @@ public partial class ProductInformation
     [Required]
     public int ProductCategoryId { get; set; }
 
+    public virtual ProductCategory ProductCategory { get; set; }
+
     [Required]
     [MaxLength(200)]
     public string Name { get; set; }
+    
+    #nullable enable
 
     [MaxLength(300)]
     public string? Specification { get; set; }
@@ -28,8 +32,6 @@ public partial class ProductInformation
     public int Wattage { get; set; } = 0;
 
     public int? Recommend { get; set; } = 0;
-
-    public virtual ProductCategory ProductCategory { get; set; }
 
     public virtual ICollection<ProductCPU> ProductCPUs { get; set; } = new List<ProductCPU>();
 

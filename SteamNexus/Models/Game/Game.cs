@@ -14,6 +14,16 @@ public partial class Game
     public int GameId { get; set; }
 
     [Required]
+    public int MinReqId { get; set; }
+
+    public virtual MinimumRequirement MinReq { get; set; }
+
+    [Required]
+    public int RecReqId { get; set; }
+
+    public virtual RecommendedRequirement RecReq { get; set; }
+
+    [Required]
     public int AppId { get; set; }
 
     [Required]
@@ -32,6 +42,8 @@ public partial class Game
     [Required]
     [MaxLength(100)]
     public string AgeRating { get; set; }
+
+    #nullable enable
 
     [MaxLength(100)]
     public string? Comment { get; set; }
@@ -57,21 +69,11 @@ public partial class Game
     [MaxLength(300)]
     public string? VideoPath { get; set; }
 
-    [Required]
-    public int MinReqId { get; set; }
-
-    [Required]
-    public int RecReqId { get; set; }
-
     public virtual ICollection<GameLanguage> GameLanguages { get; set; } = new List<GameLanguage>();
-
-    public virtual MinimumRequirement MinReq { get; set; }
 
     public virtual ICollection<PlayersHistory> PlayersHistories { get; set; } = new List<PlayersHistory>();
 
     public virtual ICollection<PriceHistory> PriceHistories { get; set; } = new List<PriceHistory>();
-
-    public virtual RecommendedRequirement RecReq { get; set; }
 
     public virtual ICollection<TagGroup> TagGroups { get; set; } = new List<TagGroup>();
 }

@@ -16,9 +16,6 @@ public partial class Advertisement
     [MaxLength(100)]
     public string Title { get; set; }
 
-    [MaxLength(200)]
-    public string? Discription { get; set; }
-
     [Required]
     [MaxLength(300)]
     public string Url { get; set; }
@@ -26,4 +23,11 @@ public partial class Advertisement
     [Required]
     [MaxLength(300)]
     public string ImagePath { get; set; }
+
+    #nullable enable
+
+    [MaxLength(200)]
+    public string? Discription { get; set; }
+
+
 }
