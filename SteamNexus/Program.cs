@@ -19,8 +19,8 @@ var SteamNexusConnectionString = builder.Configuration.GetConnectionString("Stea
 // Add SteamNexusDbContext
 builder.Services.AddDbContext<SteamNexusDbContext>(options => options.UseSqlServer(SteamNexusConnectionString));
 
-// Add WebScrabing Service
-
+// Add CoolPCWebScrabing Service
+builder.Services.AddTransient<CoolPCWebScraping>();
 
 builder.Services.AddControllersWithViews();
 
