@@ -6,11 +6,54 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SteamNexus.Migrations
 {
     /// <inheritdoc />
-    public partial class First : Migration
+    public partial class _20240403 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Advertisements",
+                columns: table => new
+                {
+                    AdvertisementId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "10000, 1"),
+                    Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Url = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
+                    ImagePath = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
+                    Discription = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Advertisements", x => x.AdvertisementId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CommonQuestions",
+                columns: table => new
+                {
+                    CommonQuestionId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "10000, 1"),
+                    Title = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CommonQuestions", x => x.CommonQuestionId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ComputerPartCategories",
+                columns: table => new
+                {
+                    ComputerPartCategoryId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "10000, 1"),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ComputerPartCategories", x => x.ComputerPartCategoryId);
+                });
+
             migrationBuilder.CreateTable(
                 name: "CPUs",
                 columns: table => new
@@ -53,19 +96,6 @@ namespace SteamNexus.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProductCategory",
-                columns: table => new
-                {
-                    ProductCategoryId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProductCategory", x => x.ProductCategoryId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Tags",
                 columns: table => new
                 {
@@ -79,6 +109,25 @@ namespace SteamNexus.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ComponentClassifications",
+                columns: table => new
+                {
+                    ComponentClassificationId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "10000, 1"),
+                    ComputerPartCategoryId = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ComponentClassifications", x => x.ComponentClassificationId);
+                    table.ForeignKey(
+                        name: "FK_ComponentClassifications_ComputerPartCategories",
+                        column: x => x.ComputerPartCategoryId,
+                        principalTable: "ComputerPartCategories",
+                        principalColumn: "ComputerPartCategoryId");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "MinimumRequirements",
                 columns: table => new
                 {
@@ -86,14 +135,14 @@ namespace SteamNexus.Migrations
                         .Annotation("SqlServer:Identity", "10000, 1"),
                     CPUId = table.Column<int>(type: "int", nullable: false),
                     GPUId = table.Column<int>(type: "int", nullable: false),
+                    GPUId1 = table.Column<int>(type: "int", nullable: false),
                     RAM = table.Column<int>(type: "int", nullable: false),
                     OS = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     DirectX = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     Network = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     Storage = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     Audio = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    Note = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
-                    GPUId1 = table.Column<int>(type: "int", nullable: false)
+                    Note = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -119,14 +168,14 @@ namespace SteamNexus.Migrations
                         .Annotation("SqlServer:Identity", "10000, 1"),
                     CPUId = table.Column<int>(type: "int", nullable: false),
                     GPUId = table.Column<int>(type: "int", nullable: false),
+                    GPUId1 = table.Column<int>(type: "int", nullable: false),
                     RAM = table.Column<int>(type: "int", nullable: false),
                     OS = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     DirectX = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     Network = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     Storage = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     Audio = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    Note = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
-                    GPUId1 = table.Column<int>(type: "int", nullable: false)
+                    Note = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -145,27 +194,26 @@ namespace SteamNexus.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProductInformation",
+                name: "ProductInformations",
                 columns: table => new
                 {
                     ProductInformationId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ProductCategoryId = table.Column<int>(type: "int", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Specification = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                        .Annotation("SqlServer:Identity", "10000, 1"),
+                    ComponentClassificationId = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Specification = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: true),
                     Price = table.Column<int>(type: "int", nullable: false),
                     Wattage = table.Column<int>(type: "int", nullable: false),
                     Recommend = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProductInformation", x => x.ProductInformationId);
+                    table.PrimaryKey("PK_ProductInformations", x => x.ProductInformationId);
                     table.ForeignKey(
-                        name: "FK_ProductInformation_ProductCategory_ProductCategoryId",
-                        column: x => x.ProductCategoryId,
-                        principalTable: "ProductCategory",
-                        principalColumn: "ProductCategoryId",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "FK_ProductInformations_ComponentClassifications",
+                        column: x => x.ComponentClassificationId,
+                        principalTable: "ComponentClassifications",
+                        principalColumn: "ComponentClassificationId");
                 });
 
             migrationBuilder.CreateTable(
@@ -174,6 +222,8 @@ namespace SteamNexus.Migrations
                 {
                     GameId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "10000, 1"),
+                    MinReqId = table.Column<int>(type: "int", nullable: false),
+                    RecReqId = table.Column<int>(type: "int", nullable: false),
                     AppId = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     OriginalPrice = table.Column<int>(type: "int", nullable: false),
@@ -188,9 +238,7 @@ namespace SteamNexus.Migrations
                     Players = table.Column<int>(type: "int", nullable: true),
                     PeakPlayers = table.Column<int>(type: "int", nullable: true),
                     ImagePath = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: true),
-                    VideoPath = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: true),
-                    MinReqId = table.Column<int>(type: "int", nullable: false),
-                    RecReqId = table.Column<int>(type: "int", nullable: false)
+                    VideoPath = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -208,75 +256,70 @@ namespace SteamNexus.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProductCpu",
+                name: "ProductCPUs",
                 columns: table => new
                 {
-                    ProductCpuid = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ProductCPUId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "10000, 1"),
                     ProductInformationId = table.Column<int>(type: "int", nullable: false),
-                    Cpuid = table.Column<int>(type: "int", nullable: false)
+                    CPUId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProductCpu", x => x.ProductCpuid);
+                    table.PrimaryKey("PK_ProductCPUs", x => x.ProductCPUId);
                     table.ForeignKey(
-                        name: "FK_ProductCpu_CPUs_Cpuid",
-                        column: x => x.Cpuid,
+                        name: "FK_ProductCPUs_CPUs",
+                        column: x => x.CPUId,
                         principalTable: "CPUs",
-                        principalColumn: "CPUId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "CPUId");
                     table.ForeignKey(
-                        name: "FK_ProductCpu_ProductInformation_ProductInformationId",
+                        name: "FK_ProductCPUs_ProductInformations",
                         column: x => x.ProductInformationId,
-                        principalTable: "ProductInformation",
-                        principalColumn: "ProductInformationId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalTable: "ProductInformations",
+                        principalColumn: "ProductInformationId");
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProductGpu",
+                name: "ProductGPUs",
                 columns: table => new
                 {
-                    ProductGpuid = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ProductGPUId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "10000, 1"),
                     ProductInformationId = table.Column<int>(type: "int", nullable: false),
-                    Gpuid = table.Column<int>(type: "int", nullable: false)
+                    GPUId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProductGpu", x => x.ProductGpuid);
+                    table.PrimaryKey("PK_ProductGPUs", x => x.ProductGPUId);
                     table.ForeignKey(
-                        name: "FK_ProductGpu_GPUs_Gpuid",
-                        column: x => x.Gpuid,
+                        name: "FK_ProductGPUs_GPUs",
+                        column: x => x.GPUId,
                         principalTable: "GPUs",
-                        principalColumn: "GPUId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "GPUId");
                     table.ForeignKey(
-                        name: "FK_ProductGpu_ProductInformation_ProductInformationId",
+                        name: "FK_ProductGPUs_ProductInformations",
                         column: x => x.ProductInformationId,
-                        principalTable: "ProductInformation",
-                        principalColumn: "ProductInformationId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalTable: "ProductInformations",
+                        principalColumn: "ProductInformationId");
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProductRam",
+                name: "ProductRAMs",
                 columns: table => new
                 {
-                    ProductRamid = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ProductRAMId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "10000, 1"),
                     ProductInformationId = table.Column<int>(type: "int", nullable: false),
                     Size = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProductRam", x => x.ProductRamid);
+                    table.PrimaryKey("PK_ProductRAMs", x => x.ProductRAMId);
                     table.ForeignKey(
-                        name: "FK_ProductRam_ProductInformation_ProductInformationId",
+                        name: "FK_ProductRAMs_ProductInformations",
                         column: x => x.ProductInformationId,
-                        principalTable: "ProductInformation",
-                        principalColumn: "ProductInformationId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalTable: "ProductInformations",
+                        principalColumn: "ProductInformationId");
                 });
 
             migrationBuilder.CreateTable(
@@ -368,6 +411,11 @@ namespace SteamNexus.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_ComponentClassifications_ComputerPartCategoryId",
+                table: "ComponentClassifications",
+                column: "ComputerPartCategoryId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_GameLanguages_GameId",
                 table: "GameLanguages",
                 column: "GameId");
@@ -408,33 +456,33 @@ namespace SteamNexus.Migrations
                 column: "GameId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductCpu_Cpuid",
-                table: "ProductCpu",
-                column: "Cpuid");
+                name: "IX_ProductCPUs_CPUId",
+                table: "ProductCPUs",
+                column: "CPUId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductCpu_ProductInformationId",
-                table: "ProductCpu",
+                name: "IX_ProductCPUs_ProductInformationId",
+                table: "ProductCPUs",
                 column: "ProductInformationId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductGpu_Gpuid",
-                table: "ProductGpu",
-                column: "Gpuid");
+                name: "IX_ProductGPUs_GPUId",
+                table: "ProductGPUs",
+                column: "GPUId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductGpu_ProductInformationId",
-                table: "ProductGpu",
+                name: "IX_ProductGPUs_ProductInformationId",
+                table: "ProductGPUs",
                 column: "ProductInformationId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductInformation_ProductCategoryId",
-                table: "ProductInformation",
-                column: "ProductCategoryId");
+                name: "IX_ProductInformations_ComponentClassificationId",
+                table: "ProductInformations",
+                column: "ComponentClassificationId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductRam_ProductInformationId",
-                table: "ProductRam",
+                name: "IX_ProductRAMs_ProductInformationId",
+                table: "ProductRAMs",
                 column: "ProductInformationId");
 
             migrationBuilder.CreateIndex(
@@ -462,6 +510,12 @@ namespace SteamNexus.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "Advertisements");
+
+            migrationBuilder.DropTable(
+                name: "CommonQuestions");
+
+            migrationBuilder.DropTable(
                 name: "GameLanguages");
 
             migrationBuilder.DropTable(
@@ -471,13 +525,13 @@ namespace SteamNexus.Migrations
                 name: "PriceHistories");
 
             migrationBuilder.DropTable(
-                name: "ProductCpu");
+                name: "ProductCPUs");
 
             migrationBuilder.DropTable(
-                name: "ProductGpu");
+                name: "ProductGPUs");
 
             migrationBuilder.DropTable(
-                name: "ProductRam");
+                name: "ProductRAMs");
 
             migrationBuilder.DropTable(
                 name: "TagGroups");
@@ -486,7 +540,7 @@ namespace SteamNexus.Migrations
                 name: "Languages");
 
             migrationBuilder.DropTable(
-                name: "ProductInformation");
+                name: "ProductInformations");
 
             migrationBuilder.DropTable(
                 name: "Games");
@@ -495,13 +549,16 @@ namespace SteamNexus.Migrations
                 name: "Tags");
 
             migrationBuilder.DropTable(
-                name: "ProductCategory");
+                name: "ComponentClassifications");
 
             migrationBuilder.DropTable(
                 name: "MinimumRequirements");
 
             migrationBuilder.DropTable(
                 name: "RecommendedRequirements");
+
+            migrationBuilder.DropTable(
+                name: "ComputerPartCategories");
 
             migrationBuilder.DropTable(
                 name: "CPUs");

@@ -6,10 +6,14 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SteamNexus.Models;
 
-public partial class ProductCategory
+public partial class ComponentClassification
 {
     [Key]
-    public int ProductCategoryId { get; set; }
+    public int ComponentClassificationId { get; set; }
+
+    [Required]
+    public int ComputerPartCategoryId { get; set; }
+    public virtual ComputerPartCategory ComputerPartCategory { get; set; }
 
     [Required]
     [MaxLength(100)]

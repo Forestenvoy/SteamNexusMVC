@@ -12,9 +12,8 @@ public partial class ProductInformation
     public int ProductInformationId { get; set; }
 
     [Required]
-    public int ProductCategoryId { get; set; }
-
-    public virtual ProductCategory ProductCategory { get; set; }
+    public int ComponentClassificationId { get; set; }
+    public virtual ComponentClassification ComponentClassification { get; set; }
 
     [Required]
     [MaxLength(200)]
