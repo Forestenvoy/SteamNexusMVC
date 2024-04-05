@@ -8,11 +8,15 @@ namespace SteamNexus.Controllers
 {
     public class PCBuilderController : Controller
     {
+        // Dependency Injection
         private readonly SteamNexusDbContext _context;
+        private readonly CoolPCWebScraping _coolPCWebScraping;
 
-        public PCBuilderController(SteamNexusDbContext context)
+        // Constructor
+        public PCBuilderController(SteamNexusDbContext context , CoolPCWebScraping coolPCWebScraping)
         {
             _context = context;
+            _coolPCWebScraping = coolPCWebScraping;
         }
         
         
@@ -22,14 +26,13 @@ namespace SteamNexus.Controllers
         }
 
         // 原價屋網頁爬蟲 從 CLIENT 端 呼叫測試
-
         // POST: /PCBuilder/WebScrabingTest
         [HttpPost]
         public string WebScrabingTest()
         {
-            CoolPCWebScraping cpws = new CoolPCWebScraping(_context);
+            //CoolPCWebScraping cpws = new CoolPCWebScraping(_context);
 
-            cpws.test();
+            _coolPCWebScraping.test();
             
 
 

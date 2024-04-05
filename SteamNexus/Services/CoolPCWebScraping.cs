@@ -13,71 +13,16 @@ namespace SteamNexus.Services
         // 宣告 optgroup 群組名稱 List
         List<string>? optgroupNames;
 
-
         // 建構式
         public CoolPCWebScraping(SteamNexusDbContext context)
         {
             _context = context;
         }
 
-        // 爬蟲初次測試
-        public void First()
-        {
-            //// 才能讀到 big5
-            //Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-
-            //// HTML 資料讀取
-            //string url = @"https://coolpc.com.tw/evaluate.php";
-            //HtmlWeb web = new HtmlWeb();
-            //web.OverrideEncoding = Encoding.GetEncoding("big5");
-            //HtmlDocument doc = web.Load(url);
-
-            //// DocumentNode 屬性則表示 HTML 文檔的根節點
-            //// Descendants("元素") 會尋找指定標籤的所有子元素
-
-            //// 返回所有 optionGroup 的集合
-            //var optionGroupNodes = doc.DocumentNode.Descendants("optgroup");
-            //// GetAttributeValue("屬性名稱","預設值(找不到返回的值)") 
-            //var optionGroupCPU = optionGroupNodes.Where(node => node.GetAttributeValue("label","No Data") == "Intel Raptor Lake-s 14代1700 腳位").FirstOrDefault();
-
-            //List<string> CPU_14series = new List<string>();
-            //List<string> CPU_12series = new List<string>();
-
-            //if(optionGroupCPU != null)
-            //{
-            //    var optionNodes = optionGroupCPU.Descendants("option");
-            //    foreach( var node in optionNodes)
-            //    {
-            //        string content = node.InnerText;
-
-
-            //        // 抓 14代 CPU 
-            //        if (content.Substring(0,11) == "Intel i3-14" || content.Substring(0,11) == "Intel i5-14" || content.Substring(0,11) == "Intel i7-14" || content.Substring(0, 11) == "Intel i9-14")
-            //        {
-            //            CPU_14series.Add(content);
-            //        }
-            //        // 抓 12代 CPU
-            //        else if (content.Substring(0, 11) == "Intel i3-12" || content.Substring(0, 11) == "Intel i5-12" || content.Substring(0, 11) == "Intel i7-12" || content.Substring(0, 11) == "Intel i9-12")
-            //        {
-            //            CPU_12series.Add(content);
-            //        }
-            //    }
-            //}
-
-            //Console.WriteLine("---------------------- 12代 CPU ----------------------");
-            //for (int i = 0; i < CPU_12series.Count();i++)
-            //{
-            //    Console.WriteLine(CPU_12series[i]);
-            //}
-            //Console.WriteLine("---------------------- 14代 CPU ----------------------");
-            //for (int i = 0; i < CPU_14series.Count(); i++)
-            //{
-            //    Console.WriteLine(CPU_14series[i]);
-            //}
-        }
-
-
-        // 獲取硬體全品項資料
+        /// <summary>
+        /// 獲取硬體全品項資料(Html元素集合)
+        /// </summary>
+        /// <returns>IEnumerable的HtmlNode</returns>
         private IEnumerable<HtmlNode>? _GetHardWareData()
         {
             // 註冊特定編碼(包含big5)
@@ -123,7 +68,10 @@ namespace SteamNexus.Services
             }
         }
 
-        // 獲取硬體單一零件集合資料並解析成List
+        /// <summary>
+        /// 獲取硬體單一零件集合資料並解析成List
+        /// </summary>
+        /// <param name="i"></param>
         private void _GetComponentsList(int i)
         {
             IEnumerable<HtmlNode>? hardWareNodes = _GetHardWareData();
@@ -189,7 +137,11 @@ namespace SteamNexus.Services
             }
         }
 
-
+        // 資料更新
+        public void UpdateData()
+        {
+            
+        }
 
 
         // 爬蟲測試
@@ -197,12 +149,71 @@ namespace SteamNexus.Services
         {
             _GetComponentsList(4);
 
-            if(optgroups !=  null && optgroupNames != null)
+            if (optgroups != null && optgroupNames != null)
             {
                 Console.WriteLine(optgroups.Count());
                 Console.WriteLine(optgroupNames.Count());
             }
 
+        }
+
+
+
+
+        // 爬蟲初次測試
+        public void First()
+        {
+            //// 才能讀到 big5
+            //Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
+            //// HTML 資料讀取
+            //string url = @"https://coolpc.com.tw/evaluate.php";
+            //HtmlWeb web = new HtmlWeb();
+            //web.OverrideEncoding = Encoding.GetEncoding("big5");
+            //HtmlDocument doc = web.Load(url);
+
+            //// DocumentNode 屬性則表示 HTML 文檔的根節點
+            //// Descendants("元素") 會尋找指定標籤的所有子元素
+
+            //// 返回所有 optionGroup 的集合
+            //var optionGroupNodes = doc.DocumentNode.Descendants("optgroup");
+            //// GetAttributeValue("屬性名稱","預設值(找不到返回的值)") 
+            //var optionGroupCPU = optionGroupNodes.Where(node => node.GetAttributeValue("label","No Data") == "Intel Raptor Lake-s 14代1700 腳位").FirstOrDefault();
+
+            //List<string> CPU_14series = new List<string>();
+            //List<string> CPU_12series = new List<string>();
+
+            //if(optionGroupCPU != null)
+            //{
+            //    var optionNodes = optionGroupCPU.Descendants("option");
+            //    foreach( var node in optionNodes)
+            //    {
+            //        string content = node.InnerText;
+
+
+            //        // 抓 14代 CPU 
+            //        if (content.Substring(0,11) == "Intel i3-14" || content.Substring(0,11) == "Intel i5-14" || content.Substring(0,11) == "Intel i7-14" || content.Substring(0, 11) == "Intel i9-14")
+            //        {
+            //            CPU_14series.Add(content);
+            //        }
+            //        // 抓 12代 CPU
+            //        else if (content.Substring(0, 11) == "Intel i3-12" || content.Substring(0, 11) == "Intel i5-12" || content.Substring(0, 11) == "Intel i7-12" || content.Substring(0, 11) == "Intel i9-12")
+            //        {
+            //            CPU_12series.Add(content);
+            //        }
+            //    }
+            //}
+
+            //Console.WriteLine("---------------------- 12代 CPU ----------------------");
+            //for (int i = 0; i < CPU_12series.Count();i++)
+            //{
+            //    Console.WriteLine(CPU_12series[i]);
+            //}
+            //Console.WriteLine("---------------------- 14代 CPU ----------------------");
+            //for (int i = 0; i < CPU_14series.Count(); i++)
+            //{
+            //    Console.WriteLine(CPU_14series[i]);
+            //}
         }
 
     }

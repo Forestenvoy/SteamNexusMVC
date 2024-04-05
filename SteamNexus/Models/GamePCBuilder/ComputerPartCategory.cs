@@ -16,4 +16,19 @@ public partial class ComputerPartCategory
     public string Name { get; set; }
 
     public virtual ICollection<ComponentClassification> ComponentClassifications { get; set; } = new List<ComponentClassification>();
+
+    public enum Type
+    {
+        CPU = 0, // 中央處理器
+        GPU = 1, // 顯示卡
+        RAM = 2, // 記憶體
+        MB = 3, // 主機板
+        SSD = 4, // 固態硬碟
+        HDD = 5, // 傳統硬碟
+        AirCooler = 6, // 風冷散熱器
+        LiquidCooler = 7, // 水冷散熱器
+        CASE = 8, // 機殼
+        PSU = 9, // 電供
+        OS = 10 // 作業系統
+    }
 }
