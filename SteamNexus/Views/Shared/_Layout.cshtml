@@ -4,11 +4,15 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - SteamNexus</title>
-
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/SteamNexus.styles.css" asp-append-version="true" />
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Saira:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
 
     <!-- Icon Font Stylesheet -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
@@ -19,21 +23,21 @@
     <link href="~/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
 
     <!-- Customized Bootstrap Stylesheet -->
-    <link href="~/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/css/bootstrap.css" rel="stylesheet">
 
     <!-- Template Stylesheet -->
     <link href="~/css/style.css" rel="stylesheet">
-
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/SteamNexus.styles.css" asp-append-version="true" />
 </head>
-<body>
+<body class="bg-dark">
     <header>
         <!-- header Start -->
         <div class="container-fluid bg-primary">
             <div class="container">
                 <nav class="navbar navbar-dark navbar-expand-lg py-0">
-                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">SteamNexus</a>
+                    <a class="navbar-brand d-inline-flex align-items-center" asp-area="" asp-controller="Home" asp-action="Index">
+                        <img class="mx-2" style="width:30px;height:30px;" src="~/img/logo.png" />
+                        <div class="text-uppercase" style="font-family: 'Oswald' , sans-serif; font-weight: 500; font-size:30px;">SteamNexus</div>
+                    </a>
                     @* <a href="index.html" class="navbar-brand">
                         <h1 class="text-white fw-bold d-block">High<span class="text-secondary">Tech</span> </h1>
                     </a> *@
@@ -78,7 +82,7 @@
                                 <span class="text-danger" @* asp-validation-for="" *@></span>
                             </div>
                             <div class="form-group">
-                                <input type="submit" value="搜尋" class="btn btn-primary" />
+                                <input class="btn btn-secondary" type="submit" value="搜尋" />
                             </div>
                         </form>
                         <!-- 搜尋 End -->
@@ -141,8 +145,8 @@
     </div>
 
     <!-- Footer Start -->
-    <footer class="border-top footer text-muted">
-        <div class="container-fluid footer bg-dark" >
+    <footer class="border-top footer text-muted ">
+        <div class="container-fluid footer bg-primary">
                 <div class="row">
                     <div class="col-md-6 text-center text-md-start">
                         <span class="text-light"><a href="#" class="text-secondary"><i class="fas fa-copyright text-secondary me-2"></i>Your Site Name</a>, All right reserved.</span>
