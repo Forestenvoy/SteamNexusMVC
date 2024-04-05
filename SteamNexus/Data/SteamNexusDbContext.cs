@@ -118,7 +118,7 @@ namespace SteamNexus.Data
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_MinimumRequirements_CPUs");
 
-                entity.HasOne(d => d.CPU).WithMany(p => p.MinimumRequirements)
+                entity.HasOne(d => d.GPU).WithMany(p => p.MinimumRequirements)
                     .HasForeignKey(d => d.GPUId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_MinimumRequirements_GPUs");
@@ -137,7 +137,7 @@ namespace SteamNexus.Data
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_RecommendedRequirements_CPUs");
 
-                entity.HasOne(d => d.CPU).WithMany(p => p.RecommendedRequirements)
+                entity.HasOne(d => d.GPU).WithMany(p => p.RecommendedRequirements)
                     .HasForeignKey(d => d.GPUId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_RecommendedRequirements_GPUs");
