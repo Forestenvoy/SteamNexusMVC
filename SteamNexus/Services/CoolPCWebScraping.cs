@@ -143,7 +143,7 @@ namespace SteamNexus.Services
         {
             // 硬碟測試
 
-            // 固態硬碟SSD
+            // 固態硬碟 SSD
             _GetComponentsList(6);
 
             // 單一零件分類表 更新
@@ -162,10 +162,13 @@ namespace SteamNexus.Services
                 }
                 else
                 {
-                    Console.WriteLine($"Exist {optgroupNames[i]}");
+                    Console.WriteLine($"Data Exist");
                 }
             }
             _context.SaveChanges();
+
+            // 產品資訊表 更新
+
 
         }
 
