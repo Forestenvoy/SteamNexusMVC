@@ -39,7 +39,9 @@ namespace SteamNexus.Data
 
         public virtual DbSet<PlayersHistory> PlayersHistories { get; set; }
 
-        public virtual DbSet<ProductCategory> ProductCategories { get; set; }
+        public virtual DbSet<ComputerPartCategory> ComputerPartCategories { get; set; }
+
+        public virtual DbSet<ComponentClassification> ComponentClassifications { get; set; }
 
         public virtual DbSet<ProductInformation> ProductInformations { get; set; }
 
@@ -241,14 +243,29 @@ namespace SteamNexus.Data
                     .HasConstraintName("FK_TagGroups_Tags");
             });
 
-            modelBuilder.Entity<ProductCategory>(entity =>
+            modelBuilder.Entity<ComputerPartCategory>(entity =>
             {
                 // 主鍵設定
                 // ValueGeneratedOnAdd 插入新的實體時，值自動生成
                 // UseIdentityColumn(10000, 1) 識別碼起始值和增量
-                entity.Property(e => e.ProductCategoryId)
+                entity.Property(e => e.ComputerPartCategoryId)
                     .ValueGeneratedOnAdd()
                     .UseIdentityColumn(10000, 1);
+            });
+
+            modelBuilder.Entity<ComponentClassification>(entity =>
+            {
+                // 主鍵設定
+                // ValueGeneratedOnAdd 插入新的實體時，值自動生成
+                // UseIdentityColumn(10000, 1) 識別碼起始值和增量
+                entity.Property(e => e.ComponentClassificationId)
+                    .ValueGeneratedOnAdd()
+                    .UseIdentityColumn(10000, 1);
+
+                entity.HasOne(d => d.ComputerPartCategory).WithMany(p => p.ComponentClassifications)
+                    .HasForeignKey(d => d.ComputerPartCategoryId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ComponentClassifications_ComputerPartCategories");
             });
 
             modelBuilder.Entity<ProductInformation>(entity =>
@@ -260,10 +277,10 @@ namespace SteamNexus.Data
                     .ValueGeneratedOnAdd()
                     .UseIdentityColumn(10000, 1);
 
-                entity.HasOne(d => d.ProductCategory).WithMany(p => p.ProductInformations)
-                    .HasForeignKey(d => d.ProductCategoryId)
+                entity.HasOne(d => d.ComponentClassification).WithMany(p => p.ProductInformations)
+                    .HasForeignKey(d => d.ComponentClassificationId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ProductInformations_ProductCategories");
+                    .HasConstraintName("FK_ProductInformations_ComponentClassifications");
             });
 
             modelBuilder.Entity<ProductRAM>(entity =>

@@ -1,0 +1,452 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DirectedGraph GraphDirection="LeftToRight" xmlns="http://schemas.microsoft.com/vs/2009/dgml">
+  <Nodes>
+<Node Id="IModel" Label="SteamNexusDbContext" ChangeTrackingStrategy="ChangeTrackingStrategy.Snapshot" PropertyAccessMode="PropertyAccessMode.Default" ProductVersion="8.0.3" Annotations="BaseTypeDiscoveryConvention:DerivedTypes: System.Collections.Generic.Dictionary`2[System.Type,System.Collections.Generic.List`1[Microsoft.EntityFrameworkCore.Metadata.IConventionEntityType]]
+Relational:MaxIdentifierLength: 128
+RelationshipDiscoveryConvention:InverseNavigationCandidates: System.Collections.Generic.Dictionary`2[System.Type,System.Collections.Generic.SortedSet`1[System.Type]]
+SqlServer:ValueGenerationStrategy: IdentityColumn" Category="Model" Group="Expanded" />
+<Node Id = "Advertisement" Label="Advertisement" Name="Advertisement" BaseClass="" IsAbstract="False" ChangeTrackingStrategy="ChangeTrackingStrategy.Snapshot"  Annotations="Relational:TableName: Advertisements
+RelationshipDiscoveryConvention:NavigationCandidates: System.Collections.Immutable.ImmutableSortedDictionary`2[System.Reflection.PropertyInfo,System.ValueTuple`2[System.Type,System.Nullable`1[System.Boolean]]]" Category="EntityType" Group="Expanded" />
+<Node Id = "CPU" Label="CPU" Name="CPU" BaseClass="" IsAbstract="False" ChangeTrackingStrategy="ChangeTrackingStrategy.Snapshot"  Annotations="Relational:TableName: CPUs
+RelationshipDiscoveryConvention:NavigationCandidates: System.Collections.Immutable.ImmutableSortedDictionary`2[System.Reflection.PropertyInfo,System.ValueTuple`2[System.Type,System.Nullable`1[System.Boolean]]]" Category="EntityType" Group="Expanded" />
+<Node Id = "Advertisement.AdvertisementId" Label="AdvertisementId (int)" Name="AdvertisementId" Category="Property Primary" Type="int" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="SqlServer:IdentityIncrement: 1
+SqlServer:IdentitySeed: 10000
+SqlServer:ValueGenerationStrategy: IdentityColumn" IsPrimaryKey="True" IsForeignKey="False" IsRequired="True" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="ValueGenerated.OnAdd" />
+<Node Id = "Advertisement.Discription" Label="Discription (string)" Name="Discription" Category="Property Optional" Type="string" MaxLength="(200)" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="MaxLength: 200" IsPrimaryKey="False" IsForeignKey="False" IsRequired="False" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "Advertisement.ImagePath" Label="ImagePath (string)" Name="ImagePath" Category="Property Required" Type="string" MaxLength="(300)" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="MaxLength: 300" IsPrimaryKey="False" IsForeignKey="False" IsRequired="True" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "Advertisement.Title" Label="Title (string)" Name="Title" Category="Property Required" Type="string" MaxLength="(100)" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="MaxLength: 100" IsPrimaryKey="False" IsForeignKey="False" IsRequired="True" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "Advertisement.Url" Label="Url (string)" Name="Url" Category="Property Required" Type="string" MaxLength="(300)" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="MaxLength: 300" IsPrimaryKey="False" IsForeignKey="False" IsRequired="True" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "CommonQuestion" Label="CommonQuestion" Name="CommonQuestion" BaseClass="" IsAbstract="False" ChangeTrackingStrategy="ChangeTrackingStrategy.Snapshot"  Annotations="Relational:TableName: CommonQuestions
+RelationshipDiscoveryConvention:NavigationCandidates: System.Collections.Immutable.ImmutableSortedDictionary`2[System.Reflection.PropertyInfo,System.ValueTuple`2[System.Type,System.Nullable`1[System.Boolean]]]" Category="EntityType" Group="Expanded" />
+<Node Id = "CPU.CPUId" Label="CPUId (int)" Name="CPUId" Category="Property Primary" Type="int" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="SqlServer:IdentityIncrement: 1
+SqlServer:IdentitySeed: 10000
+SqlServer:ValueGenerationStrategy: IdentityColumn" IsPrimaryKey="True" IsForeignKey="False" IsRequired="True" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="ValueGenerated.OnAdd" />
+<Node Id = "CPU.MinimumRequirements" Label="MinimumRequirements (*)" Name="MinimumRequirements" Category="Navigation Collection" Type="ICollection&lt;MinimumRequirement&gt;"  Field="" Dependent="MinimumRequirement" Principal="" Inverse="CPU" PropertyAccessMode="PropertyAccessMode.Default" />
+<Node Id = "CPU.ProductCPUs" Label="ProductCPUs (*)" Name="ProductCPUs" Category="Navigation Collection" Type="ICollection&lt;ProductCPU&gt;"  Field="" Dependent="ProductCPU" Principal="" Inverse="CPU" PropertyAccessMode="PropertyAccessMode.Default" />
+<Node Id = "CPU.RecommendedRequirements" Label="RecommendedRequirements (*)" Name="RecommendedRequirements" Category="Navigation Collection" Type="ICollection&lt;RecommendedRequirement&gt;"  Field="" Dependent="RecommendedRequirement" Principal="" Inverse="CPU" PropertyAccessMode="PropertyAccessMode.Default" />
+<Node Id = "CPU.Name" Label="Name (string)" Name="Name" Category="Property Required" Type="string" MaxLength="(100)" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="MaxLength: 100" IsPrimaryKey="False" IsForeignKey="False" IsRequired="True" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "CPU.Score" Label="Score (int)" Name="Score" Category="Property Required" Type="int" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="" IsPrimaryKey="False" IsForeignKey="False" IsRequired="True" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "ComponentClassification" Label="ComponentClassification" Name="ComponentClassification" BaseClass="" IsAbstract="False" ChangeTrackingStrategy="ChangeTrackingStrategy.Snapshot"  Annotations="Relational:TableName: ComponentClassifications
+RelationshipDiscoveryConvention:NavigationCandidates: System.Collections.Immutable.ImmutableSortedDictionary`2[System.Reflection.PropertyInfo,System.ValueTuple`2[System.Type,System.Nullable`1[System.Boolean]]]" Category="EntityType" Group="Expanded" />
+<Node Id = "CommonQuestion.CommonQuestionId" Label="CommonQuestionId (int)" Name="CommonQuestionId" Category="Property Primary" Type="int" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="SqlServer:IdentityIncrement: 1
+SqlServer:IdentitySeed: 10000
+SqlServer:ValueGenerationStrategy: IdentityColumn" IsPrimaryKey="True" IsForeignKey="False" IsRequired="True" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="ValueGenerated.OnAdd" />
+<Node Id = "CommonQuestion.Content" Label="Content (string)" Name="Content" Category="Property Required" Type="string" MaxLength="(500)" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="MaxLength: 500" IsPrimaryKey="False" IsForeignKey="False" IsRequired="True" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "CommonQuestion.Title" Label="Title (string)" Name="Title" Category="Property Required" Type="string" MaxLength="(200)" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="MaxLength: 200" IsPrimaryKey="False" IsForeignKey="False" IsRequired="True" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "ComputerPartCategory" Label="ComputerPartCategory" Name="ComputerPartCategory" BaseClass="" IsAbstract="False" ChangeTrackingStrategy="ChangeTrackingStrategy.Snapshot"  Annotations="Relational:TableName: ComputerPartCategories
+RelationshipDiscoveryConvention:NavigationCandidates: System.Collections.Immutable.ImmutableSortedDictionary`2[System.Reflection.PropertyInfo,System.ValueTuple`2[System.Type,System.Nullable`1[System.Boolean]]]" Category="EntityType" Group="Expanded" />
+<Node Id = "ComponentClassification.ComponentClassificationId" Label="ComponentClassificationId (int)" Name="ComponentClassificationId" Category="Property Primary" Type="int" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="SqlServer:IdentityIncrement: 1
+SqlServer:IdentitySeed: 10000
+SqlServer:ValueGenerationStrategy: IdentityColumn" IsPrimaryKey="True" IsForeignKey="False" IsRequired="True" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="ValueGenerated.OnAdd" />
+<Node Id = "ComponentClassification.ComputerPartCategory" Label="ComputerPartCategory (1)" Name="ComputerPartCategory" Category="Navigation Property" Type="ComputerPartCategory"  Field="" Dependent="" Principal="ComputerPartCategory" Inverse="ComponentClassifications" PropertyAccessMode="PropertyAccessMode.Default" />
+<Node Id = "ComponentClassification.ProductInformations" Label="ProductInformations (*)" Name="ProductInformations" Category="Navigation Collection" Type="ICollection&lt;ProductInformation&gt;"  Field="" Dependent="ProductInformation" Principal="" Inverse="ComponentClassification" PropertyAccessMode="PropertyAccessMode.Default" />
+<Node Id = "ComponentClassification.ComputerPartCategoryId" Label="ComputerPartCategoryId (int)" Name="ComputerPartCategoryId" Category="Property Foreign" Type="int" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="" IsPrimaryKey="False" IsForeignKey="True" IsRequired="True" IsIndexed="True" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "ComponentClassification.Name" Label="Name (string)" Name="Name" Category="Property Required" Type="string" MaxLength="(100)" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="MaxLength: 100" IsPrimaryKey="False" IsForeignKey="False" IsRequired="True" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "GPU" Label="GPU" Name="GPU" BaseClass="" IsAbstract="False" ChangeTrackingStrategy="ChangeTrackingStrategy.Snapshot"  Annotations="Relational:TableName: GPUs
+RelationshipDiscoveryConvention:NavigationCandidates: System.Collections.Immutable.ImmutableSortedDictionary`2[System.Reflection.PropertyInfo,System.ValueTuple`2[System.Type,System.Nullable`1[System.Boolean]]]" Category="EntityType" Group="Expanded" />
+<Node Id = "ComputerPartCategory.ComputerPartCategoryId" Label="ComputerPartCategoryId (int)" Name="ComputerPartCategoryId" Category="Property Primary" Type="int" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="SqlServer:IdentityIncrement: 1
+SqlServer:IdentitySeed: 10000
+SqlServer:ValueGenerationStrategy: IdentityColumn" IsPrimaryKey="True" IsForeignKey="False" IsRequired="True" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="ValueGenerated.OnAdd" />
+<Node Id = "ComputerPartCategory.ComponentClassifications" Label="ComponentClassifications (*)" Name="ComponentClassifications" Category="Navigation Collection" Type="ICollection&lt;ComponentClassification&gt;"  Field="" Dependent="ComponentClassification" Principal="" Inverse="ComputerPartCategory" PropertyAccessMode="PropertyAccessMode.Default" />
+<Node Id = "ComputerPartCategory.Name" Label="Name (string)" Name="Name" Category="Property Required" Type="string" MaxLength="(100)" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="MaxLength: 100" IsPrimaryKey="False" IsForeignKey="False" IsRequired="True" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "Game" Label="Game" Name="Game" BaseClass="" IsAbstract="False" ChangeTrackingStrategy="ChangeTrackingStrategy.Snapshot"  Annotations="Relational:TableName: Games
+RelationshipDiscoveryConvention:NavigationCandidates: System.Collections.Immutable.ImmutableSortedDictionary`2[System.Reflection.PropertyInfo,System.ValueTuple`2[System.Type,System.Nullable`1[System.Boolean]]]" Category="EntityType" Group="Expanded" />
+<Node Id = "GPU.GPUId" Label="GPUId (int)" Name="GPUId" Category="Property Primary" Type="int" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="SqlServer:IdentityIncrement: 1
+SqlServer:IdentitySeed: 10000
+SqlServer:ValueGenerationStrategy: IdentityColumn" IsPrimaryKey="True" IsForeignKey="False" IsRequired="True" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="ValueGenerated.OnAdd" />
+<Node Id = "GPU.MinimumRequirements" Label="MinimumRequirements (*)" Name="MinimumRequirements" Category="Navigation Collection" Type="ICollection&lt;MinimumRequirement&gt;"  Field="" Dependent="MinimumRequirement" Principal="" Inverse="GPU" PropertyAccessMode="PropertyAccessMode.Default" />
+<Node Id = "GPU.ProductGPUs" Label="ProductGPUs (*)" Name="ProductGPUs" Category="Navigation Collection" Type="ICollection&lt;ProductGPU&gt;"  Field="" Dependent="ProductGPU" Principal="" Inverse="GPU" PropertyAccessMode="PropertyAccessMode.Default" />
+<Node Id = "GPU.RecommendedRequirements" Label="RecommendedRequirements (*)" Name="RecommendedRequirements" Category="Navigation Collection" Type="ICollection&lt;RecommendedRequirement&gt;"  Field="" Dependent="RecommendedRequirement" Principal="" Inverse="GPU" PropertyAccessMode="PropertyAccessMode.Default" />
+<Node Id = "GPU.Name" Label="Name (string)" Name="Name" Category="Property Required" Type="string" MaxLength="(100)" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="MaxLength: 100" IsPrimaryKey="False" IsForeignKey="False" IsRequired="True" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "GPU.Score" Label="Score (int)" Name="Score" Category="Property Required" Type="int" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="" IsPrimaryKey="False" IsForeignKey="False" IsRequired="True" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "GameLanguage" Label="GameLanguage" Name="GameLanguage" BaseClass="" IsAbstract="False" ChangeTrackingStrategy="ChangeTrackingStrategy.Snapshot"  Annotations="Relational:TableName: GameLanguages
+RelationshipDiscoveryConvention:NavigationCandidates: System.Collections.Immutable.ImmutableSortedDictionary`2[System.Reflection.PropertyInfo,System.ValueTuple`2[System.Type,System.Nullable`1[System.Boolean]]]" Category="EntityType" Group="Expanded" />
+<Node Id = "Game.GameId" Label="GameId (int)" Name="GameId" Category="Property Primary" Type="int" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="SqlServer:IdentityIncrement: 1
+SqlServer:IdentitySeed: 10000
+SqlServer:ValueGenerationStrategy: IdentityColumn" IsPrimaryKey="True" IsForeignKey="False" IsRequired="True" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="ValueGenerated.OnAdd" />
+<Node Id = "Game.GameLanguages" Label="GameLanguages (*)" Name="GameLanguages" Category="Navigation Collection" Type="ICollection&lt;GameLanguage&gt;"  Field="" Dependent="GameLanguage" Principal="" Inverse="Game" PropertyAccessMode="PropertyAccessMode.Default" />
+<Node Id = "Game.MinReq" Label="MinReq (1)" Name="MinReq" Category="Navigation Property" Type="MinimumRequirement"  Field="" Dependent="" Principal="MinimumRequirement" Inverse="Games" PropertyAccessMode="PropertyAccessMode.Default" />
+<Node Id = "Game.PlayersHistories" Label="PlayersHistories (*)" Name="PlayersHistories" Category="Navigation Collection" Type="ICollection&lt;PlayersHistory&gt;"  Field="" Dependent="PlayersHistory" Principal="" Inverse="Game" PropertyAccessMode="PropertyAccessMode.Default" />
+<Node Id = "Game.PriceHistories" Label="PriceHistories (*)" Name="PriceHistories" Category="Navigation Collection" Type="ICollection&lt;PriceHistory&gt;"  Field="" Dependent="PriceHistory" Principal="" Inverse="Game" PropertyAccessMode="PropertyAccessMode.Default" />
+<Node Id = "Game.RecReq" Label="RecReq (1)" Name="RecReq" Category="Navigation Property" Type="RecommendedRequirement"  Field="" Dependent="" Principal="RecommendedRequirement" Inverse="Games" PropertyAccessMode="PropertyAccessMode.Default" />
+<Node Id = "Game.TagGroups" Label="TagGroups (*)" Name="TagGroups" Category="Navigation Collection" Type="ICollection&lt;TagGroup&gt;"  Field="" Dependent="TagGroup" Principal="" Inverse="Game" PropertyAccessMode="PropertyAccessMode.Default" />
+<Node Id = "Game.AgeRating" Label="AgeRating (string)" Name="AgeRating" Category="Property Required" Type="string" MaxLength="(100)" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="MaxLength: 100" IsPrimaryKey="False" IsForeignKey="False" IsRequired="True" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "Game.AppId" Label="AppId (int)" Name="AppId" Category="Property Required" Type="int" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="" IsPrimaryKey="False" IsForeignKey="False" IsRequired="True" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "Game.Comment" Label="Comment (string)" Name="Comment" Category="Property Optional" Type="string" MaxLength="(100)" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="MaxLength: 100" IsPrimaryKey="False" IsForeignKey="False" IsRequired="False" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "Game.CommentNum" Label="CommentNum (int?)" Name="CommentNum" Category="Property Optional" Type="int?" MaxLength="(100)" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="MaxLength: 100" IsPrimaryKey="False" IsForeignKey="False" IsRequired="False" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "Game.CurrentPrice" Label="CurrentPrice (int)" Name="CurrentPrice" Category="Property Required" Type="int" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="" IsPrimaryKey="False" IsForeignKey="False" IsRequired="True" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "Game.Description" Label="Description (string)" Name="Description" Category="Property Optional" Type="string" MaxLength="(500)" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="MaxLength: 500" IsPrimaryKey="False" IsForeignKey="False" IsRequired="False" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "Game.ImagePath" Label="ImagePath (string)" Name="ImagePath" Category="Property Optional" Type="string" MaxLength="(300)" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="MaxLength: 300" IsPrimaryKey="False" IsForeignKey="False" IsRequired="False" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "Game.LowestPrice" Label="LowestPrice (int)" Name="LowestPrice" Category="Property Required" Type="int" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="" IsPrimaryKey="False" IsForeignKey="False" IsRequired="True" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "Game.MinReqId" Label="MinReqId (int)" Name="MinReqId" Category="Property Foreign" Type="int" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="" IsPrimaryKey="False" IsForeignKey="True" IsRequired="True" IsIndexed="True" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "Game.Name" Label="Name (string)" Name="Name" Category="Property Required" Type="string" MaxLength="(100)" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="MaxLength: 100" IsPrimaryKey="False" IsForeignKey="False" IsRequired="True" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "Game.OriginalPrice" Label="OriginalPrice (int)" Name="OriginalPrice" Category="Property Required" Type="int" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="" IsPrimaryKey="False" IsForeignKey="False" IsRequired="True" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "Game.PeakPlayers" Label="PeakPlayers (int?)" Name="PeakPlayers" Category="Property Optional" Type="int?" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="" IsPrimaryKey="False" IsForeignKey="False" IsRequired="False" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "Game.Players" Label="Players (int?)" Name="Players" Category="Property Optional" Type="int?" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="" IsPrimaryKey="False" IsForeignKey="False" IsRequired="False" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "Game.Publisher" Label="Publisher (string)" Name="Publisher" Category="Property Optional" Type="string" MaxLength="(100)" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="MaxLength: 100" IsPrimaryKey="False" IsForeignKey="False" IsRequired="False" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "Game.RecReqId" Label="RecReqId (int)" Name="RecReqId" Category="Property Foreign" Type="int" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="" IsPrimaryKey="False" IsForeignKey="True" IsRequired="True" IsIndexed="True" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "Game.ReleaseDate" Label="ReleaseDate (DateTime?)" Name="ReleaseDate" Category="Property Optional" Type="DateTime?" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="" IsPrimaryKey="False" IsForeignKey="False" IsRequired="False" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "Game.VideoPath" Label="VideoPath (string)" Name="VideoPath" Category="Property Optional" Type="string" MaxLength="(300)" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="MaxLength: 300" IsPrimaryKey="False" IsForeignKey="False" IsRequired="False" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "Language" Label="Language" Name="Language" BaseClass="" IsAbstract="False" ChangeTrackingStrategy="ChangeTrackingStrategy.Snapshot"  Annotations="Relational:TableName: Languages
+RelationshipDiscoveryConvention:NavigationCandidates: System.Collections.Immutable.ImmutableSortedDictionary`2[System.Reflection.PropertyInfo,System.ValueTuple`2[System.Type,System.Nullable`1[System.Boolean]]]" Category="EntityType" Group="Expanded" />
+<Node Id = "GameLanguage.GameLanguageId" Label="GameLanguageId (int)" Name="GameLanguageId" Category="Property Primary" Type="int" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="SqlServer:IdentityIncrement: 1
+SqlServer:IdentitySeed: 10000
+SqlServer:ValueGenerationStrategy: IdentityColumn" IsPrimaryKey="True" IsForeignKey="False" IsRequired="True" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="ValueGenerated.OnAdd" />
+<Node Id = "GameLanguage.Game" Label="Game (1)" Name="Game" Category="Navigation Property" Type="Game"  Field="" Dependent="" Principal="Game" Inverse="GameLanguages" PropertyAccessMode="PropertyAccessMode.Default" />
+<Node Id = "GameLanguage.Language" Label="Language (1)" Name="Language" Category="Navigation Property" Type="Language"  Field="" Dependent="" Principal="Language" Inverse="GameLanguages" PropertyAccessMode="PropertyAccessMode.Default" />
+<Node Id = "GameLanguage.GameId" Label="GameId (int)" Name="GameId" Category="Property Foreign" Type="int" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="" IsPrimaryKey="False" IsForeignKey="True" IsRequired="True" IsIndexed="True" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "GameLanguage.LanguageId" Label="LanguageId (int)" Name="LanguageId" Category="Property Foreign" Type="int" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="" IsPrimaryKey="False" IsForeignKey="True" IsRequired="True" IsIndexed="True" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "MinimumRequirement" Label="MinimumRequirement" Name="MinimumRequirement" BaseClass="" IsAbstract="False" ChangeTrackingStrategy="ChangeTrackingStrategy.Snapshot"  Annotations="Relational:TableName: MinimumRequirements
+RelationshipDiscoveryConvention:NavigationCandidates: System.Collections.Immutable.ImmutableSortedDictionary`2[System.Reflection.PropertyInfo,System.ValueTuple`2[System.Type,System.Nullable`1[System.Boolean]]]" Category="EntityType" Group="Expanded" />
+<Node Id = "Language.LanguageId" Label="LanguageId (int)" Name="LanguageId" Category="Property Primary" Type="int" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="SqlServer:IdentityIncrement: 1
+SqlServer:IdentitySeed: 10000
+SqlServer:ValueGenerationStrategy: IdentityColumn" IsPrimaryKey="True" IsForeignKey="False" IsRequired="True" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="ValueGenerated.OnAdd" />
+<Node Id = "Language.GameLanguages" Label="GameLanguages (*)" Name="GameLanguages" Category="Navigation Collection" Type="ICollection&lt;GameLanguage&gt;"  Field="" Dependent="GameLanguage" Principal="" Inverse="Language" PropertyAccessMode="PropertyAccessMode.Default" />
+<Node Id = "Language.Name" Label="Name (string)" Name="Name" Category="Property Required" Type="string" MaxLength="(100)" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="MaxLength: 100" IsPrimaryKey="False" IsForeignKey="False" IsRequired="True" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "PlayersHistory" Label="PlayersHistory" Name="PlayersHistory" BaseClass="" IsAbstract="False" ChangeTrackingStrategy="ChangeTrackingStrategy.Snapshot"  Annotations="Relational:TableName: PlayersHistories
+RelationshipDiscoveryConvention:NavigationCandidates: System.Collections.Immutable.ImmutableSortedDictionary`2[System.Reflection.PropertyInfo,System.ValueTuple`2[System.Type,System.Nullable`1[System.Boolean]]]" Category="EntityType" Group="Expanded" />
+<Node Id = "MinimumRequirement.MinReqId" Label="MinReqId (int)" Name="MinReqId" Category="Property Primary" Type="int" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="SqlServer:IdentityIncrement: 1
+SqlServer:IdentitySeed: 10000
+SqlServer:ValueGenerationStrategy: IdentityColumn" IsPrimaryKey="True" IsForeignKey="False" IsRequired="True" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="ValueGenerated.OnAdd" />
+<Node Id = "MinimumRequirement.CPU" Label="CPU (1)" Name="CPU" Category="Navigation Property" Type="CPU"  Field="" Dependent="" Principal="CPU" Inverse="MinimumRequirements" PropertyAccessMode="PropertyAccessMode.Default" />
+<Node Id = "MinimumRequirement.GPU" Label="GPU (1)" Name="GPU" Category="Navigation Property" Type="GPU"  Field="" Dependent="" Principal="GPU" Inverse="MinimumRequirements" PropertyAccessMode="PropertyAccessMode.Default" />
+<Node Id = "MinimumRequirement.Games" Label="Games (*)" Name="Games" Category="Navigation Collection" Type="ICollection&lt;Game&gt;"  Field="" Dependent="Game" Principal="" Inverse="MinReq" PropertyAccessMode="PropertyAccessMode.Default" />
+<Node Id = "MinimumRequirement.Audio" Label="Audio (string)" Name="Audio" Category="Property Optional" Type="string" MaxLength="(100)" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="MaxLength: 100" IsPrimaryKey="False" IsForeignKey="False" IsRequired="False" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "MinimumRequirement.CPUId" Label="CPUId (int)" Name="CPUId" Category="Property Required" Type="int" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="" IsPrimaryKey="False" IsForeignKey="False" IsRequired="True" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "MinimumRequirement.DirectX" Label="DirectX (string)" Name="DirectX" Category="Property Optional" Type="string" MaxLength="(100)" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="MaxLength: 100" IsPrimaryKey="False" IsForeignKey="False" IsRequired="False" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "MinimumRequirement.GPUId" Label="GPUId (int)" Name="GPUId" Category="Property Foreign" Type="int" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="" IsPrimaryKey="False" IsForeignKey="True" IsRequired="True" IsIndexed="True" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "MinimumRequirement.GPUId1" Label="GPUId1 (int)" Name="GPUId1" Category="Property Foreign" Type="int" MaxLength="None" Field="nofield" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="PreUniquificationName: GPUId" IsPrimaryKey="False" IsForeignKey="True" IsRequired="True" IsIndexed="True" IsShadow="True" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "MinimumRequirement.Network" Label="Network (string)" Name="Network" Category="Property Optional" Type="string" MaxLength="(100)" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="MaxLength: 100" IsPrimaryKey="False" IsForeignKey="False" IsRequired="False" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "MinimumRequirement.Note" Label="Note (string)" Name="Note" Category="Property Optional" Type="string" MaxLength="(500)" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="MaxLength: 500" IsPrimaryKey="False" IsForeignKey="False" IsRequired="False" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "MinimumRequirement.OS" Label="OS (string)" Name="OS" Category="Property Optional" Type="string" MaxLength="(100)" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="MaxLength: 100" IsPrimaryKey="False" IsForeignKey="False" IsRequired="False" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "MinimumRequirement.RAM" Label="RAM (int)" Name="RAM" Category="Property Required" Type="int" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="" IsPrimaryKey="False" IsForeignKey="False" IsRequired="True" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "MinimumRequirement.Storage" Label="Storage (string)" Name="Storage" Category="Property Optional" Type="string" MaxLength="(100)" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="MaxLength: 100" IsPrimaryKey="False" IsForeignKey="False" IsRequired="False" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "PriceHistory" Label="PriceHistory" Name="PriceHistory" BaseClass="" IsAbstract="False" ChangeTrackingStrategy="ChangeTrackingStrategy.Snapshot"  Annotations="Relational:TableName: PriceHistories
+RelationshipDiscoveryConvention:NavigationCandidates: System.Collections.Immutable.ImmutableSortedDictionary`2[System.Reflection.PropertyInfo,System.ValueTuple`2[System.Type,System.Nullable`1[System.Boolean]]]" Category="EntityType" Group="Expanded" />
+<Node Id = "PlayersHistory.PlayersHistoryId" Label="PlayersHistoryId (int)" Name="PlayersHistoryId" Category="Property Primary" Type="int" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="SqlServer:IdentityIncrement: 1
+SqlServer:IdentitySeed: 10000
+SqlServer:ValueGenerationStrategy: IdentityColumn" IsPrimaryKey="True" IsForeignKey="False" IsRequired="True" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="ValueGenerated.OnAdd" />
+<Node Id = "PlayersHistory.Game" Label="Game (1)" Name="Game" Category="Navigation Property" Type="Game"  Field="" Dependent="" Principal="Game" Inverse="PlayersHistories" PropertyAccessMode="PropertyAccessMode.Default" />
+<Node Id = "PlayersHistory.Date" Label="Date (DateTime)" Name="Date" Category="Property Required" Type="DateTime" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="" IsPrimaryKey="False" IsForeignKey="False" IsRequired="True" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "PlayersHistory.GameId" Label="GameId (int)" Name="GameId" Category="Property Foreign" Type="int" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="" IsPrimaryKey="False" IsForeignKey="True" IsRequired="True" IsIndexed="True" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "PlayersHistory.Players" Label="Players (int)" Name="Players" Category="Property Required" Type="int" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="" IsPrimaryKey="False" IsForeignKey="False" IsRequired="True" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "ProductCPU" Label="ProductCPU" Name="ProductCPU" BaseClass="" IsAbstract="False" ChangeTrackingStrategy="ChangeTrackingStrategy.Snapshot"  Annotations="Relational:TableName: ProductCPUs
+RelationshipDiscoveryConvention:NavigationCandidates: System.Collections.Immutable.ImmutableSortedDictionary`2[System.Reflection.PropertyInfo,System.ValueTuple`2[System.Type,System.Nullable`1[System.Boolean]]]" Category="EntityType" Group="Expanded" />
+<Node Id = "PriceHistory.PriceHistoryId" Label="PriceHistoryId (int)" Name="PriceHistoryId" Category="Property Primary" Type="int" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="SqlServer:IdentityIncrement: 1
+SqlServer:IdentitySeed: 10000
+SqlServer:ValueGenerationStrategy: IdentityColumn" IsPrimaryKey="True" IsForeignKey="False" IsRequired="True" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="ValueGenerated.OnAdd" />
+<Node Id = "PriceHistory.Game" Label="Game (1)" Name="Game" Category="Navigation Property" Type="Game"  Field="" Dependent="" Principal="Game" Inverse="PriceHistories" PropertyAccessMode="PropertyAccessMode.Default" />
+<Node Id = "PriceHistory.Date" Label="Date (DateTime)" Name="Date" Category="Property Required" Type="DateTime" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="" IsPrimaryKey="False" IsForeignKey="False" IsRequired="True" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "PriceHistory.GameId" Label="GameId (int)" Name="GameId" Category="Property Foreign" Type="int" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="" IsPrimaryKey="False" IsForeignKey="True" IsRequired="True" IsIndexed="True" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "PriceHistory.Price" Label="Price (int)" Name="Price" Category="Property Required" Type="int" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="" IsPrimaryKey="False" IsForeignKey="False" IsRequired="True" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "ProductGPU" Label="ProductGPU" Name="ProductGPU" BaseClass="" IsAbstract="False" ChangeTrackingStrategy="ChangeTrackingStrategy.Snapshot"  Annotations="Relational:TableName: ProductGPUs
+RelationshipDiscoveryConvention:NavigationCandidates: System.Collections.Immutable.ImmutableSortedDictionary`2[System.Reflection.PropertyInfo,System.ValueTuple`2[System.Type,System.Nullable`1[System.Boolean]]]" Category="EntityType" Group="Expanded" />
+<Node Id = "ProductCPU.ProductCPUId" Label="ProductCPUId (int)" Name="ProductCPUId" Category="Property Primary" Type="int" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="SqlServer:IdentityIncrement: 1
+SqlServer:IdentitySeed: 10000
+SqlServer:ValueGenerationStrategy: IdentityColumn" IsPrimaryKey="True" IsForeignKey="False" IsRequired="True" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="ValueGenerated.OnAdd" />
+<Node Id = "ProductCPU.CPU" Label="CPU (1)" Name="CPU" Category="Navigation Property" Type="CPU"  Field="" Dependent="" Principal="CPU" Inverse="ProductCPUs" PropertyAccessMode="PropertyAccessMode.Default" />
+<Node Id = "ProductCPU.ProductInformation" Label="ProductInformation (1)" Name="ProductInformation" Category="Navigation Property" Type="ProductInformation"  Field="" Dependent="" Principal="ProductInformation" Inverse="ProductCPUs" PropertyAccessMode="PropertyAccessMode.Default" />
+<Node Id = "ProductCPU.CPUId" Label="CPUId (int)" Name="CPUId" Category="Property Foreign" Type="int" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="" IsPrimaryKey="False" IsForeignKey="True" IsRequired="True" IsIndexed="True" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "ProductCPU.ProductInformationId" Label="ProductInformationId (int)" Name="ProductInformationId" Category="Property Foreign" Type="int" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="" IsPrimaryKey="False" IsForeignKey="True" IsRequired="True" IsIndexed="True" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "ProductInformation" Label="ProductInformation" Name="ProductInformation" BaseClass="" IsAbstract="False" ChangeTrackingStrategy="ChangeTrackingStrategy.Snapshot"  Annotations="Relational:TableName: ProductInformations
+RelationshipDiscoveryConvention:NavigationCandidates: System.Collections.Immutable.ImmutableSortedDictionary`2[System.Reflection.PropertyInfo,System.ValueTuple`2[System.Type,System.Nullable`1[System.Boolean]]]" Category="EntityType" Group="Expanded" />
+<Node Id = "ProductGPU.ProductGPUId" Label="ProductGPUId (int)" Name="ProductGPUId" Category="Property Primary" Type="int" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="SqlServer:IdentityIncrement: 1
+SqlServer:IdentitySeed: 10000
+SqlServer:ValueGenerationStrategy: IdentityColumn" IsPrimaryKey="True" IsForeignKey="False" IsRequired="True" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="ValueGenerated.OnAdd" />
+<Node Id = "ProductGPU.GPU" Label="GPU (1)" Name="GPU" Category="Navigation Property" Type="GPU"  Field="" Dependent="" Principal="GPU" Inverse="ProductGPUs" PropertyAccessMode="PropertyAccessMode.Default" />
+<Node Id = "ProductGPU.ProductInformation" Label="ProductInformation (1)" Name="ProductInformation" Category="Navigation Property" Type="ProductInformation"  Field="" Dependent="" Principal="ProductInformation" Inverse="ProductGPUs" PropertyAccessMode="PropertyAccessMode.Default" />
+<Node Id = "ProductGPU.GPUId" Label="GPUId (int)" Name="GPUId" Category="Property Foreign" Type="int" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="" IsPrimaryKey="False" IsForeignKey="True" IsRequired="True" IsIndexed="True" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "ProductGPU.ProductInformationId" Label="ProductInformationId (int)" Name="ProductInformationId" Category="Property Foreign" Type="int" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="" IsPrimaryKey="False" IsForeignKey="True" IsRequired="True" IsIndexed="True" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "ProductRAM" Label="ProductRAM" Name="ProductRAM" BaseClass="" IsAbstract="False" ChangeTrackingStrategy="ChangeTrackingStrategy.Snapshot"  Annotations="Relational:TableName: ProductRAMs
+RelationshipDiscoveryConvention:NavigationCandidates: System.Collections.Immutable.ImmutableSortedDictionary`2[System.Reflection.PropertyInfo,System.ValueTuple`2[System.Type,System.Nullable`1[System.Boolean]]]" Category="EntityType" Group="Expanded" />
+<Node Id = "ProductInformation.ProductInformationId" Label="ProductInformationId (int)" Name="ProductInformationId" Category="Property Primary" Type="int" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="SqlServer:IdentityIncrement: 1
+SqlServer:IdentitySeed: 10000
+SqlServer:ValueGenerationStrategy: IdentityColumn" IsPrimaryKey="True" IsForeignKey="False" IsRequired="True" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="ValueGenerated.OnAdd" />
+<Node Id = "ProductInformation.ComponentClassification" Label="ComponentClassification (1)" Name="ComponentClassification" Category="Navigation Property" Type="ComponentClassification"  Field="" Dependent="" Principal="ComponentClassification" Inverse="ProductInformations" PropertyAccessMode="PropertyAccessMode.Default" />
+<Node Id = "ProductInformation.ProductCPUs" Label="ProductCPUs (*)" Name="ProductCPUs" Category="Navigation Collection" Type="ICollection&lt;ProductCPU&gt;"  Field="" Dependent="ProductCPU" Principal="" Inverse="ProductInformation" PropertyAccessMode="PropertyAccessMode.Default" />
+<Node Id = "ProductInformation.ProductGPUs" Label="ProductGPUs (*)" Name="ProductGPUs" Category="Navigation Collection" Type="ICollection&lt;ProductGPU&gt;"  Field="" Dependent="ProductGPU" Principal="" Inverse="ProductInformation" PropertyAccessMode="PropertyAccessMode.Default" />
+<Node Id = "ProductInformation.ProductRAMs" Label="ProductRAMs (*)" Name="ProductRAMs" Category="Navigation Collection" Type="ICollection&lt;ProductRAM&gt;"  Field="" Dependent="ProductRAM" Principal="" Inverse="ProductInformation" PropertyAccessMode="PropertyAccessMode.Default" />
+<Node Id = "ProductInformation.ComponentClassificationId" Label="ComponentClassificationId (int)" Name="ComponentClassificationId" Category="Property Foreign" Type="int" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="" IsPrimaryKey="False" IsForeignKey="True" IsRequired="True" IsIndexed="True" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "ProductInformation.Name" Label="Name (string)" Name="Name" Category="Property Required" Type="string" MaxLength="(200)" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="MaxLength: 200" IsPrimaryKey="False" IsForeignKey="False" IsRequired="True" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "ProductInformation.Price" Label="Price (int)" Name="Price" Category="Property Required" Type="int" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="" IsPrimaryKey="False" IsForeignKey="False" IsRequired="True" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "ProductInformation.Recommend" Label="Recommend (int?)" Name="Recommend" Category="Property Optional" Type="int?" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="" IsPrimaryKey="False" IsForeignKey="False" IsRequired="False" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "ProductInformation.Specification" Label="Specification (string)" Name="Specification" Category="Property Optional" Type="string" MaxLength="(300)" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="MaxLength: 300" IsPrimaryKey="False" IsForeignKey="False" IsRequired="False" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "ProductInformation.Wattage" Label="Wattage (int)" Name="Wattage" Category="Property Required" Type="int" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="" IsPrimaryKey="False" IsForeignKey="False" IsRequired="True" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "RecommendedRequirement" Label="RecommendedRequirement" Name="RecommendedRequirement" BaseClass="" IsAbstract="False" ChangeTrackingStrategy="ChangeTrackingStrategy.Snapshot"  Annotations="Relational:TableName: RecommendedRequirements
+RelationshipDiscoveryConvention:NavigationCandidates: System.Collections.Immutable.ImmutableSortedDictionary`2[System.Reflection.PropertyInfo,System.ValueTuple`2[System.Type,System.Nullable`1[System.Boolean]]]" Category="EntityType" Group="Expanded" />
+<Node Id = "ProductRAM.ProductRAMId" Label="ProductRAMId (int)" Name="ProductRAMId" Category="Property Primary" Type="int" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="SqlServer:IdentityIncrement: 1
+SqlServer:IdentitySeed: 10000
+SqlServer:ValueGenerationStrategy: IdentityColumn" IsPrimaryKey="True" IsForeignKey="False" IsRequired="True" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="ValueGenerated.OnAdd" />
+<Node Id = "ProductRAM.ProductInformation" Label="ProductInformation (1)" Name="ProductInformation" Category="Navigation Property" Type="ProductInformation"  Field="" Dependent="" Principal="ProductInformation" Inverse="ProductRAMs" PropertyAccessMode="PropertyAccessMode.Default" />
+<Node Id = "ProductRAM.ProductInformationId" Label="ProductInformationId (int)" Name="ProductInformationId" Category="Property Foreign" Type="int" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="" IsPrimaryKey="False" IsForeignKey="True" IsRequired="True" IsIndexed="True" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "ProductRAM.Size" Label="Size (int)" Name="Size" Category="Property Required" Type="int" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="" IsPrimaryKey="False" IsForeignKey="False" IsRequired="True" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "Tag" Label="Tag" Name="Tag" BaseClass="" IsAbstract="False" ChangeTrackingStrategy="ChangeTrackingStrategy.Snapshot"  Annotations="Relational:TableName: Tags
+RelationshipDiscoveryConvention:NavigationCandidates: System.Collections.Immutable.ImmutableSortedDictionary`2[System.Reflection.PropertyInfo,System.ValueTuple`2[System.Type,System.Nullable`1[System.Boolean]]]" Category="EntityType" Group="Expanded" />
+<Node Id = "RecommendedRequirement.RecReqId" Label="RecReqId (int)" Name="RecReqId" Category="Property Primary" Type="int" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="SqlServer:IdentityIncrement: 1
+SqlServer:IdentitySeed: 10000
+SqlServer:ValueGenerationStrategy: IdentityColumn" IsPrimaryKey="True" IsForeignKey="False" IsRequired="True" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="ValueGenerated.OnAdd" />
+<Node Id = "RecommendedRequirement.CPU" Label="CPU (1)" Name="CPU" Category="Navigation Property" Type="CPU"  Field="" Dependent="" Principal="CPU" Inverse="RecommendedRequirements" PropertyAccessMode="PropertyAccessMode.Default" />
+<Node Id = "RecommendedRequirement.GPU" Label="GPU (1)" Name="GPU" Category="Navigation Property" Type="GPU"  Field="" Dependent="" Principal="GPU" Inverse="RecommendedRequirements" PropertyAccessMode="PropertyAccessMode.Default" />
+<Node Id = "RecommendedRequirement.Games" Label="Games (*)" Name="Games" Category="Navigation Collection" Type="ICollection&lt;Game&gt;"  Field="" Dependent="Game" Principal="" Inverse="RecReq" PropertyAccessMode="PropertyAccessMode.Default" />
+<Node Id = "RecommendedRequirement.Audio" Label="Audio (string)" Name="Audio" Category="Property Optional" Type="string" MaxLength="(100)" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="MaxLength: 100" IsPrimaryKey="False" IsForeignKey="False" IsRequired="False" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "RecommendedRequirement.CPUId" Label="CPUId (int)" Name="CPUId" Category="Property Required" Type="int" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="" IsPrimaryKey="False" IsForeignKey="False" IsRequired="True" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "RecommendedRequirement.DirectX" Label="DirectX (string)" Name="DirectX" Category="Property Optional" Type="string" MaxLength="(100)" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="MaxLength: 100" IsPrimaryKey="False" IsForeignKey="False" IsRequired="False" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "RecommendedRequirement.GPUId" Label="GPUId (int)" Name="GPUId" Category="Property Foreign" Type="int" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="" IsPrimaryKey="False" IsForeignKey="True" IsRequired="True" IsIndexed="True" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "RecommendedRequirement.GPUId1" Label="GPUId1 (int)" Name="GPUId1" Category="Property Foreign" Type="int" MaxLength="None" Field="nofield" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="PreUniquificationName: GPUId" IsPrimaryKey="False" IsForeignKey="True" IsRequired="True" IsIndexed="True" IsShadow="True" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "RecommendedRequirement.Network" Label="Network (string)" Name="Network" Category="Property Optional" Type="string" MaxLength="(100)" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="MaxLength: 100" IsPrimaryKey="False" IsForeignKey="False" IsRequired="False" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "RecommendedRequirement.Note" Label="Note (string)" Name="Note" Category="Property Optional" Type="string" MaxLength="(500)" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="MaxLength: 500" IsPrimaryKey="False" IsForeignKey="False" IsRequired="False" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "RecommendedRequirement.OS" Label="OS (string)" Name="OS" Category="Property Optional" Type="string" MaxLength="(100)" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="MaxLength: 100" IsPrimaryKey="False" IsForeignKey="False" IsRequired="False" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "RecommendedRequirement.RAM" Label="RAM (int)" Name="RAM" Category="Property Required" Type="int" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="" IsPrimaryKey="False" IsForeignKey="False" IsRequired="True" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "RecommendedRequirement.Storage" Label="Storage (string)" Name="Storage" Category="Property Optional" Type="string" MaxLength="(100)" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="MaxLength: 100" IsPrimaryKey="False" IsForeignKey="False" IsRequired="False" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "TagGroup" Label="TagGroup" Name="TagGroup" BaseClass="" IsAbstract="False" ChangeTrackingStrategy="ChangeTrackingStrategy.Snapshot"  Annotations="Relational:TableName: TagGroups
+RelationshipDiscoveryConvention:NavigationCandidates: System.Collections.Immutable.ImmutableSortedDictionary`2[System.Reflection.PropertyInfo,System.ValueTuple`2[System.Type,System.Nullable`1[System.Boolean]]]" Category="EntityType" Group="Expanded" />
+<Node Id = "Tag.TagId" Label="TagId (int)" Name="TagId" Category="Property Primary" Type="int" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="SqlServer:IdentityIncrement: 1
+SqlServer:IdentitySeed: 10000
+SqlServer:ValueGenerationStrategy: IdentityColumn" IsPrimaryKey="True" IsForeignKey="False" IsRequired="True" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="ValueGenerated.OnAdd" />
+<Node Id = "Tag.TagGroups" Label="TagGroups (*)" Name="TagGroups" Category="Navigation Collection" Type="ICollection&lt;TagGroup&gt;"  Field="" Dependent="TagGroup" Principal="" Inverse="Tag" PropertyAccessMode="PropertyAccessMode.Default" />
+<Node Id = "Tag.Name" Label="Name (string)" Name="Name" Category="Property Required" Type="string" MaxLength="(100)" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="MaxLength: 100" IsPrimaryKey="False" IsForeignKey="False" IsRequired="True" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "TagGroup" Label="TagGroup" Name="TagGroup" BaseClass="" IsAbstract="False" ChangeTrackingStrategy="ChangeTrackingStrategy.Snapshot"  Annotations="" Category="EntityType" Group="Expanded" />
+<Node Id = "TagGroup.TagGroupId" Label="TagGroupId (int)" Name="TagGroupId" Category="Property Primary" Type="int" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="SqlServer:IdentityIncrement: 1
+SqlServer:IdentitySeed: 10000
+SqlServer:ValueGenerationStrategy: IdentityColumn" IsPrimaryKey="True" IsForeignKey="False" IsRequired="True" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="ValueGenerated.OnAdd" />
+<Node Id = "TagGroup.Game" Label="Game (1)" Name="Game" Category="Navigation Property" Type="Game"  Field="" Dependent="" Principal="Game" Inverse="TagGroups" PropertyAccessMode="PropertyAccessMode.Default" />
+<Node Id = "TagGroup.Tag" Label="Tag (1)" Name="Tag" Category="Navigation Property" Type="Tag"  Field="" Dependent="" Principal="Tag" Inverse="TagGroups" PropertyAccessMode="PropertyAccessMode.Default" />
+<Node Id = "TagGroup.GameId" Label="GameId (int)" Name="GameId" Category="Property Foreign" Type="int" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="" IsPrimaryKey="False" IsForeignKey="True" IsRequired="True" IsIndexed="True" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "TagGroup.TagId" Label="TagId (int)" Name="TagId" Category="Property Foreign" Type="int" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="" IsPrimaryKey="False" IsForeignKey="True" IsRequired="True" IsIndexed="True" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+  </Nodes>
+  <Links>
+<Link Source = "IModel" Target="Advertisement" Category="Contains" />
+<Link Source = "IModel" Target="CPU" Category="Contains" />
+<Link Source = "Advertisement" Target="Advertisement.AdvertisementId" Category="Contains" />
+<Link Source = "Advertisement" Target="Advertisement.Discription" Category="Contains" />
+<Link Source = "Advertisement" Target="Advertisement.ImagePath" Category="Contains" />
+<Link Source = "Advertisement" Target="Advertisement.Title" Category="Contains" />
+<Link Source = "Advertisement" Target="Advertisement.Url" Category="Contains" />
+<Link Source = "IModel" Target="CommonQuestion" Category="Contains" />
+<Link Source = "CPU" Target="CPU.MinimumRequirements" Category="Contains" />
+<Link Source = "CPU" Target="CPU.ProductCPUs" Category="Contains" />
+<Link Source = "CPU" Target="CPU.RecommendedRequirements" Category="Contains" />
+<Link Source = "CPU" Target="CPU.CPUId" Category="Contains" />
+<Link Source = "CPU" Target="CPU.Name" Category="Contains" />
+<Link Source = "CPU" Target="CPU.Score" Category="Contains" />
+<Link Source = "IModel" Target="ComponentClassification" Category="Contains" />
+<Link Source = "CommonQuestion" Target="CommonQuestion.CommonQuestionId" Category="Contains" />
+<Link Source = "CommonQuestion" Target="CommonQuestion.Content" Category="Contains" />
+<Link Source = "CommonQuestion" Target="CommonQuestion.Title" Category="Contains" />
+<Link Source = "IModel" Target="ComputerPartCategory" Category="Contains" />
+<Link Source = "ComponentClassification" Target="ComponentClassification.ComputerPartCategory" Category="Contains" />
+<Link Source = "ComponentClassification" Target="ComponentClassification.ProductInformations" Category="Contains" />
+<Link Source = "ComponentClassification" Target="ComponentClassification.ComponentClassificationId" Category="Contains" />
+<Link Source="ComponentClassification" Target="ComputerPartCategory" From="ComponentClassification.ComputerPartCategoryId" To="ComputerPartCategory.ComputerPartCategoryId" Name="ComponentClassification -> ComputerPartCategory" Annotations="Relational:Name: FK_ComponentClassifications_ComputerPartCategories" IsUnique="False" Label="1:*" Category="Foreign Key" />
+<Link Source = "ComponentClassification" Target="ComponentClassification.ComputerPartCategoryId" Category="Contains" />
+<Link Source = "ComponentClassification" Target="ComponentClassification.Name" Category="Contains" />
+<Link Source = "IModel" Target="GPU" Category="Contains" />
+<Link Source = "ComputerPartCategory" Target="ComputerPartCategory.ComponentClassifications" Category="Contains" />
+<Link Source = "ComputerPartCategory" Target="ComputerPartCategory.ComputerPartCategoryId" Category="Contains" />
+<Link Source = "ComputerPartCategory" Target="ComputerPartCategory.Name" Category="Contains" />
+<Link Source = "IModel" Target="Game" Category="Contains" />
+<Link Source = "GPU" Target="GPU.MinimumRequirements" Category="Contains" />
+<Link Source = "GPU" Target="GPU.ProductGPUs" Category="Contains" />
+<Link Source = "GPU" Target="GPU.RecommendedRequirements" Category="Contains" />
+<Link Source = "GPU" Target="GPU.GPUId" Category="Contains" />
+<Link Source = "GPU" Target="GPU.Name" Category="Contains" />
+<Link Source = "GPU" Target="GPU.Score" Category="Contains" />
+<Link Source = "IModel" Target="GameLanguage" Category="Contains" />
+<Link Source = "Game" Target="Game.GameLanguages" Category="Contains" />
+<Link Source = "Game" Target="Game.MinReq" Category="Contains" />
+<Link Source = "Game" Target="Game.PlayersHistories" Category="Contains" />
+<Link Source = "Game" Target="Game.PriceHistories" Category="Contains" />
+<Link Source = "Game" Target="Game.RecReq" Category="Contains" />
+<Link Source = "Game" Target="Game.TagGroups" Category="Contains" />
+<Link Source = "Game" Target="Game.GameId" Category="Contains" />
+<Link Source="Game" Target="MinimumRequirement" From="Game.MinReqId" To="MinimumRequirement.MinReqId" Name="Game -> MinimumRequirement" Annotations="Relational:Name: FK_Games_MinimumRequirements" IsUnique="False" Label="1:*" Category="Foreign Key" />
+<Link Source="Game" Target="RecommendedRequirement" From="Game.RecReqId" To="RecommendedRequirement.RecReqId" Name="Game -> RecommendedRequirement" Annotations="Relational:Name: FK_Games_RecommendedRequirements" IsUnique="False" Label="1:*" Category="Foreign Key" />
+<Link Source = "Game" Target="Game.AgeRating" Category="Contains" />
+<Link Source = "Game" Target="Game.AppId" Category="Contains" />
+<Link Source = "Game" Target="Game.Comment" Category="Contains" />
+<Link Source = "Game" Target="Game.CommentNum" Category="Contains" />
+<Link Source = "Game" Target="Game.CurrentPrice" Category="Contains" />
+<Link Source = "Game" Target="Game.Description" Category="Contains" />
+<Link Source = "Game" Target="Game.ImagePath" Category="Contains" />
+<Link Source = "Game" Target="Game.LowestPrice" Category="Contains" />
+<Link Source = "Game" Target="Game.MinReqId" Category="Contains" />
+<Link Source = "Game" Target="Game.Name" Category="Contains" />
+<Link Source = "Game" Target="Game.OriginalPrice" Category="Contains" />
+<Link Source = "Game" Target="Game.PeakPlayers" Category="Contains" />
+<Link Source = "Game" Target="Game.Players" Category="Contains" />
+<Link Source = "Game" Target="Game.Publisher" Category="Contains" />
+<Link Source = "Game" Target="Game.RecReqId" Category="Contains" />
+<Link Source = "Game" Target="Game.ReleaseDate" Category="Contains" />
+<Link Source = "Game" Target="Game.VideoPath" Category="Contains" />
+<Link Source = "IModel" Target="Language" Category="Contains" />
+<Link Source = "GameLanguage" Target="GameLanguage.Game" Category="Contains" />
+<Link Source = "GameLanguage" Target="GameLanguage.Language" Category="Contains" />
+<Link Source = "GameLanguage" Target="GameLanguage.GameLanguageId" Category="Contains" />
+<Link Source="GameLanguage" Target="Game" From="GameLanguage.GameId" To="Game.GameId" Name="GameLanguage -> Game" Annotations="Relational:Name: FK_GameLanguages_Games" IsUnique="False" Label="1:*" Category="Foreign Key" />
+<Link Source="GameLanguage" Target="Language" From="GameLanguage.LanguageId" To="Language.LanguageId" Name="GameLanguage -> Language" Annotations="Relational:Name: FK_GameLanguages_Languages" IsUnique="False" Label="1:*" Category="Foreign Key" />
+<Link Source = "GameLanguage" Target="GameLanguage.GameId" Category="Contains" />
+<Link Source = "GameLanguage" Target="GameLanguage.LanguageId" Category="Contains" />
+<Link Source = "IModel" Target="MinimumRequirement" Category="Contains" />
+<Link Source = "Language" Target="Language.GameLanguages" Category="Contains" />
+<Link Source = "Language" Target="Language.LanguageId" Category="Contains" />
+<Link Source = "Language" Target="Language.Name" Category="Contains" />
+<Link Source = "IModel" Target="PlayersHistory" Category="Contains" />
+<Link Source = "MinimumRequirement" Target="MinimumRequirement.CPU" Category="Contains" />
+<Link Source = "MinimumRequirement" Target="MinimumRequirement.GPU" Category="Contains" />
+<Link Source = "MinimumRequirement" Target="MinimumRequirement.Games" Category="Contains" />
+<Link Source = "MinimumRequirement" Target="MinimumRequirement.MinReqId" Category="Contains" />
+<Link Source="MinimumRequirement" Target="CPU" From="MinimumRequirement.GPUId" To="CPU.CPUId" Name="MinimumRequirement -> CPU" Annotations="Relational:Name: FK_MinimumRequirements_GPUs" IsUnique="False" Label="1:*" Category="Foreign Key" />
+<Link Source="MinimumRequirement" Target="GPU" From="MinimumRequirement.GPUId1" To="GPU.GPUId" Name="MinimumRequirement -> GPU" Annotations="" IsUnique="False" Label="1:*" Category="Foreign Key" />
+<Link Source = "MinimumRequirement" Target="MinimumRequirement.Audio" Category="Contains" />
+<Link Source = "MinimumRequirement" Target="MinimumRequirement.CPUId" Category="Contains" />
+<Link Source = "MinimumRequirement" Target="MinimumRequirement.DirectX" Category="Contains" />
+<Link Source = "MinimumRequirement" Target="MinimumRequirement.GPUId" Category="Contains" />
+<Link Source = "MinimumRequirement" Target="MinimumRequirement.GPUId1" Category="Contains" />
+<Link Source = "MinimumRequirement" Target="MinimumRequirement.Network" Category="Contains" />
+<Link Source = "MinimumRequirement" Target="MinimumRequirement.Note" Category="Contains" />
+<Link Source = "MinimumRequirement" Target="MinimumRequirement.OS" Category="Contains" />
+<Link Source = "MinimumRequirement" Target="MinimumRequirement.RAM" Category="Contains" />
+<Link Source = "MinimumRequirement" Target="MinimumRequirement.Storage" Category="Contains" />
+<Link Source = "IModel" Target="PriceHistory" Category="Contains" />
+<Link Source = "PlayersHistory" Target="PlayersHistory.Game" Category="Contains" />
+<Link Source = "PlayersHistory" Target="PlayersHistory.PlayersHistoryId" Category="Contains" />
+<Link Source="PlayersHistory" Target="Game" From="PlayersHistory.GameId" To="Game.GameId" Name="PlayersHistory -> Game" Annotations="Relational:Name: FK_PlayersHistories_Games" IsUnique="False" Label="1:*" Category="Foreign Key" />
+<Link Source = "PlayersHistory" Target="PlayersHistory.Date" Category="Contains" />
+<Link Source = "PlayersHistory" Target="PlayersHistory.GameId" Category="Contains" />
+<Link Source = "PlayersHistory" Target="PlayersHistory.Players" Category="Contains" />
+<Link Source = "IModel" Target="ProductCPU" Category="Contains" />
+<Link Source = "PriceHistory" Target="PriceHistory.Game" Category="Contains" />
+<Link Source = "PriceHistory" Target="PriceHistory.PriceHistoryId" Category="Contains" />
+<Link Source="PriceHistory" Target="Game" From="PriceHistory.GameId" To="Game.GameId" Name="PriceHistory -> Game" Annotations="Relational:Name: FK_PriceHistories_Games" IsUnique="False" Label="1:*" Category="Foreign Key" />
+<Link Source = "PriceHistory" Target="PriceHistory.Date" Category="Contains" />
+<Link Source = "PriceHistory" Target="PriceHistory.GameId" Category="Contains" />
+<Link Source = "PriceHistory" Target="PriceHistory.Price" Category="Contains" />
+<Link Source = "IModel" Target="ProductGPU" Category="Contains" />
+<Link Source = "ProductCPU" Target="ProductCPU.CPU" Category="Contains" />
+<Link Source = "ProductCPU" Target="ProductCPU.ProductInformation" Category="Contains" />
+<Link Source = "ProductCPU" Target="ProductCPU.ProductCPUId" Category="Contains" />
+<Link Source="ProductCPU" Target="CPU" From="ProductCPU.CPUId" To="CPU.CPUId" Name="ProductCPU -> CPU" Annotations="Relational:Name: FK_ProductCPUs_CPUs" IsUnique="False" Label="1:*" Category="Foreign Key" />
+<Link Source="ProductCPU" Target="ProductInformation" From="ProductCPU.ProductInformationId" To="ProductInformation.ProductInformationId" Name="ProductCPU -> ProductInformation" Annotations="Relational:Name: FK_ProductCPUs_ProductInformations" IsUnique="False" Label="1:*" Category="Foreign Key" />
+<Link Source = "ProductCPU" Target="ProductCPU.CPUId" Category="Contains" />
+<Link Source = "ProductCPU" Target="ProductCPU.ProductInformationId" Category="Contains" />
+<Link Source = "IModel" Target="ProductInformation" Category="Contains" />
+<Link Source = "ProductGPU" Target="ProductGPU.GPU" Category="Contains" />
+<Link Source = "ProductGPU" Target="ProductGPU.ProductInformation" Category="Contains" />
+<Link Source = "ProductGPU" Target="ProductGPU.ProductGPUId" Category="Contains" />
+<Link Source="ProductGPU" Target="GPU" From="ProductGPU.GPUId" To="GPU.GPUId" Name="ProductGPU -> GPU" Annotations="Relational:Name: FK_ProductGPUs_GPUs" IsUnique="False" Label="1:*" Category="Foreign Key" />
+<Link Source="ProductGPU" Target="ProductInformation" From="ProductGPU.ProductInformationId" To="ProductInformation.ProductInformationId" Name="ProductGPU -> ProductInformation" Annotations="Relational:Name: FK_ProductGPUs_ProductInformations" IsUnique="False" Label="1:*" Category="Foreign Key" />
+<Link Source = "ProductGPU" Target="ProductGPU.GPUId" Category="Contains" />
+<Link Source = "ProductGPU" Target="ProductGPU.ProductInformationId" Category="Contains" />
+<Link Source = "IModel" Target="ProductRAM" Category="Contains" />
+<Link Source = "ProductInformation" Target="ProductInformation.ComponentClassification" Category="Contains" />
+<Link Source = "ProductInformation" Target="ProductInformation.ProductCPUs" Category="Contains" />
+<Link Source = "ProductInformation" Target="ProductInformation.ProductGPUs" Category="Contains" />
+<Link Source = "ProductInformation" Target="ProductInformation.ProductRAMs" Category="Contains" />
+<Link Source = "ProductInformation" Target="ProductInformation.ProductInformationId" Category="Contains" />
+<Link Source="ProductInformation" Target="ComponentClassification" From="ProductInformation.ComponentClassificationId" To="ComponentClassification.ComponentClassificationId" Name="ProductInformation -> ComponentClassification" Annotations="Relational:Name: FK_ProductInformations_ComponentClassifications" IsUnique="False" Label="1:*" Category="Foreign Key" />
+<Link Source = "ProductInformation" Target="ProductInformation.ComponentClassificationId" Category="Contains" />
+<Link Source = "ProductInformation" Target="ProductInformation.Name" Category="Contains" />
+<Link Source = "ProductInformation" Target="ProductInformation.Price" Category="Contains" />
+<Link Source = "ProductInformation" Target="ProductInformation.Recommend" Category="Contains" />
+<Link Source = "ProductInformation" Target="ProductInformation.Specification" Category="Contains" />
+<Link Source = "ProductInformation" Target="ProductInformation.Wattage" Category="Contains" />
+<Link Source = "IModel" Target="RecommendedRequirement" Category="Contains" />
+<Link Source = "ProductRAM" Target="ProductRAM.ProductInformation" Category="Contains" />
+<Link Source = "ProductRAM" Target="ProductRAM.ProductRAMId" Category="Contains" />
+<Link Source="ProductRAM" Target="ProductInformation" From="ProductRAM.ProductInformationId" To="ProductInformation.ProductInformationId" Name="ProductRAM -> ProductInformation" Annotations="Relational:Name: FK_ProductRAMs_ProductInformations" IsUnique="False" Label="1:*" Category="Foreign Key" />
+<Link Source = "ProductRAM" Target="ProductRAM.ProductInformationId" Category="Contains" />
+<Link Source = "ProductRAM" Target="ProductRAM.Size" Category="Contains" />
+<Link Source = "IModel" Target="Tag" Category="Contains" />
+<Link Source = "RecommendedRequirement" Target="RecommendedRequirement.CPU" Category="Contains" />
+<Link Source = "RecommendedRequirement" Target="RecommendedRequirement.GPU" Category="Contains" />
+<Link Source = "RecommendedRequirement" Target="RecommendedRequirement.Games" Category="Contains" />
+<Link Source = "RecommendedRequirement" Target="RecommendedRequirement.RecReqId" Category="Contains" />
+<Link Source="RecommendedRequirement" Target="CPU" From="RecommendedRequirement.GPUId" To="CPU.CPUId" Name="RecommendedRequirement -> CPU" Annotations="Relational:Name: FK_RecommendedRequirements_GPUs" IsUnique="False" Label="1:*" Category="Foreign Key" />
+<Link Source="RecommendedRequirement" Target="GPU" From="RecommendedRequirement.GPUId1" To="GPU.GPUId" Name="RecommendedRequirement -> GPU" Annotations="" IsUnique="False" Label="1:*" Category="Foreign Key" />
+<Link Source = "RecommendedRequirement" Target="RecommendedRequirement.Audio" Category="Contains" />
+<Link Source = "RecommendedRequirement" Target="RecommendedRequirement.CPUId" Category="Contains" />
+<Link Source = "RecommendedRequirement" Target="RecommendedRequirement.DirectX" Category="Contains" />
+<Link Source = "RecommendedRequirement" Target="RecommendedRequirement.GPUId" Category="Contains" />
+<Link Source = "RecommendedRequirement" Target="RecommendedRequirement.GPUId1" Category="Contains" />
+<Link Source = "RecommendedRequirement" Target="RecommendedRequirement.Network" Category="Contains" />
+<Link Source = "RecommendedRequirement" Target="RecommendedRequirement.Note" Category="Contains" />
+<Link Source = "RecommendedRequirement" Target="RecommendedRequirement.OS" Category="Contains" />
+<Link Source = "RecommendedRequirement" Target="RecommendedRequirement.RAM" Category="Contains" />
+<Link Source = "RecommendedRequirement" Target="RecommendedRequirement.Storage" Category="Contains" />
+<Link Source = "IModel" Target="TagGroup" Category="Contains" />
+<Link Source = "Tag" Target="Tag.TagGroups" Category="Contains" />
+<Link Source = "Tag" Target="Tag.TagId" Category="Contains" />
+<Link Source = "Tag" Target="Tag.Name" Category="Contains" />
+<Link Source = "IModel" Target="TagGroup" Category="Contains" />
+<Link Source = "TagGroup" Target="TagGroup.Game" Category="Contains" />
+<Link Source = "TagGroup" Target="TagGroup.Tag" Category="Contains" />
+<Link Source = "TagGroup" Target="TagGroup.TagGroupId" Category="Contains" />
+<Link Source="TagGroup" Target="Game" From="TagGroup.GameId" To="Game.GameId" Name="TagGroup -> Game" Annotations="Relational:Name: FK_TagGroups_Games" IsUnique="False" Label="1:*" Category="Foreign Key" />
+<Link Source="TagGroup" Target="Tag" From="TagGroup.TagId" To="Tag.TagId" Name="TagGroup -> Tag" Annotations="Relational:Name: FK_TagGroups_Tags" IsUnique="False" Label="1:*" Category="Foreign Key" />
+<Link Source = "TagGroup" Target="TagGroup.GameId" Category="Contains" />
+<Link Source = "TagGroup" Target="TagGroup.TagId" Category="Contains" />
+  </Links>
+  <Styles>
+    <Style TargetType="Node" GroupLabel="EntityType" ValueLabel="True">
+      <Condition Expression="HasCategory('EntityType')" />
+      <Setter Property="Background" Value="#FFC0C0C0" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Property Primary" ValueLabel="True">
+      <Condition Expression="HasCategory('Property Primary')" />
+      <Setter Property="Background" Value="#FF008000" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Property Optional" ValueLabel="True">
+      <Condition Expression="HasCategory('Property Optional')" />
+      <Setter Property="Background" Value="#FF808040" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Property Foreign" ValueLabel="True">
+      <Condition Expression="HasCategory('Property Foreign')" />
+      <Setter Property="Background" Value="#FF8080FF" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Property Required" ValueLabel="True">
+      <Condition Expression="HasCategory('Property Required')" />
+      <Setter Property="Background" Value="#FFC0A000" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Navigation Property" ValueLabel="True">
+      <Condition Expression="HasCategory('Navigation Property')" />
+      <Setter Property="Background" Value="#FF990000" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Navigation Collection" ValueLabel="True">
+      <Condition Expression="HasCategory('Navigation Collection')" />
+      <Setter Property="Background" Value="#FFFF3232" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Model" ValueLabel="True">
+      <Condition Expression="HasCategory('Model')" />
+      <Setter Property="Background" Value="#FFFFFFFF" />
+    </Style>
+  </Styles>
+  <Properties>
+    <Property Id="Name" Group="Model Properties" DataType="System.String" />
+    <Property Id="Field"  Description="Backing field" Group="Model Properties" DataType="System.String" />
+    <Property Id="Type"  Description="CLR data type" Group="Model Properties" DataType="System.String" />
+    <Property Id="To" Description="Source property" Group="Model Properties" DataType="System.String" />
+    <Property Id="From" Description="Target property" Group="Model Properties" DataType="System.String" />
+    <Property Id="Dependent" Description="Dependent entity" Group="Model Properties" DataType="System.String" />
+    <Property Id="Inverse" Description="Inverse entity" Group="Model Properties" DataType="System.String" />
+    <Property Id="Principal" Description="Principal entity" Group="Model Properties" DataType="System.String" />    
+    <Property Id="Annotations" Description="Annotations" Group="Model Properties" DataType="System.String" />
+    <Property Id="BaseClass"  Description="Base class" Group="Model Properties" DataType="System.String" />
+    <Property Id="ChangeTrackingStrategy" Description="Change tracking strategy" Group="Model Properties" DataType="System.String" />
+    <Property Id="IsUnique" Group="Model Properties" DataType="System.Boolean" />
+    <Property Id="IsAbstract" Group="Model Properties" DataType="System.Boolean" />
+    <Property Id="ProductVersion" Label="Product Version" Description="EF Core product version" Group="Model Properties" DataType="System.String" />
+    <Property Id="IsIndexed" Group="Property Flags" DataType="System.Boolean" />
+    <Property Id="IsRequired" Group="Property Flags" DataType="System.Boolean" />
+    <Property Id="IsPrimaryKey" Group="Property Flags" DataType="System.Boolean" />
+    <Property Id="IsForeignKey" Group="Property Flags" DataType="System.Boolean" />
+    <Property Id="IsShadow" Group="Property Flags" DataType="System.Boolean" />
+    <Property Id="IsAlternateKey" Group="Property Flags" DataType="System.Boolean" />
+    <Property Id="IsConcurrencyToken" Group="Property Flags" DataType="System.Boolean" />
+    <Property Id="IsIndexed" Group="Property Flags" DataType="System.Boolean" />
+    <Property Id="IsUnicode" Group="Property Flags" DataType="System.Boolean" />
+    <Property Id="ValueGenerated" Group="Property Flags" DataType="System.String" />
+    <Property Id="BeforeSaveBehavior" Group="Property Flags" DataType="System.String" />
+    <Property Id="AfterSaveBehavior" Group="Property Flags" DataType="System.String" />
+    <Property Id="PropertyAccessMode" Group="Property Flags" DataType="System.String" />
+  </Properties>
+</DirectedGraph>
