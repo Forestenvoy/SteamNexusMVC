@@ -1,6 +1,7 @@
 ﻿using HtmlAgilityPack;
 using System.Text;
 using SteamNexus.Data;
+using SteamNexus.Models;
 
 namespace SteamNexus.Services
 {
@@ -140,18 +141,43 @@ namespace SteamNexus.Services
         // 資料更新
         public void UpdateData()
         {
-            
+            // 硬碟測試
+
+            // 固態硬碟SSD
+            _GetComponentsList(6);
+
+            // 單一零件分類表 更新
+            for(int i = 0; i < optgroupNames?.Count(); i++)
+            {
+                bool exist =  _context.ComponentClassifications.Where(x => x.ComputerPartCategoryId == (int)ComputerPartCategory.Type.SSD).Any(x=>x.Name == optgroupNames[i]);
+
+                if (!exist)
+                {
+                    _context.ComponentClassifications.Add(new ComponentClassification
+                    {
+                        ComputerPartCategoryId = (int)ComputerPartCategory.Type.SSD,
+                        Name = optgroupNames[i]
+                    });
+                    Console.WriteLine($"Add {optgroupNames[i]}");
+                }
+                else
+                {
+                    Console.WriteLine($"Exist {optgroupNames[i]}");
+                }
+            }
+            _context.SaveChanges();
+
         }
 
 
-        // 爬蟲測試
+        // 測試用
         public virtual void test()
         {
-            _GetComponentsList(4);
+            _GetComponentsList(6);
 
             if (optgroups != null && optgroupNames != null)
             {
-                Console.WriteLine(optgroups.Count());
+                Console.WriteLine(optgroups[0].Count());
                 Console.WriteLine(optgroupNames.Count());
             }
 

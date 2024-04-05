@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SteamNexus.Data;
 
@@ -11,9 +12,11 @@ using SteamNexus.Data;
 namespace SteamNexus.Migrations
 {
     [DbContext(typeof(SteamNexusDbContext))]
-    partial class SteamNexusDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240402125825_2024-04-02")]
+    partial class _20240402
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -96,47 +99,6 @@ namespace SteamNexus.Migrations
                     b.HasKey("CommonQuestionId");
 
                     b.ToTable("CommonQuestions");
-                });
-
-            modelBuilder.Entity("SteamNexus.Models.ComponentClassification", b =>
-                {
-                    b.Property<int>("ComponentClassificationId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ComponentClassificationId"), 10000L);
-
-                    b.Property<int>("ComputerPartCategoryId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("ComponentClassificationId");
-
-                    b.HasIndex("ComputerPartCategoryId");
-
-                    b.ToTable("ComponentClassifications");
-                });
-
-            modelBuilder.Entity("SteamNexus.Models.ComputerPartCategory", b =>
-                {
-                    b.Property<int>("ComputerPartCategoryId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ComputerPartCategoryId"), 10000L);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("ComputerPartCategoryId");
-
-                    b.ToTable("ComputerPartCategories");
                 });
 
             modelBuilder.Entity("SteamNexus.Models.GPU", b =>
@@ -301,6 +263,9 @@ namespace SteamNexus.Migrations
                     b.Property<int>("GPUId")
                         .HasColumnType("int");
 
+                    b.Property<int>("GPUId1")
+                        .HasColumnType("int");
+
                     b.Property<string>("Network")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
@@ -322,9 +287,9 @@ namespace SteamNexus.Migrations
 
                     b.HasKey("MinReqId");
 
-                    b.HasIndex("CPUId");
-
                     b.HasIndex("GPUId");
+
+                    b.HasIndex("GPUId1");
 
                     b.ToTable("MinimumRequirements");
                 });
@@ -400,6 +365,24 @@ namespace SteamNexus.Migrations
                     b.ToTable("ProductCPUs");
                 });
 
+            modelBuilder.Entity("SteamNexus.Models.ProductCategory", b =>
+                {
+                    b.Property<int>("ProductCategoryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductCategoryId"), 10000L);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("ProductCategoryId");
+
+                    b.ToTable("ProductCategories");
+                });
+
             modelBuilder.Entity("SteamNexus.Models.ProductGPU", b =>
                 {
                     b.Property<int>("ProductGPUId")
@@ -431,15 +414,15 @@ namespace SteamNexus.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductInformationId"), 10000L);
 
-                    b.Property<int>("ComponentClassificationId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
                     b.Property<int>("Price")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductCategoryId")
                         .HasColumnType("int");
 
                     b.Property<int?>("Recommend")
@@ -454,7 +437,7 @@ namespace SteamNexus.Migrations
 
                     b.HasKey("ProductInformationId");
 
-                    b.HasIndex("ComponentClassificationId");
+                    b.HasIndex("ProductCategoryId");
 
                     b.ToTable("ProductInformations");
                 });
@@ -502,6 +485,9 @@ namespace SteamNexus.Migrations
                     b.Property<int>("GPUId")
                         .HasColumnType("int");
 
+                    b.Property<int>("GPUId1")
+                        .HasColumnType("int");
+
                     b.Property<string>("Network")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
@@ -523,9 +509,9 @@ namespace SteamNexus.Migrations
 
                     b.HasKey("RecReqId");
 
-                    b.HasIndex("CPUId");
-
                     b.HasIndex("GPUId");
+
+                    b.HasIndex("GPUId1");
 
                     b.ToTable("RecommendedRequirements");
                 });
@@ -571,17 +557,6 @@ namespace SteamNexus.Migrations
                     b.ToTable("TagGroups");
                 });
 
-            modelBuilder.Entity("SteamNexus.Models.ComponentClassification", b =>
-                {
-                    b.HasOne("SteamNexus.Models.ComputerPartCategory", "ComputerPartCategory")
-                        .WithMany("ComponentClassifications")
-                        .HasForeignKey("ComputerPartCategoryId")
-                        .IsRequired()
-                        .HasConstraintName("FK_ComponentClassifications_ComputerPartCategories");
-
-                    b.Navigation("ComputerPartCategory");
-                });
-
             modelBuilder.Entity("SteamNexus.Models.Game", b =>
                 {
                     b.HasOne("SteamNexus.Models.MinimumRequirement", "MinReq")
@@ -624,15 +599,15 @@ namespace SteamNexus.Migrations
                 {
                     b.HasOne("SteamNexus.Models.CPU", "CPU")
                         .WithMany("MinimumRequirements")
-                        .HasForeignKey("CPUId")
-                        .IsRequired()
-                        .HasConstraintName("FK_MinimumRequirements_CPUs");
-
-                    b.HasOne("SteamNexus.Models.GPU", "GPU")
-                        .WithMany("MinimumRequirements")
                         .HasForeignKey("GPUId")
                         .IsRequired()
                         .HasConstraintName("FK_MinimumRequirements_GPUs");
+
+                    b.HasOne("SteamNexus.Models.GPU", "GPU")
+                        .WithMany("MinimumRequirements")
+                        .HasForeignKey("GPUId1")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("CPU");
 
@@ -701,13 +676,13 @@ namespace SteamNexus.Migrations
 
             modelBuilder.Entity("SteamNexus.Models.ProductInformation", b =>
                 {
-                    b.HasOne("SteamNexus.Models.ComponentClassification", "ComponentClassification")
+                    b.HasOne("SteamNexus.Models.ProductCategory", "ProductCategory")
                         .WithMany("ProductInformations")
-                        .HasForeignKey("ComponentClassificationId")
+                        .HasForeignKey("ProductCategoryId")
                         .IsRequired()
-                        .HasConstraintName("FK_ProductInformations_ComponentClassifications");
+                        .HasConstraintName("FK_ProductInformations_ProductCategories");
 
-                    b.Navigation("ComponentClassification");
+                    b.Navigation("ProductCategory");
                 });
 
             modelBuilder.Entity("SteamNexus.Models.ProductRAM", b =>
@@ -725,15 +700,15 @@ namespace SteamNexus.Migrations
                 {
                     b.HasOne("SteamNexus.Models.CPU", "CPU")
                         .WithMany("RecommendedRequirements")
-                        .HasForeignKey("CPUId")
-                        .IsRequired()
-                        .HasConstraintName("FK_RecommendedRequirements_CPUs");
-
-                    b.HasOne("SteamNexus.Models.GPU", "GPU")
-                        .WithMany("RecommendedRequirements")
                         .HasForeignKey("GPUId")
                         .IsRequired()
                         .HasConstraintName("FK_RecommendedRequirements_GPUs");
+
+                    b.HasOne("SteamNexus.Models.GPU", "GPU")
+                        .WithMany("RecommendedRequirements")
+                        .HasForeignKey("GPUId1")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("CPU");
 
@@ -768,16 +743,6 @@ namespace SteamNexus.Migrations
                     b.Navigation("RecommendedRequirements");
                 });
 
-            modelBuilder.Entity("SteamNexus.Models.ComponentClassification", b =>
-                {
-                    b.Navigation("ProductInformations");
-                });
-
-            modelBuilder.Entity("SteamNexus.Models.ComputerPartCategory", b =>
-                {
-                    b.Navigation("ComponentClassifications");
-                });
-
             modelBuilder.Entity("SteamNexus.Models.GPU", b =>
                 {
                     b.Navigation("MinimumRequirements");
@@ -806,6 +771,11 @@ namespace SteamNexus.Migrations
             modelBuilder.Entity("SteamNexus.Models.MinimumRequirement", b =>
                 {
                     b.Navigation("Games");
+                });
+
+            modelBuilder.Entity("SteamNexus.Models.ProductCategory", b =>
+                {
+                    b.Navigation("ProductInformations");
                 });
 
             modelBuilder.Entity("SteamNexus.Models.ProductInformation", b =>

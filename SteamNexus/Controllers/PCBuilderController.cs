@@ -32,7 +32,7 @@ namespace SteamNexus.Controllers
         {
             //CoolPCWebScraping cpws = new CoolPCWebScraping(_context);
 
-            _coolPCWebScraping.test();
+            _coolPCWebScraping.UpdateData();
             
 
 
