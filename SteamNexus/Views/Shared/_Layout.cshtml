@@ -31,7 +31,7 @@
 <body class="bg-dark">
     <header>
         <!-- header Start -->
-        <div class="container-fluid bg-primary">
+        <div class="container-fluid bg-primary" >
             <div class="container">
                 <nav class="navbar navbar-dark navbar-expand-lg py-0">
                     <a class="navbar-brand d-inline-flex align-items-center" asp-area="" asp-controller="Home" asp-action="Index">
@@ -112,40 +112,17 @@
         </div>
         <!-- 跑馬燈 End -->
     </header>
-
-    @* <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">SteamNexus</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="PCBuilder" asp-action="Index">PCBuilder</a>
-                        </li>
-                    </ul>
-                    <partial name="_LoginPartial" />
-                </div>
-            </div>
-        </nav>
-    </header> *@
+    
+    
     <div class="container">
         <main role="main" class="pb-3 ">
+            
             @RenderBody()
         </main>
     </div>
-
+    
     <!-- Footer Start -->
-    <footer class="border-top footer text-muted ">
+    <footer class="position-absolute bottom-0 start-0 border-top footer text-muted ">
         <div class="container-fluid footer bg-primary">
                 <div class="row">
                     <div class="col-md-6 text-center text-md-start">
@@ -156,9 +133,9 @@
                         <span class="text-light">Designed By<a href="https://htmlcodex.com" class="text-secondary">HTML Codex</a> Distributed By <a href="https://themewagon.com">ThemeWagon</a></span>
                     </div>
                 </div>
-            </div>
         </div>
-    </footer>>
+    </footer>
+    <div class="position-absolute top-0 start-0" id="particles-js"></div>
     <!-- Footer End -->
 
     @* <footer class="border-top footer text-muted">
@@ -177,6 +154,10 @@
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
+
+    <!--particles scripts -->
+    <script src="~/js/particles.js"></script>
+    <script src="~/js/app.js"></script>
 
 
    @*  <script src="~/lib/jquery/dist/jquery.min.js"></script>
