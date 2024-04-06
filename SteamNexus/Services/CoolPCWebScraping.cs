@@ -3,6 +3,7 @@ using System.Text;
 using SteamNexus.Data;
 using SteamNexus.Models;
 using System.Xml.Serialization;
+using Microsoft.EntityFrameworkCore;
 
 namespace SteamNexus.Services
 {
@@ -99,7 +100,6 @@ namespace SteamNexus.Services
                 Console.WriteLine("This component not found!");
                 return;
             }
-
             // 實體化 optgroup 群組 List 集合
             optgroups = new List<List<string>>();
             // 實體化 optgroup 群組名稱 List
@@ -213,89 +213,139 @@ namespace SteamNexus.Services
             }
         }
 
-        // 主機板
-        public virtual void UpdateComponentData()
+        /// <summary>
+        /// 主機板更新
+        /// </summary>
+        public virtual void UpdateMBData()
         {
-            
+
             _GetHardWareData();
             // 主機板 List
             _GetComponentsList(4);
 
+            // 檢測該 optgroups List 是否有資料
+            if (optgroupNames == null || optgroups == null)
+            {
+                Console.WriteLine("optgroups is null");
+                return;
+            }
+            else
+            {
+                // 資料更新
+                for (int i = 0; i < optgroupNames.Count(); i++)
+                {
+                    // 主機板，只需 Intel、AMD，且排除工作站、伺服器
+                    if (!(optgroupNames[i].Substring(0, 7) == "Intel H" ||
+                          optgroupNames[i].Substring(0, 7) == "Intel B" ||
+                          optgroupNames[i].Substring(0, 7) == "Intel Z" ||
+                          optgroupNames[i].Substring(0, 5) == "AMD B" ||
+                          optgroupNames[i].Substring(0, 5) == "AMD A" ||
+                          optgroupNames[i].Substring(0, 5) == "AMD X"))
+                    {
+                        continue;
+                    }
 
+                    // 產品資訊 List 更新
 
+                    // 瓦數
+                    int watts = 0;
+                    if(optgroupNames[i].Substring(0, 7) == "Intel H" || optgroupNames[i].Substring(0, 7) == "Intel B" || optgroupNames[i].Substring(0, 7) == "Intel Z" || optgroupNames[i].Substring(0, 5) == "AMD X")
+                    {
+                        watts = 132;
+                    }
+                    else if(optgroupNames[i].Substring(0, 5) == "AMD B" || optgroupNames[i].Substring(0, 5) == "AMD A")
+                    {
+                        watts = 82;
+                    }
+
+                    // ComponentClassificationId
+                    var ComponentClassification = _context.ComponentClassifications.Where(x => x.ComputerPartCategoryId == (int)ComputerPartCategory.Type.MB).Where(x => x.Name == optgroupNames[i]).FirstOrDefault();
+                    if (ComponentClassification == null) { continue; }
+                    int ComponentClassificationId = ComponentClassification.ComponentClassificationId;
+
+                    //Console.WriteLine("-----------------------");
+                    //Console.WriteLine($"{ComponentClassificationId} {optgroupNames[i]} watts: {watts}");
+
+                    for (int j = 0; j < optgroups[i].Count(); j++)
+                    {
+                        // 例外排除
+                        if (optgroups[i][j].Substring(0, 3) == "【狂】" ||
+                            optgroups[i][j].Substring(0, 8) == "&#x2764;" ||
+                            optgroups[i][j].Substring(0, 8) == "&#x21AA;" ||
+                            optgroups[i][j].Substring(0, 5) == "[任搭U]" ||
+                            optgroups[i][j].Substring(0, 9) == "【任搭K版CPU】")
+                        {
+                            continue;
+                        }
+
+                        // 找到各段資訊的索引值斷點
+                        int NameEnd = optgroups[i][j].IndexOf("(M-ATX") != -1 ? optgroups[i][j].IndexOf("(M-ATX") :
+                                      optgroups[i][j].IndexOf("(ATX") != -1 ? optgroups[i][j].IndexOf("(ATX") :
+                                      optgroups[i][j].IndexOf("(E-ATX") != -1 ? optgroups[i][j].IndexOf("(E-ATX") :
+                                      optgroups[i][j].IndexOf("(Mini-ITX");
+                        int SpecEnd = optgroups[i][j].IndexOf(",");
+                        int PriceFirst = optgroups[i][j].IndexOf("$");
+
+                        if (NameEnd == -1 || SpecEnd == -1 || PriceFirst == -1) { continue; }
+
+                        // 名稱、規格
+                        string Name = optgroups[i][j].Substring(0, NameEnd);
+                        string Spec = optgroups[i][j].Substring(NameEnd, SpecEnd - NameEnd);
+                        // 價格
+                        string PriceStr = optgroups[i][j].Substring(PriceFirst);
+                        int Price = 0;
+                        if (PriceStr.Length == 5 || PriceStr.Length == 6)
+                        {
+                            Price = int.Parse(PriceStr.Substring(1));
+                        }
+                        else
+                        {
+                            int PriceEnd = PriceStr.IndexOf(" ");
+                            Price = int.Parse(PriceStr.Substring(1, PriceEnd - 1));
+                        }
+
+                        // 存入資料庫 Create or Update
+                        var item = _context.ProductInformations.Where(x => x.ComponentClassificationId == ComponentClassificationId)
+                            .Where(x => x.Name == Name).FirstOrDefault();
+
+                        if(item == null)
+                        {
+                            // Create
+                            ProductInformation productInfo = new ProductInformation();
+                            productInfo.ComponentClassificationId = ComponentClassificationId;
+                            productInfo.Name = Name;
+                            productInfo.Specification = Spec;
+                            productInfo.Price = Price;
+                            productInfo.Wattage = watts;
+                            _context.ProductInformations.Add(productInfo);
+                        }
+                        else
+                        {
+                            // Update
+                            item.Specification = Spec;
+                            item.Price = Price;
+                        }
+                    }
+                    // 保存資料庫變更
+                    _context.SaveChanges();
+                }
+            }
+            
         }
 
 
         // 測試用
         public virtual void test()
         {
-            _GetComponentsList(6);
+            _GetHardWareData();
+            _GetComponentsList(4);
 
             if (optgroups != null && optgroupNames != null)
             {
-                Console.WriteLine(optgroups[0].Count());
+                Console.WriteLine(optgroups.Count());
                 Console.WriteLine(optgroupNames.Count());
-            }
+            }      
 
-        }
-
-
-
-
-        // 爬蟲初次測試
-        public void First()
-        {
-            //// 才能讀到 big5
-            //Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-
-            //// HTML 資料讀取
-            //string url = @"https://coolpc.com.tw/evaluate.php";
-            //HtmlWeb web = new HtmlWeb();
-            //web.OverrideEncoding = Encoding.GetEncoding("big5");
-            //HtmlDocument doc = web.Load(url);
-
-            //// DocumentNode 屬性則表示 HTML 文檔的根節點
-            //// Descendants("元素") 會尋找指定標籤的所有子元素
-
-            //// 返回所有 optionGroup 的集合
-            //var optionGroupNodes = doc.DocumentNode.Descendants("optgroup");
-            //// GetAttributeValue("屬性名稱","預設值(找不到返回的值)") 
-            //var optionGroupCPU = optionGroupNodes.Where(node => node.GetAttributeValue("label","No Data") == "Intel Raptor Lake-s 14代1700 腳位").FirstOrDefault();
-
-            //List<string> CPU_14series = new List<string>();
-            //List<string> CPU_12series = new List<string>();
-
-            //if(optionGroupCPU != null)
-            //{
-            //    var optionNodes = optionGroupCPU.Descendants("option");
-            //    foreach( var node in optionNodes)
-            //    {
-            //        string content = node.InnerText;
-
-
-            //        // 抓 14代 CPU 
-            //        if (content.Substring(0,11) == "Intel i3-14" || content.Substring(0,11) == "Intel i5-14" || content.Substring(0,11) == "Intel i7-14" || content.Substring(0, 11) == "Intel i9-14")
-            //        {
-            //            CPU_14series.Add(content);
-            //        }
-            //        // 抓 12代 CPU
-            //        else if (content.Substring(0, 11) == "Intel i3-12" || content.Substring(0, 11) == "Intel i5-12" || content.Substring(0, 11) == "Intel i7-12" || content.Substring(0, 11) == "Intel i9-12")
-            //        {
-            //            CPU_12series.Add(content);
-            //        }
-            //    }
-            //}
-
-            //Console.WriteLine("---------------------- 12代 CPU ----------------------");
-            //for (int i = 0; i < CPU_12series.Count();i++)
-            //{
-            //    Console.WriteLine(CPU_12series[i]);
-            //}
-            //Console.WriteLine("---------------------- 14代 CPU ----------------------");
-            //for (int i = 0; i < CPU_14series.Count(); i++)
-            //{
-            //    Console.WriteLine(CPU_14series[i]);
-            //}
         }
 
     }

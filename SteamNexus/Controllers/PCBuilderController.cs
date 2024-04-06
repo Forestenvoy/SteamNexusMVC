@@ -30,8 +30,8 @@ namespace SteamNexus.Controllers
         [HttpPost]
         public string WebScrabingTest()
         {
-            _coolPCWebScraping.UpdateAllComponentClassifications();
-            
+            _coolPCWebScraping.test();
+
 
 
             return "Run Success";
