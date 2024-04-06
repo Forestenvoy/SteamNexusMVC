@@ -30,9 +30,7 @@ namespace SteamNexus.Controllers
         [HttpPost]
         public string WebScrabingTest()
         {
-            //CoolPCWebScraping cpws = new CoolPCWebScraping(_context);
-
-            _coolPCWebScraping.test();
+            _coolPCWebScraping.UpdateAllComponentClassifications();
             
 
 
