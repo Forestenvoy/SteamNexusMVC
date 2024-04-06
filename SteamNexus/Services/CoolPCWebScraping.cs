@@ -2,6 +2,7 @@
 using System.Text;
 using SteamNexus.Data;
 using SteamNexus.Models;
+using System.Xml.Serialization;
 
 namespace SteamNexus.Services
 {
@@ -9,6 +10,8 @@ namespace SteamNexus.Services
     {
         // Dependency Injection SteamNexusDbContext
         private readonly SteamNexusDbContext _context;
+        // 宣告全品項資料(Html元素集合)
+        IEnumerable<HtmlNode>? hardWareNodes;
         // 宣告 optgroup 群組 List 集合
         List<List<string>>? optgroups;
         // 宣告 optgroup 群組名稱 List
@@ -23,13 +26,17 @@ namespace SteamNexus.Services
         /// <summary>
         /// 獲取硬體全品項資料(Html元素集合)
         /// </summary>
-        /// <returns>IEnumerable的HtmlNode</returns>
-        private IEnumerable<HtmlNode>? _GetHardWareData()
+        private void _GetHardWareData()
         {
+            // 如果已經爬取過就不再爬取
+            if (hardWareNodes != null)
+            {
+                Console.WriteLine("HardWare Data Exist!");
+                return;
+            }
+
             // 註冊特定編碼(包含big5)
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-
-
             // HtmlWeb 物件 : 用於從 URL 加載 HTML 文檔
             HtmlWeb web = new HtmlWeb();
             // HtmlDocument 物件 : 為 HTML 文檔的 物件模型 DOM
@@ -48,7 +55,7 @@ namespace SteamNexus.Services
             catch (Exception error)
             {
                 Console.WriteLine($"Web Scrabing Error\n{error.Message}");
-                return null;
+                return;
             }
 
             // DocumentNode 屬性表示 HTML 文檔的根節點
@@ -56,34 +63,36 @@ namespace SteamNexus.Services
             // .GetAttributeValue("class","") == ("bf") 會尋找 class="bf" 的所有子元素，找不到會回傳空字串
 
             // 硬體品項集合 ~ 30項，索引從 0 開始
-            IEnumerable<HtmlNode> hardWareNodes = doc.DocumentNode.Descendants().Where(node => node.GetAttributeValue("class", "") == ("bf"));
+            hardWareNodes = doc.DocumentNode.Descendants().Where(node => node.GetAttributeValue("class", "") == ("bf"));
             // 檢測硬體品項集合是否有資料
             if (hardWareNodes.Any())
             {
-                return hardWareNodes;
+                Console.WriteLine("HardWare Data Get!");
+                return;
             }
             else
             {
                 Console.WriteLine("HardWare Data not found!");
-                return null;
+                return;
             }
         }
 
         /// <summary>
         /// 獲取硬體單一零件集合資料並解析成List
         /// </summary>
-        /// <param name="i"></param>
-        private void _GetComponentsList(int i)
+        /// <param name="CoolPCType"></param>
+        private void _GetComponentsList(int CoolPCType)
         {
-            IEnumerable<HtmlNode>? hardWareNodes = _GetHardWareData();
+
             // 檢測硬體品項集合是否有資料
             if (hardWareNodes == null)
             {
+                Console.WriteLine("HardWare Data not found!");
                 return;
             }
 
             // 獲取硬體單一零件集合
-            HtmlNode? Components = hardWareNodes?.ElementAtOrDefault(i);
+            HtmlNode? Components = hardWareNodes?.ElementAtOrDefault(CoolPCType);
             // 檢驗零件集合是否有資料
             if (Components == null)
             {
@@ -136,26 +145,30 @@ namespace SteamNexus.Services
                     optgroups.Add(options);
                 }
             }
+
+            Console.WriteLine("optgroups、optgroupNames Data Get!");
         }
 
-        // 資料更新
-        public void UpdateData()
+        /// <summary>
+        /// 單一零件分類表資料更新
+        /// </summary>
+        /// <param name="CoolPCType"></param>
+        /// <param name="TableType"></param>
+        private void _UpdateComponentClassifications(int CoolPCType, int TableType)
         {
-            // 硬碟測試
-
-            // 固態硬碟 SSD
-            _GetComponentsList(6);
+            // 獲取 硬體單一零件集合 List
+            _GetComponentsList(CoolPCType);
 
             // 單一零件分類表 更新
-            for(int i = 0; i < optgroupNames?.Count(); i++)
+            for (int i = 0; i < optgroupNames?.Count(); i++)
             {
-                bool exist =  _context.ComponentClassifications.Where(x => x.ComputerPartCategoryId == (int)ComputerPartCategory.Type.SSD).Any(x=>x.Name == optgroupNames[i]);
+                bool exist = _context.ComponentClassifications.Where(x => x.ComputerPartCategoryId == TableType).Any(x => x.Name == optgroupNames[i]);
 
                 if (!exist)
                 {
                     _context.ComponentClassifications.Add(new ComponentClassification
                     {
-                        ComputerPartCategoryId = (int)ComputerPartCategory.Type.SSD,
+                        ComputerPartCategoryId = TableType,
                         Name = optgroupNames[i]
                     });
                     Console.WriteLine($"Add {optgroupNames[i]}");
@@ -166,8 +179,48 @@ namespace SteamNexus.Services
                 }
             }
             _context.SaveChanges();
+        }
 
-            // 產品資訊表 更新
+        /// <summary>
+        /// 全零件分類表更新
+        /// </summary>
+        public virtual void UpdateAllComponentClassifications()
+        {
+            // 原價屋零件表 序列
+            int[] CoolPCType = { 3, 4, 5, 6, 7, 9, 10, 11, 13, 14, 28 };
+            // 電腦零件類別表 序列
+            int[] TableType = {
+                (int)ComputerPartCategory.Type.CPU,
+                (int)ComputerPartCategory.Type.MB,
+                (int)ComputerPartCategory.Type.RAM,
+                (int)ComputerPartCategory.Type.SSD,
+                (int)ComputerPartCategory.Type.HDD,
+                (int)ComputerPartCategory.Type.AirCooler,
+                (int)ComputerPartCategory.Type.LiquidCooler,
+                (int)ComputerPartCategory.Type.GPU,
+                (int)ComputerPartCategory.Type.CASE,
+                (int)ComputerPartCategory.Type.PSU,
+                (int)ComputerPartCategory.Type.OS
+            };
+
+            // 爬取硬體品項集合
+            _GetHardWareData();
+
+            // 全零件分類表 更新
+            for (int i = 0; i < CoolPCType.Length; i++)
+            {
+                _UpdateComponentClassifications(CoolPCType[i], TableType[i]);
+            }
+        }
+
+        // 主機板
+        public virtual void UpdateComponentData()
+        {
+            
+            _GetHardWareData();
+            // 主機板 List
+            _GetComponentsList(4);
+
 
 
         }
