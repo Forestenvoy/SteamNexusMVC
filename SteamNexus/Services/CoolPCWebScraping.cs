@@ -477,8 +477,8 @@ namespace SteamNexus.Services
                     if (ComponentClassification == null) { continue; }
                     int ComponentClassificationId = ComponentClassification.ComponentClassificationId;
 
-                    Console.WriteLine("-----------------------");
-                    Console.WriteLine($"{ComponentClassificationId} {optgroupNames[i]} watts: {watts}");
+                    //Console.WriteLine("-----------------------");
+                    //Console.WriteLine($"{ComponentClassificationId} {optgroupNames[i]} watts: {watts}");
 
                     for (int j = 0; j < optgroups[i].Count(); j++)
                     {
@@ -550,10 +550,121 @@ namespace SteamNexus.Services
         }
 
         /// <summary>
-        /// 
+        /// 風冷散熱器產品更新
         /// </summary>
-        
-        
+        public virtual void UpdateAirCooler()
+        {
+
+            _GetHardWareData();
+            // 風冷散熱器 List
+            _GetComponentsList(9);
+
+            // 檢測該 optgroups List 是否有資料
+            if (optgroupNames == null || optgroups == null)
+            {
+                Console.WriteLine("optgroups is null");
+                return;
+            }
+            else
+            {
+                // 資料更新
+                for (int i = 0; i < optgroupNames.Count(); i++)
+                {
+                    // 筆電版 排除
+                    if (optgroupNames[i].Substring(0, 3) == "M.2" ||
+                        optgroupNames[i] == "高效能散熱膏" ||
+                        optgroupNames[i] == "矽膠導熱片" ||
+                        optgroupNames[i] == "筆記型專用散熱座")
+                    {
+                        continue;
+                    }
+
+
+                    // 產品資訊 List 更新
+
+                    // 瓦數
+                    int watts = 5;
+
+                    // ComponentClassificationId
+                    var ComponentClassification = _context.ComponentClassifications.Where(x => x.ComputerPartCategoryId == (int)ComputerPartCategory.Type.AirCooler).Where(x => x.Name == optgroupNames[i]).FirstOrDefault();
+                    if (ComponentClassification == null) { continue; }
+                    int ComponentClassificationId = ComponentClassification.ComponentClassificationId;
+
+                    Console.WriteLine("-----------------------");
+                    Console.WriteLine($"{ComponentClassificationId} {optgroupNames[i]} watts: {watts}");
+
+                    for (int j = 0; j < optgroups[i].Count(); j++)
+                    {
+                        // 例外排除
+                        if (optgroups[i][j].Substring(0, 8) == "&#x2764;" ||
+                            optgroups[i][j].Substring(0, 8) == "&#x21AA;" ||
+                            optgroups[i][j].IndexOf("限網單") != -1 ||
+                            optgroups[i][j].IndexOf("LGA17XX-SS2 扣具") != -1 ||
+                            optgroups[i][j].IndexOf("【提醒】") != -1 )
+                        {
+                            continue;
+                        }
+
+                        //Console.WriteLine(optgroups[i][j]);
+
+                        // 找到各段資訊的索引值斷點
+                        int NameEnd = optgroups[i][j].IndexOf("/");
+                        int SpecEnd = optgroups[i][j].IndexOf(",");
+                        int PriceFirst = optgroups[i][j].IndexOf("$");
+
+                        if (NameEnd == -1 || SpecEnd == -1 || PriceFirst == -1) { continue; }
+
+                        // 名稱、規格
+                        string Name = optgroups[i][j].Substring(0, NameEnd).Trim();
+                        string Spec = optgroups[i][j].Substring(NameEnd, SpecEnd - NameEnd).Trim();
+                        // 價格
+                        string PriceStr = optgroups[i][j].Substring(PriceFirst);
+                        int Price = 0;
+
+                        if (PriceStr.IndexOf("↘") != -1)
+                        {
+                            int PriceStart = PriceStr.IndexOf("↘") + 2;
+                            int PriceEnd = PriceStr.IndexOf(" ");
+                            Price = int.Parse(PriceStr.Substring(PriceStart, PriceEnd - PriceStart));
+                        }
+                        else
+                        {
+                            int PriceEnd = PriceStr.IndexOf(" ");
+                            Price = int.Parse(PriceStr.Substring(1, PriceEnd - 1));
+                        }
+
+                        Console.WriteLine($"{Name} {Spec} {Price}");
+
+                        // 存入資料庫 Create or Update
+                        var item = _context.ProductInformations.Where(x => x.ComponentClassificationId == ComponentClassificationId)
+                            .Where(x => x.Name == Name).FirstOrDefault();
+
+                        if (item == null)
+                        {
+                            // Create
+                            ProductInformation productInfo = new ProductInformation();
+                            productInfo.ComponentClassificationId = ComponentClassificationId;
+                            productInfo.Name = Name;
+                            productInfo.Specification = Spec;
+                            productInfo.Price = Price;
+                            productInfo.Wattage = watts;
+                            _context.ProductInformations.Add(productInfo);
+                        }
+                        else
+                        {
+                            // Update
+                            item.Specification = Spec;
+                            item.Price = Price;
+                        }
+                    }
+                    // 保存資料庫變更
+                    _context.SaveChanges();
+                }
+            }
+
+        }
+
+
         // 測試用
         public virtual void test()
         {
