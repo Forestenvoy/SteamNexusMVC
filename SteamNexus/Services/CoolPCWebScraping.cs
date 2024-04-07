@@ -249,11 +249,11 @@ namespace SteamNexus.Services
 
                     // 瓦數
                     int watts = 0;
-                    if(optgroupNames[i].Substring(0, 7) == "Intel H" || optgroupNames[i].Substring(0, 7) == "Intel B" || optgroupNames[i].Substring(0, 7) == "Intel Z" || optgroupNames[i].Substring(0, 5) == "AMD X")
+                    if (optgroupNames[i].Substring(0, 7) == "Intel H" || optgroupNames[i].Substring(0, 7) == "Intel B" || optgroupNames[i].Substring(0, 7) == "Intel Z" || optgroupNames[i].Substring(0, 5) == "AMD X")
                     {
                         watts = 132;
                     }
-                    else if(optgroupNames[i].Substring(0, 5) == "AMD B" || optgroupNames[i].Substring(0, 5) == "AMD A")
+                    else if (optgroupNames[i].Substring(0, 5) == "AMD B" || optgroupNames[i].Substring(0, 5) == "AMD A")
                     {
                         watts = 82;
                     }
@@ -273,8 +273,8 @@ namespace SteamNexus.Services
                             optgroups[i][j].Substring(0, 8) == "&#x2764;" ||
                             optgroups[i][j].Substring(0, 8) == "&#x21AA;" ||
                             optgroups[i][j].Substring(0, 5) == "[任搭U]" ||
-                            optgroups[i][j].Substring(0, 9) == "【任搭K版CPU】"||
-                            optgroups[i][j].IndexOf("[裝機價]") != -1 )
+                            optgroups[i][j].Substring(0, 9) == "【任搭K版CPU】" ||
+                            optgroups[i][j].IndexOf("[裝機價]") != -1)
                         {
                             continue;
                         }
@@ -287,7 +287,7 @@ namespace SteamNexus.Services
                                       optgroups[i][j].IndexOf("(E-ATX") != -1 ? optgroups[i][j].IndexOf("(E-ATX") :
                                       optgroups[i][j].IndexOf("(Mini-ITX");
                         int SpecEnd = optgroups[i][j].IndexOf(",");
-                        int PriceFirst = optgroups[i][j].IndexOf("$");
+                        int PriceFirst = optgroups[i][j].LastIndexOf("$");
 
                         if (NameEnd == -1 || SpecEnd == -1 || PriceFirst == -1) { continue; }
 
@@ -298,17 +298,8 @@ namespace SteamNexus.Services
                         string PriceStr = optgroups[i][j].Substring(PriceFirst);
                         int Price = 0;
 
-                        if (PriceStr.IndexOf("↘") != -1)
-                        {
-                            int PriceStart = PriceStr.IndexOf("↘") + 2;
-                            int PriceEnd = PriceStr.IndexOf(" ");
-                            Price = int.Parse(PriceStr.Substring(PriceStart, PriceEnd - PriceStart));
-                        }
-                        else
-                        {
-                            int PriceEnd = PriceStr.IndexOf(" ");
-                            Price = int.Parse(PriceStr.Substring(1, PriceEnd - 1));
-                        }
+                        int PriceEnd = PriceStr.IndexOf(" ");
+                        Price = int.Parse(PriceStr.Substring(1, PriceEnd - 1));
 
                         // 存入資料庫 Create or Update
                         var item = _context.ProductInformations.Where(x => x.ComponentClassificationId == ComponentClassificationId)
@@ -336,7 +327,7 @@ namespace SteamNexus.Services
                     _context.SaveChanges();
                 }
             }
-            
+
         }
 
         /// <summary>
@@ -387,7 +378,7 @@ namespace SteamNexus.Services
                         // 找到各段資訊的索引值斷點
                         int NameEnd = optgroups[i][j].IndexOf("讀");
                         int SpecEnd = optgroups[i][j].IndexOf(",");
-                        int PriceFirst = optgroups[i][j].IndexOf("$");
+                        int PriceFirst = optgroups[i][j].LastIndexOf("$");
 
                         if (NameEnd == -1 || SpecEnd == -1 || PriceFirst == -1) { continue; }
 
@@ -397,18 +388,9 @@ namespace SteamNexus.Services
                         // 價格
                         string PriceStr = optgroups[i][j].Substring(PriceFirst);
                         int Price = 0;
-                        
-                        if (PriceStr.IndexOf("↘") != -1)
-                        {
-                            int PriceStart = PriceStr.IndexOf("↘") + 2;
-                            int PriceEnd = PriceStr.IndexOf(" ");
-                            Price = int.Parse(PriceStr.Substring(PriceStart, PriceEnd - PriceStart));
-                        }
-                        else
-                        {
-                            int PriceEnd = PriceStr.IndexOf(" ");
-                            Price = int.Parse(PriceStr.Substring(1, PriceEnd - 1));
-                        }
+
+                        int PriceEnd = PriceStr.IndexOf(" ");
+                        Price = int.Parse(PriceStr.Substring(1, PriceEnd - 1));
 
                         //Console.WriteLine($"{Name} {Spec} {Price}");
 
@@ -464,9 +446,9 @@ namespace SteamNexus.Services
                 for (int i = 0; i < optgroupNames.Count(); i++)
                 {
                     // 筆電版 排除
-                    if(optgroupNames[i].Substring(0,3) == "2.5") { continue; }
-                    
-               
+                    if (optgroupNames[i].Substring(0, 3) == "2.5") { continue; }
+
+
                     // 產品資訊 List 更新
 
                     // 瓦數
@@ -495,28 +477,19 @@ namespace SteamNexus.Services
                         // 找到各段資訊的索引值斷點
                         int NameEnd = optgroups[i][j].IndexOf("】");
                         int SpecEnd = optgroups[i][j].IndexOf(",");
-                        int PriceFirst = optgroups[i][j].IndexOf("$");
+                        int PriceFirst = optgroups[i][j].LastIndexOf("$");
 
                         if (NameEnd == -1 || SpecEnd == -1 || PriceFirst == -1) { continue; }
 
                         // 名稱、規格
-                        string Name = optgroups[i][j].Substring(0, NameEnd+1).Trim();
-                        string Spec = optgroups[i][j].Substring(NameEnd+1, SpecEnd - NameEnd).Trim();
+                        string Name = optgroups[i][j].Substring(0, NameEnd + 1).Trim();
+                        string Spec = optgroups[i][j].Substring(NameEnd + 1, SpecEnd - NameEnd).Trim();
                         // 價格
                         string PriceStr = optgroups[i][j].Substring(PriceFirst);
                         int Price = 0;
 
-                        if (PriceStr.IndexOf("↘") != -1)
-                        {
-                            int PriceStart = PriceStr.IndexOf("↘") + 2;
-                            int PriceEnd = PriceStr.IndexOf(" ");
-                            Price = int.Parse(PriceStr.Substring(PriceStart, PriceEnd - PriceStart));
-                        }
-                        else
-                        {
-                            int PriceEnd = PriceStr.IndexOf(" ");
-                            Price = int.Parse(PriceStr.Substring(1, PriceEnd - 1));
-                        }
+                        int PriceEnd = PriceStr.IndexOf(" ");
+                        Price = int.Parse(PriceStr.Substring(1, PriceEnd - 1));
 
                         // Console.WriteLine($"{Name} {Spec} {Price}");
 
@@ -570,7 +543,7 @@ namespace SteamNexus.Services
                 // 資料更新
                 for (int i = 0; i < optgroupNames.Count(); i++)
                 {
-                    // 筆電版 排除
+                    // 清單排除
                     if (optgroupNames[i].Substring(0, 3) == "M.2" ||
                         optgroupNames[i] == "高效能散熱膏" ||
                         optgroupNames[i] == "矽膠導熱片" ||
@@ -590,8 +563,8 @@ namespace SteamNexus.Services
                     if (ComponentClassification == null) { continue; }
                     int ComponentClassificationId = ComponentClassification.ComponentClassificationId;
 
-                    Console.WriteLine("-----------------------");
-                    Console.WriteLine($"{ComponentClassificationId} {optgroupNames[i]} watts: {watts}");
+                    //Console.WriteLine("-----------------------");
+                    //Console.WriteLine($"{ComponentClassificationId} {optgroupNames[i]} watts: {watts}");
 
                     for (int j = 0; j < optgroups[i].Count(); j++)
                     {
@@ -600,7 +573,7 @@ namespace SteamNexus.Services
                             optgroups[i][j].Substring(0, 8) == "&#x21AA;" ||
                             optgroups[i][j].IndexOf("限網單") != -1 ||
                             optgroups[i][j].IndexOf("LGA17XX-SS2 扣具") != -1 ||
-                            optgroups[i][j].IndexOf("【提醒】") != -1 )
+                            optgroups[i][j].IndexOf("【提醒】") != -1)
                         {
                             continue;
                         }
@@ -610,7 +583,7 @@ namespace SteamNexus.Services
                         // 找到各段資訊的索引值斷點
                         int NameEnd = optgroups[i][j].IndexOf("/");
                         int SpecEnd = optgroups[i][j].IndexOf(",");
-                        int PriceFirst = optgroups[i][j].IndexOf("$");
+                        int PriceFirst = optgroups[i][j].LastIndexOf("$");
 
                         if (NameEnd == -1 || SpecEnd == -1 || PriceFirst == -1) { continue; }
 
@@ -621,19 +594,10 @@ namespace SteamNexus.Services
                         string PriceStr = optgroups[i][j].Substring(PriceFirst);
                         int Price = 0;
 
-                        if (PriceStr.IndexOf("↘") != -1)
-                        {
-                            int PriceStart = PriceStr.IndexOf("↘") + 2;
-                            int PriceEnd = PriceStr.IndexOf(" ");
-                            Price = int.Parse(PriceStr.Substring(PriceStart, PriceEnd - PriceStart));
-                        }
-                        else
-                        {
-                            int PriceEnd = PriceStr.IndexOf(" ");
-                            Price = int.Parse(PriceStr.Substring(1, PriceEnd - 1));
-                        }
+                        int PriceEnd = PriceStr.IndexOf(" ");
+                        Price = int.Parse(PriceStr.Substring(1, PriceEnd - 1));
 
-                        Console.WriteLine($"{Name} {Spec} {Price}");
+                        //Console.WriteLine($"{Name} {Spec} {Price}");
 
                         // 存入資料庫 Create or Update
                         var item = _context.ProductInformations.Where(x => x.ComponentClassificationId == ComponentClassificationId)
@@ -664,6 +628,110 @@ namespace SteamNexus.Services
 
         }
 
+        /// <summary>
+        /// 水冷散熱器產品更新
+        /// </summary>
+        public virtual void UpdateLiquidCooler()
+        {
+
+            _GetHardWareData();
+            // 水冷散熱器 List
+            _GetComponentsList(10);
+
+            // 檢測該 optgroups List 是否有資料
+            if (optgroupNames == null || optgroups == null)
+            {
+                Console.WriteLine("optgroups is null");
+                return;
+            }
+            else
+            {
+                // 資料更新
+                for (int i = 0; i < optgroupNames.Count(); i++)
+                {
+                    // 清單排除
+                    if (optgroupNames[i] == "水冷套件-水冷液【客訂商品】" ||
+                        optgroupNames[i] == "封閉式水冷")
+                    {
+                        continue;
+                    }
+
+
+                    // 產品資訊 List 更新
+
+                    // 瓦數
+                    int watts = 10;
+
+                    // ComponentClassificationId
+                    var ComponentClassification = _context.ComponentClassifications.Where(x => x.ComputerPartCategoryId == (int)ComputerPartCategory.Type.LiquidCooler).Where(x => x.Name == optgroupNames[i]).FirstOrDefault();
+                    if (ComponentClassification == null) { continue; }
+                    int ComponentClassificationId = ComponentClassification.ComponentClassificationId;
+
+                    //Console.WriteLine("-----------------------");
+                    //Console.WriteLine($"{ComponentClassificationId} {optgroupNames[i]} watts: {watts}");
+
+                    for (int j = 0; j < optgroups[i].Count(); j++)
+                    {
+                        // 例外排除
+                        if (optgroups[i][j].Substring(0, 8) == "&#x2764;" ||
+                            optgroups[i][j].Substring(0, 8) == "&#x21AA;" ||
+                            optgroups[i][j].IndexOf("優惠") != -1 ||
+                            optgroups[i][j].IndexOf("W金牌") != -1)
+                        {
+                            continue;
+                        }
+
+                        // Console.WriteLine(optgroups[i][j]);
+
+                        // 找到各段資訊的索引值斷點
+                        int NameEnd = optgroups[i][j].IndexOf("/");
+                        if (NameEnd == -1) { NameEnd = optgroups[i][j].IndexOf("【"); }
+                        int SpecEnd = optgroups[i][j].IndexOf(",");
+                        int PriceFirst = optgroups[i][j].LastIndexOf("$");
+
+                        if (NameEnd == -1 || SpecEnd == -1 || PriceFirst == -1) { continue; }
+
+                        // 名稱、規格
+                        string Name = optgroups[i][j].Substring(0, NameEnd).Trim();
+                        string Spec = optgroups[i][j].Substring(NameEnd, SpecEnd - NameEnd).Trim();
+                        // 價格
+                        string PriceStr = optgroups[i][j].Substring(PriceFirst);
+                        int Price = 0;
+
+                        int PriceEnd = PriceStr.IndexOf(" ");
+                        Price = int.Parse(PriceStr.Substring(1, PriceEnd - 1));
+
+
+                        //Console.WriteLine($"{Name} {Spec} {Price}");
+
+                        // 存入資料庫 Create or Update
+                        var item = _context.ProductInformations.Where(x => x.ComponentClassificationId == ComponentClassificationId)
+                            .Where(x => x.Name == Name).FirstOrDefault();
+
+                        if (item == null)
+                        {
+                            // Create
+                            ProductInformation productInfo = new ProductInformation();
+                            productInfo.ComponentClassificationId = ComponentClassificationId;
+                            productInfo.Name = Name;
+                            productInfo.Specification = Spec;
+                            productInfo.Price = Price;
+                            productInfo.Wattage = watts;
+                            _context.ProductInformations.Add(productInfo);
+                        }
+                        else
+                        {
+                            // Update
+                            item.Specification = Spec;
+                            item.Price = Price;
+                        }
+                    }
+                    // 保存資料庫變更
+                    _context.SaveChanges();
+                }
+            }
+
+        }
 
         // 測試用
         public virtual void test()
@@ -675,7 +743,7 @@ namespace SteamNexus.Services
             {
                 Console.WriteLine(optgroups.Count());
                 Console.WriteLine(optgroupNames.Count());
-            }      
+            }
 
         }
 
