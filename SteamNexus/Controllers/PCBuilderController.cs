@@ -30,7 +30,7 @@ namespace SteamNexus.Controllers
         [HttpPost]
         public string WebScrabingTest()
         {
-            _coolPCWebScraping.UpdateOS();
+            _coolPCWebScraping.UpdateRAM();
 
             
 
