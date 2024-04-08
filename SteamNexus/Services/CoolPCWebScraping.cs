@@ -785,7 +785,7 @@ namespace SteamNexus.Services
                             optgroups[i][j].IndexOf("金牌") != -1 ||
                             optgroups[i][j].IndexOf("50W") != -1 ||
                             optgroups[i][j].IndexOf("水冷") != -1 ||
-                            optgroups[i][j].IndexOf("散熱器") != -1 )
+                            optgroups[i][j].IndexOf("散熱器") != -1)
                         {
                             continue;
                         }
@@ -902,8 +902,8 @@ namespace SteamNexus.Services
                         if (NameEnd == -1 || SpecEnd == -1 || PriceFirst == -1) { continue; }
 
                         // 名稱、規格
-                        string Name = optgroups[i][j].Substring(0, NameEnd +1).Trim();
-                        string Spec = optgroups[i][j].Substring(NameEnd +1, SpecEnd - NameEnd).Trim();
+                        string Name = optgroups[i][j].Substring(0, NameEnd + 1).Trim();
+                        string Spec = optgroups[i][j].Substring(NameEnd + 1, SpecEnd - NameEnd).Trim();
                         // 價格
                         string PriceStr = optgroups[i][j].Substring(PriceFirst);
                         int Price = 0;
@@ -1102,7 +1102,7 @@ namespace SteamNexus.Services
                         }
 
                         // Console.WriteLine(optgroups[i][j]);
-                        
+
                         // 找到各段資訊的索引值斷點
                         int NameEnd = optgroups[i][j].IndexOf("▼");
                         if (NameEnd == -1) { NameEnd = optgroups[i][j].IndexOf(","); }
@@ -1118,7 +1118,7 @@ namespace SteamNexus.Services
                         {
                             Spec = optgroups[i][j].Substring(NameEnd, SpecEnd - NameEnd).Trim();
                         }
-                      
+
                         // 價格
                         string PriceStr = optgroups[i][j].Substring(PriceFirst);
                         int Price = 0;
@@ -1138,9 +1138,9 @@ namespace SteamNexus.Services
                             Sizeindex = Sizeindex + newindex + 1;
                         }
                         int SizeStart = Sizeindex - 3;
-                        string SizeStr = optgroups[i][j].Substring(SizeStart,3);
+                        string SizeStr = optgroups[i][j].Substring(SizeStart, 3);
                         int Size = 0;
-                        if(!int.TryParse(SizeStr, out Size))
+                        if (!int.TryParse(SizeStr, out Size))
                         {
                             SizeStr = SizeStr.Substring(1);
                             if (!int.TryParse(SizeStr, out Size))
@@ -1327,7 +1327,7 @@ namespace SteamNexus.Services
                         switch (optgroupNames[i])
                         {
                             case "INTEL ARC 顯示卡":
-                                GPUitem = _context.GPUs.Where(x=>x.Name.Contains("Arc A750")).FirstOrDefault();
+                                GPUitem = _context.GPUs.Where(x => x.Name.Contains("Arc A750")).FirstOrDefault();
                                 GPUID = GPUitem?.GPUId ?? 10000;
                                 break;
                             case "NVIDIA GT710":
@@ -1448,7 +1448,7 @@ namespace SteamNexus.Services
                                 break;
                         }
                     }
-                    catch(Exception error)
+                    catch (Exception error)
                     {
                         Console.WriteLine(error.Message);
                         return;
@@ -1538,7 +1538,196 @@ namespace SteamNexus.Services
 
         }
 
+        /// <summary>
+        /// 中央處理器產品更新
+        /// </summary>
+        public virtual void UpdateCPU()
+        {
 
+            _GetHardWareData();
+            // 中央處理器 List
+            _GetComponentsList(3);
+
+            // 檢測該 optgroups List 是否有資料
+            if (optgroupNames == null || optgroups == null)
+            {
+                Console.WriteLine("optgroups is null");
+                return;
+            }
+            else
+            {
+                // 資料更新
+                for (int i = 0; i < optgroupNames.Count(); i++)
+                {
+                    // 清單排除
+                    if (optgroupNames[i].IndexOf("Sapphire Rapids Xeon") != -1 ||
+                        optgroupNames[i].IndexOf("TRX") != -1 ||
+                        optgroupNames[i].IndexOf("WRX") != -1)
+                    {
+                        continue;
+                    }
+
+                    // 產品資訊 List 更新
+
+
+                    // ComponentClassificationId
+                    var ComponentClassification = _context.ComponentClassifications.Where(x => x.ComputerPartCategoryId == (int)ComputerPartCategory.Type.CPU).Where(x => x.Name == optgroupNames[i]).FirstOrDefault();
+                    if (ComponentClassification == null) { continue; }
+                    int ComponentClassificationId = ComponentClassification.ComponentClassificationId;
+
+                    Console.WriteLine("-----------------------");
+                    Console.WriteLine($"{optgroupNames[i]}");
+
+                    for (int j = 0; j < optgroups[i].Count(); j++)
+                    {
+                        // 例外排除
+                        if (optgroups[i][j].Substring(0, 8) == "&#x2764;" ||
+                            optgroups[i][j].Substring(0, 8) == "&#x21AA;" ||
+                            optgroups[i][j].IndexOf("Processor") != -1)
+                        {
+                            continue;
+                        }
+                        if(optgroups[i][j].Substring(0, 3) != "AMD" &&
+                            optgroups[i][j].Substring(0, 5) != "Intel")
+                        {
+                            continue;
+                        }
+
+                        //Console.WriteLine(optgroups[i][j]);
+
+                        // 找到各段資訊的索引值斷點
+                        int NameEnd = optgroups[i][j].IndexOf("】");
+                        int SpecEnd = optgroups[i][j].IndexOf(",");
+                        int PriceFirst = optgroups[i][j].LastIndexOf("$");
+
+                        if (NameEnd == -1 || SpecEnd == -1 || PriceFirst == -1) { continue; }
+
+                        // 名稱、規格
+                        string Name = optgroups[i][j].Substring(0, NameEnd+1).Trim();
+                        string Spec = "";
+                        if (NameEnd != SpecEnd)
+                        {
+                            Spec = optgroups[i][j].Substring(NameEnd+1, SpecEnd - NameEnd-1).Trim();
+                        }
+
+                        // 價格
+                        string PriceStr = optgroups[i][j].Substring(PriceFirst);
+                        int Price = 0;
+                        int PriceEnd = PriceStr.IndexOf(" ");
+                        Price = int.Parse(PriceStr.Substring(1, PriceEnd - 1));
+
+                        //Console.WriteLine($"{Name}!!{Spec}!!{Price}");
+
+                        // 瓦數
+                        int watts = 0;
+                        if(optgroups[i][j].IndexOf("Intel") != -1)
+                        {
+                            if (optgroups[i][j].IndexOf("K") != -1)
+                            {
+                                watts = 125;
+                            }
+                            else
+                            {
+                                watts = 65;
+                            }
+                        }
+                        else if(optgroups[i][j].IndexOf("AMD") != -1)
+                        {
+                            if (optgroups[i][j].IndexOf("X3D") != -1)
+                            {
+                                watts = 120;
+                            }
+                            else if(optgroups[i][j].IndexOf("900X") != -1 || optgroups[i][j].IndexOf("950X") != -1)
+                            {
+                                watts = 170;
+                            }
+                            else if (optgroups[i][j].IndexOf("X") != -1)
+                            {
+                                watts = 105;
+                            }
+                            else
+                            {
+                                watts = 65;
+                            }
+                        }
+
+                        //Console.WriteLine($"{Name}!!{watts}");
+
+                        // CPU跑分 ID
+                        // 擷取 有效搜尋字串
+                        string CPUstr = "00000";
+                        if(optgroups[i][j].IndexOf("Intel") != -1)
+                        {
+                            // Intel CPU
+                            int CPUStart = optgroups[i][j].IndexOf("-")+1;
+                            int CPUstrNum = optgroups[i][j].Substring(CPUStart).IndexOf("【");
+                            CPUstr = optgroups[i][j].Substring(CPUStart,CPUstrNum).Trim();
+                            if (CPUstr.IndexOf("特別版") != -1)
+                            {
+                                CPUstr = CPUstr.Substring(0,CPUstr.Length-3).Trim();
+                            }
+                        }
+                        else
+                        {
+                            // AMD CPU
+                            int CPUStart = optgroups[i][j].IndexOf("R") + 3;
+                            int CPUstrNum = optgroups[i][j].IndexOf("【") - CPUStart;
+                            CPUstr = optgroups[i][j].Substring(CPUStart, CPUstrNum).Trim();
+                            if (CPUstr.IndexOf(" ") != -1)
+                            {
+                                CPUstr = CPUstr.Substring(0, CPUstr.IndexOf(" ")).Trim();
+                            }
+                            else if(CPUstr.IndexOf("代理盒裝") != -1)
+                            {
+                                CPUstr = CPUstr.Substring(0, CPUstr.Length - 4).Trim();
+                            }
+                            else if (CPUstr.IndexOf("盒") != -1)
+                            {
+                                CPUstr = CPUstr.Substring(0, CPUstr.Length - 1).Trim();
+                            }
+                            CPUstr = " " + CPUstr;
+                        }
+                        var CPUitem = _context.CPUs.Where(x=>x.Name.Contains(CPUstr)).FirstOrDefault();
+                        int CPUID = CPUitem?.CPUId ?? 10000;
+
+                        // Console.WriteLine($"{CPUstr}!!{CPUID}");
+
+                        // 存入資料庫 => 產品資訊表 Create or Update
+                        var item = _context.ProductInformations.Where(x => x.ComponentClassificationId == ComponentClassificationId)
+                            .Where(x => x.Name == Name).FirstOrDefault();
+
+                        if (item == null)
+                        {
+                            // Create
+                            ProductInformation productInfo = new ProductInformation();
+                            productInfo.ComponentClassificationId = ComponentClassificationId;
+                            productInfo.Name = Name;
+                            productInfo.Specification = Spec;
+                            productInfo.Price = Price;
+                            productInfo.Wattage = watts;
+                            _context.ProductInformations.Add(productInfo);
+                            // 保存資料庫變更
+                            _context.SaveChanges();
+                            // 存入資料庫 => ProductGPUs
+                            int ProductId = productInfo.ProductInformationId;
+                            ProductCPU productCPU = new ProductCPU();
+                            productCPU.ProductInformationId = ProductId;
+                            productCPU.CPUId = CPUID;
+                            _context.ProductCPUs.Add(productCPU);
+                            _context.SaveChanges();
+                        }
+                        else
+                        {
+                            // Update
+                            item.Specification = Spec;
+                            item.Price = Price;
+                            // 保存資料庫變更
+                            _context.SaveChanges();
+                        }
+                    }
+                }
+            }
+        }
 
         // 硬體資料全更新
         public virtual void UpdateAll()
