@@ -1734,6 +1734,9 @@ namespace SteamNexus.Services
         {
             UpdateAllComponentClassifications();
 
+            UpdateCPU();
+            UpdateGPU();
+            UpdateRAM();
             UpdateMB();
             UpdateSSD();
             UpdateHDD();
