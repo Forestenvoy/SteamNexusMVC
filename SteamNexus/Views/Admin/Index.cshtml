@@ -1,0 +1,36 @@
+﻿<button id="HardWare" class="btn btn-primary">HardWare</button>
+<div class="container" id="System"></div>
+
+
+
+@section Scripts
+{
+    <script>
+        // AJAX 呼叫替換 PartialView
+        $(document).ready(function () {
+            var baseAddress = "https://localhost:7097"; // For Development
+            // 事件綁定
+            $("#HardWare").on("click", function () {
+                // 發送非同步GET請求
+                fetch(`${baseAddress}@Url.Action("HardwareManagement", "Admin")`, {
+                    method: "GET"
+                }).then(response => {
+                    // 確保請求是否成功
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    // 解析 html
+                    return response.text();
+                }).then(data => {
+                    $("#System").html(data);
+                }).catch(error => {
+                    // 顯示 throw 的錯誤
+                    alert(error);
+                });
+            });
+
+
+
+        })
+    </script>
+}
