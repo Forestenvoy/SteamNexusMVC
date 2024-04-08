@@ -1,25 +1,49 @@
-﻿<button id="HardWare" class="btn btn-primary">HardWare</button>
-<div class="container" id="System"></div>
+﻿@section Styles
+{
+    <style>
+       
+    </style>
+}
 
-@*麵包屑實作*@
-@*breadcrumb start*@
-<div class="p-3 bg-light mb-5">
-    <div class="container">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb mb-0">
-                <li class="breadcrumb-item"><a href="index.html">首頁</a></li>
-                <li class="breadcrumb-item active" aria-current="page">
-                    聯絡我們
-                </li>
-            </ol>
-        </nav>
+@* container *@
+<div class="container-fluid p-0">
+    <div class="row">
+        <div class="col-2 p-0">
+            @* Sidebar 側邊導覽列 *@
+            @* Sidebar start *@
+            <!-- Sidebar  -->
+            <nav class="nav flex-column bg-light">
+                <a class="nav-link active" aria-current="page" href="#">Active</a>
+                <a class="nav-link" href="#">會員管理</a>
+                <a class="nav-link" href="#">遊戲管理</a>
+                <a class="nav-link" href="#">硬體管理</a>
+                <a class="nav-link" href="#">廣告管理</a>
+            </nav>
+            @* Sidebar end *@
+        </div>
+        <div class="col-10 p-0">
+            @*麵包屑*@
+            @*breadcrumb start*@
+            <div class="bg-secondary">
+                <div class="container">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb mb-0">
+                            <li class="breadcrumb-item"><a href="index.html">首頁</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">
+                                聯絡我們
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+            @*breadcrumb End*@
+        </div>
     </div>
 </div>
-@*breadcrumb End*@
 
 
-
-
+<button id="HardWare" class="btn btn-primary">HardWare</button>
+<div class="container" id="System"></div>
 
 @section Scripts
 {
@@ -47,7 +71,9 @@
                 });
             });
 
-
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar').toggleClass('active');
+            });
 
         })
     </script>
