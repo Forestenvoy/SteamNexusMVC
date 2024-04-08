@@ -1190,6 +1190,355 @@ namespace SteamNexus.Services
 
         }
 
+        /// <summary>
+        /// 顯示卡產品更新
+        /// </summary>
+        public virtual void UpdateGPU()
+        {
+
+            _GetHardWareData();
+            // 顯示卡 List
+            _GetComponentsList(11);
+
+            // 檢測該 optgroups List 是否有資料
+            if (optgroupNames == null || optgroups == null)
+            {
+                Console.WriteLine("optgroups is null");
+                return;
+            }
+            else
+            {
+                // 資料更新
+                for (int i = 0; i < optgroupNames.Count(); i++)
+                {
+                    // 清單排除
+                    if (optgroupNames[i].IndexOf("NVIDIA / AMD 顯示卡周邊配件") != -1 ||
+                        optgroupNames[i].IndexOf("NVIDIA / AMD 外接顯卡轉接盒") != -1 ||
+                        optgroupNames[i].IndexOf("繪圖卡") != -1 ||
+                        optgroupNames[i] == "NVIDIA GeForce 210" ||
+                        optgroupNames[i] == "AMD R7 240 系列")
+                    {
+                        continue;
+                    }
+
+                    // 產品資訊 List 更新
+
+                    // 瓦數
+                    int watts = 0;
+                    switch (optgroupNames[i])
+                    {
+                        case "INTEL ARC 顯示卡":
+                            watts = 225;
+                            break;
+                        case "NVIDIA GT710":
+                            watts = 19;
+                            break;
+                        case "NVIDIA GT730":
+                            watts = 65;
+                            break;
+                        case "NVIDIA GT1030":
+                            watts = 30;
+                            break;
+                        case "NVIDIA GTX1630 (DDR6)":
+                            watts = 75;
+                            break;
+                        case "NVIDIA GTX1650 (DDR6)":
+                            watts = 90;
+                            break;
+                        case "NVIDIA RTX3050-6GB":
+                            watts = 70;
+                            break;
+                        case "NVIDIA RTX3050-8GB":
+                            watts = 130;
+                            break;
+                        case "NVIDIA RTX3060-8GB":
+                            watts = 170;
+                            break;
+                        case "NVIDIA RTX3060-12GB":
+                            watts = 170;
+                            break;
+                        case "NVIDIA RTX4060-8GB":
+                            watts = 115;
+                            break;
+                        case "NVIDIA RTX4060Ti-8GB":
+                            watts = 160;
+                            break;
+                        case "NVIDIA RTX4060Ti-16G":
+                            watts = 165;
+                            break;
+                        case "NVIDIA RTX4070-12GB":
+                            watts = 200;
+                            break;
+                        case "NVIDIA RTX4070 SUPER 12GB":
+                            watts = 220;
+                            break;
+                        case "NVIDIA RTX4070TI-12GB":
+                            watts = 285;
+                            break;
+                        case "NVIDIA RTX4070Ti SUPER 16GB":
+                            watts = 285;
+                            break;
+                        case "NVIDIA RTX4080-16GB":
+                            watts = 320;
+                            break;
+                        case "NVIDIA RTX4080 SUPER 16GB":
+                            watts = 320;
+                            break;
+                        case "NVIDIA RTX4090":
+                            watts = 450;
+                            break;
+                        case "AMD RX6500XT":
+                            watts = 107;
+                            break;
+                        case "AMD RX6600":
+                            watts = 150;
+                            break;
+                        case "AMD RX6650XT":
+                            watts = 180;
+                            break;
+                        case "AMD Radeon RX7600-8G":
+                            watts = 166;
+                            break;
+                        case "AMD Radeon RX7600XT OC 16G":
+                            watts = 215;
+                            break;
+                        case "AMD Radeon RX7700XT-12G":
+                            watts = 245;
+                            break;
+                        case "AMD Radeon RX7800XT-16G":
+                            watts = 263;
+                            break;
+                        case "AMD Radeon RX7900GRE-16G":
+                            watts = 260;
+                            break;
+                        case "AMD Radeon RX7900XT-20G":
+                            watts = 300;
+                            break;
+                        case "AMD Radeon RX7900XTX-24G":
+                            watts = 355;
+                            break;
+                    }
+
+                    // GPU跑分ID
+                    int GPUID = 10000;
+                    SteamNexus.Models.GPU? GPUitem = null;
+                    try
+                    {
+                        switch (optgroupNames[i])
+                        {
+                            case "INTEL ARC 顯示卡":
+                                GPUitem = _context.GPUs.Where(x=>x.Name.Contains("Arc A750")).FirstOrDefault();
+                                GPUID = GPUitem?.GPUId ?? 10000;
+                                break;
+                            case "NVIDIA GT710":
+                                GPUitem = _context.GPUs.Where(x => x.Name.Contains("GT 710")).FirstOrDefault();
+                                GPUID = GPUitem?.GPUId ?? 10000;
+                                break;
+                            case "NVIDIA GT730":
+                                GPUitem = _context.GPUs.Where(x => x.Name.Contains("GT 730")).FirstOrDefault();
+                                GPUID = GPUitem?.GPUId ?? 10000;
+                                break;
+                            case "NVIDIA GT1030":
+                                GPUitem = _context.GPUs.Where(x => x.Name.Contains("GT 1030")).FirstOrDefault();
+                                GPUID = GPUitem?.GPUId ?? 10000;
+                                break;
+                            case "NVIDIA GTX1630 (DDR6)":
+                                GPUitem = _context.GPUs.Where(x => x.Name.Contains("GTX 1630")).FirstOrDefault();
+                                GPUID = GPUitem?.GPUId ?? 10000;
+                                break;
+                            case "NVIDIA GTX1650 (DDR6)":
+                                GPUitem = _context.GPUs.Where(x => x.Name.Contains("GTX 1650")).FirstOrDefault();
+                                GPUID = GPUitem?.GPUId ?? 10000;
+                                break;
+                            case "NVIDIA RTX3050-6GB":
+                                GPUitem = _context.GPUs.Where(x => x.Name.Contains("RTX 3050")).FirstOrDefault();
+                                GPUID = GPUitem?.GPUId ?? 10000;
+                                break;
+                            case "NVIDIA RTX3050-8GB":
+                                GPUitem = _context.GPUs.Where(x => x.Name.Contains("RTX 3050")).FirstOrDefault();
+                                GPUID = GPUitem?.GPUId ?? 10000;
+                                break;
+                            case "NVIDIA RTX3060-8GB":
+                                GPUitem = _context.GPUs.Where(x => x.Name.Contains("RTX 3060 8GB")).FirstOrDefault();
+                                GPUID = GPUitem?.GPUId ?? 10000;
+                                break;
+                            case "NVIDIA RTX3060-12GB":
+                                GPUitem = _context.GPUs.Where(x => x.Name.Contains("RTX 3060 12GB")).FirstOrDefault();
+                                GPUID = GPUitem?.GPUId ?? 10000;
+                                break;
+                            case "NVIDIA RTX4060-8GB":
+                                GPUitem = _context.GPUs.Where(x => x.Name.Contains("RTX 4060")).FirstOrDefault();
+                                GPUID = GPUitem?.GPUId ?? 10000;
+                                break;
+                            case "NVIDIA RTX4060Ti-8GB":
+                                GPUitem = _context.GPUs.Where(x => x.Name.Contains("RTX 4060 Ti")).FirstOrDefault();
+                                GPUID = GPUitem?.GPUId ?? 10000;
+                                break;
+                            case "NVIDIA RTX4060Ti-16G":
+                                GPUitem = _context.GPUs.Where(x => x.Name.Contains("RTX 4060 Ti 16G")).FirstOrDefault();
+                                GPUID = GPUitem?.GPUId ?? 10000;
+                                break;
+                            case "NVIDIA RTX4070-12GB":
+                                GPUitem = _context.GPUs.Where(x => x.Name.Contains("RTX 4070")).FirstOrDefault();
+                                GPUID = GPUitem?.GPUId ?? 10000;
+                                break;
+                            case "NVIDIA RTX4070 SUPER 12GB":
+                                GPUitem = _context.GPUs.Where(x => x.Name.Contains("RTX 4070 SUPER")).FirstOrDefault();
+                                GPUID = GPUitem?.GPUId ?? 10000;
+                                break;
+                            case "NVIDIA RTX4070TI-12GB":
+                                GPUitem = _context.GPUs.Where(x => x.Name.Contains("RTX 4070 Ti")).FirstOrDefault();
+                                GPUID = GPUitem?.GPUId ?? 10000;
+                                break;
+                            case "NVIDIA RTX4070Ti SUPER 16GB":
+                                GPUitem = _context.GPUs.Where(x => x.Name.Contains("RTX 4070 Ti SUPER")).FirstOrDefault();
+                                GPUID = GPUitem?.GPUId ?? 10000;
+                                break;
+                            case "NVIDIA RTX4080-16GB":
+                                GPUitem = _context.GPUs.Where(x => x.Name.Contains("RTX 4080")).FirstOrDefault();
+                                GPUID = GPUitem?.GPUId ?? 10000;
+                                break;
+                            case "NVIDIA RTX4080 SUPER 16GB":
+                                GPUitem = _context.GPUs.Where(x => x.Name.Contains("RTX 4080 SUPER")).FirstOrDefault();
+                                GPUID = GPUitem?.GPUId ?? 10000;
+                                break;
+                            case "NVIDIA RTX4090":
+                                GPUitem = _context.GPUs.Where(x => x.Name.Contains("RTX 4090")).FirstOrDefault();
+                                GPUID = GPUitem?.GPUId ?? 10000;
+                                break;
+                            case "AMD RX6500XT":
+                                GPUitem = _context.GPUs.Where(x => x.Name.Contains("RX 6500 XT")).FirstOrDefault();
+                                GPUID = GPUitem?.GPUId ?? 10000;
+                                break;
+                            case "AMD RX6600":
+                                GPUitem = _context.GPUs.Where(x => x.Name.Contains("RX 6600")).FirstOrDefault();
+                                GPUID = GPUitem?.GPUId ?? 10000;
+                                break;
+                            case "AMD RX6650XT":
+                                GPUitem = _context.GPUs.Where(x => x.Name.Contains("RX 6650 XT")).FirstOrDefault();
+                                GPUID = GPUitem?.GPUId ?? 10000;
+                                break;
+                            case "AMD Radeon RX7600-8G":
+                                GPUitem = _context.GPUs.Where(x => x.Name.Contains("RX 7600")).FirstOrDefault();
+                                GPUID = GPUitem?.GPUId ?? 10000;
+                                break;
+                            case "AMD Radeon RX7600XT OC 16G":
+                                GPUitem = _context.GPUs.Where(x => x.Name.Contains("RX 7600 XT")).FirstOrDefault();
+                                GPUID = GPUitem?.GPUId ?? 10000;
+                                break;
+                            case "AMD Radeon RX7700XT-12G":
+                                GPUitem = _context.GPUs.Where(x => x.Name.Contains("RX 7700 XT")).FirstOrDefault();
+                                GPUID = GPUitem?.GPUId ?? 10000;
+                                break;
+                            case "AMD Radeon RX7800XT-16G":
+                                GPUitem = _context.GPUs.Where(x => x.Name.Contains("RX 7800 XT")).FirstOrDefault();
+                                GPUID = GPUitem?.GPUId ?? 10000;
+                                break;
+                            case "AMD Radeon RX7900GRE-16G":
+                                GPUitem = _context.GPUs.Where(x => x.Name.Contains("RX 7900 GRE")).FirstOrDefault();
+                                GPUID = GPUitem?.GPUId ?? 10000;
+                                break;
+                            case "AMD Radeon RX7900XT-20G":
+                                GPUitem = _context.GPUs.Where(x => x.Name.Contains("RX 7900 XT")).FirstOrDefault();
+                                GPUID = GPUitem?.GPUId ?? 10000;
+                                break;
+                            case "AMD Radeon RX7900XTX-24G":
+                                GPUitem = _context.GPUs.Where(x => x.Name.Contains("RX 7900 XTX")).FirstOrDefault();
+                                GPUID = GPUitem?.GPUId ?? 10000;
+                                break;
+                        }
+                    }
+                    catch(Exception error)
+                    {
+                        Console.WriteLine(error.Message);
+                        return;
+                    }
+
+                    // Console.WriteLine($"{optgroupNames[i]} watts: {watts} GPUID: {GPUID}");
+
+                    // ComponentClassificationId
+                    var ComponentClassification = _context.ComponentClassifications.Where(x => x.ComputerPartCategoryId == (int)ComputerPartCategory.Type.GPU).Where(x => x.Name == optgroupNames[i]).FirstOrDefault();
+                    if (ComponentClassification == null) { continue; }
+                    int ComponentClassificationId = ComponentClassification.ComponentClassificationId;
+
+                    Console.WriteLine("-----------------------");
+                    Console.WriteLine($"{optgroupNames[i]}");
+
+                    for (int j = 0; j < optgroups[i].Count(); j++)
+                    {
+                        // 例外排除
+                        if (optgroups[i][j].Substring(0, 8) == "&#x2764;" ||
+                            optgroups[i][j].Substring(0, 8) == "&#x21AA;" ||
+                            optgroups[i][j].IndexOf("搭機") != -1 ||
+                            optgroups[i][j].IndexOf("INTEL 原廠卡 ARC A750 8G(2050MHz/27cm/三年保)限量版顯示卡-任搭優惠") != -1)
+                        {
+                            continue;
+                        }
+
+                        // Console.WriteLine(optgroups[i][j]);
+
+                        // 找到各段資訊的索引值斷點
+                        int NameEnd = optgroups[i][j].IndexOf("(");
+                        int SpecEnd = optgroups[i][j].IndexOf(",");
+                        int PriceFirst = optgroups[i][j].LastIndexOf("$");
+
+                        if (NameEnd == -1 || SpecEnd == -1 || PriceFirst == -1) { continue; }
+
+                        // 名稱、規格
+                        string Name = optgroups[i][j].Substring(0, NameEnd).Trim();
+                        string Spec = "";
+                        if (NameEnd != SpecEnd)
+                        {
+                            Spec = optgroups[i][j].Substring(NameEnd, SpecEnd - NameEnd).Trim();
+                        }
+
+                        // 價格
+                        string PriceStr = optgroups[i][j].Substring(PriceFirst);
+                        int Price = 0;
+                        int PriceEnd = PriceStr.IndexOf(" ");
+                        Price = int.Parse(PriceStr.Substring(1, PriceEnd - 1));
+
+                        //Console.WriteLine($"{Name} {Spec} {Price}");
+
+                        // 存入資料庫 => 產品資訊表 Create or Update
+                        var item = _context.ProductInformations.Where(x => x.ComponentClassificationId == ComponentClassificationId)
+                            .Where(x => x.Name == Name).FirstOrDefault();
+
+                        if (item == null)
+                        {
+                            // Create
+                            ProductInformation productInfo = new ProductInformation();
+                            productInfo.ComponentClassificationId = ComponentClassificationId;
+                            productInfo.Name = Name;
+                            productInfo.Specification = Spec;
+                            productInfo.Price = Price;
+                            productInfo.Wattage = watts;
+                            _context.ProductInformations.Add(productInfo);
+                            // 保存資料庫變更
+                            _context.SaveChanges();
+                            // 存入資料庫 => ProductGPUs
+                            int ProductId = productInfo.ProductInformationId;
+                            ProductGPU productGPU = new ProductGPU();
+                            productGPU.ProductInformationId = ProductId;
+                            productGPU.GPUId = GPUID;
+                            _context.ProductGPUs.Add(productGPU);
+                            _context.SaveChanges();
+                        }
+                        else
+                        {
+                            // Update
+                            item.Specification = Spec;
+                            item.Price = Price;
+                            // 保存資料庫變更
+                            _context.SaveChanges();
+                        }
+                    }
+                }
+            }
+
+        }
+
+
 
         // 硬體資料全更新
         public virtual void UpdateAll()
