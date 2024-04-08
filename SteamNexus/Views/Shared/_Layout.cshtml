@@ -32,7 +32,7 @@
     <header>
         <!-- header Start -->
         <div class="container-fluid bg-primary" >
-            <div class="container">
+            <div class="container-fluid">
                 <nav class="navbar navbar-dark navbar-expand-lg py-0">
                     <a class="navbar-brand d-inline-flex align-items-center" asp-area="" asp-controller="Home" asp-action="Index">
                         <img class="mx-2" style="width:30px;height:30px;" src="~/img/logo.png" />
@@ -163,5 +163,11 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script> *@
     @await RenderSectionAsync("Scripts", required: false)
+
+    <script>
+        // container、container-fluid 切換
+
+    </script>
+
 </body>
 </html>
