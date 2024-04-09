@@ -25,7 +25,7 @@ namespace SteamNexus.Controllers
         [HttpGet]
         public IActionResult HardwareManagement()
         {
-            ViewBag.CustomerCourtries = new SelectList(_context.ComputerParts.Select(c=>c.Name));
+            ViewBag.ComputerParts = new SelectList(_context.ComputerPartCategories.Select(c=>c.Name));
             // 
             return PartialView("_HardwareManagementPartial");
         }
