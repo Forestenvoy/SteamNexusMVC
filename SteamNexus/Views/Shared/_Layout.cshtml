@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-100">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -27,10 +27,9 @@
 
     <!-- Template Stylesheet -->
     <link href="~/css/style.css" rel="stylesheet">
-
     @await RenderSectionAsync("Styles", required: false)
 </head>
-<body class="bg-dark">
+<body class="bg-dark d-flex flex-column h-100">
     <header>
         <!-- header Start -->
         <div class="container-fluid bg-primary" >
@@ -117,13 +116,14 @@
     
     
     <div class="container-fluid">
-        <main role="main" class="pb-3 ">
+        <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
     
     <!-- Footer Start -->
-    <footer class="position-absolute bottom-0 start-0 border-top footer text-muted ">
+    @*<footer class="position-absolute bottom-0 start-0 border-top footer text-muted ">*@
+    <footer class="position-absolute bottom-0 start-0 border-top footer text-muted">
         <div class="container-fluid footer bg-primary">
                 <div class="row">
                     <div class="col-md-6 text-center text-md-start">

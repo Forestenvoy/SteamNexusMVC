@@ -6,44 +6,32 @@
 }
 
 @* container *@
-<div class="container-fluid p-0">
+<div class="container-fluid p-0 h-auto">
     <div class="row">
         <div class="col-2 p-0">
             @* Sidebar 側邊導覽列 *@
             @* Sidebar start *@
             <!-- Sidebar  -->
-            <nav class="nav flex-column bg-light">
+            <nav class="nav flex-column bg-light h-100">
                 <a class="nav-link active" aria-current="page" href="#">Active</a>
-                <a class="nav-link" href="#">會員管理</a>
-                <a class="nav-link" href="#">遊戲管理</a>
-                <a class="nav-link" href="#">硬體管理</a>
-                <a class="nav-link" href="#">廣告管理</a>
+                <a class="nav-link" href="">會員管理</a>
+                <a class="nav-link" href="">遊戲管理</a>
+                <a class="nav-link" href="" id="HardWare">硬體管理</a>
+                <a class="nav-link" href="">廣告管理</a>
             </nav>
             @* Sidebar end *@
         </div>
-        <div class="col-10 p-0">
-            @*麵包屑*@
-            @*breadcrumb start*@
-            <div class="bg-secondary">
-                <div class="container">
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb mb-0">
-                            <li class="breadcrumb-item"><a href="index.html">首頁</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">
-                                聯絡我們
-                            </li>
-                        </ol>
-                    </nav>
-                </div>
+        <div class="col-10">
+            <div class="h-100 bg-primary" id="System">
+                
             </div>
-            @*breadcrumb End*@
         </div>
     </div>
 </div>
 
 
-<button id="HardWare" class="btn btn-primary">HardWare</button>
-<div class="container" id="System"></div>
+
+
 
 @section Scripts
 {
@@ -52,7 +40,8 @@
         $(document).ready(function () {
             var baseAddress = "https://localhost:7097"; // For Development
             // 事件綁定
-            $("#HardWare").on("click", function () {
+            $("#HardWare").on("click", function (event) {
+                event.preventDefault();
                 // 發送非同步GET請求
                 fetch(`${baseAddress}@Url.Action("HardwareManagement", "Admin")`, {
                     method: "GET"
