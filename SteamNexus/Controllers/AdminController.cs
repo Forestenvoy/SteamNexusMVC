@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SteamNexus.Data;
+using SteamNexus.Models;
 
 namespace SteamNexus.Controllers
 {
@@ -25,9 +26,30 @@ namespace SteamNexus.Controllers
         [HttpGet]
         public IActionResult HardwareManagement()
         {
+            // 下拉式選單 => 硬體
             ViewBag.ComputerParts = new SelectList(_context.ComputerPartCategories.Select(c=>c.Name));
-            // 
             return PartialView("_HardwareManagementPartial");
+        }
+
+        // GET: Admin/HardwareData
+        [HttpGet]
+        public IActionResult HardwareData(int Type)
+        {
+            // 尋找特定硬體
+            var result = _context.ComponentClassifications
+                .Where(c=>c.ComputerPartCategoryId == Type)
+                .Join(_context.ProductInformations, c=>c.ComponentClassificationId, p=>p.ComponentClassificationId, 
+                (c,p)=> new
+                {
+                    ProductId = p.ProductInformationId,
+                    ComponentClassificationName = c.Name,
+                    ProductName = p.Name,
+                    p.Specification,
+                    p.Price,
+                    p.Wattage,
+                    p.Recommend
+                });
+            return Json(result);
         }
 
         [HttpGet]

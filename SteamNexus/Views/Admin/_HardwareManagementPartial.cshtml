@@ -1,2 +1,95 @@
-﻿<h3>硬體選擇</h3>
-<select asp-items="@ViewBag.ComputerParts" class="form-select"></select>
+﻿@* PartialView 的局部樣式 *@
+<style asp-add-nested-styles="true">
+    .dataTables_wrapper .dataTables_filter label {
+        color: white;
+    }
+</style>
+<link href="~/lib/datatables/css/jquery.datatables.min.css" rel="stylesheet" asp-add-nested-styles="true" />
+@* PartialView 的內容 *@
+<div class="text-center d-flex justify-content-center align-items-center bg" style="height:100px">
+    <h3 class="text-white p-2 m-0">硬體選擇</h3>
+    <select asp-items="@ViewBag.ComputerParts" class="form-select" style="width:250px;height:40px" id="HardSelect">
+        <option value="" disabled selected hidden>---- 請選擇 ----</option>
+    </select>
+</div>
+<table id="HardwareManageTable" class="dark">
+    <thead>
+        <tr>
+            <td>ID</td>
+            <td>componentClassificationName</td>
+            <td>productName</td>
+            <td>specification</td>
+            <td>price</td>
+            <td>wattage</td>
+        </tr>
+    </thead>
+</table>
+<script src="~/lib/datatables/js/jquery.datatables.min.js"></script>
+<script>
+    $(document).ready(function () {
+
+        var datatable = $("#HardwareManageTable").DataTable({
+            columns: [
+                { "data": "productId", "width": "10%" },
+                { "data": "componentClassificationName", "width": "20%" },
+                { "data": "productName", "width": "20%" },
+                { "data": "specification", "width": "30%" },
+                { "data": "price", "width": "10%" },
+                { "data": "wattage", "width": "10%" },
+            ],
+            fixedHeader: { header: true },
+            language: {
+                url: '//cdn.datatables.net/plug-ins/2.0.3/i18n/zh-HANT.json'
+            }
+        });
+
+        let HardAddress = "https://localhost:7097";
+
+        $("#HardSelect").change(function () {
+            var selectedOption = $(this).val();
+            let p;
+            switch (selectedOption) {
+                case "CPU 中央處理器":
+                    p = encodeURI("Type=10000");
+                    break;
+                case "GPU 顯示卡":
+                    p = encodeURI("Type=10001");
+                    break;
+            };
+            // 發送非同步GET請求
+            fetch(`${HardAddress}@Url.Action("HardwareData", "Admin")?${p}`, {
+                method: "GET"
+            }).then(result => {
+                // 此時 result 是一個請求結果的物件
+                // 注意傳回值型態，字串用 text()，JSON 用 json()
+                if (result.ok) {
+                    return result.json();
+                }
+            }).then(data => {
+                // 此時 data 為上一個 then 回傳的資料
+                // 清空表格
+                datatable.clear().draw();
+                // 添加新的資料
+                datatable.rows.add(data).draw();
+            }).catch(error => {
+                alert(error);
+            });
+
+            // 發送非同步GET請求
+            // $.ajax({
+            //     type: "GET",
+            //     url: `"https://localhost:7097"@Url.Action("HardwareData", "Admin")`,
+            //     success: function (data) {
+            //         // 清空表格
+            //         datatable.clear().draw();
+            //         // 添加新的資料
+            //         datatable.rows.add(data).draw();
+            //     },
+            //     error: function (xhr, status, error) {
+            //         // 處理錯誤情況
+            //         console.error(xhr, status, error);
+            //     }
+            // });
+        });
+    });
+</script>
