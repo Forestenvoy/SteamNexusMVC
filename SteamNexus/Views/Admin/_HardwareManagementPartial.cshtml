@@ -3,8 +3,13 @@
     .dataTables_wrapper .dataTables_filter label {
         color: white;
     }
+    thead {
+        margin-top: 20px;
+        background-color: black;
+        color: white;
+    }
 </style>
-<link href="~/lib/datatables/css/jquery.datatables.min.css" rel="stylesheet" asp-add-nested-styles="true" />
+<link href="~/lib/datatables/css/jquery.datatables.min.css" rel="stylesheet" />
 @* PartialView 的內容 *@
 <div class="text-center d-flex justify-content-center align-items-center bg" style="height:100px">
     <h3 class="text-white p-2 m-0">硬體選擇</h3>
@@ -15,12 +20,13 @@
 <table id="HardwareManageTable" class="dark">
     <thead>
         <tr>
-            <td>ID</td>
-            <td>componentClassificationName</td>
-            <td>productName</td>
-            <td>specification</td>
-            <td>price</td>
-            <td>wattage</td>
+            <th></th>
+            <th>ID</th>
+            <th>產品名稱</th>
+            <th>規格</th>
+            <th>種類</th>
+            <th>價格</th>
+            <th>瓦數</th>
         </tr>
     </thead>
 </table>
@@ -30,17 +36,25 @@
 
         var datatable = $("#HardwareManageTable").DataTable({
             columns: [
-                { "data": "productId", "width": "10%" },
-                { "data": "componentClassificationName", "width": "20%" },
-                { "data": "productName", "width": "20%" },
-                { "data": "specification", "width": "30%" },
-                { "data": "price", "width": "10%" },
-                { "data": "wattage", "width": "10%" },
+                {
+                    class:'dt-control',
+                    orderable: false,
+                    data: null,
+                    defaultContent: ''
+                },
+                { "data": "productId" },
+                { "data": "productName" },
+                { "data": "specification" },
+                { "data": "componentClassificationName" },
+                { "data": "price" },
+                { "data": "wattage" },
             ],
             fixedHeader: { header: true },
             language: {
                 url: '//cdn.datatables.net/plug-ins/2.0.3/i18n/zh-HANT.json'
-            }
+            },
+            order: [[1, 'asc']],
+            processing: true
         });
 
         let HardAddress = "https://localhost:7097";
@@ -54,6 +68,33 @@
                     break;
                 case "GPU 顯示卡":
                     p = encodeURI("Type=10001");
+                    break;
+                case "RAM 記憶體":
+                    p = encodeURI("Type=10002");
+                    break;
+                case "MotherBoard 主機板":
+                    p = encodeURI("Type=10003");
+                    break;
+                case "SSD 固態硬碟":
+                    p = encodeURI("Type=10004");
+                    break;
+                case "HDD 傳統硬碟":
+                    p = encodeURI("Type=10005");
+                    break;
+                case "AirCooler 風冷散熱器":
+                    p = encodeURI("Type=10006");
+                    break;
+                case "LiquidCooler 水冷散熱器":
+                    p = encodeURI("Type=10007");
+                    break;
+                case "CASE 機殼":
+                    p = encodeURI("Type=10008");
+                    break;
+                case "PSU 電源供應器":
+                    p = encodeURI("Type=10009");
+                    break;
+                case "OS 作業系統":
+                    p = encodeURI("Type=10010");
                     break;
             };
             // 發送非同步GET請求
@@ -75,21 +116,30 @@
                 alert(error);
             });
 
-            // 發送非同步GET請求
-            // $.ajax({
-            //     type: "GET",
-            //     url: `"https://localhost:7097"@Url.Action("HardwareData", "Admin")`,
-            //     success: function (data) {
-            //         // 清空表格
-            //         datatable.clear().draw();
-            //         // 添加新的資料
-            //         datatable.rows.add(data).draw();
-            //     },
-            //     error: function (xhr, status, error) {
-            //         // 處理錯誤情況
-            //         console.error(xhr, status, error);
-            //     }
-            // });
         });
+
+
+        // Add event listener for opening and closing details
+        $('#HardwareManageTable tbody').on('click', 'td.dt-control', function () {
+            var tr = $(this).closest('tr');
+            var row = $('#HardwareManageTable').DataTable().row(tr);
+
+            if (row.child.isShown()) {
+                // This row is already open - close it
+                row.child.hide();
+                tr.removeClass('shown');
+            }
+            else {
+                // Open this row
+                row.child(format1(row.data())).show();
+                tr.addClass('shown');
+            }
+        });
+
+        function format(d) {
+            return (
+                'Full name: ' 
+            );
+        }
     });
 </script>
