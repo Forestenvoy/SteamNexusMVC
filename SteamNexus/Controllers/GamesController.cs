@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SteamNexus.Data;
 using SteamNexus.Models;
+using SteamNexus.ViewModels.Game;
 
 namespace SteamNexus.Controllers
 {
@@ -23,7 +24,7 @@ namespace SteamNexus.Controllers
         public async Task<IActionResult> Index()
         {
             var steamNexusDbContext = _context.Games.Include(g => g.MinReq).Include(g => g.RecReq);
-            return View(await steamNexusDbContext.ToListAsync());
+            return View(steamNexusDbContext);
         }
 
         // GET: Games/Details/5
@@ -59,17 +60,25 @@ namespace SteamNexus.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("GameId,MinReqId,RecReqId,AppId,Name,OriginalPrice,CurrentPrice,LowestPrice,AgeRating,Comment,CommentNum,ReleaseDate,Publisher,Description,Players,PeakPlayers,ImagePath,VideoPath")] Game game)
+        public async Task<IActionResult> Create([Bind("AppId,Name,OriginalPrice,AgeRating,ReleaseDate,Publisher,Description,ImagePath,VideoPath")] CreateViewModel Create)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(game);
+                Game game = new Game{
+                    AppId = Create.AppId,
+                    Name = Create.Name,
+                    OriginalPrice = Create.OriginalPrice,
+                    AgeRating = Create.AgeRating,
+                    Description = Create.Description,
+                    ImagePath = Create.ImagePath,
+                    VideoPath = Create.VideoPath,
+                };
+                
+                _context.Games.Add(game);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["MinReqId"] = new SelectList(_context.MinimumRequirements, "MinReqId", "MinReqId", game.MinReqId);
-            ViewData["RecReqId"] = new SelectList(_context.RecommendedRequirements, "RecReqId", "RecReqId", game.RecReqId);
-            return View(game);
+            return View(Create);
         }
 
         // GET: Games/Edit/5
