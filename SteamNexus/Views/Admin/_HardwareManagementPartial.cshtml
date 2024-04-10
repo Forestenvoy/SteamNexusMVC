@@ -54,6 +54,23 @@
     tr.shown td.details-control .detailIcon {
         color: black;
     }
+
+    /* 推薦行文字顏色 */
+    .black-row {
+        color: black !important;
+    }
+
+    .green-row{
+        color: green !important;
+    }
+
+    .blue-row{
+        color: blue !important;
+    }
+
+    .red-row{
+        color: red !important;
+    }
 </style>
 @* PartialView 的內容 *@
 <div class="text-center d-flex justify-content-center align-items-center bg" style="height:100px">
@@ -93,7 +110,7 @@
                 { "data": "specification" },
                 { "data": "componentClassificationName" },
                 { "data": "price", "width": "5%", "className": "text-center" },
-                { "data": "wattage", "width": "5%", "className": "text-center" },
+                { "data": "wattage", "width": "5%", "className": "text-center" }
             ],
             fixedHeader: { header: true },
             language: {
@@ -101,9 +118,20 @@
             },
             order: [[1, 'asc']],
             // 讀取 顯示 轉圈圈
-            "processing": true,
+            processing: true,
             // 關閉 自動計算寬度
-            "autoWidth": false
+            autoWidth: false,
+            createdRow: function (row, data, dataIndex) {
+                if (data.recommend == 0) {
+                    $(row).addClass('black-row');
+                } else if (data.recommend == 1) {
+                    $(row).addClass('green-row');
+                } else if (data.recommend == 2) {
+                    $(row).addClass('blue-row');
+                } else if (data.recommend == 3) {
+                    $(row).addClass('red-row');
+                }
+            }
         });
 
         let HardAddress = "https://localhost:7097";
@@ -169,28 +197,15 @@
 
         // RowDetail 內容
         function format(d) {
-            let Rec = "無";
             let color = "black"; // 默認顏色
             let RadioId = "recommend" + d.productId;
-            if (d.recommend == 1) {
-                Rec = "基本";
-                color = "green"; // 基本推薦，綠色
-            }
-            else if (d.recommend == 2) {
-                Rec = "優良";
-                color = "blue"; // 優良推薦，藍色
-            }
-            else if (d.recommend == 3) {
-                Rec = "完美";
-                color = "red"; // 完美推薦，紅色
-            }
             return (
-                `<div> 推薦設定:
-                            <label style="color: ${color};"><input type="radio" name="${RadioId}" value="0" ${d.recommend == 0 ? 'checked' : ''}> 無</label>
-                            <label style="color: ${color};"><input type="radio" name="${RadioId}" value="1" ${d.recommend == 1 ? 'checked' : ''}> 基本</label>
-                            <label style="color: ${color};"><input type="radio" name="${RadioId}" value="2" ${d.recommend == 2 ? 'checked' : ''}> 優良</label>
-                            <label style="color: ${color};"><input type="radio" name="${RadioId}" value="3" ${d.recommend == 3 ? 'checked' : ''}> 完美</label>
-                        </div>`
+                `<div id="recommend${d.productId}"> 推薦設定:
+                                <label style="color: black;"><input type="radio" name="${RadioId}" value="0" ${d.recommend == 0 ? 'checked' : ''}> 無</label>
+                                    <label style="color: green;"><input type="radio" name="${RadioId}" value="1" ${d.recommend == 1 ? 'checked' : ''}> 基本</label>
+                                    <label style="color: blue;"><input type="radio" name="${RadioId}" value="2" ${d.recommend == 2 ? 'checked' : ''}> 優良</label>
+                                    <label style="color: red;"><input type="radio" name="${RadioId}" value="3" ${d.recommend == 3 ? 'checked' : ''}> 完美</label>
+                            </div>`
             );
         };
         // 推薦變更事件
@@ -200,35 +215,67 @@
                 let itemid = Number($(this).attr('name').slice('9'));
                 let value = Number($(this).val());
 
-                // 發送非同步POST請求
+                // 發送非同步POST請求 ==> 資料庫資料變更
                 var data = {
-                    ProductId:itemid,
-                    recommend:value
+                    ProductId: itemid,
+                    recommend: value
                 };
-                
-                // JSON.stringify() 將物件轉換為JSON字串
-                fetch(`${baseAddress}/Ajax/FetchPostGreet`, {
+                fetch(`${HardAddress}@Url.Action("recommendChange", "Admin")`, {
                     method: "POST",
-                    body: JSON.stringify(p),
+                    body: JSON.stringify(data),
                     headers: {
                         "Content-Type": "application/json"
                     }
                 }).then(result => {
                     // 此時 result 是一個請求結果的物件
                     // 注意傳回值型態，字串用 text()，JSON 用 json()
-                    $("#progress").hide();
+                    // $("#progress").hide();
                     //  如過 HTTP 響應的狀態馬碼在 200 到 299 的範圍內 ==> .ok 會回傳 true
                     if (result.ok) {
                         return result.text();
                     }
                 }).then(data => {
                     // 此時 data 為上一個 then 回傳的資料
-                    $("#result").text(data);
+                    // $("#result").text(data);
                 }).catch(error => {
-                    $("#progress").hide();
+                    // $("#progress").hide();
                     alert(error);
                 });
 
+                // 前端視覺效果
+                let divid = "recommend" + itemid;
+                let targetRow = $(`#${divid}`).parent().parent().prev();
+                let colorclass = "";
+                switch (value) {
+                    case 0:
+                        colorclass = "black-row";
+                        break;
+                    case 1:
+                        colorclass = "green-row";
+                        break;
+                    case 2:
+                        colorclass = "blue-row";
+                        break;
+                    case 3:
+                        colorclass = "red-row";
+                        break;
+                }
+                if (targetRow.hasClass('black-row')) {
+                    targetRow.removeClass('black-row');
+                    targetRow.addClass(colorclass);
+                }
+                else if (targetRow.hasClass('green-row')) {
+                    targetRow.removeClass('green-row');
+                    targetRow.addClass(colorclass);
+                }
+                else if (targetRow.hasClass('blue-row')) {
+                    targetRow.removeClass('blue-row');
+                    targetRow.addClass(colorclass);
+                }
+                else if (targetRow.hasClass('red-row')) {
+                    targetRow.removeClass('red-row');
+                    targetRow.addClass(colorclass);
+                }
             });
         }
 
