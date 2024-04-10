@@ -1,0 +1,149 @@
+﻿@model IEnumerable<SteamNexus.Models.Game>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+<div class="table-responsive">
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.ImagePath)
+                </th>
+                @* <th>
+                    @Html.DisplayNameFor(model => model.MinReq)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.RecReq)
+                </th> *@
+                <th>
+                    @Html.DisplayNameFor(model => model.AppId)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.OriginalPrice)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CurrentPrice)
+                </th>
+                @* <th>
+                    @Html.DisplayNameFor(model => model.LowestPrice)
+                </th> *@
+                <th>
+                    @Html.DisplayNameFor(model => model.AgeRating)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Comment)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CommentNum)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ReleaseDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Publisher)
+                </th>
+                @* <th>
+                    @Html.DisplayNameFor(model => model.Description)
+                </th> *@
+                @* <th>
+                    @Html.DisplayNameFor(model => model.Players)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PeakPlayers)
+                </th> *@
+                
+                @* <th>
+                    @Html.DisplayNameFor(model => model.VideoPath)
+                </th> *@
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        <img src=@item.ImagePath title=@item.Name style="width:150px"></img>
+                        @* @Html.DisplayFor(modelItem => item.ImagePath) *@
+                    </td>
+                    @* <td>
+                        @Html.DisplayFor(modelItem => item.MinReq.MinReqId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RecReq.RecReqId)
+                    </td> *@
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AppId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                     <td>
+                        @Html.DisplayFor(modelItem => item.OriginalPrice)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CurrentPrice)
+                    </td>
+                    @*<td>
+                        @Html.DisplayFor(modelItem => item.LowestPrice)
+                    </td> *@
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AgeRating)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Comment)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CommentNum)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ReleaseDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Publisher)
+                    </td>
+                    @* <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td> *@
+                    @* <td>
+                        @Html.DisplayFor(modelItem => item.Players)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PeakPlayers)
+                    </td> *@
+                    
+                    @* <td>
+                        @Html.DisplayFor(modelItem => item.VideoPath)
+                    </td> *@
+                    <td>
+                        <button class="btn btn-primary">
+                            <a asp-action="Edit" asp-route-id="@item.GameId">Edit</a>
+                        </button>
+                        <button class="btn btn-primary">
+                            <a asp-action="Details" asp-route-id="@item.GameId">Details</a>
+                        </button>
+                        <button class="btn btn-primary">
+                            <a asp-action="Delete" asp-route-id="@item.GameId">Delete</a>
+                        </button>
+                        @* <a asp-action="Edit" asp-route-id="@item.GameId">Edit</a> 
+                        <a asp-action="Details" asp-route-id="@item.GameId">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.GameId">Delete</a> *@
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>

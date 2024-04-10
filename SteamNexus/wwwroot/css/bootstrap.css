@@ -75,7 +75,7 @@ h6, .h6, h5, .h5, h4, .h4, h3, .h3, h2, .h2, h1, .h1 {
   font-family: "Saira", sans-serif;
   font-weight: 600;
   line-height: 1.2;
-  color: #000103;
+  color: white;
 }
 
 h1, .h1 {
@@ -205,11 +205,11 @@ sup {
 }
 
 a {
-  color: #31384f;
+  color: white;
   text-decoration: none;
 }
 a:hover {
-  color: #272d3f;
+  color: white;
 }
 
 a:not([href]):not([class]), a:not([href]):not([class]):hover {
@@ -1712,7 +1712,7 @@ progress {
   --bs-table-hover-bg: rgba(0, 0, 0, 0.075);
   width: 100%;
   margin-bottom: 1rem;
-  color: #787878;
+  color: white;
   vertical-align: top;
   border-color: #dee2e6;
 }
@@ -2704,9 +2704,15 @@ textarea.form-control-lg {
 }
 
 .btn-primary {
-  color: #fff;
+  color: white;
   background-color: #31384f;
   border-color: #31384f;
+  height:25px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  text-align:center;
+  margin:5px;
 }
 .btn-primary:hover {
   color: #fff;
@@ -7205,7 +7211,7 @@ textarea.form-control-lg {
 
 /* rtl:end:remove */
 .text-primary {
-  color: #31384f !important;
+  color: white !important;
 }
 
 .text-secondary {
