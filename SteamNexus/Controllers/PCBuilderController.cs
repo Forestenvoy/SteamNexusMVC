@@ -30,9 +30,20 @@ namespace SteamNexus.Controllers
         [HttpPost]
         public string WebScrabingTest()
         {
-            _coolPCWebScraping.UpdateAll();
+            _coolPCWebScraping.UpdateAllComponentClassifications();
 
-            
+            _coolPCWebScraping.UpdateCPU();
+            _coolPCWebScraping.UpdateGPU();
+            _coolPCWebScraping.UpdateRAM();
+            _coolPCWebScraping.UpdateMB();
+            _coolPCWebScraping.UpdateSSD();
+            _coolPCWebScraping.UpdateHDD();
+            _coolPCWebScraping.UpdateAirCooler();
+            _coolPCWebScraping.UpdateLiquidCooler();
+            _coolPCWebScraping.UpdateCASE();
+            _coolPCWebScraping.UpdatePSU();
+            _coolPCWebScraping.UpdateOS();
+
 
             return "Run Success";
         }
