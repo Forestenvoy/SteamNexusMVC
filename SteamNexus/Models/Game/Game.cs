@@ -13,35 +13,35 @@ public partial class Game
     [Required]
     public int GameId { get; set; }
 
-    [Required]
-    public int MinReqId { get; set; }
+    //[Required]
+    public int? MinReqId { get; set; }
 
     public virtual MinimumRequirement MinReq { get; set; }
 
-    [Required]
-    public int RecReqId { get; set; }
+    //[Required]
+    public int? RecReqId { get; set; }
 
     public virtual RecommendedRequirement RecReq { get; set; }
 
-    [Required]
-    public int AppId { get; set; }
+    //[Required]
+    public int? AppId { get; set; }
 
-    [Required]
+    //[Required]
     [MaxLength(100)]
-    public string Name { get; set; }
+    public string? Name { get; set; }
 
-    [Required]
-    public int OriginalPrice { get; set; }
+    //[Required]
+    public int? OriginalPrice { get; set; }
 
-    [Required]
-    public int CurrentPrice { get; set; }
+    //[Required]
+    public int? CurrentPrice { get; set; }
 
-    [Required]
-    public int LowestPrice { get; set; }
+    //[Required]
+    public int? LowestPrice { get; set; }
 
-    [Required]
+    //[Required]
     [MaxLength(100)]
-    public string AgeRating { get; set; }
+    public string? AgeRating { get; set; }
 
     #nullable enable
 
