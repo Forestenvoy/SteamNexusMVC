@@ -8,6 +8,15 @@
         background-color: black;
         color: white;
     }
+
+    td.details-control {
+        background: url('~/img/right-arrow.png') no-repeat center center;
+        cursor: pointer;
+    }
+
+    tr.shown td.details-control {
+        background: url('~/img/down-arrow.pn') no-repeat center center;
+    }
 </style>
 <link href="~/lib/datatables/css/jquery.datatables.min.css" rel="stylesheet" />
 @* PartialView 的內容 *@
@@ -37,14 +46,10 @@
         var datatable = $("#HardwareManageTable").DataTable({
             columns: [
                 {
-                    class:'dt-control',
-                    orderable: false,
-                    data: null,
-                    defaultContent: '',
-                    "render": function (data, type, full, meta) {
-                        return '<button class="btn btn-primary dt-control">0</button>';
-                    },
-                    "width": "5%"
+                    "class": 'details-control',
+                    "orderable": false,
+                    "data": null,
+                    "defaultContent": ''
                 },
                 { "data": "productId" },
                 { "data": "productName" },
@@ -122,12 +127,15 @@
 
         });
 
-
+        function format(d) {
+            return (
+                'Full name: '
+            );
+        };
         // Add event listener for opening and closing details
-        $('#HardwareManageTable tbody').on('click', 'td.dt-control', function () {
+        $('#HardwareManageTable tbody').on('click', 'td.details-control', function () {
             var tr = $(this).closest('tr');
-            var row = $('#HardwareManageTable').DataTable().row(tr);
-
+            var row = datatable.row(tr);
             if (row.child.isShown()) {
                 // This row is already open - close it
                 row.child.hide();
@@ -135,15 +143,11 @@
             }
             else {
                 // Open this row
-                row.child(format1(row.data())).show();
+                row.child(format(row.data())).show();
                 tr.addClass('shown');
             }
         });
 
-        function format(d) {
-            return (
-                'Full name: ' 
-            );
-        }
+
     });
 </script>
