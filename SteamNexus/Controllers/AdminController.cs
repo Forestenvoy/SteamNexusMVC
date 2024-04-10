@@ -52,6 +52,33 @@ namespace SteamNexus.Controllers
             return Json(result);
         }
 
+        // 推薦變更呼叫
+
+        public class RecommondData
+        {
+            public int ProductId { get; set; }
+            public int recommend { get; set; }
+        }
+
+        // POST: Admin/recommendChange
+        [HttpPost]
+        public string recommendChange([FromBody]RecommondData data)
+        {
+            var product = _context.ProductInformations
+                .Where(p => p.ProductInformationId == data.ProductId)
+                .FirstOrDefault();
+            if(product != null)
+            {
+                product.Recommend = data.recommend;
+                _context.SaveChanges();
+                return "變更成功";
+            }
+            else
+            {
+                return "找不到產品";
+            }
+        }
+
         [HttpGet]
         public IActionResult MemberManagement()
         {

@@ -167,9 +167,11 @@
 
         });
 
+        // RowDetail 內容
         function format(d) {
             let Rec = "無";
             let color = "black"; // 默認顏色
+            let RadioId = "recommend" + d.productId;
             if (d.recommend == 1) {
                 Rec = "基本";
                 color = "green"; // 基本推薦，綠色
@@ -184,13 +186,52 @@
             }
             return (
                 `<div> 推薦設定:
-                    <label style="color: ${color};"><input type="radio" name="recommend" value="0" ${d.recommend == 0 ? 'checked' : ''}> 無</label>
-                    <label style="color: ${color};"><input type="radio" name="recommend" value="1" ${d.recommend == 1 ? 'checked' : ''}> 基本</label>
-                    <label style="color: ${color};"><input type="radio" name="recommend" value="2" ${d.recommend == 2 ? 'checked' : ''}> 優良</label>
-                    <label style="color: ${color};"><input type="radio" name="recommend" value="3" ${d.recommend == 3 ? 'checked' : ''}> 完美</label>
-                </div>`
+                            <label style="color: ${color};"><input type="radio" name="${RadioId}" value="0" ${d.recommend == 0 ? 'checked' : ''}> 無</label>
+                            <label style="color: ${color};"><input type="radio" name="${RadioId}" value="1" ${d.recommend == 1 ? 'checked' : ''}> 基本</label>
+                            <label style="color: ${color};"><input type="radio" name="${RadioId}" value="2" ${d.recommend == 2 ? 'checked' : ''}> 優良</label>
+                            <label style="color: ${color};"><input type="radio" name="${RadioId}" value="3" ${d.recommend == 3 ? 'checked' : ''}> 完美</label>
+                        </div>`
             );
         };
+        // 推薦變更事件
+        function radioevent(rowDetail) {
+            $(rowDetail).on('change', 'input[type="radio"]', function () {
+                // 獲取 Radiobutton 的 ID
+                let itemid = Number($(this).attr('name').slice('9'));
+                let value = Number($(this).val());
+
+                // 發送非同步POST請求
+                var data = {
+                    ProductId:itemid,
+                    recommend:value
+                };
+                
+                // JSON.stringify() 將物件轉換為JSON字串
+                fetch(`${baseAddress}/Ajax/FetchPostGreet`, {
+                    method: "POST",
+                    body: JSON.stringify(p),
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                }).then(result => {
+                    // 此時 result 是一個請求結果的物件
+                    // 注意傳回值型態，字串用 text()，JSON 用 json()
+                    $("#progress").hide();
+                    //  如過 HTTP 響應的狀態馬碼在 200 到 299 的範圍內 ==> .ok 會回傳 true
+                    if (result.ok) {
+                        return result.text();
+                    }
+                }).then(data => {
+                    // 此時 data 為上一個 then 回傳的資料
+                    $("#result").text(data);
+                }).catch(error => {
+                    $("#progress").hide();
+                    alert(error);
+                });
+
+            });
+        }
+
         // Add event listener for opening and closing details
         $('#HardwareManageTable tbody').on('click', 'td.details-control', function () {
             var tr = $(this).closest('tr');
@@ -206,8 +247,14 @@
                 row.child(format(row.data())).show();
                 tr.addClass('shown');
                 $(this).find('.detailIcon').text("▼");
+
+                // 獲取子元素（row.detail）
+                var rowDetail = $(tr).next();
+                // 綁定事件(推薦變更)
+                radioevent(rowDetail);
             }
         });
+
 
 
     });
