@@ -1,11 +1,11 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-100 dark">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - SteamNexus</title>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/SteamNexus.styles.css" asp-append-version="true" />
+    @* <link rel="stylesheet" href="~/SteamNexus.styles.css" asp-append-version="true" /> *@
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,15 +24,36 @@
 
     <!-- Customized Bootstrap Stylesheet -->
     <link href="~/css/bootstrap.css" rel="stylesheet">
-
-    <!-- Template Stylesheet -->
     <link href="~/css/style.css" rel="stylesheet">
+    <!-- Template Stylesheet -->
+    <style>
+        html, body {
+            height: 100% !important;
+            margin: 0 !important;
+        }
+
+        body {
+            display: flex !important; /*使物件依序排列*/
+            flex-direction: column !important; /*使物件垂直排列*/
+        }
+
+        .wrapperdiv {
+            flex-grow: 1 !important; /*可佔滿垂直剩餘的空間*/
+        }
+
+        .footer {
+            line-height:1.5;
+        }
+    </style>
+
+
+    @await RenderSectionAsync("Styles", required: false)
 </head>
-<body class="bg-dark">
+<body class="bg-dark d-flex flex-column h-100">
     <header>
         <!-- header Start -->
         <div class="container-fluid bg-primary" >
-            <div class="container">
+            <div class="container-fluid">
                 <nav class="navbar navbar-dark navbar-expand-lg py-0">
                     <a class="navbar-brand d-inline-flex align-items-center" asp-area="" asp-controller="Home" asp-action="Index">
                         <img class="mx-2" style="width:30px;height:30px;" src="~/img/logo.png" />
@@ -53,7 +74,7 @@
                                 <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-controller="Games" asp-action="Index">遊戲資訊測試</a>
+                                <a class="nav-link" asp-area="" asp-controller="Admin" asp-action="Index">後台管理</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" asp-area="" asp-controller="PCBuilder" asp-action="Index">硬體測試</a>
@@ -114,38 +135,25 @@
     </header>
     
     
-    <div class="container">
-        <main role="main" class="pb-3 ">
-            
+    <div class="container-fluid wrapperdiv">
+        <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
     
-@*     <!-- Footer Start -->
-    <footer class="position-absolute bottom-0 start-0 border-top footer text-muted ">
-        <div class="container-fluid footer bg-primary">
-                <div class="row">
-                    <div class="col-md-6 text-center text-md-start">
-                        <span class="text-light"><a href="#" class="text-secondary"><i class="fas fa-copyright text-secondary me-2"></i>Your Site Name</a>, All right reserved.</span>
-                    </div>
-                    <div class="col-md-6 text-center text-md-end">
-                        <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
-                        <span class="text-light">Designed By<a href="https://htmlcodex.com" class="text-secondary">HTML Codex</a> Distributed By <a href="https://themewagon.com">ThemeWagon</a></span>
-                    </div>
-                </div>
+    <!-- Footer Start -->
+    @*<footer class="position-absolute bottom-0 start-0 border-top footer text-muted ">*@
+    <footer class="border-top footer text-muted bg-dark">
+        <div class="text-center p-3">
+            &copy; 2024 - SteamNexus
         </div>
     </footer>
-    <div class="position-absolute top-0 start-0" id="particles-js"></div>
     <!-- Footer End -->
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2024 - SteamNexus - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer> *@
+    @*粒子效果*@
+    <div class="position-absolute top-0 start-0" id="particles-js"></div>
 
     <!-- JavaScript Libraries -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/lib/wow/wow.min.js"></script>
     <script src="~/lib/easing/easing.min.js"></script>
@@ -164,5 +172,11 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script> *@
     @await RenderSectionAsync("Scripts", required: false)
+
+    <script>
+        // container、container-fluid 切換
+
+    </script>
+
 </body>
 </html>

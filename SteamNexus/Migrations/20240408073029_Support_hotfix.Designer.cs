@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SteamNexus.Data;
 
@@ -11,9 +12,11 @@ using SteamNexus.Data;
 namespace SteamNexus.Migrations
 {
     [DbContext(typeof(SteamNexusDbContext))]
-    partial class SteamNexusDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240408073029_Support_hotfix")]
+    partial class Support_hotfix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -169,10 +172,11 @@ namespace SteamNexus.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("GameId"), 10000L);
 
                     b.Property<string>("AgeRating")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int?>("AppId")
+                    b.Property<int>("AppId")
                         .HasColumnType("int");
 
                     b.Property<string>("Comment")
@@ -183,7 +187,7 @@ namespace SteamNexus.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("int");
 
-                    b.Property<int?>("CurrentPrice")
+                    b.Property<int>("CurrentPrice")
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
@@ -194,17 +198,18 @@ namespace SteamNexus.Migrations
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
 
-                    b.Property<int?>("LowestPrice")
+                    b.Property<int>("LowestPrice")
                         .HasColumnType("int");
 
-                    b.Property<int?>("MinReqId")
+                    b.Property<int>("MinReqId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int?>("OriginalPrice")
+                    b.Property<int>("OriginalPrice")
                         .HasColumnType("int");
 
                     b.Property<int?>("PeakPlayers")
@@ -217,7 +222,7 @@ namespace SteamNexus.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int?>("RecReqId")
+                    b.Property<int>("RecReqId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("ReleaseDate")
@@ -588,11 +593,13 @@ namespace SteamNexus.Migrations
                     b.HasOne("SteamNexus.Models.MinimumRequirement", "MinReq")
                         .WithMany("Games")
                         .HasForeignKey("MinReqId")
+                        .IsRequired()
                         .HasConstraintName("FK_Games_MinimumRequirements");
 
                     b.HasOne("SteamNexus.Models.RecommendedRequirement", "RecReq")
                         .WithMany("Games")
                         .HasForeignKey("RecReqId")
+                        .IsRequired()
                         .HasConstraintName("FK_Games_RecommendedRequirements");
 
                     b.Navigation("MinReq");

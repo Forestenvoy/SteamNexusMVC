@@ -1,0 +1,89 @@
+﻿@section Styles
+{
+    <style>
+        .sidebar-link {
+            background-color: #F8F8F9;
+            border-bottom: 1px solid;
+            border-color: #9daec6;
+        }
+
+        .sidebar-active {
+            background-color: black;
+            border: 1px solid;
+            border-color:white;
+            color: white !important;
+        }
+    </style>
+}
+
+@* container *@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12 col-md-2 mt-3 mt-md-0">
+            @* Sidebar 側邊導覽列 *@
+            @* Sidebar start *@
+            <!-- Sidebar  -->
+            <nav class="nav flex-column h-100 text-center sidebar" style="background-color: transparent">
+                <a class="nav-link sidebar-link" href="" id="MemberManage">會員管理</a>
+                <a class="nav-link sidebar-link" href="" id="GameManage">遊戲管理</a>
+                <a class="nav-link sidebar-link" href="" id="HardWareManage">硬體管理</a>
+                <a class="nav-link sidebar-link" href="" id="AdManage">廣告管理</a>
+            </nav>
+            @* Sidebar end *@
+        </div>
+        <div class="col-sm-12 col-md-10 mt-3 mt-md-0">
+            <div class="h-100 bg-primary" id="System">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts
+{
+    <script>
+        // AJAX 呼叫替換 PartialView
+        $(document).ready(function () {
+            var baseAddress = "https://localhost:7097"; // For Development
+
+            // 後台系統 AJAX 切換
+            $("#HardWareManage").on("click", function (event) {
+                event.preventDefault();
+                // 發送非同步GET請求
+                fetch(`${baseAddress}@Url.Action("HardwareManagement", "Admin")`, {
+                    method: "GET"
+                }).then(response => {
+                    // 確保請求是否成功
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    // 解析 html
+                    return response.text();
+                }).then(data => {
+                    $("#System").html(data);
+                }).catch(error => {
+                    // 顯示 throw 的錯誤
+                    alert(error);
+                });
+            });
+
+            $("#GameManage").on("click", function (event) {
+                event.preventDefault();
+            });
+            $("#MemberManage").on("click", function (event) {
+                event.preventDefault();
+            });
+            $("#AdManage").on("click", function (event) {
+                event.preventDefault();
+            });
+
+            $('.sidebar-link').on('click', function () {
+                $(this).toggleClass('sidebar-active');
+                // 將其他兄弟元素的 'active' 類移除
+                $(this).siblings().removeClass('sidebar-active');
+            });
+
+
+        })
+    </script>
+}

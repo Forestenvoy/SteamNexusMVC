@@ -19,6 +19,9 @@ public partial class GameLanguage
     [Required]
     public int LanguageId { get; set; }
 
+    [Required]
+    public int Support { get; set; } = 0;
+
     // 導覽屬性
 
     public virtual Game Game { get; set; }
