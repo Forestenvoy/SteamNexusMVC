@@ -9,13 +9,22 @@
         color: white;
     }
 
-    td.details-control {
-        background: url('~/img/right-arrow.png') no-repeat center center;
+    /* RowDetail Icon setting */
+    td.details-control .detailIcon{
         cursor: pointer;
+        display: flex;
+        justify-content:center;
+        align-items:center;
+        font-size: 20px;
+        width:25px;
+        height: 25px;
+        border-radius: 20px;
+        background-color: green;
+        color: white;
+   
     }
-
-    tr.shown td.details-control {
-        background: url('~/img/down-arrow.pn') no-repeat center center;
+    tr.shown td.details-control .detailIcon {
+        background-color: red;
     }
 </style>
 <link href="~/lib/datatables/css/jquery.datatables.min.css" rel="stylesheet" />
@@ -49,9 +58,10 @@
                     "class": 'details-control',
                     "orderable": false,
                     "data": null,
-                    "defaultContent": ''
+                    "defaultContent": '<div class="detailIcon">+</div>',
+                    "width": "3%"
                 },
-                { "data": "productId" },
+                { "data": "productId", "width": "5%" },
                 { "data": "productName" },
                 { "data": "specification" },
                 { "data": "componentClassificationName" },
@@ -128,8 +138,22 @@
         });
 
         function format(d) {
+            let Rec = "無";
+            let color = "black"; // 默認顏色
+            if (d.recommend == 0) {
+                Rec = "基本";
+                color = "green"; // 基本推薦，綠色
+            }
+            else if (d.recommend == 2) {
+                Rec = "優良";
+                color = "blue"; // 優良推薦，藍色
+            }
+            else if (d.recommend == 3) {
+                Rec = "完美";
+                color = "red"; // 完美推薦，紅色
+            }
             return (
-                'Full name: '
+                '<span style="color:' + color + ';">推薦設定: ' + Rec + '</span>'
             );
         };
         // Add event listener for opening and closing details
@@ -140,11 +164,13 @@
                 // This row is already open - close it
                 row.child.hide();
                 tr.removeClass('shown');
+                $(this).find('.detailIcon').text("+");
             }
             else {
                 // Open this row
                 row.child(format(row.data())).show();
                 tr.addClass('shown');
+                $(this).find('.detailIcon').text("-");
             }
         });
 
