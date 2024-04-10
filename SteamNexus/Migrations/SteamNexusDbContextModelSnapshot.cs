@@ -51,7 +51,7 @@ namespace SteamNexus.Migrations
 
                     b.HasKey("AdvertisementId");
 
-                    b.ToTable("Advertisements");
+                    b.ToTable("Advertisements", (string)null);
                 });
 
             modelBuilder.Entity("SteamNexus.Models.CPU", b =>
@@ -72,7 +72,7 @@ namespace SteamNexus.Migrations
 
                     b.HasKey("CPUId");
 
-                    b.ToTable("CPUs");
+                    b.ToTable("CPUs", (string)null);
                 });
 
             modelBuilder.Entity("SteamNexus.Models.CommonQuestion", b =>
@@ -95,7 +95,7 @@ namespace SteamNexus.Migrations
 
                     b.HasKey("CommonQuestionId");
 
-                    b.ToTable("CommonQuestions");
+                    b.ToTable("CommonQuestions", (string)null);
                 });
 
             modelBuilder.Entity("SteamNexus.Models.ComponentClassification", b =>
@@ -118,7 +118,7 @@ namespace SteamNexus.Migrations
 
                     b.HasIndex("ComputerPartCategoryId");
 
-                    b.ToTable("ComponentClassifications");
+                    b.ToTable("ComponentClassifications", (string)null);
                 });
 
             modelBuilder.Entity("SteamNexus.Models.ComputerPartCategory", b =>
@@ -136,7 +136,7 @@ namespace SteamNexus.Migrations
 
                     b.HasKey("ComputerPartCategoryId");
 
-                    b.ToTable("ComputerPartCategories");
+                    b.ToTable("ComputerPartCategories", (string)null);
                 });
 
             modelBuilder.Entity("SteamNexus.Models.GPU", b =>
@@ -157,7 +157,7 @@ namespace SteamNexus.Migrations
 
                     b.HasKey("GPUId");
 
-                    b.ToTable("GPUs");
+                    b.ToTable("GPUs", (string)null);
                 });
 
             modelBuilder.Entity("SteamNexus.Models.Game", b =>
@@ -233,7 +233,7 @@ namespace SteamNexus.Migrations
 
                     b.HasIndex("RecReqId");
 
-                    b.ToTable("Games");
+                    b.ToTable("Games", (string)null);
                 });
 
             modelBuilder.Entity("SteamNexus.Models.GameLanguage", b =>
@@ -259,7 +259,7 @@ namespace SteamNexus.Migrations
 
                     b.HasIndex("LanguageId");
 
-                    b.ToTable("GameLanguages");
+                    b.ToTable("GameLanguages", (string)null);
                 });
 
             modelBuilder.Entity("SteamNexus.Models.Language", b =>
@@ -277,7 +277,7 @@ namespace SteamNexus.Migrations
 
                     b.HasKey("LanguageId");
 
-                    b.ToTable("Languages");
+                    b.ToTable("Languages", (string)null);
                 });
 
             modelBuilder.Entity("SteamNexus.Models.MinimumRequirement", b =>
@@ -327,7 +327,7 @@ namespace SteamNexus.Migrations
 
                     b.HasIndex("GPUId");
 
-                    b.ToTable("MinimumRequirements");
+                    b.ToTable("MinimumRequirements", (string)null);
                 });
 
             modelBuilder.Entity("SteamNexus.Models.PlayersHistory", b =>
@@ -351,7 +351,7 @@ namespace SteamNexus.Migrations
 
                     b.HasIndex("GameId");
 
-                    b.ToTable("PlayersHistories");
+                    b.ToTable("PlayersHistories", (string)null);
                 });
 
             modelBuilder.Entity("SteamNexus.Models.PriceHistory", b =>
@@ -375,7 +375,7 @@ namespace SteamNexus.Migrations
 
                     b.HasIndex("GameId");
 
-                    b.ToTable("PriceHistories");
+                    b.ToTable("PriceHistories", (string)null);
                 });
 
             modelBuilder.Entity("SteamNexus.Models.ProductCPU", b =>
@@ -398,7 +398,7 @@ namespace SteamNexus.Migrations
 
                     b.HasIndex("ProductInformationId");
 
-                    b.ToTable("ProductCPUs");
+                    b.ToTable("ProductCPUs", (string)null);
                 });
 
             modelBuilder.Entity("SteamNexus.Models.ProductGPU", b =>
@@ -421,7 +421,7 @@ namespace SteamNexus.Migrations
 
                     b.HasIndex("ProductInformationId");
 
-                    b.ToTable("ProductGPUs");
+                    b.ToTable("ProductGPUs", (string)null);
                 });
 
             modelBuilder.Entity("SteamNexus.Models.ProductInformation", b =>
@@ -457,7 +457,7 @@ namespace SteamNexus.Migrations
 
                     b.HasIndex("ComponentClassificationId");
 
-                    b.ToTable("ProductInformations");
+                    b.ToTable("ProductInformations", (string)null);
                 });
 
             modelBuilder.Entity("SteamNexus.Models.ProductRAM", b =>
@@ -478,7 +478,7 @@ namespace SteamNexus.Migrations
 
                     b.HasIndex("ProductInformationId");
 
-                    b.ToTable("ProductRAMs");
+                    b.ToTable("ProductRAMs", (string)null);
                 });
 
             modelBuilder.Entity("SteamNexus.Models.RecommendedRequirement", b =>
@@ -528,7 +528,7 @@ namespace SteamNexus.Migrations
 
                     b.HasIndex("GPUId");
 
-                    b.ToTable("RecommendedRequirements");
+                    b.ToTable("RecommendedRequirements", (string)null);
                 });
 
             modelBuilder.Entity("SteamNexus.Models.Tag", b =>
@@ -546,7 +546,7 @@ namespace SteamNexus.Migrations
 
                     b.HasKey("TagId");
 
-                    b.ToTable("Tags");
+                    b.ToTable("Tags", (string)null);
                 });
 
             modelBuilder.Entity("SteamNexus.Models.TagGroup", b =>
@@ -569,7 +569,7 @@ namespace SteamNexus.Migrations
 
                     b.HasIndex("TagId");
 
-                    b.ToTable("TagGroups");
+                    b.ToTable("TagGroups", (string)null);
                 });
 
             modelBuilder.Entity("SteamNexus.Models.ComponentClassification", b =>

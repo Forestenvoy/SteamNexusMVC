@@ -69,6 +69,8 @@ namespace SteamNexus.Controllers
                     Name = Create.Name,
                     OriginalPrice = Create.OriginalPrice,
                     AgeRating = Create.AgeRating,
+                    ReleaseDate= Create.ReleaseDate,
+                    Publisher= Create.Publisher,
                     Description = Create.Description,
                     ImagePath = Create.ImagePath,
                     VideoPath = Create.VideoPath,
@@ -82,7 +84,7 @@ namespace SteamNexus.Controllers
         }
 
         // GET: Games/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int id )
         {
             if (id == null)
             {
@@ -90,13 +92,27 @@ namespace SteamNexus.Controllers
             }
 
             var game = await _context.Games.FindAsync(id);
+            EditViewModel ViewModel = new EditViewModel
+            {
+                GameId= id,
+                AppId = game.AppId,
+                Name = game.Name,
+                OriginalPrice = game.OriginalPrice,
+                AgeRating = game.AgeRating,
+                ReleaseDate = game.ReleaseDate,
+                Publisher = game.Publisher,
+                Description = game.Description,
+                ImagePath = game.ImagePath,
+                VideoPath = game.VideoPath
+            };
+
             if (game == null)
             {
                 return NotFound();
             }
-            ViewData["MinReqId"] = new SelectList(_context.MinimumRequirements, "MinReqId", "MinReqId", game.MinReqId);
-            ViewData["RecReqId"] = new SelectList(_context.RecommendedRequirements, "RecReqId", "RecReqId", game.RecReqId);
-            return View(game);
+            //ViewData["MinReqId"] = new SelectList(_context.MinimumRequirements, "MinReqId", "MinReqId", game.MinReqId);
+            //ViewData["RecReqId"] = new SelectList(_context.RecommendedRequirements, "RecReqId", "RecReqId", game.RecReqId);
+            return View(ViewModel);
         }
 
         // POST: Games/Edit/5

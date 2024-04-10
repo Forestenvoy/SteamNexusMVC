@@ -1,12 +1,15 @@
-﻿using SteamNexus.Models;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace SteamNexus.ViewModels.Game
 {
-    public class CreateViewModel
+    public class EditViewModel
     {
+        [Key]
+        [Required]
+        public int GameId { get; set; }
+
         [Required(ErrorMessage = "SteamID為必填欄位")]
-        [Display(Name ="SteamID")]
+        [Display(Name = "SteamID")]
         public int? AppId { get; set; }
 
         [Required(ErrorMessage = "遊戲名稱為必填欄位")]
