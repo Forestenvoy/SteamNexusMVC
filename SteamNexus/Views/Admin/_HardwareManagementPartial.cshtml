@@ -1,5 +1,6 @@
 ﻿@* PartialView 的局部樣式 *@
-<link href="~/lib/datatables/css/jquery.datatables.min.css" rel="stylesheet" />
+<link href="~/datatables/css/jquery.datatables.min.css" rel="stylesheet" />
+<link href="~/font-awesome/css/all.min.css" rel="stylesheet" />
 <style asp-add-nested-styles="true">
 
     /* datatables 樣式設定 */
@@ -92,7 +93,8 @@
         </tr>
     </thead>
 </table>
-<script src="~/lib/datatables/js/jquery.datatables.min.js"></script>
+<script src="~/datatables/js/jquery.datatables.min.js"></script>
+<script src="~/font-awesome/js/all.min.js"></script>
 <script>
     $(document).ready(function () {
 
@@ -106,11 +108,23 @@
                     "width": "3%"
                 },
                 { "data": "productId", "width": "5%", "className": "text-center" },
-                { "data": "productName", "width": "15%" },
-                { "data": "specification" },
-                { "data": "componentClassificationName" },
+                { "data": "productName", "width": "25%" },
+                { "data": "specification", "width": "15%" },
+                { "data": "componentClassificationName", "width": "15%" },
                 { "data": "price", "width": "5%", "className": "text-center" },
                 { "data": "wattage", "width": "5%", "className": "text-center" }
+            ],
+            columnDefs: [
+                {
+                    targets: 3, //第四列
+                    render: function (data, type, row, meta) {
+                        // 超過30個字就截斷字串
+                        if (type === 'display' && data.length > 30) {
+                            return data.substr(0, 10) + '...';
+                        }
+                        return data;
+                    }
+                }
             ],
             fixedHeader: { header: true },
             language: {
@@ -200,15 +214,17 @@
             let color = "black"; // 默認顏色
             let RadioId = "recommend" + d.productId;
             return (
-                `<div id="recommend${d.productId}"> 推薦設定:
-                                <label style="color: black;"><input type="radio" name="${RadioId}" value="0" ${d.recommend == 0 ? 'checked' : ''}> 無</label>
-                                    <label style="color: green;"><input type="radio" name="${RadioId}" value="1" ${d.recommend == 1 ? 'checked' : ''}> 基本</label>
-                                    <label style="color: blue;"><input type="radio" name="${RadioId}" value="2" ${d.recommend == 2 ? 'checked' : ''}> 優良</label>
-                                    <label style="color: red;"><input type="radio" name="${RadioId}" value="3" ${d.recommend == 3 ? 'checked' : ''}> 完美</label>
-                            </div>`
+                `<div id="recommend${d.productId}" style="color: black;"> 推薦設定:
+                    <label style="color: black;"><input type="radio" name="${RadioId}" value="0" ${d.recommend == 0 ? 'checked' : ''}> 無</label>
+                        <label style="color: green;"><input type="radio" name="${RadioId}" value="1" ${d.recommend == 1 ? 'checked' : ''}> 基本</label>
+                        <label style="color: blue;"><input type="radio" name="${RadioId}" value="2" ${d.recommend == 2 ? 'checked' : ''}> 優良</label>
+                        <label style="color: red;"><input type="radio" name="${RadioId}" value="3" ${d.recommend == 3 ? 'checked' : ''}> 完美</label>
+                        <i class="fa-solid fa-spinner fa-spin ms-2"style="color:black;display:none" id="loading${d.productId}"></i>
+                            <span id="result${d.productId}" class="ms-2" style="color: black;"></span>
+                 </div>`
             );
         };
-        // 推薦變更事件
+        // 推薦變更事件W
         function radioevent(rowDetail) {
             $(rowDetail).on('change', 'input[type="radio"]', function () {
                 // 獲取 Radiobutton 的 ID
@@ -216,6 +232,9 @@
                 let value = Number($(this).val());
 
                 // 發送非同步POST請求 ==> 資料庫資料變更
+                // 顯示進度條
+                $("#loading"+itemid).show();
+                $("#result" + itemid).text("");
                 var data = {
                     ProductId: itemid,
                     recommend: value
@@ -229,14 +248,17 @@
                 }).then(result => {
                     // 此時 result 是一個請求結果的物件
                     // 注意傳回值型態，字串用 text()，JSON 用 json()
-                    // $("#progress").hide();
+                    $("#loading" + itemid).hide();
                     //  如過 HTTP 響應的狀態馬碼在 200 到 299 的範圍內 ==> .ok 會回傳 true
                     if (result.ok) {
                         return result.text();
                     }
                 }).then(data => {
                     // 此時 data 為上一個 then 回傳的資料
-                    // $("#result").text(data);
+                    $("#result" + itemid).text(data).fadeIn(200, function () {
+                        // 在 fadeIn 完成后延遲 1000 毫秒，執行 fadeOut
+                        $(this).delay(1000).fadeOut(300);
+                    });;
                 }).catch(error => {
                     // $("#progress").hide();
                     alert(error);
