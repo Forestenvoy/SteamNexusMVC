@@ -40,7 +40,11 @@
                     class:'dt-control',
                     orderable: false,
                     data: null,
-                    defaultContent: ''
+                    defaultContent: '',
+                    "render": function (data, type, full, meta) {
+                        return '<button class="btn btn-primary dt-control">0</button>';
+                    },
+                    "width": "5%"
                 },
                 { "data": "productId" },
                 { "data": "productName" },
