@@ -1,0 +1,61 @@
+﻿@model SteamNexus.Models.Advertisement
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Advertisement</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="AdvertisementId" />
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Url" class="control-label"></label>
+                <input asp-for="Url" class="form-control" />
+                <span asp-validation-for="Url" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ImagePath" class="control-label"></label>
+                <input asp-for="ImagePath" class="form-control imagePathInput" />
+                <a class="btn btn-primary previewButton">預覽</a>
+                <span asp-validation-for="ImagePath" class="text-danger"></span>
+                <img src="@Model.ImagePath" alt="圖片" class="imagePreview"/>
+            </div>
+            <div class="form-group">
+                <label asp-for="Discription" class="control-label"></label>
+                <input asp-for="Discription" class="form-control" />
+                <span asp-validation-for="Discription" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        // 監聽圖片路徑輸入框的變化事件
+        $('.previewButton').click(function () {
+            // alert("123");
+            var newImagePath = $('.imagePathInput').val(); // 獲取輸入框的值，即新的圖片路徑
+            $('.imagePreview').attr('src', newImagePath); // 將圖片元素的 src 屬性設置為新的圖片路徑
+        });
+    </script>
+}
