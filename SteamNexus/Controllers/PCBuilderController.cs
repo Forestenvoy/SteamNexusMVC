@@ -31,18 +31,29 @@ namespace SteamNexus.Controllers
         public string WebScrabingTest()
         {
             _coolPCWebScraping.UpdateAllComponentClassifications();
-
+            Console.WriteLine("All OK");
             _coolPCWebScraping.UpdateCPU();
+            Console.WriteLine("CPU OK");
             _coolPCWebScraping.UpdateGPU();
+            Console.WriteLine("GPU OK");
             _coolPCWebScraping.UpdateRAM();
+            Console.WriteLine("RAM OK");
             _coolPCWebScraping.UpdateMB();
+            Console.WriteLine("MB OK");
             _coolPCWebScraping.UpdateSSD();
+            Console.WriteLine("SSD OK");
             _coolPCWebScraping.UpdateHDD();
+            Console.WriteLine("HDD OK");
             _coolPCWebScraping.UpdateAirCooler();
+            Console.WriteLine("Air Cooler OK");
             _coolPCWebScraping.UpdateLiquidCooler();
+            Console.WriteLine("LiquidCooler OK");
             _coolPCWebScraping.UpdateCASE();
+            Console.WriteLine("CASE OK");
             _coolPCWebScraping.UpdatePSU();
+            Console.WriteLine("PSU OK");
             _coolPCWebScraping.UpdateOS();
+            Console.WriteLine("OS OK");
 
 
             return "Run Success";
