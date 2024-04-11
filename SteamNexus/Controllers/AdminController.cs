@@ -211,7 +211,7 @@ namespace SteamNexus.Controllers
         [HttpGet]
         public IActionResult AdManagementIndex()
         {
-            return PartialView("_AdManagementPartial", _context.Advertisements);
+            return PartialView("_AdManagementIndexPartial", _context.Advertisements);
         }
 
         [HttpGet]
@@ -273,6 +273,52 @@ namespace SteamNexus.Controllers
                 return NotFound();
             }
             return PartialView("_AdManagementEditPartail", advertisement);
+        }
+
+        public class AdManagementDataAboutId
+        {
+            [Required]
+            public int AdvertisementId { get; set; }
+
+            [Required]
+            [MaxLength(100)]
+            public string? Title { get; set; }
+
+            [Required]
+            [MaxLength(300)]
+            public string? Url { get; set; }
+
+            [Required]
+            [MaxLength(300)]
+            public string? ImagePath { get; set; }
+
+            public string? Discription { get; set; }
+        }
+
+        [HttpPost]
+        public string AdManagementEdit([FromBody] AdManagementDataAboutId data)
+        {
+            if (ModelState.IsValid)
+            {
+                Advertisement? ad = _context.Advertisements.Find(data.AdvertisementId);
+                if(ad != null) {
+                    ad.Title = data.Title;
+                    ad.Url = data.Url;
+                    ad.Discription = data.Discription;
+                    ad.ImagePath = data.ImagePath;
+                    _context.SaveChangesAsync();
+                    return "ok";
+                }
+                else
+                {
+                    return ("找不到");
+                }
+            }
+            else
+            {
+                return "fail";
+            }
+
         }
     }
 }
