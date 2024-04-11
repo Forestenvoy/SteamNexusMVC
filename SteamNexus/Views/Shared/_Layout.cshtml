@@ -79,6 +79,9 @@
                             <li class="nav-item">
                                 <a class="nav-link" asp-area="" asp-controller="PCBuilder" asp-action="Index">硬體測試</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Games" asp-action="Index" id="GamesIndex">遊戲資料</a>
+                            </li>
                             @* <a href="index.html" class="nav-item nav-link active text-secondary">Home</a>
                             <a href="about.html" class="nav-item nav-link">About</a>
                             <a href="service.html" class="nav-item nav-link">Services</a>
@@ -126,7 +129,7 @@
                         <a href="" class="bg-light nav-fill btn btn-sm-square rounded-circle"><i class="fab fa-facebook-f text-primary"></i></a>
                         <a href="" class="bg-light nav-fill btn btn-sm-square rounded-circle"><i class="fab fa-twitter text-primary"></i></a>
                         <a href="" class="bg-light nav-fill btn btn-sm-square rounded-circle"><i class="fab fa-instagram text-primary"></i></a>
-                        <a href="" class="bg-light nav-fill btn btn-sm-square rounded-circle me-0"><i class="fab fa-linkedin-in text-primary"></i></a>
+                        <a href=""  class="bg-light nav-fill btn btn-sm-square rounded-circle me-0"><i class="fab fa-linkedin-in text-primary"></i></a>
                     </div>
                 </div>
             </div>
@@ -175,7 +178,12 @@
 
     <script>
         // container、container-fluid 切換
-
+    </script>
+    <script>
+        var baseAddress = "https://localhost:7097/"
+        $("#GamesIndex").click(function () {
+            $.ajax(type: "GET", url: `${baseAddress}Games`).done().fail()
+        });
     </script>
 
 </body>

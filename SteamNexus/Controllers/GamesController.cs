@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SteamNexus.Data;
 using SteamNexus.Models;
+using SteamNexus.ViewModels.Game;
 
 namespace SteamNexus.Controllers
 {
@@ -23,11 +24,44 @@ namespace SteamNexus.Controllers
         public async Task<IActionResult> Index()
         {
             var steamNexusDbContext = _context.Games.Include(g => g.MinReq).Include(g => g.RecReq);
-            return View(await steamNexusDbContext.ToListAsync());
+            return View(steamNexusDbContext);
+        }
+
+        private async Task<DetailsViewModel> GetViewModel(int id)
+        {
+            var game = await _context.Games
+                .Include(g => g.MinReq)
+                .Include(g => g.RecReq)
+                .FirstOrDefaultAsync(m => m.GameId == id);
+
+            if (game == null)
+            {
+                return null; // 或者根據您的需求返回其他值
+            }
+
+            return new DetailsViewModel
+            {
+                GameId = id,
+                AppId = game.AppId,
+                Name = game.Name,
+                OriginalPrice = game.OriginalPrice,
+                CurrentPrice = game.CurrentPrice,
+                LowestPrice = game.LowestPrice,
+                AgeRating = game.AgeRating,
+                Comment = game.Comment,
+                CommentNum = game.CommentNum,
+                ReleaseDate = game.ReleaseDate,
+                Publisher = game.Publisher,
+                Description = game.Description,
+                Players = game.Players,
+                PeakPlayers = game.PeakPlayers,
+                ImagePath = game.ImagePath,
+                VideoPath = game.VideoPath
+            };
         }
 
         // GET: Games/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int id)
         {
             if (id == null)
             {
@@ -43,7 +77,9 @@ namespace SteamNexus.Controllers
                 return NotFound();
             }
 
-            return View(game);
+            var viewModel = await GetViewModel(id);
+
+            return View(viewModel);
         }
 
         // GET: Games/Create
@@ -59,21 +95,31 @@ namespace SteamNexus.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("GameId,MinReqId,RecReqId,AppId,Name,OriginalPrice,CurrentPrice,LowestPrice,AgeRating,Comment,CommentNum,ReleaseDate,Publisher,Description,Players,PeakPlayers,ImagePath,VideoPath")] Game game)
+        public async Task<IActionResult> Create([Bind("AppId,Name,OriginalPrice,AgeRating,ReleaseDate,Publisher,Description,ImagePath,VideoPath")] CreateViewModel Create)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(game);
+                Game game = new Game{
+                    AppId = Create.AppId,
+                    Name = Create.Name,
+                    OriginalPrice = Create.OriginalPrice,
+                    AgeRating = Create.AgeRating,
+                    ReleaseDate= Create.ReleaseDate,
+                    Publisher= Create.Publisher,
+                    Description = Create.Description,
+                    ImagePath = Create.ImagePath,
+                    VideoPath = Create.VideoPath,
+                };
+                
+                _context.Games.Add(game);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["MinReqId"] = new SelectList(_context.MinimumRequirements, "MinReqId", "MinReqId", game.MinReqId);
-            ViewData["RecReqId"] = new SelectList(_context.RecommendedRequirements, "RecReqId", "RecReqId", game.RecReqId);
-            return View(game);
+            return View(Create);
         }
 
         // GET: Games/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int id )
         {
             if (id == null)
             {
@@ -81,13 +127,27 @@ namespace SteamNexus.Controllers
             }
 
             var game = await _context.Games.FindAsync(id);
+            EditViewModel ViewModel = new EditViewModel
+            {
+                GameId= id,
+                AppId = game.AppId,
+                Name = game.Name,
+                OriginalPrice = game.OriginalPrice,
+                AgeRating = game.AgeRating,
+                ReleaseDate = game.ReleaseDate,
+                Publisher = game.Publisher,
+                Description = game.Description,
+                ImagePath = game.ImagePath,
+                VideoPath = game.VideoPath
+            };
+
             if (game == null)
             {
                 return NotFound();
             }
-            ViewData["MinReqId"] = new SelectList(_context.MinimumRequirements, "MinReqId", "MinReqId", game.MinReqId);
-            ViewData["RecReqId"] = new SelectList(_context.RecommendedRequirements, "RecReqId", "RecReqId", game.RecReqId);
-            return View(game);
+            //ViewData["MinReqId"] = new SelectList(_context.MinimumRequirements, "MinReqId", "MinReqId", game.MinReqId);
+            //ViewData["RecReqId"] = new SelectList(_context.RecommendedRequirements, "RecReqId", "RecReqId", game.RecReqId);
+            return View(ViewModel);
         }
 
         // POST: Games/Edit/5
@@ -128,23 +188,25 @@ namespace SteamNexus.Controllers
         }
 
         // GET: Games/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var game = await _context.Games
-                .Include(g => g.MinReq)
-                .Include(g => g.RecReq)
-                .FirstOrDefaultAsync(m => m.GameId == id);
-            if (game == null)
-            {
-                return NotFound();
-            }
+            var viewModel = await GetViewModel(id);
 
-            return View(game);
+            //var game = await _context.Games
+            //    .Include(g => g.MinReq)
+            //    .Include(g => g.RecReq)
+            //    .FirstOrDefaultAsync(m => m.GameId == id);
+            //if (game == null)
+            //{
+            //    return NotFound();
+            //}
+
+            return View(viewModel);
         }
 
         // POST: Games/Delete/5
