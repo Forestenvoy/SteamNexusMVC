@@ -61,43 +61,152 @@
         color: black !important;
     }
 
-    .green-row{
+    .green-row {
         color: green !important;
     }
 
-    .blue-row{
+    .blue-row {
         color: blue !important;
     }
 
-    .red-row{
+    .red-row {
         color: red !important;
     }
 </style>
 @* PartialView 的內容 *@
-<div class="text-center d-flex justify-content-center align-items-center bg" style="height:100px">
-    <h3 class="text-white p-2 m-0">硬體選擇</h3>
-    <select asp-items="@ViewBag.ComputerParts" class="form-select" style="width:250px;height:40px" id="HardSelect">
-        <option value="" disabled selected hidden>---- 請選擇 ----</option>
-    </select>
+<div>
+    <div class="container-fluid p-2">
+        <div class="row">
+            <div class="col-12 col-md-4 d-flex align-items-center justify-content-center">
+                <label class="text-white m-0 h3 me-2">硬體選擇</label>
+                <select asp-items="@ViewBag.ComputerParts" class="form-select" style="width:250px;height:40px" id="HardSelect">
+                    <option value="" disabled selected hidden>---- 請選擇 ----</option>
+                </select>
+            </div>
+            <div class="col-12 col-md-3 d-flex justify-content-center justify-content-md-start align-items-center">
+                <button class="btn btn-secondary m-3" id="UpdateHardwareOne">單一零件更新</button>
+                <button class="btn btn-secondary m-3" id="UpdateHardwareAll">全零件更新</button>
+            </div>
+            <div class="col-12 col-md-5 d-flex justify-content-center justify-content-md-start align-items-center">
+                <img src="~/img/loading-block-white.gif" style="width:30px;height:30px;display:none" id="HardwareLoading" />
+                <span id="UpdateResult" style="color:white" class="h3"></span>
+            </div>
+        </div>
+    </div>
+    <table id="HardwareManageTable" class="display" data-bs-theme="dark">
+        <thead>
+            <tr>
+                <th></th>
+                <th>ID</th>
+                <th>產品名稱</th>
+                <th>規格</th>
+                <th>種類</th>
+                <th>價格</th>
+                <th>瓦數</th>
+            </tr>
+        </thead>
+    </table>
 </div>
-<table id="HardwareManageTable" class="display" data-bs-theme="dark">
-    <thead>
-        <tr>
-            <th></th>
-            <th>ID</th>
-            <th>產品名稱</th>
-            <th>規格</th>
-            <th>種類</th>
-            <th>價格</th>
-            <th>瓦數</th>
-        </tr>
-    </thead>
-</table>
 <script src="~/datatables/js/jquery.datatables.min.js"></script>
 <script src="~/font-awesome/js/all.min.js"></script>
 <script>
     $(document).ready(function () {
 
+        let HardAddress = "https://localhost:7097";
+
+        // 單一零件更新
+        $("#UpdateHardwareOne").on("click", function () {
+            // 清空結果訊息
+            $("#UpdateResult").text("");
+            // 取得 零件ID
+            let p = getType();
+            if (p == "NoSeclect") {
+                $("#UpdateResult").text("請選擇要更新的硬體種類").fadeIn(200, function () {
+                    // 在 fadeIn 完成后延遲 1000 毫秒，執行 fadeOut
+                    $(this).delay(1000).fadeOut(300);
+                });;;
+                return;
+            }
+            // 顯示進度條
+            $("#HardwareLoading").show();
+            // 發送非同步POST請求 ==> 資料庫資料變更
+            let itemid = Number(p.slice(5));
+            var data = {
+                Type: itemid
+            };
+            fetch(`${HardAddress}@Url.Action("UpdateHardwareOne", "Admin")`, {
+                method: "POST",
+                body: JSON.stringify(data),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }).then(result => {
+                // 此時 result 是一個請求結果的物件
+                // 注意傳回值型態，字串用 text()，JSON 用 json()
+                $("#HardwareLoading").hide();
+                //  如過 HTTP 響應的狀態馬碼在 200 到 299 的範圍內 ==> .ok 會回傳 true
+                if (result.ok) {
+                    return result.text();
+                }
+            }).then(data => {
+                // 此時 data 為上一個 then 回傳的資料
+                $("#UpdateResult").text(data).fadeIn(200, function () {
+                    // 在 fadeIn 完成后延遲 1000 毫秒，執行 fadeOut
+                    $(this).delay(1000).fadeOut(300);
+                });;
+                getdatatableData();
+            }).catch(error => {
+                $("#HardwareLoading").hide();
+                $("#UpdateResult").text(data).fadeIn(200, function () {
+                    // 在 fadeIn 完成后延遲 1000 毫秒，執行 fadeOut
+                    $(this).delay(1000).fadeOut(300);
+                });;
+                alert(error);
+            });
+        });
+
+        // 全零件更新
+        $("#UpdateHardwareAll").on("click", function () {
+            // 清空結果訊息
+            $("#UpdateResult").text("");
+            // 顯示進度條
+            $("#HardwareLoading").show();
+            // 發送非同步POST請求 ==> 資料庫資料變更
+            fetch(`${HardAddress}@Url.Action("UpdateHardwareAll", "Admin")`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }).then(result => {
+                // 此時 result 是一個請求結果的物件
+                // 注意傳回值型態，字串用 text()，JSON 用 json()
+                $("#HardwareLoading").hide();
+                //  如過 HTTP 響應的狀態馬碼在 200 到 299 的範圍內 ==> .ok 會回傳 true
+                if (result.ok) {
+                    return result.text();
+                }
+            }).then(data => {
+                // 此時 data 為上一個 then 回傳的資料
+                $("#UpdateResult").text(data).fadeIn(200, function () {
+                    // 在 fadeIn 完成后延遲 1000 毫秒，執行 fadeOut
+                    $(this).delay(1000).fadeOut(300);
+                });;
+                let p = getType();
+                if (p != "NoSeclect") {
+                    getdatatableData();
+                }
+            }).catch(error => {
+                $("#HardwareLoading").hide();
+                $("#UpdateResult").text(data).fadeIn(200, function () {
+                    // 在 fadeIn 完成后延遲 1000 毫秒，執行 fadeOut
+                    $(this).delay(1000).fadeOut(300);
+                });;
+                alert(error);
+            });
+        
+        });
+
+        // 設定 datatable
         var datatable = $("#HardwareManageTable").DataTable({
             columns: [
                 {
@@ -148,46 +257,49 @@
             }
         });
 
-        let HardAddress = "https://localhost:7097";
-
-        $("#HardSelect").change(function () {
-            var selectedOption = $(this).val();
-            let p;
+        function getType() {
+            var selectedOption = $("#HardSelect").val();
             switch (selectedOption) {
                 case "CPU 中央處理器":
-                    p = encodeURI("Type=10000");
+                    return encodeURI("Type=10000");
                     break;
                 case "GPU 顯示卡":
-                    p = encodeURI("Type=10001");
+                    return encodeURI("Type=10001");
                     break;
                 case "RAM 記憶體":
-                    p = encodeURI("Type=10002");
+                    return encodeURI("Type=10002");
                     break;
                 case "MotherBoard 主機板":
-                    p = encodeURI("Type=10003");
+                    return encodeURI("Type=10003");
                     break;
                 case "SSD 固態硬碟":
-                    p = encodeURI("Type=10004");
+                    return encodeURI("Type=10004");
                     break;
                 case "HDD 傳統硬碟":
-                    p = encodeURI("Type=10005");
+                    return encodeURI("Type=10005");
                     break;
                 case "AirCooler 風冷散熱器":
-                    p = encodeURI("Type=10006");
+                    return encodeURI("Type=10006");
                     break;
                 case "LiquidCooler 水冷散熱器":
-                    p = encodeURI("Type=10007");
+                    return encodeURI("Type=10007");
                     break;
                 case "CASE 機殼":
-                    p = encodeURI("Type=10008");
+                    return encodeURI("Type=10008");
                     break;
                 case "PSU 電源供應器":
-                    p = encodeURI("Type=10009");
+                    return encodeURI("Type=10009");
                     break;
                 case "OS 作業系統":
-                    p = encodeURI("Type=10010");
+                    return encodeURI("Type=10010");
                     break;
+                default:
+                    return "NoSeclect";
             };
+        };
+
+        function getdatatableData() {
+            let p = getType();
             // 發送非同步GET請求
             fetch(`${HardAddress}@Url.Action("HardwareData", "Admin")?${p}`, {
                 method: "GET"
@@ -206,6 +318,10 @@
             }).catch(error => {
                 alert(error);
             });
+        };
+
+        $("#HardSelect").change(function () {
+            getdatatableData();
 
         });
 
@@ -215,13 +331,13 @@
             let RadioId = "recommend" + d.productId;
             return (
                 `<div id="recommend${d.productId}" style="color: black;"> 推薦設定:
-                    <label style="color: black;"><input type="radio" name="${RadioId}" value="0" ${d.recommend == 0 ? 'checked' : ''}> 無</label>
-                        <label style="color: green;"><input type="radio" name="${RadioId}" value="1" ${d.recommend == 1 ? 'checked' : ''}> 基本</label>
-                        <label style="color: blue;"><input type="radio" name="${RadioId}" value="2" ${d.recommend == 2 ? 'checked' : ''}> 優良</label>
-                        <label style="color: red;"><input type="radio" name="${RadioId}" value="3" ${d.recommend == 3 ? 'checked' : ''}> 完美</label>
-                        <i class="fa-solid fa-spinner fa-spin ms-2"style="color:black;display:none" id="loading${d.productId}"></i>
-                            <span id="result${d.productId}" class="ms-2" style="color: black;"></span>
-                 </div>`
+                            <label style="color: black;"><input type="radio" name="${RadioId}" value="0" ${d.recommend == 0 ? 'checked' : ''}> 無</label>
+                                <label style="color: green;"><input type="radio" name="${RadioId}" value="1" ${d.recommend == 1 ? 'checked' : ''}> 基本</label>
+                                <label style="color: blue;"><input type="radio" name="${RadioId}" value="2" ${d.recommend == 2 ? 'checked' : ''}> 優良</label>
+                                <label style="color: red;"><input type="radio" name="${RadioId}" value="3" ${d.recommend == 3 ? 'checked' : ''}> 完美</label>
+                                <i class="fa-solid fa-spinner fa-spin ms-2"style="color:black;display:none" id="loading${d.productId}"></i>
+                                    <span id="result${d.productId}" class="ms-2" style="color: black;"></span>
+                         </div>`
             );
         };
         // 推薦變更事件W
@@ -233,7 +349,7 @@
 
                 // 發送非同步POST請求 ==> 資料庫資料變更
                 // 顯示進度條
-                $("#loading"+itemid).show();
+                $("#loading" + itemid).show();
                 $("#result" + itemid).text("");
                 var data = {
                     ProductId: itemid,
@@ -260,7 +376,10 @@
                         $(this).delay(1000).fadeOut(300);
                     });;
                 }).catch(error => {
-                    // $("#progress").hide();
+                    $("#result" + itemid).text(data).fadeIn(200, function () {
+                        // 在 fadeIn 完成后延遲 1000 毫秒，執行 fadeOut
+                        $(this).delay(1000).fadeOut(300);
+                    });;
                     alert(error);
                 });
 
