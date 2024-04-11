@@ -6,7 +6,7 @@
 
 <h1>遊戲資訊</h1>
 
-<button class="btn btn-primary w-100">
+<button class="btn btn-secondary w-100">
     <a id="Create" asp-action="Create">新增遊戲</a>
 </button>
 
@@ -136,13 +136,13 @@
                         @Html.DisplayFor(modelItem => item.VideoPath)
                     </td> *@
                     <td>
-                        <button class="btn btn-primary">
+                        <button class="btn btn-secondary">
                             <a id="Edit" asp-action="Edit" asp-route-id="@item.GameId">編輯</a>
                         </button>
-                        <button class="btn btn-primary">
+                        <button class="btn btn-secondary">
                             <a id="Details" asp-action="Details" asp-route-id="@item.GameId">查看</a>
                         </button>
-                        <button class="btn btn-primary">
+                        <button class="btn btn-secondary">
                             <a id="Delete" asp-action="Delete" asp-route-id="@item.GameId">刪除</a>
                         </button>
                         @* <a asp-action="Edit" asp-route-id="@item.GameId">Edit</a> 
