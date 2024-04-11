@@ -211,13 +211,68 @@ namespace SteamNexus.Controllers
         [HttpGet]
         public IActionResult AdManagementIndex()
         {
-            return PartialView("_AdManagementPartial" ,_context.Advertisements);
+            return PartialView("_AdManagementPartial", _context.Advertisements);
         }
 
         [HttpGet]
         public IActionResult AdManagementCreate()
         {
             return PartialView("_AdManagementCreatePartail");
+        }
+
+        public class AdManagementData
+        {
+            [Required]
+            [MaxLength(100)]
+            public string? Title { get; set; }
+
+            [Required]
+            [MaxLength(300)]
+            public string? Url { get; set; }
+
+            [Required]
+            [MaxLength(300)]
+            public string? ImagePath { get; set; }
+
+            public string? Discription { get; set; }
+        }
+
+        [HttpPost]
+        public string AdManagementCreate([FromBody] AdManagementData data)
+        {
+            if (ModelState.IsValid)
+            {
+                Advertisement ad = new Advertisement();
+                ad.Title = data.Title;
+                ad.Url = data.Url;
+                ad.Discription = data.Discription;
+                ad.ImagePath = data.ImagePath;
+                _context.Add(ad);
+                _context.SaveChangesAsync();
+                return "ok";
+            }
+            else
+            {
+                return "fail";
+            }
+
+        }
+
+        [HttpGet]
+        public IActionResult AdManagementEdit(int id)
+        {
+            Console.WriteLine(id);
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var advertisement = _context.Advertisements.Find(id);
+            if (advertisement == null)
+            {
+                return NotFound();
+            }
+            return PartialView("_AdManagementEditPartail", advertisement);
         }
     }
 }

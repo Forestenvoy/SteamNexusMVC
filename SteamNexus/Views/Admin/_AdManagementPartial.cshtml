@@ -45,8 +45,8 @@
                     @Html.DisplayFor(modelItem => item.Discription)
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.AdvertisementId">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.AdvertisementId">Details</a> |
+                    <a asp-action="Edit" name="@item.AdvertisementId" id="AdManagementEdit">Edit</a> |
+                    <a asp-action="Details" id="@item.AdvertisementId">Details</a> |
                     <a asp-action="Delete" asp-route-id="@item.AdvertisementId">Delete</a>
                 </td>
             </tr>
@@ -55,11 +55,41 @@
 </table>
 <script>
     var AdbaseAddress = "https://localhost:7097";
+    //按下Create
     $("#AdManagementCreate").on("click", function (event) {
         event.preventDefault();
         $("#systemLoading").show();
         //發送非同步GET請求
         fetch(`${AdbaseAddress}@Url.Action("AdManagementCreate", "Admin")`, {
+            method: "GET"
+        }).then(response => {
+            // 確保請求是否成功
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            // 解析 html
+            return response.text();
+        }).then(data => {
+            $("#systemLoading").hide();
+            $("#System").html(data);
+        }).catch(error => {
+            $("#systemLoading").hide();
+            // 顯示 throw 的錯誤
+            alert(error);
+        });
+    });
+
+    //按下Edit
+    $("#AdManagementEdit").on("click", function (event) {
+        event.preventDefault();
+        $("#systemLoading").show();
+        //抓Id
+        var id = $("#AdManagementEdit").attr("name");
+        console.log(id);
+        id = encodeURI(id);
+        console.log(id);
+        //發送非同步GET請求
+        fetch(`${AdbaseAddress}@Url.Action("AdManagementEdit", "Admin")?id=${id}`, {
             method: "GET"
         }).then(response => {
             // 確保請求是否成功
