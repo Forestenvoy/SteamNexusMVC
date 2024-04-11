@@ -1,16 +1,16 @@
-﻿@model SteamNexus.Models.Game
+﻿@model SteamNexus.ViewModels.Game.DetailsViewModel
 
 @{
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<h1>@Html.DisplayFor(model => model.Name)</h1>
 
 <div>
-    <h4>Game</h4>
+    <h4>遊戲資訊</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        @* <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.MinReq)
         </dt>
         <dd class = "col-sm-10">
@@ -21,7 +21,7 @@
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.RecReq.RecReqId)
-        </dd>
+        </dd> *@
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.AppId)
         </dt>
@@ -104,17 +104,17 @@
             @Html.DisplayNameFor(model => model.ImagePath)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ImagePath)
+            <img id="imgPreview" src="@Html.DisplayFor(model => model.ImagePath)" title="上無內容" style="width:250px;" /><br>         
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.VideoPath)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.VideoPath)
+            <video id="videoPreview" width="250" height="240" controls autoplay muted src="@Html.DisplayFor(model => model.VideoPath)"></video><br>
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.GameId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model?.GameId">Edit</a>
+    <a class="btn btn-primary" asp-action="Index">Back to List</a>
 </div>
