@@ -32,7 +32,8 @@
             @* Sidebar end *@
         </div>
         <div class="col-sm-12 col-md-10 mt-3 mt-md-0">
-            <div class="h-100 bg-primary" id="System">
+            <div class="h-100 bg-primary position-relative" id="System">
+                <img src="~/img/loading-white.gif" class="position-absolute top-50 start-50 translate-middle" style="display:none" id="systemLoading"/>
             </div>
         </div>
     </div>
@@ -47,8 +48,10 @@
             var baseAddress = "https://localhost:7097"; // For Development
 
             // 後台系統 AJAX 切換
+            
             $("#HardWareManage").on("click", function (event) {
                 event.preventDefault();
+                $("#systemLoading").show();
                 // 發送非同步GET請求
                 fetch(`${baseAddress}@Url.Action("HardwareManagement", "Admin")`, {
                     method: "GET"
@@ -60,8 +63,10 @@
                     // 解析 html
                     return response.text();
                 }).then(data => {
+                    $("#systemLoading").hide();
                     $("#System").html(data);
                 }).catch(error => {
+                    $("#systemLoading").hide();
                     // 顯示 throw 的錯誤
                     alert(error);
                 });

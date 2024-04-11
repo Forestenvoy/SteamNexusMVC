@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SteamNexus.Data;
 using SteamNexus.Models;
+using SteamNexus.Services;
 using System.ComponentModel.DataAnnotations;
 
 namespace SteamNexus.Controllers
@@ -12,11 +13,12 @@ namespace SteamNexus.Controllers
     {
         // Dependency Injection
         private readonly SteamNexusDbContext _context;
-
+        private readonly CoolPCWebScraping _coolPCWebScraping;
         // Constructor
-        public AdminController(SteamNexusDbContext context)
+        public AdminController(SteamNexusDbContext context, CoolPCWebScraping coolPCWebScraping)
         {
             _context = context;
+            _coolPCWebScraping = coolPCWebScraping;
         }
 
 
@@ -55,7 +57,6 @@ namespace SteamNexus.Controllers
         }
 
         // 推薦變更呼叫
-
         public class RecommondData
         {
             [Required]
@@ -94,6 +95,102 @@ namespace SteamNexus.Controllers
             }
 
         }
+
+        // 單一零件更新
+        public class HardwareType
+        {
+            [Required]
+            [Range(10000, 10010)]
+            public int Type { get; set; }
+        }
+
+        // POST: Admin/UpdateHardwareOne
+        [HttpPost]
+        public string UpdateHardwareOne([FromBody] HardwareType data)
+        {
+            // 如果驗證合法
+            if (ModelState.IsValid)
+            {
+                _coolPCWebScraping.UpdateAllComponentClassifications();
+                switch (data.Type)
+                {
+                    case (int)ComputerPartCategory.Type.CPU:
+                        _coolPCWebScraping.UpdateCPU();
+                        return "CPU 更新成功";
+                    case (int)ComputerPartCategory.Type.MB:
+                        _coolPCWebScraping.UpdateMB();
+                        return "MB 更新成功";
+                    case (int)ComputerPartCategory.Type.RAM:
+                        _coolPCWebScraping.UpdateRAM();
+                        return "RAM 更新成功";
+                    case (int)ComputerPartCategory.Type.SSD:
+                        _coolPCWebScraping.UpdateSSD();
+                        return "SSD 更新成功";
+                    case (int)ComputerPartCategory.Type.HDD:
+                        _coolPCWebScraping.UpdateHDD();
+                        return "HDD 更新成功";
+                    case (int)ComputerPartCategory.Type.AirCooler:
+                        _coolPCWebScraping.UpdateAirCooler();
+                        return "AirCooler 更新成功";
+                    case (int)ComputerPartCategory.Type.LiquidCooler:
+                        _coolPCWebScraping.UpdateLiquidCooler();
+                        return "LiquidCooler 更新成功";
+                    case (int)ComputerPartCategory.Type.GPU:
+                        _coolPCWebScraping.UpdateGPU();
+                        return "GPU 更新成功";
+                    case (int)ComputerPartCategory.Type.CASE:
+                        _coolPCWebScraping.UpdateCASE();
+                        return "CASE 更新成功";
+                    case (int)ComputerPartCategory.Type.PSU:
+                        _coolPCWebScraping.UpdatePSU();
+                        return "PSU 更新成功";
+                    case (int)ComputerPartCategory.Type.OS:
+                        _coolPCWebScraping.UpdateOS();
+                        return "OS 更新成功";
+                    default:
+                        return "更新失敗";
+                }
+            }
+            else
+            {
+                return "更新失敗";
+            }
+        }
+
+        // 全零件更新
+        // POST: Admin/UpdateHardwareAll
+        [HttpPost]
+        public string UpdateHardwareAll()
+        {
+            _coolPCWebScraping.UpdateAllComponentClassifications();
+            Console.WriteLine("All OK");
+            _coolPCWebScraping.UpdateCPU();
+            Console.WriteLine("CPU OK");
+            _coolPCWebScraping.UpdateGPU();
+            Console.WriteLine("GPU OK");
+            _coolPCWebScraping.UpdateRAM();
+            Console.WriteLine("RAM OK");
+            _coolPCWebScraping.UpdateMB();
+            Console.WriteLine("MB OK");
+            _coolPCWebScraping.UpdateSSD();
+            Console.WriteLine("SSD OK");
+            _coolPCWebScraping.UpdateHDD();
+            Console.WriteLine("HDD OK");
+            _coolPCWebScraping.UpdateAirCooler();
+            Console.WriteLine("Air Cooler OK");
+            _coolPCWebScraping.UpdateLiquidCooler();
+            Console.WriteLine("LiquidCooler OK");
+            _coolPCWebScraping.UpdateCASE();
+            Console.WriteLine("CASE OK");
+            _coolPCWebScraping.UpdatePSU();
+            Console.WriteLine("PSU OK");
+            _coolPCWebScraping.UpdateOS();
+            Console.WriteLine("OS OK");
+
+
+            return "全零件更新成功";
+        }
+
 
         [HttpGet]
         public IActionResult MemberManagement()
