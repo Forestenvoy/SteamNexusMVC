@@ -209,7 +209,6 @@ namespace SteamNexus.Controllers
         }
 
 
-
         //GameAJAX設定
         private async Task<DetailsViewModel> GetViewModel(int id)
         {
@@ -261,10 +260,6 @@ namespace SteamNexus.Controllers
         [HttpGet]
         public IActionResult GetEditPartialView(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
             var game = _context.Games.FindAsync(id).Result;
           
@@ -292,10 +287,6 @@ namespace SteamNexus.Controllers
         [HttpGet]
         public IActionResult GetDetailsPartialView(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
             var game = _context.Games
                .Include(g => g.MinReq)
@@ -333,10 +324,6 @@ namespace SteamNexus.Controllers
         [HttpGet]
         public IActionResult GetDeletePartialView(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
             var game = _context.Games
                 .Include(g => g.MinReq)
@@ -437,6 +424,118 @@ namespace SteamNexus.Controllers
         private bool GameExists(int id)
         {
             return _context.Games.Any(e => e.GameId == id);
+        }
+
+
+        //GET: Admin/AdManagementIndex
+        [HttpGet]
+        public IActionResult AdManagementIndex()
+        {
+            return PartialView("_AdManagementIndexPartial", _context.Advertisements);
+        }
+
+        [HttpGet]
+        public IActionResult AdManagementCreate()
+        {
+            return PartialView("_AdManagementCreatePartail");
+        }
+
+        public class AdManagementData
+        {
+            [Required]
+            [MaxLength(100)]
+            public string? Title { get; set; }
+
+            [Required]
+            [MaxLength(300)]
+            public string? Url { get; set; }
+
+            [Required]
+            [MaxLength(300)]
+            public string? ImagePath { get; set; }
+
+            public string? Discription { get; set; }
+        }
+
+        [HttpPost]
+        public string AdManagementCreate([FromBody] AdManagementData data)
+        {
+            if (ModelState.IsValid)
+            {
+                Advertisement ad = new Advertisement();
+                ad.Title = data.Title;
+                ad.Url = data.Url;
+                ad.Discription = data.Discription;
+                ad.ImagePath = data.ImagePath;
+                _context.Add(ad);
+                _context.SaveChangesAsync();
+                return "ok";
+            }
+            else
+            {
+                return "fail";
+            }
+
+        }
+
+        [HttpGet]
+        public IActionResult AdManagementEdit(int id)
+        {
+            Console.WriteLine(id);
+
+            var advertisement = _context.Advertisements.Find(id);
+            if (advertisement == null)
+            {
+                return NotFound();
+            }
+            return PartialView("_AdManagementEditPartail", advertisement);
+        }
+
+        public class AdManagementDataAboutId
+        {
+            [Required]
+            public int AdvertisementId { get; set; }
+
+            [Required]
+            [MaxLength(100)]
+            public string? Title { get; set; }
+
+            [Required]
+            [MaxLength(300)]
+            public string? Url { get; set; }
+
+            [Required]
+            [MaxLength(300)]
+            public string? ImagePath { get; set; }
+
+            public string? Discription { get; set; }
+        }
+
+        [HttpPost]
+        public string AdManagementEdit([FromBody] AdManagementDataAboutId data)
+        {
+            if (ModelState.IsValid)
+            {
+                Advertisement? ad = _context.Advertisements.Find(data.AdvertisementId);
+                if (ad != null)
+                {
+                    ad.Title = data.Title;
+                    ad.Url = data.Url;
+                    ad.Discription = data.Discription;
+                    ad.ImagePath = data.ImagePath;
+                    _context.SaveChangesAsync();
+                    return "ok";
+                }
+                else
+                {
+                    return ("找不到");
+                }
+            }
+            else
+            {
+                return "fail";
+            }
+
         }
 
     }
