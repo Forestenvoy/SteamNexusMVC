@@ -1,0 +1,135 @@
+﻿@model SteamNexus.ViewModels.Game.DetailsViewModel
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h1 class="text-danger">@Html.DisplayFor(model => model.Name)</h1>
+
+<div>
+    <h4 class="text-danger">刪除遊戲</h4>
+    <hr />
+    <dl class="row">
+        @* <dt class = "col-sm-2">
+        @Html.DisplayNameFor(model => model.MinReq)
+        </dt>
+        <dd class = "col-sm-10">
+        @Html.DisplayFor(model => model.MinReq.MinReqId)
+        </dd>
+        <dt class = "col-sm-2">
+        @Html.DisplayNameFor(model => model.RecReq)
+        </dt>
+        <dd class = "col-sm-10">
+        @Html.DisplayFor(model => model.RecReq.RecReqId)
+        </dd> *@
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.AppId)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.AppId)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.OriginalPrice)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.OriginalPrice)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CurrentPrice)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CurrentPrice)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.LowestPrice)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.LowestPrice)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.AgeRating)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.AgeRating)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Comment)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Comment)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CommentNum)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CommentNum)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ReleaseDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ReleaseDate)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Publisher)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Publisher)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Players)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Players)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.PeakPlayers)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.PeakPlayers)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ImagePath)
+        </dt>
+        <dd class="col-sm-10">
+            <img id="imgPreview" src="@Html.DisplayFor(model => model.ImagePath)" title="上無內容" style="width:250px;" /><br>
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.VideoPath)
+        </dt>
+        <dd class="col-sm-10">
+            <video id="videoPreview" width="250" height="240" controls autoplay muted src="@Html.DisplayFor(model => model.VideoPath)"></video><br>
+        </dd>
+    </dl>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="GameId" />
+        <input id="submit" type="submit" value="Delete" class="btn btn-danger" />
+        <a asp-action="Index" class="btn btn-primary">Back to List</a>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        $("#submit").click(function () {
+            var result = confirm("你確定要刪除這款遊戲嗎?");
+            if (result == true) {
+                return true;
+            } else {
+                return false;
+            }
+        })
+    </script>
+}
