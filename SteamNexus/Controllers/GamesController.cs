@@ -9,6 +9,7 @@ using SteamNexus.Data;
 using SteamNexus.Models;
 using SteamNexus.ViewModels.Game;
 
+
 namespace SteamNexus.Controllers
 {
     public class GamesController : Controller
@@ -85,8 +86,8 @@ namespace SteamNexus.Controllers
         // GET: Games/Create
         public IActionResult Create()
         {
-            ViewData["MinReqId"] = new SelectList(_context.MinimumRequirements, "MinReqId", "MinReqId");
-            ViewData["RecReqId"] = new SelectList(_context.RecommendedRequirements, "RecReqId", "RecReqId");
+            //ViewData["MinReqId"] = new SelectList(_context.MinimumRequirements, "MinReqId", "MinReqId");
+            //ViewData["RecReqId"] = new SelectList(_context.RecommendedRequirements, "RecReqId", "RecReqId");
             return View();
         }
 

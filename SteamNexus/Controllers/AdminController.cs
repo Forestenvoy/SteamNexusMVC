@@ -6,6 +6,7 @@ using SteamNexus.Data;
 using SteamNexus.Models;
 using SteamNexus.Services;
 using System.ComponentModel.DataAnnotations;
+using SteamNexus.ViewModels.Game;
 
 namespace SteamNexus.Controllers
 {
@@ -205,5 +206,237 @@ namespace SteamNexus.Controllers
             // 
             return PartialView("_GaenManagementPartial");
         }
+
+
+
+        //GameAJAX設定
+        private async Task<DetailsViewModel> GetViewModel(int id)
+        {
+            var game = await _context.Games
+                .Include(g => g.MinReq)
+                .Include(g => g.RecReq)
+                .FirstOrDefaultAsync(m => m.GameId == id);
+
+            if (game == null)
+            {
+                return null; // 或者根據您的需求返回其他值
+            }
+
+            return new DetailsViewModel
+            {
+                GameId = id,
+                AppId = game.AppId,
+                Name = game.Name,
+                OriginalPrice = game.OriginalPrice,
+                CurrentPrice = game.CurrentPrice,
+                LowestPrice = game.LowestPrice,
+                AgeRating = game.AgeRating,
+                Comment = game.Comment,
+                CommentNum = game.CommentNum,
+                ReleaseDate = game.ReleaseDate,
+                Publisher = game.Publisher,
+                Description = game.Description,
+                Players = game.Players,
+                PeakPlayers = game.PeakPlayers,
+                ImagePath = game.ImagePath,
+                VideoPath = game.VideoPath
+            };
+        }
+
+
+        [HttpGet]
+        public IActionResult GetIndexPartialView()
+        {
+            var steamNexusDbContext = _context.Games.Include(g => g.MinReq).Include(g => g.RecReq);
+            return PartialView("_GameIndexManagementPartial", steamNexusDbContext);
+        }
+
+        [HttpGet]
+        public IActionResult GetCreatPartialView()
+        {
+            return PartialView("_GameCreateManagementPartial");
+        }
+
+        [HttpGet]
+        public IActionResult GetEditPartialView(int id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var game = _context.Games.FindAsync(id).Result;
+          
+            EditViewModel ViewModel = new EditViewModel
+            {
+                GameId= id,
+                AppId = game.AppId,
+                Name = game.Name,
+                OriginalPrice = game.OriginalPrice,
+                AgeRating = game.AgeRating,
+                ReleaseDate = game.ReleaseDate,
+                Publisher = game.Publisher,
+                Description = game.Description,
+                ImagePath = game.ImagePath,
+                VideoPath = game.VideoPath
+            };
+
+            if (game == null)
+            {
+                return NotFound();
+            }
+            return PartialView("_GameEditeManagementPartial", ViewModel);
+        }
+
+        [HttpGet]
+        public IActionResult GetDetailsPartialView(int id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var game = _context.Games
+               .Include(g => g.MinReq)
+               .Include(g => g.RecReq)
+               .FirstOrDefaultAsync(m => m.GameId == id).Result;
+
+            if (game == null)
+            {
+                return NotFound();
+            }
+
+            DetailsViewModel ViewModel = new DetailsViewModel
+            {
+                GameId = id,
+                AppId = game.AppId,
+                Name = game.Name,
+                OriginalPrice = game.OriginalPrice,
+                CurrentPrice = game.CurrentPrice,
+                LowestPrice = game.LowestPrice,
+                AgeRating = game.AgeRating,
+                Comment = game.Comment,
+                CommentNum = game.CommentNum,
+                ReleaseDate = game.ReleaseDate,
+                Publisher = game.Publisher,
+                Description = game.Description,
+                Players = game.Players,
+                PeakPlayers = game.PeakPlayers,
+                ImagePath = game.ImagePath,
+                VideoPath = game.VideoPath
+            };
+
+            return PartialView("_GameDetailsManagementPartial", ViewModel);
+        }
+
+        [HttpGet]
+        public IActionResult GetDeletePartialView(int id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var game = _context.Games
+                .Include(g => g.MinReq)
+                .Include(g => g.RecReq)
+                .FirstOrDefaultAsync(m => m.GameId == id).Result;
+
+            if (game == null)
+            {
+                return NotFound(); // 或者根據您的需求返回其他值
+            }
+
+            DetailsViewModel ViewModel = new DetailsViewModel
+            {
+                GameId = id,
+                AppId = game.AppId,
+                Name = game.Name,
+                OriginalPrice = game.OriginalPrice,
+                CurrentPrice = game.CurrentPrice,
+                LowestPrice = game.LowestPrice,
+                AgeRating = game.AgeRating,
+                Comment = game.Comment,
+                CommentNum = game.CommentNum,
+                ReleaseDate = game.ReleaseDate,
+                Publisher = game.Publisher,
+                Description = game.Description,
+                Players = game.Players,
+                PeakPlayers = game.PeakPlayers,
+                ImagePath = game.ImagePath,
+                VideoPath = game.VideoPath
+            };
+
+
+            return PartialView("_GameDeleteManagementPartial", ViewModel);
+        }
+
+        [HttpPost]
+        public IActionResult PostCreatPartialToDB(CreateViewModel Create)
+        {
+            var steamNexusDbContext = _context.Games.Include(g => g.MinReq).Include(g => g.RecReq);
+           
+            if (ModelState.IsValid)
+            {
+                
+                Game game = new Game
+                {
+                    AppId = Create.AppId,
+                    Name = Create.Name,
+                    OriginalPrice = Create.OriginalPrice,
+                    AgeRating = Create.AgeRating,
+                    ReleaseDate = Create.ReleaseDate,
+                    Publisher = Create.Publisher,
+                    Description = Create.Description,
+                    ImagePath = Create.ImagePath,
+                    VideoPath = Create.VideoPath,
+                };
+
+                _context.Games.Add(game);
+                _context.SaveChangesAsync();
+                return PartialView("_GameCreateManagementPartial");
+            }
+
+            
+            return PartialView("_GameCreateManagementPartial");
+        }
+        [HttpPost]
+        public IActionResult PostEditPartialToDB(Game game)
+        {
+            //if (id != game.GameId)
+            //{
+            //    return NotFound();
+            //}
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(game);
+                    _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!GameExists(game.GameId))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return PartialView("_GameEditeManagementPartial", game);
+            }
+            ViewData["MinReqId"] = new SelectList(_context.MinimumRequirements, "MinReqId", "MinReqId", game.MinReqId);
+            ViewData["RecReqId"] = new SelectList(_context.RecommendedRequirements, "RecReqId", "RecReqId", game.RecReqId);
+            return View(game);
+        }
+
+        private bool GameExists(int id)
+        {
+            return _context.Games.Any(e => e.GameId == id);
+        }
+
     }
 }
