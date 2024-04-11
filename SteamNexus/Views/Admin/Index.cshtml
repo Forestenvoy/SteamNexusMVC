@@ -78,8 +78,29 @@
             $("#MemberManage").on("click", function (event) {
                 event.preventDefault();
             });
+
+            //呼叫廣告管理的index
             $("#AdManage").on("click", function (event) {
                 event.preventDefault();
+                $("#systemLoading").show();
+                // 發送非同步GET請求
+                fetch(`${baseAddress}@Url.Action("AdManagementIndex", "Admin")`, {
+                    method: "GET"
+                }).then(response => {
+                    // 確保請求是否成功
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    // 解析 html
+                    return response.text();
+                }).then(data => {
+                    $("#systemLoading").hide();
+                    $("#System").html(data);
+                }).catch(error => {
+                    $("#systemLoading").hide();
+                    // 顯示 throw 的錯誤
+                    alert(error);
+                });
             });
 
             $('.sidebar-link').on('click', function () {

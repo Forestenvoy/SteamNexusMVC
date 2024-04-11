@@ -44,15 +44,16 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script>
-        // 監聽圖片路徑輸入框的變化事件
-        $('.previewButton').click(function () {
-            // alert("123");
-            var newImagePath = $('.imagePathInput').val(); // 獲取輸入框的值，即新的圖片路徑
-            $('.imagePreview').attr('src', newImagePath); // 將圖片元素的 src 屬性設置為新的圖片路徑
-        });
-    </script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
+<script>
+    // 監聽圖片路徑輸入框的變化事件
+    $('.previewButton').click(function () {
+        // alert("123");
+        var newImagePath = $('.imagePathInput').val(); // 獲取輸入框的值，即新的圖片路徑
+        $('.imagePreview').attr('src', newImagePath); // 將圖片元素的 src 屬性設置為新的圖片路徑
+    });
+</script>

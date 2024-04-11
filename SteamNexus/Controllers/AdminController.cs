@@ -27,6 +27,7 @@ namespace SteamNexus.Controllers
             return View();
         }
 
+        // Admin/HardwareManagement
         [HttpGet]
         public IActionResult HardwareManagement()
         {
@@ -204,6 +205,19 @@ namespace SteamNexus.Controllers
         {
             // 
             return PartialView("_GaenManagementPartial");
+        }
+
+        //GET: Admin/AdManagementIndex
+        [HttpGet]
+        public IActionResult AdManagementIndex()
+        {
+            return PartialView("_AdManagementPartial" ,_context.Advertisements);
+        }
+
+        [HttpGet]
+        public IActionResult AdManagementCreate()
+        {
+            return PartialView("_AdManagementCreatePartail");
         }
     }
 }
