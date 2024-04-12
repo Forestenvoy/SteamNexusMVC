@@ -15,6 +15,10 @@ public partial class MinimumRequirement
     public int MinReqId { get; set; }
 
     [Required]
+    public int GameId { get; set; }
+    public virtual Game Game { get; set; }
+
+    [Required]
     public int CPUId { get; set; } = 10000;
 
     public virtual CPU CPU { get; set; }
@@ -46,7 +50,5 @@ public partial class MinimumRequirement
 
     [MaxLength(500)]
     public string? Note { get; set; }
-
-    public virtual ICollection<Game> Games { get; set; } = new List<Game>();
 
 }

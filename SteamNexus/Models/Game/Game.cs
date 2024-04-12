@@ -14,16 +14,6 @@ public partial class Game
     public int GameId { get; set; }
 
     //[Required]
-    public int? MinReqId { get; set; }
-
-    public virtual MinimumRequirement MinReq { get; set; }
-
-    //[Required]
-    public int? RecReqId { get; set; }
-
-    public virtual RecommendedRequirement RecReq { get; set; }
-
-    //[Required]
     public int? AppId { get; set; }
 
     //[Required]
@@ -76,4 +66,8 @@ public partial class Game
     public virtual ICollection<PriceHistory> PriceHistories { get; set; } = new List<PriceHistory>();
 
     public virtual ICollection<TagGroup> TagGroups { get; set; } = new List<TagGroup>();
+
+    public virtual ICollection<MinimumRequirement> MinimumRequirements { get; set; } = new List<MinimumRequirement>();
+
+    public virtual ICollection<RecommendedRequirement> RecommendedRequirements { get; set; } = new List<RecommendedRequirement>();
 }

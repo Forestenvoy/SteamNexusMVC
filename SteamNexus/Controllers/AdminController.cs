@@ -213,8 +213,6 @@ namespace SteamNexus.Controllers
         private async Task<DetailsViewModel> GetViewModel(int id)
         {
             var game = await _context.Games
-                .Include(g => g.MinReq)
-                .Include(g => g.RecReq)
                 .FirstOrDefaultAsync(m => m.GameId == id);
 
             if (game == null)
@@ -247,7 +245,7 @@ namespace SteamNexus.Controllers
         [HttpGet]
         public IActionResult GetIndexPartialView()
         {
-            var steamNexusDbContext = _context.Games.Include(g => g.MinReq).Include(g => g.RecReq);
+            var steamNexusDbContext = _context.Games;
             return PartialView("_GameIndexManagementPartial", steamNexusDbContext);
         }
 
@@ -289,8 +287,6 @@ namespace SteamNexus.Controllers
         {
 
             var game = _context.Games
-               .Include(g => g.MinReq)
-               .Include(g => g.RecReq)
                .FirstOrDefaultAsync(m => m.GameId == id).Result;
 
             if (game == null)
@@ -326,8 +322,6 @@ namespace SteamNexus.Controllers
         {
 
             var game = _context.Games
-                .Include(g => g.MinReq)
-                .Include(g => g.RecReq)
                 .FirstOrDefaultAsync(m => m.GameId == id).Result;
 
             if (game == null)
@@ -362,7 +356,7 @@ namespace SteamNexus.Controllers
         [HttpPost]
         public IActionResult PostCreatPartialToDB(CreateViewModel Create)
         {
-            var steamNexusDbContext = _context.Games.Include(g => g.MinReq).Include(g => g.RecReq);
+            var steamNexusDbContext = _context.Games;
            
             if (ModelState.IsValid)
             {
@@ -416,8 +410,6 @@ namespace SteamNexus.Controllers
                 }
                 return PartialView("_GameEditeManagementPartial", game);
             }
-            ViewData["MinReqId"] = new SelectList(_context.MinimumRequirements, "MinReqId", "MinReqId", game.MinReqId);
-            ViewData["RecReqId"] = new SelectList(_context.RecommendedRequirements, "RecReqId", "RecReqId", game.RecReqId);
             return View(game);
         }
 

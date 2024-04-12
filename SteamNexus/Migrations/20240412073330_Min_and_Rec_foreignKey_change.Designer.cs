@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SteamNexus.Data;
 
@@ -11,9 +12,11 @@ using SteamNexus.Data;
 namespace SteamNexus.Migrations
 {
     [DbContext(typeof(SteamNexusDbContext))]
-    partial class SteamNexusDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240412073330_Min_and_Rec_foreignKey_change")]
+    partial class Min_and_Rec_foreignKey_change
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

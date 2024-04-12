@@ -113,6 +113,11 @@ namespace SteamNexus.Data
                     .ValueGeneratedOnAdd()
                     .UseIdentityColumn(10000, 1);
 
+                entity.HasOne(d => d.Game).WithMany(p => p.MinimumRequirements)
+                    .HasForeignKey(d => d.GameId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_MinimumRequirements_Games");
+
                 entity.HasOne(d => d.CPU).WithMany(p => p.MinimumRequirements)
                     .HasForeignKey(d => d.CPUId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
@@ -132,6 +137,12 @@ namespace SteamNexus.Data
                 entity.Property(e => e.RecReqId)
                     .ValueGeneratedOnAdd()
                     .UseIdentityColumn(10000, 1);
+
+                entity.HasOne(d => d.Game).WithMany(p => p.RecommendedRequirements)
+                    .HasForeignKey(d => d.GameId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_RecommendedRequirements_Games");
+
                 entity.HasOne(d => d.CPU).WithMany(p => p.RecommendedRequirements)
                     .HasForeignKey(d => d.CPUId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
@@ -151,16 +162,6 @@ namespace SteamNexus.Data
                 entity.Property(e => e.GameId)
                     .ValueGeneratedOnAdd()
                     .UseIdentityColumn(10000, 1);
-
-                entity.HasOne(d => d.MinReq).WithMany(p => p.Games)
-                .HasForeignKey(d => d.MinReqId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Games_MinimumRequirements");
-
-                entity.HasOne(d => d.RecReq).WithMany(p => p.Games)
-                    .HasForeignKey(d => d.RecReqId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Games_RecommendedRequirements");
             });
 
             modelBuilder.Entity<GameLanguage>(entity =>
