@@ -258,7 +258,7 @@ namespace SteamNexus.Controllers
         [HttpPost]
         public async Task<IActionResult> PostCreatPartialToDB(Game game)
         {
-            var steamNexusDbContext = _context.Games.Include(g => g.MinReq).Include(g => g.RecReq);
+            var steamNexusDbContext = _context.Games;
 
             if (ModelState.IsValid)
             {
