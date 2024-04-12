@@ -1,0 +1,114 @@
+﻿@model SteamNexus.Models.Advertisement
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Advertisement</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Url" class="control-label"></label>
+                <input asp-for="Url" class="form-control" />
+                <span asp-validation-for="Url" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ImagePath" class="control-label"></label>
+                <input asp-for="ImagePath" class="form-control imagePathInput" />
+                <a class="btn btn-primary previewButton">預覽</a>
+                <span asp-validation-for="ImagePath" class="text-danger"></span>
+                <img src="~/img/noimage.png" alt="圖片" class="imagePreview" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Discription" class="control-label"></label>
+                <input asp-for="Discription" class="form-control" />
+                <span asp-validation-for="Discription" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" id="AdManagementCreate" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+<script>
+    // 監聽圖片路徑輸入框的變化事件
+    var AdbaseAddress = "https://localhost:7097";
+        // ${ AdbaseAddress } @Url.Action("AdManagementCreate", "Admin")
+    $('.previewButton').click(function () {
+        // alert("123");
+        var newImagePath = $('.imagePathInput').val(); // 獲取輸入框的值，即新的圖片路徑
+        $('.imagePreview').attr('src', newImagePath); // 將圖片元素的 src 屬性設置為新的圖片路徑
+    });
+    $("#AdManagementCreate").on("click", function (event) {
+        event.preventDefault();
+        $("#systemLoading").show();
+        //發送非同步GET請求
+        var data = {
+            Title: $("#Title").val(),
+            Url: $("#Url").val(),
+            ImagePath: $("#ImagePath").val(),
+            Discription: $("#Discription").val()
+        };
+
+        fetch(`https://localhost:7097/Admin/AdManagementCreate`, {
+            method: "POST",
+            body: JSON.stringify(data),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then(response => {
+            // 確保請求是否成功
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            // 解析 html
+            return response.text();
+        }).then(data => {
+            $("#systemLoading").hide();
+            // 檢測資料變更是否成功
+            if (data == "ok") {
+                $("#systemLoading").show();
+                fetch(`${AdbaseAddress}@Url.Action("AdManagementIndex", "Admin")`, {
+                    method: "GET"
+                }).then(response => {
+                    // 確保請求是否成功
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    // 解析 html
+                    return response.text();
+                }).then(data => {
+                    $("#systemLoading").hide();
+                    $("#System").html(data);
+                }).catch(error => {
+                    $("#systemLoading").hide();
+                    // 顯示 throw 的錯誤
+                    alert(error);
+                });
+            }
+        }).catch(error => {
+            $("#systemLoading").hide();
+            // 顯示 throw 的錯誤
+            alert(error);
+        });
+    });
+</script>

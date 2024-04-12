@@ -1,0 +1,112 @@
+﻿@model IEnumerable<SteamNexus.Models.Advertisement>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create" id="AdManagementCreate">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Url)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ImagePath)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Discription)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Url)
+                </td>
+                <td>
+                    @* @Html.DisplayFor(modelItem => item.ImagePath) *@
+                    <img src="@item.ImagePath" alt="圖片" />
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Discription)
+                </td>
+                <td>
+                    <a asp-action="Edit" name="@item.AdvertisementId" id="@($"Edit{item.AdvertisementId}")">Edit</a> |
+                    <a asp-action="Details" name="@item.AdvertisementId">Details</a> |
+                    <a asp-action="Delete" name="@item.AdvertisementId">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<script>
+    var AdbaseAddress = "https://localhost:7097";
+    //按下Create
+    $("#AdManagementCreate").on("click", function (event) {
+        event.preventDefault();
+        $("#systemLoading").show();
+        //發送非同步GET請求
+        fetch(`${AdbaseAddress}@Url.Action("AdManagementCreate", "Admin")`, {
+            method: "GET"
+        }).then(response => {
+            // 確保請求是否成功
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            // 解析 html
+            return response.text();
+        }).then(data => {
+            $("#systemLoading").hide();
+            $("#System").html(data);
+        }).catch(error => {
+            $("#systemLoading").hide();
+            // 顯示 throw 的錯誤
+            alert(error);
+        });
+    });
+
+    //按下Edit
+    $(document).ready(function () {
+        // 選擇所有 ID 以 "Edit" 開頭的超連結
+        $('a[id^="Edit"]').click(function (event) {
+            event.preventDefault();
+            $("#systemLoading").show();
+            //抓advertisementId
+            var advertisementId = $(this).attr('name'); // 獲取廣告 ID
+            advertisementId = encodeURI(advertisementId);
+            //發送非同步GET請求
+            fetch(`${AdbaseAddress}@Url.Action("AdManagementEdit", "Admin")?id=${advertisementId}`, {
+                method: "GET"
+            }).then(response => {
+                // 確保請求是否成功
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                // 解析 html
+                return response.text();
+            }).then(data => {
+                $("#systemLoading").hide();
+                $("#System").html(data);
+            }).catch(error => {
+                $("#systemLoading").hide();
+                // 顯示 throw 的錯誤
+                alert(error);
+            });
+        });
+    });
+</script>
+
