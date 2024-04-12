@@ -255,6 +255,36 @@ namespace SteamNexus.Controllers
             return PartialView("_GameCreateManagementPartial");
         }
 
+        [HttpPost]
+        public async Task<IActionResult> PostCreatPartialToDB(Game game)
+        {
+            var steamNexusDbContext = _context.Games.Include(g => g.MinReq).Include(g => g.RecReq);
+
+            if (ModelState.IsValid)
+            {
+
+                //Game game = new Game
+                //{
+                //    AppId = Create.AppId,
+                //    Name = Create.Name,
+                //    OriginalPrice = Create.OriginalPrice,
+                //    AgeRating = Create.AgeRating,
+                //    ReleaseDate = Create.ReleaseDate,
+                //    Publisher = Create.Publisher,
+                //    Description = Create.Description,
+                //    ImagePath = Create.ImagePath,
+                //    VideoPath = Create.VideoPath,
+                //};
+
+                _context.Games.Add(game);
+                await _context.SaveChangesAsync();
+                return GetIndexPartialView();
+            }
+
+
+            return GetIndexPartialView();
+        }
+
         [HttpGet]
         public IActionResult GetEditPartialView(int id)
         {
@@ -280,6 +310,38 @@ namespace SteamNexus.Controllers
                 return NotFound();
             }
             return PartialView("_GameEditeManagementPartial", ViewModel);
+        }
+        [HttpPost]
+        public async Task<IActionResult> PostEditPartialToDB(Game game)
+        {
+            //if (id != game.GameId)
+            //{
+            //    return NotFound();
+            //}
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                     _context.Update(game);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!GameExists(game.GameId))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return GetIndexPartialView();
+            }
+            //ViewData["MinReqId"] = new SelectList(_context.MinimumRequirements, "MinReqId", "MinReqId", game.MinReqId);
+            //ViewData["RecReqId"] = new SelectList(_context.RecommendedRequirements, "RecReqId", "RecReqId", game.RecReqId);
+            return GetIndexPartialView();
         }
 
         [HttpGet]
@@ -354,64 +416,19 @@ namespace SteamNexus.Controllers
         }
 
         [HttpPost]
-        public IActionResult PostCreatPartialToDB(CreateViewModel Create)
+        public async Task<IActionResult> PostDeletePartialToDB(int id)
         {
-            var steamNexusDbContext = _context.Games;
-           
-            if (ModelState.IsValid)
+            var game = _context.Games.FindAsync(id).Result;
+            if (game != null)
             {
-                
-                Game game = new Game
-                {
-                    AppId = Create.AppId,
-                    Name = Create.Name,
-                    OriginalPrice = Create.OriginalPrice,
-                    AgeRating = Create.AgeRating,
-                    ReleaseDate = Create.ReleaseDate,
-                    Publisher = Create.Publisher,
-                    Description = Create.Description,
-                    ImagePath = Create.ImagePath,
-                    VideoPath = Create.VideoPath,
-                };
-
-                _context.Games.Add(game);
-                _context.SaveChangesAsync();
-                return PartialView("_GameCreateManagementPartial");
+                _context.Games.Remove(game);
             }
 
-            
-            return PartialView("_GameCreateManagementPartial");
-        }
-        [HttpPost]
-        public IActionResult PostEditPartialToDB(Game game)
-        {
-            //if (id != game.GameId)
-            //{
-            //    return NotFound();
-            //}
+            await _context.SaveChangesAsync();
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(game);
-                    _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!GameExists(game.GameId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return PartialView("_GameEditeManagementPartial", game);
-            }
-            return View(game);
+            return GetIndexPartialView();
         }
+
 
         private bool GameExists(int id)
         {

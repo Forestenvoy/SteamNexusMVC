@@ -124,12 +124,13 @@
     }
     var baseAddress = "https://localhost:7097";
     $("#PostEditPartialToDB").on("click", function (event) {
-        
+        var num = event.target.name
         event.preventDefault();
         $("#systemLoading").show();
         $.ajax({
             type: "POST",
             data: {
+                GameId: Number(num),
                 AppId: Number($("#AppId").val()),
                 Name: $("#Name").val(),
                 OriginalPrice: Number($("#OriginalPrice").val()),
@@ -142,10 +143,11 @@
             },
             url: `${baseAddress}/Admin/PostEditPartialToDB`
         }).done(data => {
-            $("#systemLoading").hide();
+            console.log("已完成");
             $("#System").html(data);
         })
             .fail(data => {
+                console.log("失敗");
                 $("#systemLoading").hide();
                 $("#System").html(data);
             });

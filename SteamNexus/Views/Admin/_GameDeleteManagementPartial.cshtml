@@ -110,26 +110,47 @@
             @Html.DisplayNameFor(model => model.VideoPath)
         </dt>
         <dd class="col-sm-10">
-            <video id="videoPreview" width="250" height="240" controls autoplay muted src="@Html.DisplayFor(model => model.VideoPath)"></video><br>
+            <video  id="videoPreview" width="250" height="240" controls autoplay muted src="@Html.DisplayFor(model => model.VideoPath)"></video><br>
         </dd>
     </dl>
 
     <form asp-action="Delete">
         <input type="hidden" asp-for="GameId" />
-        <input id="submit" type="submit" value="Delete" class="btn btn-danger" />
+        <input name="@Html.DisplayFor(modelItem => modelItem.GameId)" id="submit" type="submit" value="Delete" class="btn btn-danger" />
         <a asp-action="Index" class="btn btn-primary">Back to List</a>
     </form>
 </div>
 
-@section Scripts {
-    <script>
-        $("#submit").click(function () {
-            var result = confirm("你確定要刪除這款遊戲嗎?");
-            if (result == true) {
-                return true;
-            } else {
-                return false;
-            }
-        })
-    </script>
-}
+<script>
+    $("#submit").click(function () {
+        event.preventDefault();
+        var result = confirm("你確定要刪除這款遊戲嗎?");
+        if (result == true) {
+            $("#systemLoading").show();
+            var num = event.target.name
+            $.ajax({
+                type: "POST",
+                data: {
+                    id: Number(num)
+                },
+                url: `${baseAddress}/Admin/PostDeletePartialToDB`
+            }).done(data => {
+                $("#systemLoading").hide();
+                $("#System").html(data);
+            })
+                .fail(data => {
+                    $("#systemLoading").hide();
+                    $("#System").html(data);
+                });
+            return true;
+        } else {
+            return false;
+        }
+        
+
+    })
+
+    
+
+
+</script>
