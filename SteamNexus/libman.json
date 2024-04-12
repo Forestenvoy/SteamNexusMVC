@@ -3,13 +3,18 @@
   "defaultProvider": "cdnjs",
   "libraries": [
     {
-      "library": "font-awesome@6.5.2",
-      "destination": "wwwroot/font-awesome/"
+      "library": "signalr.js@2.4.3",
+      "destination": "wwwroot/lib/signalr.js/"
     },
     {
       "provider": "cdnjs",
       "library": "datatables@1.10.21",
-      "destination": "wwwroot/datatables/"
+      "destination": "wwwroot/lib/datatables/"
+    },
+    {
+      "provider": "cdnjs",
+      "library": "font-awesome@6.5.2",
+      "destination": "wwwroot/lib/font-awesome/"
     }
   ]
 }
