@@ -1,0 +1,80 @@
+﻿@model SteamNexus.Data.ApplicationUser
+
+
+<h1>新增會員基本資料</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" autocomplete="off">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-floating mb-3">
+                <input asp-for="Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                <label asp-for="Email" style="color:black">Email</label>
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+@*             <div class="form-floating mb-3">
+                <input asp-for="Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
+                <label asp-for="Password" style="color:black">Password</label>
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
+                <label asp-for="ConfirmPassword" style="color:black">Confirm Password</label>
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            </div> *@
+
+            <div class="form-floating mb-3">
+                <input asp-for="Name" class="form-control" autocomplete="Name" aria-required="true" placeholder="請輸入姓名" />
+                <label asp-for="Name" style="color:black">@Html.DisplayNameFor(a => a.Name)</label>
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="PhoneNumber" class="form-control" autocomplete="PhoneNumber" aria-required="true" placeholder="09xxxxxxxx" />
+                <label asp-for="PhoneNumber" style="color:black">@Html.DisplayNameFor(a => a.PhoneNumber)</label>
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <select asp-for="Gender" class="form-control" aria-required="true" placeholder="請選擇性別">
+                    <option value="">請選擇性別</option>
+                    <option value="True">男</option>
+                    <option value="False">女</option>
+                </select>
+                <label asp-for="Gender" style="color:black">@Html.DisplayNameFor(a => a.Gender)</label>
+                <span asp-validation-for="Gender" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Birthday" class="form-control" autocomplete="Birthday" aria-required="true" type="date" />
+                <label asp-for="Birthday" style="color:black">@Html.DisplayNameFor(a => a.Birthday)</label>
+                <span asp-validation-for="Birthday" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="CPUId" class="form-control" autocomplete="CPU" aria-required="true" placeholder="請輸入CPU" />
+                <label asp-for="CPUId" style="color:black">@Html.DisplayNameFor(a => a.CPUId)</label>
+                <span asp-validation-for="CPUId" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="GPUId" class="form-control" autocomplete="GPUId" aria-required="true" placeholder="請輸入GPU()" />
+                <label asp-for="GPUId" style="color:black">@Html.DisplayNameFor(a => a.GPUId)</label>
+                <span asp-validation-for="GPUId" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="RAM" class="form-control" autocomplete="RAM" aria-required="true" placeholder="請記憶體輸入容量，ex:8、16、32、64" />
+                <label asp-for="RAM" style="color:black">@Html.DisplayNameFor(a => a.RAM)</label>
+                <span asp-validation-for="RAM" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Power" class="form-control" autocomplete="Power" aria-required="true" placeholder="請輸入權限代號" />
+                <label asp-for="Power" style="color:black">@Html.DisplayNameFor(a => a.Power)</label>
+                <span asp-validation-for="Power" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="新增" class="btn btn-danger" />
+                <button class="btn btn-danger">
+                    <a asp-area="" asp-controller="Home" asp-action="Identity" style="text-decoration: none; color:white">返回會員列表</a>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

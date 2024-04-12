@@ -3,13 +3,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace SteamNexus.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
         }
 
+        public DbSet<ApplicationUser> ApplicationUser { get; set; }
 
     }
 }

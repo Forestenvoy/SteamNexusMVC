@@ -1,0 +1,70 @@
+﻿@model SteamNexus.Data.ApplicationUser
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h4>編輯 @Html.DisplayFor(model => model.Name) 的會員資料</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit" autocomplete="off">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PhoneNumber" class="control-label"></label>
+                <input asp-for="PhoneNumber" class="form-control" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Gender" class="control-label"></label>
+                <select asp-for="Gender" class="form-control">
+                    <option value="true">男</option>
+                    <option value="false">女</option>
+                </select>
+                <span asp-validation-for="Gender" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Birthday" class="control-label"></label>
+                <input asp-for="Birthday" class="form-control" />
+                <span asp-validation-for="Birthday" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CPUId" class="control-label"></label>
+                <input asp-for="CPUId" class="form-control" />
+                <span asp-validation-for="CPUId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GPUId" class="control-label"></label>
+                <input asp-for="GPUId" class="form-control" />
+                <span asp-validation-for="GPUId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RAM" class="control-label"></label>
+                <input asp-for="RAM" class="form-control" />
+                <span asp-validation-for="RAM" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Power" class="control-label"></label>
+                <input asp-for="Power" class="form-control" />
+                <span asp-validation-for="Power" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-3">
+                <input type="submit" value="儲存" class="btn btn-danger" />
+                <button class="btn btn-danger">
+                    <a asp-area="" asp-controller="Home" asp-action="Identity" style="text-decoration: none; color:white">返回會員列表</a>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

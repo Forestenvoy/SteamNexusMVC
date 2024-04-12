@@ -1,0 +1,129 @@
+﻿@model IEnumerable<SteamNexus.Data.ApplicationUser>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+
+<h3 class="mt-2">會員基本資料</h3>
+<div class="mb-3 mt-3" style="font-size: 20px">
+    <span class="mt-5 mb-5" style="color: white">註冊會員數量：</span>
+    <span style="color: white;"><cache expires-after="@TimeSpan.FromMilliseconds(5)">@ViewData["UsersCount"]</cache></span>
+</div>
+
+<button id="Button1" class="btn btn-danger mb-3" style="font-size: 15px">
+    新 增
+</button>
+
+
+@* <p>
+    <a asp-action="Create">Create New</a>
+</p> *@
+<table class="table table-dark table-hover">
+    <thead>
+        <tr>
+            @*             <th>
+            @Html.DisplayNameFor(model => model.Id)
+            </th> *@
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PhoneNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Gender)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Birthday)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CPUId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GPUId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RAM)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Power)
+            </th>
+            <th>
+                操作方法
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                @*                 <td>
+            @Html.DisplayFor(modelItem => item.Id)
+            </td> *@
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PhoneNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @if (item.Gender)
+                    {
+                        <text>男</text>
+                    }
+                    else
+                    {
+                        <text>女</text>
+                    }
+                </td>
+                <td>
+                    @if (item.Birthday != null)
+                    {
+                        <text>@item.Birthday.ToString("yyyy/MM/dd")</text>
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CPUId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GPUId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RAM) GB
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Power)
+                </td>
+                <td>
+                    <button class="btn btn-danger">
+                        <a asp-controller="Home" asp-action="Edit" asp-route-Id="@item.Id" style="text-decoration: none; color:white">編輯</a>
+                    </button>
+                    <button class="btn btn-danger">
+                        <a asp-controller="Home" asp-action="Delete" asp-route-Id="@item.Id" style="text-decoration: none; color:white">刪除</a>
+                    </button>
+                    <button class="btn btn-danger">
+                        <a asp-controller="Home" asp-action="Details" asp-route-Id="@item.Id" style="text-decoration: none; color:white">詳細資料</a>
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $("#Button1").click(function () {
+                window.location.href = "https://localhost:7097/Identity/Account/Register";
+            });
+        });
+    </script>
+}

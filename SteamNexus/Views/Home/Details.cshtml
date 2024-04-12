@@ -1,0 +1,81 @@
+﻿@model SteamNexus.Data.ApplicationUser
+
+<div>
+    <h4>@Html.DisplayFor(model => model.Name) 會員的個人資料</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.PhoneNumber)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.PhoneNumber)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Gender)
+        </dt>
+        <dd class="col-sm-10">
+            @if (Model.Gender)
+            {
+                <text>男</text>
+            }
+            else
+            {
+                <text>女</text>
+            }
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Birthday)
+        </dt>
+        <dd class="col-sm-10">
+            @if (Model.Birthday != null)
+            {
+                <text>@Model.Birthday.ToString("yyyy/MM/dd")</text>
+            }
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CPUId)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CPUId)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.GPUId)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.GPUId)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.RAM)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.RAM)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Power)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Power)
+        </dd>
+    </dl>
+</div>
+
+<button class="btn btn-danger">
+    <a asp-action="Edit" asp-route-id="@Model?.Id" style="text-decoration: none; color:white">編輯</a>
+</button>
+<button class="btn btn-danger">
+    <a asp-area="" asp-controller="Home" asp-action="Identity" style="text-decoration: none; color:white">返回會員列表</a>
+</button>
+
+
