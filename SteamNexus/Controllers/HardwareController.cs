@@ -6,14 +6,14 @@ using SteamNexus.Data;
 
 namespace SteamNexus.Controllers
 {
-    public class PCBuilderController : Controller
+    public class HardwareController : Controller
     {
         // Dependency Injection
         private readonly SteamNexusDbContext _context;
         private readonly CoolPCWebScraping _coolPCWebScraping;
 
         // Constructor
-        public PCBuilderController(SteamNexusDbContext context , CoolPCWebScraping coolPCWebScraping)
+        public HardwareController(SteamNexusDbContext context , CoolPCWebScraping coolPCWebScraping)
         {
             _context = context;
             _coolPCWebScraping = coolPCWebScraping;
