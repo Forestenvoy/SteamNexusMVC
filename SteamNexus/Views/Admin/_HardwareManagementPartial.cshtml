@@ -11,7 +11,12 @@
 
     /* 內容背景色 */
     tbody tr {
-        background-color:white !important;
+        background-color: white !important;
+    }
+
+    /* 下拉式選單內容顏色 */
+    #dt-length-0 option {
+        color: black;
     }
 
     /* 空資料內容顏色 */
@@ -56,6 +61,12 @@
     .red-row {
         color: red !important;
     }
+
+    /* 列 按鈕樣式 */
+    .row-button {
+        border-radius: 5px;
+        background-color: white;
+    }
 </style>
 @* PartialView 的 HTML *@
 <div>
@@ -87,6 +98,7 @@
                 <th>種類</th>
                 <th>價格</th>
                 <th>瓦數</th>
+                <th></th>
             </tr>
         </thead>
     </table>
@@ -204,13 +216,54 @@
                 { "data": "productName", "width": "25%" },
                 { "data": "specification", "width": "15%" },
                 { "data": "componentClassificationName", "width": "15%" },
-                { "data": "price", "width": "5%", "className": "text-center" },
-                { "data": "wattage", "width": "5%", "className": "text-center" }
+                { "data": "price", "width": "8%", "className": "text-center" },
+                {
+                    "data": "wattage",
+                    "width": "8%",
+                    "className": "text-center",
+                    // 瓦數 自定義
+                    render: function (data, type, row, meta) {
+                        // 取得 productId
+                        let productId = row.productId;
+                        // 此處 type 為 'sort' 表示 DataTables 正在進行排序
+                        if (type === 'sort') {
+                            // 返回元素的值作為排序依據
+                            return data;
+                        }
+                        // input 欄位 ~ 可編輯
+                        let inputEle = '<input type="text" id="' + productId + "_watt" + '" value="' + data + '" style="width: 50px; text-align: center;" >';
+                        return inputEle;
+                    },
+                    // 將此列的數據類型設置為數字 ~ 排序才會正常運作
+                    "type": "num" 
+                },
+                {
+                    "data": null,
+                    "orderable": false,
+                    "width": "10%",
+                    "className": "text-center",
+                    // 瓦數 自定義
+                    render: function (data, type, row, meta) {
+                        // 取得 productId
+                        let productId = row.productId;
+                        // 確認按鈕
+                        let enterEle = '<button id="' + productId + "_enter" + '" class="row-button" data-bs-toggle="popover" data-bs-content="test"><i class="fa-solid fa-check" style="color: #04ff00;"></i></button>';
+                        // 復原按鈕
+                        let resetEle = '<button id="' + productId + "_reset" + '" class="row-button" data-bs-toggle="popover" data-bs-content="test"><i class="fa-solid fa-rotate-right" style="color: #ff0000;"></i></button>';
+                        if (type === 'display') {
+                            return `${enterEle}&nbsp;&nbsp;&nbsp;${resetEle}`;
+                        }
+                        return data;
+                    }
+                }
             ],
-            fixedHeader: { header: true },
+            // 標頭固定
+            fixedHeader: true,
+            // 語言設定
             language: {
                 url: '//cdn.datatables.net/plug-ins/2.0.3/i18n/zh-HANT.json',
             },
+            // 預設排序 ~ 根據第一欄位升覓
             order: [[1, 'asc']],
             processing: true,
             autoWidth: false,
@@ -219,7 +272,60 @@
             }
         });
 
+        // 瓦數變更 ~ 確認事件
+        function btnWattEnterEvent() {
+            // 綁定所有 button 標籤 id 為 _enter 結尾的元素
+            $('button[id$="_enter"]').on('click', function () {
+                // 取得 ID
+                let id = Number($(this).attr('id').slice(0, -6));
+                // 更改提示泡泡內容
+                $(this).attr('data-bs-content', id);
+                // 顯示提示泡泡
+                $(this).popover('show');
+            });
+        };
 
+        // 瓦數變更 ~ 重設事件
+        function btnWattResetEvent() {
+            // 綁定所有 button 標籤 id 為 _enter 結尾的元素
+            $('button[id$="_reset"]').on('click', function (event) {
+                // 取得 ID
+                let id = $(this).attr('id').slice(0, -6);
+                // 更改提示泡泡內容
+                $(this).attr('data-bs-content', id);
+                // 顯示提示泡泡
+                $(this).popover('show');
+            });
+        };
+
+        // 提示泡泡事件
+        function btnPopoverEvent() {
+            // 提示泡泡的屬性
+            $('[data-bs-toggle="popover"]').popover({
+                // 指定彈出方向為上方
+                placement: 'top',
+                // 不顯示箭頭
+                template: '<div class="popover" role="tooltip"><h3 class="popover-header"></h3><div class="popover-body"></div></div>',
+                // 動畫效果
+                animation: true,
+                trigger: 'manual' // 手動觸發提示泡泡
+            });
+            // 動畫效果
+            // shown.bs.popover 顯示完畢觸發的事件
+            $('[data-bs-toggle="popover"]').on('shown.bs.popover', function () {
+                // 抓取當前元素(提示泡泡)
+                let $popover = $(this);
+                // 設置一段時間後觸發淡出效果
+                setTimeout(function () {
+                    // 添加淡出效果 ~ 影響 opacity
+                    $popover.find('.popover').fadeOut();
+                    // 隱藏提示泡泡 ~ 影響 display
+                    $popover.popover('hide');
+                }, 1000); // 這裡的 1000 表示延遲 1 秒後觸發淡出效果
+            });
+        };
+
+        // 獲取下拉式選單的資料類型
         function getType() {
             var selectedOption = $("#HardSelect").val();
             switch (selectedOption) {
@@ -261,6 +367,7 @@
             };
         };
 
+        // AJAX 資料載入 datatable
         function getdatatableData() {
             let p = getType();
             // 發送非同步GET請求
@@ -278,6 +385,10 @@
                 datatable.clear().draw();
                 // 添加新的資料
                 datatable.rows.add(data).draw();
+                // 欄位事件綁定
+                btnWattEnterEvent();
+                btnWattResetEvent();
+                btnPopoverEvent();
             }).catch(error => {
                 alert(error);
             });
@@ -285,7 +396,6 @@
 
         $("#HardSelect").change(function () {
             getdatatableData();
-
         });
 
         // RowDetail 內容
@@ -294,13 +404,13 @@
             let RadioId = "recommend" + d.productId;
             return (
                 `<div id="recommend${d.productId}" style="color: black;"> 推薦設定:
-                                                                                <label style="color: black;"><input type="radio" name="${RadioId}" value="0" ${d.recommend == 0 ? 'checked' : ''}> 無</label>
-                                                                                    <label style="color: green;"><input type="radio" name="${RadioId}" value="1" ${d.recommend == 1 ? 'checked' : ''}> 基本</label>
-                                                                                    <label style="color: blue;"><input type="radio" name="${RadioId}" value="2" ${d.recommend == 2 ? 'checked' : ''}> 優良</label>
-                                                                                    <label style="color: red;"><input type="radio" name="${RadioId}" value="3" ${d.recommend == 3 ? 'checked' : ''}> 完美</label>
-                                                                                    <i class="fa-solid fa-spinner fa-spin ms-2"style="color:black;display:none" id="loading${d.productId}"></i>
-                                                                                        <span id="result${d.productId}" class="ms-2" style="color: black;"></span>
-                                                                             </div>`
+                                                                                            <label style="color: black;"><input type="radio" name="${RadioId}" value="0" ${d.recommend == 0 ? 'checked' : ''}> 無</label>
+                                                                                                <label style="color: green;"><input type="radio" name="${RadioId}" value="1" ${d.recommend == 1 ? 'checked' : ''}> 基本</label>
+                                                                                                <label style="color: blue;"><input type="radio" name="${RadioId}" value="2" ${d.recommend == 2 ? 'checked' : ''}> 優良</label>
+                                                                                                <label style="color: red;"><input type="radio" name="${RadioId}" value="3" ${d.recommend == 3 ? 'checked' : ''}> 完美</label>
+                                                                                                <i class="fa-solid fa-spinner fa-spin ms-2"style="color:black;display:none" id="loading${d.productId}"></i>
+                                                                                                    <span id="result${d.productId}" class="ms-2" style="color: black;"></span>
+                                                                                         </div>`
             );
         };
         // 推薦變更事件W
