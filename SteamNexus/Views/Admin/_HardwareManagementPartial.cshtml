@@ -1,53 +1,63 @@
-﻿@* datatables 樣式 *@
+﻿@* 改良成 cdn 的形式 日後加入 asp-fallback*@
+@* datatables 樣式 *@
+<link href="~/lib/datatables/css/jquery.datatables.min.css" rel="stylesheet" />
+@* <link rel="stylesheet"
+      href="https://cdn.datatables.net/2.0.3/css/dataTables.dataTables.min.css"
+      asp-append-version="true" /> *@
+@* font-awesome 樣式 *@
 <link rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/css/jquery.dataTables.min.css"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
       asp-append-version="true"
-      integrity="sha512-1k7mWiTNoyx2XtmI96o+hdjP8nn0f3Z2N4oF/9ZZRgijyV4omsKOXEnqL1gKQNPy2MTSP9rIEWGcH/CInulptA=="
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
       crossorigin="anonymous"
       referrerpolicy="no-referrer" />
-@* font-awesome 樣式 *@
-<link href="@Url.Content("~/lib/font-awesome/css/all.min.css")" rel="stylesheet" asp-append-version="true" />
 @* PartialView 的局部樣式 *@
 <style asp-add-nested-styles="true">
 
-    /* datatables 樣式設定 */
+    /***** datatables 樣式設定 *****/
 
-    /* 每頁數量 文字顏色*/
+    /* 筆數 label 文字顏色*/
     .dataTables_length label {
-
         color: white;
     }
-    /* 數量顯示結果 文字顏色*/
+
+    /* 搜尋 label 文字顏色*/
+    .dataTables_filter label {
+        color: white;
+    }
+
+    /* 數據展示信息 文字顏色*/
     .dataTables_info {
         color: white !important;
     }
-    /* 搜尋 文字顏色*/
-    .dataTables_wrapper .dataTables_filter label {
-        color: white;
-    }
+
     /* 分頁按鈕顏色 */
     .dataTables_wrapper .dataTables_paginate .paginate_button {
         color: white !important;
     }
+
     /* 標題列設定 */
     thead {
         background-color: black;
         color: white;
     }
 
-    /* 間隔空間 */
+    /* 間隔空間調整 */
     .dataTables_length {
         margin-left: 10px;
-        margin-bottom: 10px;
-    }
-
-    .dataTables_length label select {
-        border-radius: 5px;
+        margin-bottom: 10px !important;
     }
 
     .dataTables_filter {
         margin-right: 10px;
         margin-bottom: 10px;
+    }
+
+    /* 方框調整 */
+    .dataTables_length label select {
+        border-radius: 5px;
+        margin-right: 5px;
+        margin-left: 5px;
     }
 
     /* RowDetail Icon setting */
@@ -60,11 +70,7 @@
         color: black;
     }
 
-    tr.shown td.details-control .detailIcon {
-        color: black;
-    }
-
-    /* 推薦行文字顏色 */
+    /* 推薦設定 文字顏色 */
     .black-row {
         color: black !important;
     }
@@ -117,8 +123,14 @@
 </div>
 @* datatables JS *@
 <script src="~/lib/datatables/js/jquery.datatables.min.js"></script>
+@* <script src="https://cdn.datatables.net/2.0.3/js/dataTables.min.js"
+        asp-append-version="true"></script> *@
 @* font-awesome JS *@
-<script src="~/lib/font-awesome/js/all.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js"
+        asp-append-version="true"
+        integrity="sha512-u3fPA7V8qQmhBPNT5quvaXVa1mnnLSXUep5PS1qo5NRzHwG19aHmNJnj1Q8hpA/nBWZtZD4r4AX6YOt5ynLN2g=="
+        crossorigin="anonymous"
+        referrerpolicy="no-referrer"></script>
 <script>
     $(document).ready(function () {
 
@@ -341,13 +353,13 @@
             let RadioId = "recommend" + d.productId;
             return (
                 `<div id="recommend${d.productId}" style="color: black;"> 推薦設定:
-                                            <label style="color: black;"><input type="radio" name="${RadioId}" value="0" ${d.recommend == 0 ? 'checked' : ''}> 無</label>
-                                                <label style="color: green;"><input type="radio" name="${RadioId}" value="1" ${d.recommend == 1 ? 'checked' : ''}> 基本</label>
-                                                <label style="color: blue;"><input type="radio" name="${RadioId}" value="2" ${d.recommend == 2 ? 'checked' : ''}> 優良</label>
-                                                <label style="color: red;"><input type="radio" name="${RadioId}" value="3" ${d.recommend == 3 ? 'checked' : ''}> 完美</label>
-                                                <i class="fa-solid fa-spinner fa-spin ms-2"style="color:black;display:none" id="loading${d.productId}"></i>
-                                                    <span id="result${d.productId}" class="ms-2" style="color: black;"></span>
-                                         </div>`
+                                                                                <label style="color: black;"><input type="radio" name="${RadioId}" value="0" ${d.recommend == 0 ? 'checked' : ''}> 無</label>
+                                                                                    <label style="color: green;"><input type="radio" name="${RadioId}" value="1" ${d.recommend == 1 ? 'checked' : ''}> 基本</label>
+                                                                                    <label style="color: blue;"><input type="radio" name="${RadioId}" value="2" ${d.recommend == 2 ? 'checked' : ''}> 優良</label>
+                                                                                    <label style="color: red;"><input type="radio" name="${RadioId}" value="3" ${d.recommend == 3 ? 'checked' : ''}> 完美</label>
+                                                                                    <i class="fa-solid fa-spinner fa-spin ms-2"style="color:black;display:none" id="loading${d.productId}"></i>
+                                                                                        <span id="result${d.productId}" class="ms-2" style="color: black;"></span>
+                                                                             </div>`
             );
         };
         // 推薦變更事件W
