@@ -67,6 +67,38 @@
         border-radius: 5px;
         background-color: white;
     }
+
+    /* popover 初始樣式 */
+    .popover {
+        /* 初始透明度 0 */
+        opacity: 0;
+    }
+        /* popover 顯示 */
+        .popover.show {
+            transition: opacity 0.5s ease;
+            opacity: 1;
+        }
+
+    /* popover 成功 CSS */
+    .popover-success {
+        background-color: #dff0d8;
+        border-color: #d6e9c6;
+        display:flex;
+        justify-content: center;
+        align-items: center;
+        height: 40px;
+    }
+
+    /* popover 失敗 CSS */
+    .popover-fail {
+        background-color: #f2dede;
+        border-color: #ebccd1;
+        display:flex;
+        justify-content: center;
+        align-items: center;
+        height: 40px;
+    }
+
 </style>
 @* PartialView 的 HTML *@
 <div>
@@ -235,21 +267,21 @@
                         return inputEle;
                     },
                     // 將此列的數據類型設置為數字 ~ 排序才會正常運作
-                    "type": "num" 
+                    "type": "num"
                 },
                 {
                     "data": null,
                     "orderable": false,
                     "width": "10%",
                     "className": "text-center",
-                    // 瓦數 自定義
+                    // 按鈕 自定義
                     render: function (data, type, row, meta) {
                         // 取得 productId
                         let productId = row.productId;
                         // 確認按鈕
-                        let enterEle = '<button id="' + productId + "_enter" + '" class="row-button" data-bs-toggle="popover" data-bs-content="test"><i class="fa-solid fa-check" style="color: #04ff00;"></i></button>';
+                        let enterEle = '<button id="' + productId + "_enter" + '" class="row-button" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-check" style="color: #04ff00;"></i></button>';
                         // 復原按鈕
-                        let resetEle = '<button id="' + productId + "_reset" + '" class="row-button" data-bs-toggle="popover" data-bs-content="test"><i class="fa-solid fa-rotate-right" style="color: #ff0000;"></i></button>';
+                        let resetEle = '<button id="' + productId + "_reset" + '" class="row-button" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-rotate-right" style="color: #ff0000;"></i></button>';
                         if (type === 'display') {
                             return `${enterEle}&nbsp;&nbsp;&nbsp;${resetEle}`;
                         }
@@ -272,56 +304,67 @@
             }
         });
 
-        // 瓦數變更 ~ 確認事件
+        // 資料變更 ~ 綁定事件
         function btnWattEnterEvent() {
             // 綁定所有 button 標籤 id 為 _enter 結尾的元素
             $('button[id$="_enter"]').on('click', function () {
                 // 取得 ID
                 let id = Number($(this).attr('id').slice(0, -6));
+                
+                
+                
                 // 更改提示泡泡內容
-                $(this).attr('data-bs-content', id);
+                let popContent = '<i class="fa-solid fa-check"></i>&nbsp;&nbsp;變更成功';
+                $(this).attr('data-bs-content', popContent);
                 // 顯示提示泡泡
                 $(this).popover('show');
+                // 更改顏色 ~ 綠色
+                $('.popover').last().find('.popover-body').css('color', '#30b300');
+                // 自訂提示泡泡 CSS
+                $('.popover').last().addClass('popover-success');
+                // 設置一段時間後隱藏提示泡泡
+                setTimeout(function () {
+                    $(this).popover('hide');
+                }.bind(this), 1000); // 這裡的 1000 表示延遲 1 秒後隱藏提示泡泡
             });
         };
 
-        // 瓦數變更 ~ 重設事件
+        // 資料還原 ~ 綁定事件
         function btnWattResetEvent() {
             // 綁定所有 button 標籤 id 為 _enter 結尾的元素
             $('button[id$="_reset"]').on('click', function (event) {
                 // 取得 ID
-                let id = $(this).attr('id').slice(0, -6);
+                let id = Number($(this).attr('id').slice(0, -6));
+                
                 // 更改提示泡泡內容
-                $(this).attr('data-bs-content', id);
+                let popcontent = '<i class="fa-solid fa-xmark"></i>&nbsp;&nbsp;變更失敗';
+                $(this).attr('data-bs-content', popcontent);
                 // 顯示提示泡泡
                 $(this).popover('show');
+                // 更改顏色 ~ 紅色
+                $('.popover').last().find('.popover-body').css('color', '#ff0000');
+                // 自訂提示泡泡 CSS
+                $('.popover').last().addClass('popover-fail');
+                // 設置一段時間後隱藏提示泡泡
+                setTimeout(function () {
+                    $(this).popover('hide');
+                }.bind(this), 1000); // 這裡的 1000 表示延遲 1 秒後隱藏提示泡泡
             });
         };
 
-        // 提示泡泡事件
-        function btnPopoverEvent() {
-            // 提示泡泡的屬性
+        // 提示泡泡 ~ popover 初始化
+        function btnPopoverInitialization() {
             $('[data-bs-toggle="popover"]').popover({
                 // 指定彈出方向為上方
                 placement: 'top',
                 // 不顯示箭頭
                 template: '<div class="popover" role="tooltip"><h3 class="popover-header"></h3><div class="popover-body"></div></div>',
-                // 動畫效果
-                animation: true,
-                trigger: 'manual' // 手動觸發提示泡泡
-            });
-            // 動畫效果
-            // shown.bs.popover 顯示完畢觸發的事件
-            $('[data-bs-toggle="popover"]').on('shown.bs.popover', function () {
-                // 抓取當前元素(提示泡泡)
-                let $popover = $(this);
-                // 設置一段時間後觸發淡出效果
-                setTimeout(function () {
-                    // 添加淡出效果 ~ 影響 opacity
-                    $popover.find('.popover').fadeOut();
-                    // 隱藏提示泡泡 ~ 影響 display
-                    $popover.popover('hide');
-                }, 1000); // 這裡的 1000 表示延遲 1 秒後觸發淡出效果
+                // 禁用預設動畫
+                animation: false,
+                // 手動觸發提示泡泡
+                trigger: 'manual',
+                // 顯示 html 元素
+                html: true,
             });
         };
 
@@ -388,7 +431,7 @@
                 // 欄位事件綁定
                 btnWattEnterEvent();
                 btnWattResetEvent();
-                btnPopoverEvent();
+                btnPopoverInitialization();
             }).catch(error => {
                 alert(error);
             });
@@ -404,13 +447,13 @@
             let RadioId = "recommend" + d.productId;
             return (
                 `<div id="recommend${d.productId}" style="color: black;"> 推薦設定:
-                                                                                            <label style="color: black;"><input type="radio" name="${RadioId}" value="0" ${d.recommend == 0 ? 'checked' : ''}> 無</label>
-                                                                                                <label style="color: green;"><input type="radio" name="${RadioId}" value="1" ${d.recommend == 1 ? 'checked' : ''}> 基本</label>
-                                                                                                <label style="color: blue;"><input type="radio" name="${RadioId}" value="2" ${d.recommend == 2 ? 'checked' : ''}> 優良</label>
-                                                                                                <label style="color: red;"><input type="radio" name="${RadioId}" value="3" ${d.recommend == 3 ? 'checked' : ''}> 完美</label>
-                                                                                                <i class="fa-solid fa-spinner fa-spin ms-2"style="color:black;display:none" id="loading${d.productId}"></i>
-                                                                                                    <span id="result${d.productId}" class="ms-2" style="color: black;"></span>
-                                                                                         </div>`
+                                                                                                            <label style="color: black;"><input type="radio" name="${RadioId}" value="0" ${d.recommend == 0 ? 'checked' : ''}> 無</label>
+                                                                                                                <label style="color: green;"><input type="radio" name="${RadioId}" value="1" ${d.recommend == 1 ? 'checked' : ''}> 基本</label>
+                                                                                                                <label style="color: blue;"><input type="radio" name="${RadioId}" value="2" ${d.recommend == 2 ? 'checked' : ''}> 優良</label>
+                                                                                                                <label style="color: red;"><input type="radio" name="${RadioId}" value="3" ${d.recommend == 3 ? 'checked' : ''}> 完美</label>
+                                                                                                                <i class="fa-solid fa-spinner fa-spin ms-2"style="color:black;display:none" id="loading${d.productId}"></i>
+                                                                                                                    <span id="result${d.productId}" class="ms-2" style="color: black;"></span>
+                                                                                                         </div>`
             );
         };
         // 推薦變更事件W
