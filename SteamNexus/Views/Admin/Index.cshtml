@@ -1,5 +1,21 @@
 ﻿@section Styles
 {
+    @* datatables 本體 CSS *@
+    <link rel="stylesheet"
+          href="https://cdn.datatables.net/2.0.3/css/dataTables.dataTables.min.css"
+          asp-append-version="true" />
+    @* datatables Fixed Header 標頭固定 *@
+    <link rel="stylesheet"
+          href="https://cdn.datatables.net/fixedheader/4.0.1/css/fixedHeader.dataTables.min.css"
+          asp-append-version="true" />
+    @* font-awesome 樣式 *@
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+          asp-append-version="true"
+          integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+          crossorigin="anonymous"
+          referrerpolicy="no-referrer" />
+    @* 側邊導覽 自訂樣式 *@
     <style>
         .sidebar-link {
             background-color: #F8F8F9;
@@ -41,6 +57,19 @@
 
 @section Scripts
 {
+    @* datatables 本體 JS *@
+    <script src="https://cdn.datatables.net/2.0.3/js/dataTables.min.js"
+            asp-append-version="true"></script>
+    @* datatables Fixed Header 標頭固定 *@
+    <script src="https://cdn.datatables.net/fixedheader/4.0.1/js/dataTables.fixedHeader.min.js"
+            asp-append-version="true"></script>
+    @* font-awesome JS *@
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js"
+            asp-append-version="true"
+            integrity="sha512-u3fPA7V8qQmhBPNT5quvaXVa1mnnLSXUep5PS1qo5NRzHwG19aHmNJnj1Q8hpA/nBWZtZD4r4AX6YOt5ynLN2g=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"></script>
+    @* 側邊導覽 AJAX 後台系統切換 *@
     <script>
         // AJAX 呼叫替換 PartialView
         $(document).ready(function () {
@@ -131,7 +160,6 @@
             });
 
 
-        })
-        
+        }) 
     </script>
 }
