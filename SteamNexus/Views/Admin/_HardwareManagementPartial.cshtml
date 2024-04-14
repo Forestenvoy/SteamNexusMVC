@@ -24,15 +24,23 @@
         color: black;
     }
 
-    /* 間隔空間調整 */
-    .dataTables_length {
-        margin-left: 10px;
-        margin-bottom: 10px !important;
+    /* RowGroup 顏色 */
+    .dtrg-group {
+        color: black;
     }
 
-    .dataTables_filter {
-        margin-right: 10px;
-        margin-bottom: 10px;
+    /* 頂部布局調整 */
+    .dt-start {
+        padding-left: 10px !important;
+    }
+
+    .dt-end .dt-search {
+        text-align: center !important;
+    }
+
+    .dt-middle {
+        text-align: end !important;
+        padding-right: 10px !important;
     }
 
     /* RowDetail Icon setting */
@@ -83,7 +91,7 @@
     .popover-success {
         background-color: #dff0d8;
         border-color: #d6e9c6;
-        display:flex;
+        display: flex;
         justify-content: center;
         align-items: center;
         height: 40px;
@@ -93,7 +101,7 @@
     .popover-fail {
         background-color: #f2dede;
         border-color: #ebccd1;
-        display:flex;
+        display: flex;
         justify-content: center;
         align-items: center;
         height: 40px;
@@ -110,17 +118,13 @@
                     <option value="" disabled selected hidden>---- 請選擇 ----</option>
                 </select>
             </div>
-            <div class="col-12 col-md-3 d-flex justify-content-center justify-content-md-start align-items-center">
-                <button class="btn btn-secondary m-3" id="UpdateHardwareOne">單一零件更新</button>
-                <button class="btn btn-secondary m-3" id="UpdateHardwareAll">全零件更新</button>
-            </div>
             <div class="col-12 col-md-5 d-flex justify-content-center justify-content-md-start align-items-center">
                 <img src="~/img/loading-block-white.gif" style="width:30px;height:30px;display:none" id="HardwareLoading" />
                 <span id="UpdateResult" style="color:white" class="h3"></span>
             </div>
         </div>
     </div>
-    <table id="HardwareManageTable" class="display">
+    <table id="HardwareManageTable" class="display dt-responsive" style="width:100%">
         <thead>
             <tr>
                 <th></th>
@@ -142,7 +146,7 @@
         let HardAddress = "https://localhost:7097";
 
         // 單一零件更新
-        $("#UpdateHardwareOne").on("click", function () {
+        function UpdateOneHardware() {
             // 清空結果訊息
             $("#UpdateResult").text("");
             // 取得 零件ID
@@ -190,10 +194,10 @@
                 });;
                 alert(error);
             });
-        });
+        };
 
         // 全零件更新
-        $("#UpdateHardwareAll").on("click", function () {
+        function UpdateAllHardware() {
             // 清空結果訊息
             $("#UpdateResult").text("");
             // 顯示進度條
@@ -230,8 +234,7 @@
                 });;
                 alert(error);
             });
-
-        });
+        };
 
         // 初始化 Datatables
         var datatable = new DataTable('#HardwareManageTable', {
@@ -247,7 +250,7 @@
                 { "data": "productId", "width": "5%", "className": "text-center" },
                 { "data": "productName", "width": "25%" },
                 { "data": "specification", "width": "15%" },
-                { "data": "componentClassificationName", "width": "15%" },
+                { "data": "componentClassificationName", "width": "15%", "visible": false },
                 { "data": "price", "width": "8%", "className": "text-center" },
                 {
                     "data": "wattage",
@@ -291,17 +294,52 @@
             ],
             // 標頭固定
             fixedHeader: true,
+            // 響應式設計
+            responsive: true,
             // 語言設定
             language: {
                 url: '//cdn.datatables.net/plug-ins/2.0.3/i18n/zh-HANT.json',
             },
-            // 預設排序 ~ 根據第一欄位升覓
+            // 預設排序 ~ 根據第一個欄位 升冪排序
             order: [[1, 'asc']],
+            // 行分組
+            rowGroup: {
+                dataSrc: 'componentClassificationName',
+            },
+            // 資料載入中 gif
             processing: true,
+            // 自動寬度 關閉
             autoWidth: false,
+            // 資料行樣式
             createdRow: function (row, data, dataIndex) {
                 row.classList.add(data.recommend === 0 ? 'black-row' : data.recommend === 1 ? 'green-row' : data.recommend === 2 ? 'blue-row' : 'red-row');
-            }
+            },
+            // 按鈕建立
+            layout: {
+                topMiddle: {
+                    buttons: [
+                        {
+                            // 按鈕顯示的文本
+                            text: '單一零件更新',
+                            // 按鈕點擊事件
+                            action: function (e, dt, node, config) {
+                                // 單一零件更新
+                                UpdateOneHardware();
+                            }
+                        },
+                        {
+                            // 按鈕顯示的文本
+                            text: '全零件更新',
+                            // 按鈕點擊事件
+                            action: function (e, dt, node, config) {
+                                // 全零件更新
+                                UpdateAllHardware();
+                            }
+                        },
+
+                    ]
+                },
+            },
         });
 
         // 資料變更 ~ 綁定事件
@@ -310,9 +348,9 @@
             $('button[id$="_enter"]').on('click', function () {
                 // 取得 ID
                 let id = Number($(this).attr('id').slice(0, -6));
-                
-                
-                
+
+
+
                 // 更改提示泡泡內容
                 let popContent = '<i class="fa-solid fa-check"></i>&nbsp;&nbsp;變更成功';
                 $(this).attr('data-bs-content', popContent);
@@ -335,7 +373,7 @@
             $('button[id$="_reset"]').on('click', function (event) {
                 // 取得 ID
                 let id = Number($(this).attr('id').slice(0, -6));
-                
+
                 // 更改提示泡泡內容
                 let popcontent = '<i class="fa-solid fa-xmark"></i>&nbsp;&nbsp;變更失敗';
                 $(this).attr('data-bs-content', popcontent);
@@ -447,13 +485,13 @@
             let RadioId = "recommend" + d.productId;
             return (
                 `<div id="recommend${d.productId}" style="color: black;"> 推薦設定:
-                                                                                                            <label style="color: black;"><input type="radio" name="${RadioId}" value="0" ${d.recommend == 0 ? 'checked' : ''}> 無</label>
-                                                                                                                <label style="color: green;"><input type="radio" name="${RadioId}" value="1" ${d.recommend == 1 ? 'checked' : ''}> 基本</label>
-                                                                                                                <label style="color: blue;"><input type="radio" name="${RadioId}" value="2" ${d.recommend == 2 ? 'checked' : ''}> 優良</label>
-                                                                                                                <label style="color: red;"><input type="radio" name="${RadioId}" value="3" ${d.recommend == 3 ? 'checked' : ''}> 完美</label>
-                                                                                                                <i class="fa-solid fa-spinner fa-spin ms-2"style="color:black;display:none" id="loading${d.productId}"></i>
-                                                                                                                    <span id="result${d.productId}" class="ms-2" style="color: black;"></span>
-                                                                                                         </div>`
+                                                                                                                    <label style="color: black;"><input type="radio" name="${RadioId}" value="0" ${d.recommend == 0 ? 'checked' : ''}> 無</label>
+                                                                                                                        <label style="color: green;"><input type="radio" name="${RadioId}" value="1" ${d.recommend == 1 ? 'checked' : ''}> 基本</label>
+                                                                                                                        <label style="color: blue;"><input type="radio" name="${RadioId}" value="2" ${d.recommend == 2 ? 'checked' : ''}> 優良</label>
+                                                                                                                        <label style="color: red;"><input type="radio" name="${RadioId}" value="3" ${d.recommend == 3 ? 'checked' : ''}> 完美</label>
+                                                                                                                        <i class="fa-solid fa-spinner fa-spin ms-2"style="color:black;display:none" id="loading${d.productId}"></i>
+                                                                                                                            <span id="result${d.productId}" class="ms-2" style="color: black;"></span>
+                                                                                                                 </div>`
             );
         };
         // 推薦變更事件W
@@ -537,27 +575,27 @@
         }
 
         // Add event listener for opening and closing details
-        $('#HardwareManageTable tbody').on('click', 'td.details-control', function () {
-            var tr = $(this).closest('tr');
-            var row = datatable.row(tr);
-            if (row.child.isShown()) {
-                // This row is already open - close it
-                row.child.hide();
-                tr.removeClass('shown');
-                $(this).find('.detailIcon').text("▶");
-            }
-            else {
-                // Open this row
-                row.child(format(row.data())).show();
-                tr.addClass('shown');
-                $(this).find('.detailIcon').text("▼");
+        // $('#HardwareManageTable tbody').on('click', 'td.details-control', function () {
+        //     var tr = $(this).closest('tr');
+        //     var row = datatable.row(tr);
+        //     if (row.child.isShown()) {
+        //         // This row is already open - close it
+        //         row.child.hide();
+        //         tr.removeClass('shown');
+        //         $(this).find('.detailIcon').text("▶");
+        //     }
+        //     else {
+        //         // Open this row
+        //         row.child(format(row.data())).show();
+        //         tr.addClass('shown');
+        //         $(this).find('.detailIcon').text("▼");
 
-                // 獲取子元素（row.detail）
-                var rowDetail = $(tr).next();
-                // 綁定事件(推薦變更)
-                radioevent(rowDetail);
-            }
-        });
+        //         // 獲取子元素（row.detail）
+        //         var rowDetail = $(tr).next();
+        //         // 綁定事件(推薦變更)
+        //         radioevent(rowDetail);
+        //     }
+        // });
 
 
 
