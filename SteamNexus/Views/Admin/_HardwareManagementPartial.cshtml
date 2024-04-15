@@ -575,27 +575,27 @@
         }
 
         // Add event listener for opening and closing details
-        // $('#HardwareManageTable tbody').on('click', 'td.details-control', function () {
-        //     var tr = $(this).closest('tr');
-        //     var row = datatable.row(tr);
-        //     if (row.child.isShown()) {
-        //         // This row is already open - close it
-        //         row.child.hide();
-        //         tr.removeClass('shown');
-        //         $(this).find('.detailIcon').text("▶");
-        //     }
-        //     else {
-        //         // Open this row
-        //         row.child(format(row.data())).show();
-        //         tr.addClass('shown');
-        //         $(this).find('.detailIcon').text("▼");
+        $('#HardwareManageTable tbody').on('click', 'td.details-control', function () {
+            var tr = $(this).closest('tr');
+            var row = datatable.row(tr);
+            if (row.child.isShown()) {
+                // This row is already open - close it
+                row.child.hide();
+                tr.removeClass('shown');
+                $(this).find('.detailIcon').text("▶");
+            }
+            else {
+                // Open this row
+                row.child(format(row.data())).show();
+                tr.addClass('shown');
+                $(this).find('.detailIcon').text("▼");
 
-        //         // 獲取子元素（row.detail）
-        //         var rowDetail = $(tr).next();
-        //         // 綁定事件(推薦變更)
-        //         radioevent(rowDetail);
-        //     }
-        // });
+                // 獲取子元素（row.detail）
+                var rowDetail = $(tr).next();
+                // 綁定事件(推薦變更)
+                radioevent(rowDetail);
+            }
+        });
 
 
 
