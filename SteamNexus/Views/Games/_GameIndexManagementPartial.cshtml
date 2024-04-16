@@ -1,6 +1,4 @@
 ﻿@* PartialView 的局部樣式 *@
-<link href="~/lib/datatables/css/jquery.datatables.min.css" rel="stylesheet" />
-<link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet" />
 <style asp-add-nested-styles="true">
 
     /* datatables 樣式設定 */
@@ -103,15 +101,11 @@
         </thead>
     </table>
 </div>
-
-<script src="~/lib/datatables/js/jquery.datatables.min.js"></script>
-<script src="~/lib/font-awesome/js/all.min.js"></script>
-
 <script>
     $(document).ready(function () {
         $("#HardwareLoading").show();
         let baseAddress = "https://localhost:7097";
-        var dataTable =$("#HardwareManageTable").DataTable({
+        var dataTable = new DataTable('#HardwareManageTable', {
             columns: [
                 {
                     "class": 'details-control',
