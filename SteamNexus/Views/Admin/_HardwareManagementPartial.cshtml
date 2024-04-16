@@ -107,6 +107,9 @@
         height: 40px;
     }
 
+    body {
+        table-layout: fixed;
+    }
 </style>
 @* PartialView 的 HTML *@
 <div>
@@ -124,7 +127,7 @@
             </div>
         </div>
     </div>
-    <table id="HardwareManageTable" class="display dt-responsive" style="width:100%">
+    <table id="HardwareManageTable" class="display" style="width:100%">
         <thead>
             <tr>
                 <th></th>
@@ -244,7 +247,7 @@
                     "class": 'details-control',
                     "orderable": false,
                     "data": null,
-                    "defaultContent": '<div class="detailIcon">▶</div>',
+                    "defaultContent": '<div class="detailIcon"></div>',
                     "width": "3%"
                 },
                 { "data": "productId", "width": "5%", "className": "text-center" },
@@ -309,7 +312,7 @@
             // 資料載入中 gif
             processing: true,
             // 自動寬度 關閉
-            autoWidth: false,
+            autoWidth: true,
             // 資料行樣式
             createdRow: function (row, data, dataIndex) {
                 row.classList.add(data.recommend === 0 ? 'black-row' : data.recommend === 1 ? 'green-row' : data.recommend === 2 ? 'blue-row' : 'red-row');
@@ -341,6 +344,7 @@
                 },
             },
         });
+
 
         // 資料變更 ~ 綁定事件
         function btnWattEnterEvent() {
