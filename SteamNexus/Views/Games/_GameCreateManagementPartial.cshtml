@@ -139,7 +139,7 @@
                 ImagePath: $("#ImagePath").val(),
                 VideoPath: $("#VideoPath").val()
             },
-            url: `${baseAddress}/Admin/PostCreatPartialToDB`
+            url: `${baseAddress}@Url.Action("PostCreatPartialToDB", "Games")`
         }).done(data => {
                 $("#systemLoading").hide();
                 $("#System").html(data);

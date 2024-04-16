@@ -75,7 +75,7 @@
                 event.preventDefault();
                 $("#systemLoading").show();
                 // 發送非同步GET請求
-                fetch(`${baseAddress}@Url.Action("GetIndexPartialView", "Admin")`, {
+                fetch(`${baseAddress}@Url.Action("GetIndexPartialView", "Games")`, {
                     method: "GET"
                 }).then(response => {
                     // 確保請求是否成功

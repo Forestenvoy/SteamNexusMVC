@@ -133,7 +133,7 @@
                 data: {
                     id: Number(num)
                 },
-                url: `${baseAddress}/Admin/PostDeletePartialToDB`
+                url: `${baseAddress}@Url.Action("PostDeletePartialToDB", "Games")`
             }).done(data => {
                 $("#systemLoading").hide();
                 $("#System").html(data);
