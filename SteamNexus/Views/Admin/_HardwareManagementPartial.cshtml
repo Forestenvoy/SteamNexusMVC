@@ -92,7 +92,7 @@
     }
 </style>
 @* PartialView 的 HTML *@
-<div>
+<div class="position-relative">
     <div class="container-fluid p-2">
         <div class="row">
             <div class="col-12 col-md-4 d-flex align-items-center justify-content-center">
@@ -110,14 +110,14 @@
     <table id="HardwareManageTable" class="display" style="width:100%">
         <thead>
             <tr>
-                <th></th>
-                <th>ID</th>
+@*                 <th></th> *@
+                <th data-priority="1">ID</th>
                 <th>產品名稱</th>
                 <th>規格</th>
                 <th>種類</th>
                 <th>價格</th>
                 <th>瓦數</th>
-                <th></th>
+                <th data-priority="2"></th>
             </tr>
         </thead>
     </table>
@@ -148,7 +148,7 @@
             var data = {
                 Type: itemid
             };
-            fetch(`${HardAddress}@Url.Action("UpdateHardwareOne", "Admin")`, {
+            fetch(`@Url.Action("UpdateHardwareOne", "Admin")`, {
                 method: "POST",
                 body: JSON.stringify(data),
                 headers: {
@@ -186,7 +186,7 @@
             // 顯示進度條
             $("#HardwareLoading").show();
             // 發送非同步POST請求 ==> 資料庫資料變更
-            fetch(`${HardAddress}@Url.Action("UpdateHardwareAll", "Admin")`, {
+            fetch(`@Url.Action("UpdateHardwareAll", "Admin")`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -223,13 +223,13 @@
         var datatable = new DataTable('#HardwareManageTable', {
             // column 定義
             columns: [
-                {
-                    "class": 'details-control',
-                    "orderable": false,
-                    "data": null,
-                    "defaultContent": '<div class="detailIcon"></div>',
-                    "width": "3%"
-                },
+                // {
+                //     "class": 'details-control',
+                //     "orderable": false,
+                //     "data": null,
+                //     "defaultContent": '<div class="detailIcon"></div>',
+                //     "width": "3%"
+                // },
                 { "data": "productId", "width": "5%", "className": "text-center" },
                 { "data": "productName", "width": "25%" },
                 { "data": "specification", "width": "15%" },
