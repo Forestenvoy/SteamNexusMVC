@@ -1,0 +1,596 @@
+﻿@* PartialView 的 CSS *@
+<style asp-add-nested-styles="true">
+
+    /***** datatables 自訂樣式 *****/
+
+    /* 標題列設定 */
+    thead {
+        background-color: black;
+        color: white;
+    }
+
+    /* 頂部布局調整 */
+    .dt-start {
+        padding-left: 10px !important;
+    }
+
+    .dt-end .dt-search {
+        text-align: center !important;
+    }
+
+    .dt-middle {
+        text-align: end !important;
+        padding-right: 10px !important;
+    }
+
+    /* RowDetail Icon setting */
+    td.details-control .detailIcon {
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 15px;
+        color: black;
+    }
+
+    /* 推薦設定 文字顏色 */
+    .green-row {
+        color: green !important;
+    }
+
+    .blue-row {
+        color: blue !important;
+    }
+
+    .red-row {
+        color: red !important;
+    }
+
+    /* 列 按鈕樣式 */
+    .row-button {
+        border-radius: 5px;
+        background-color: gray;
+    }
+
+    /* popover 初始樣式 */
+    .popover {
+        /* 初始透明度 0 */
+        opacity: 0;
+    }
+        /* popover 顯示 */
+        .popover.show {
+            transition: opacity 0.5s ease;
+            opacity: 1;
+        }
+
+    /* popover 成功 CSS */
+    .popover-success {
+        background-color: #dff0d8;
+        border-color: #d6e9c6;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 40px;
+    }
+
+    /* popover 失敗 CSS */
+    .popover-fail {
+        background-color: #f2dede;
+        border-color: #ebccd1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 40px;
+    }
+
+    body {
+        table-layout: fixed;
+    }
+</style>
+@* PartialView 的 HTML *@
+<div class="position-relative">
+    <div class="container-fluid p-2">
+        <div class="row">
+            <div class="col-12 col-md-4 d-flex align-items-center justify-content-center">
+                <label class="text-white m-0 h3 me-2">硬體選擇</label>
+                <select asp-items="@ViewBag.ComputerParts" class="form-select" style="width:250px;height:40px" id="HardSelect">
+                    <option value="" disabled selected hidden>---- 請選擇 ----</option>
+                </select>
+            </div>
+            <div class="col-12 col-md-5 d-flex justify-content-center justify-content-md-start align-items-center">
+                <img src="~/img/loading-block-white.gif" style="width:30px;height:30px;display:none" id="HardwareLoading" />
+                <span id="UpdateResult" style="color:white" class="h3"></span>
+            </div>
+        </div>
+    </div>
+    <table id="HardwareManageTable" class="display" style="width:100%">
+        <thead>
+            <tr>
+                <th data-priority="1">ID</th>
+                <th>產品名稱</th>
+                <th>規格</th>
+                <th>種類</th>
+                <th>價格</th>
+                <th>瓦數</th>
+                <th>推薦</th>
+                <th data-priority="2"></th>
+            </tr>
+        </thead>
+    </table>
+</div>
+@* PartialView 的 JavaScript *@
+<script>
+    $(document).ready(function () {
+
+        let HardAddress = "https://localhost:7097";
+
+        // 單一零件更新
+        function UpdateOneHardware() {
+            // 清空結果訊息
+            $("#UpdateResult").text("");
+            // 取得 零件ID
+            let p = getType();
+            if (p == "NoSeclect") {
+                $("#UpdateResult").text("請選擇要更新的硬體種類").fadeIn(200, function () {
+                    // 在 fadeIn 完成后延遲 1000 毫秒，執行 fadeOut
+                    $(this).delay(1000).fadeOut(300);
+                });;;
+                return;
+            }
+            // 顯示進度條
+            $("#HardwareLoading").show();
+            // 發送非同步POST請求 ==> 資料庫資料變更
+            let itemid = Number(p.slice(5));
+            var data = {
+                Type: itemid
+            };
+            fetch(`@Url.Action("UpdateHardwareOne", "Admin")`, {
+                method: "POST",
+                body: JSON.stringify(data),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }).then(result => {
+                // 此時 result 是一個請求結果的物件
+                // 注意傳回值型態，字串用 text()，JSON 用 json()
+                $("#HardwareLoading").hide();
+                //  如過 HTTP 響應的狀態馬碼在 200 到 299 的範圍內 ==> .ok 會回傳 true
+                if (result.ok) {
+                    return result.text();
+                }
+            }).then(data => {
+                // 此時 data 為上一個 then 回傳的資料
+                $("#UpdateResult").text(data).fadeIn(200, function () {
+                    // 在 fadeIn 完成后延遲 1000 毫秒，執行 fadeOut
+                    $(this).delay(1000).fadeOut(300);
+                });;
+                getdatatableData();
+            }).catch(error => {
+                $("#HardwareLoading").hide();
+                $("#UpdateResult").text(data).fadeIn(200, function () {
+                    // 在 fadeIn 完成后延遲 1000 毫秒，執行 fadeOut
+                    $(this).delay(1000).fadeOut(300);
+                });;
+                alert(error);
+            });
+        };
+
+        // 全零件更新
+        function UpdateAllHardware() {
+            // 清空結果訊息
+            $("#UpdateResult").text("");
+            // 顯示進度條
+            $("#HardwareLoading").show();
+            // 發送非同步POST請求 ==> 資料庫資料變更
+            fetch(`@Url.Action("UpdateHardwareAll", "Admin")`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }).then(result => {
+                // 此時 result 是一個請求結果的物件
+                // 注意傳回值型態，字串用 text()，JSON 用 json()
+                $("#HardwareLoading").hide();
+                //  如過 HTTP 響應的狀態馬碼在 200 到 299 的範圍內 ==> .ok 會回傳 true
+                if (result.ok) {
+                    return result.text();
+                }
+            }).then(data => {
+                // 此時 data 為上一個 then 回傳的資料
+                $("#UpdateResult").text(data).fadeIn(200, function () {
+                    // 在 fadeIn 完成后延遲 1000 毫秒，執行 fadeOut
+                    $(this).delay(1000).fadeOut(300);
+                });;
+                let p = getType();
+                if (p != "NoSeclect") {
+                    getdatatableData();
+                }
+            }).catch(error => {
+                $("#HardwareLoading").hide();
+                $("#UpdateResult").text(data).fadeIn(200, function () {
+                    // 在 fadeIn 完成后延遲 1000 毫秒，執行 fadeOut
+                    $(this).delay(1000).fadeOut(300);
+                });;
+                alert(error);
+            });
+        };
+
+        // 初始化 Datatables
+        var datatable = new DataTable('#HardwareManageTable', {
+            // column 定義
+            columns: [
+                { "data": "productId", "width": "5%", "className": "text-center" },
+                { "data": "productName", "width": "35%" },
+                { "data": "specification", "width": "30%" },
+                { "data": "componentClassificationName", "visible": false },
+                { "data": "price", "width": "10%", "className": "text-center" },
+                {
+                    "data": "wattage",
+                    "width": "10%",
+                    "className": "text-center",
+                    // 瓦數 ~ 文字輸入方塊 
+                    render: function (data, type, row, meta) {
+                        // 此處 type 為 'sort' 表示 DataTables 正在進行排序
+                        if (type === 'sort') {
+                            // 返回元素的值作為排序依據
+                            return data;
+                        }
+                        // 取得 productId
+                        let productId = row.productId;
+                        // input 欄位 ~ 可編輯
+                        let inputEle = '<input type="text" id="' + productId + "_watt" + '" value="' + data + '" style="width: 50px; text-align: center;" >';
+                        return inputEle;
+                    },
+                    // 將此列的數據類型設置為數字 ~ 排序才會正常運作
+                    "type": "num"
+                },
+                {
+                    "data": "recommend",
+                    "width": "10%",
+                    "className": "text-center",
+                    // 推薦 ~ 下拉式選單
+                    render: function (data, type, row, meta) {
+                        // 此處 type 為 'sort' 表示 DataTables 正在進行排序
+                        if (type === 'sort') {
+                            // 返回元素的值作為排序依據
+                            return data;
+                        }
+                        // 取得 productId
+                        let productId = row.productId;
+                        // input 欄位 ~ 可編輯
+                        let inputEle = '<input type="text" id="' + productId + "_watt" + '" value="' + data + '" style="width: 50px; text-align: center;" >';
+                        return inputEle;
+                    },
+                    // 將此列的數據類型設置為數字 ~ 排序才會正常運作
+                    "type": "num"
+                },
+                {
+                    "data": null,
+                    "orderable": false,
+                    "width": "10%",
+                    "className": "text-center",
+                    // 按鈕 自定義
+                    render: function (data, type, row, meta) {
+                        // 取得 productId
+                        let productId = row.productId;
+                        // 確認按鈕
+                        let enterEle = '<button id="' + productId + "_enter" + '" class="row-button" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-check" style="color: #04ff00;"></i></button>';
+                        // 復原按鈕
+                        let resetEle = '<button id="' + productId + "_reset" + '" class="row-button" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-rotate-right" style="color: #ff0000;"></i></button>';
+                        if (type === 'display') {
+                            return `${enterEle}&nbsp;&nbsp;&nbsp;${resetEle}`;
+                        }
+                        return data;
+                    }
+                }
+            ],
+            // 標頭固定
+            fixedHeader: true,
+            // 響應式設計
+            responsive: true,
+            // 語言設定
+            language: {
+                url: '//cdn.datatables.net/plug-ins/2.0.3/i18n/zh-HANT.json',
+            },
+            // 預設排序 ~ 根據第一個欄位 升冪排序
+            order: [[1, 'asc']],
+            // 行分組
+            rowGroup: {
+                dataSrc: 'componentClassificationName',
+            },
+            // 資料載入中 gif
+            processing: true,
+            // 自動寬度 關閉
+            autoWidth: true,
+            // 資料行樣式
+            createdRow: function (row, data, dataIndex) {
+                row.classList.add(data.recommend === 0 ? 'black-row' : data.recommend === 1 ? 'green-row' : data.recommend === 2 ? 'blue-row' : 'red-row');
+            },
+            // 按鈕建立
+            layout: {
+                topMiddle: {
+                    buttons: [
+                        {
+                            // 按鈕顯示的文本
+                            text: '單一零件更新',
+                            // 按鈕點擊事件
+                            action: function (e, dt, node, config) {
+                                // 單一零件更新
+                                UpdateOneHardware();
+                            }
+                        },
+                        {
+                            // 按鈕顯示的文本
+                            text: '全零件更新',
+                            // 按鈕點擊事件
+                            action: function (e, dt, node, config) {
+                                // 全零件更新
+                                UpdateAllHardware();
+                            }
+                        },
+
+                    ]
+                },
+            },
+        });
+
+
+        // 資料變更 ~ 綁定事件
+        function btnWattEnterEvent() {
+            // 綁定所有 button 標籤 id 為 _enter 結尾的元素
+            $('button[id$="_enter"]').on('click', function () {
+                // 取得 ID
+                let id = Number($(this).attr('id').slice(0, -6));
+
+
+
+                // 更改提示泡泡內容
+                let popContent = '<i class="fa-solid fa-check"></i>&nbsp;&nbsp;變更成功';
+                $(this).attr('data-bs-content', popContent);
+                // 顯示提示泡泡
+                $(this).popover('show');
+                // 更改顏色 ~ 綠色
+                $('.popover').last().find('.popover-body').css('color', '#30b300');
+                // 自訂提示泡泡 CSS
+                $('.popover').last().addClass('popover-success');
+                // 設置一段時間後隱藏提示泡泡
+                setTimeout(function () {
+                    $(this).popover('hide');
+                }.bind(this), 1000); // 這裡的 1000 表示延遲 1 秒後隱藏提示泡泡
+            });
+        };
+
+        // 資料還原 ~ 綁定事件
+        function btnWattResetEvent() {
+            // 綁定所有 button 標籤 id 為 _enter 結尾的元素
+            $('button[id$="_reset"]').on('click', function (event) {
+                // 取得 ID
+                let id = Number($(this).attr('id').slice(0, -6));
+
+                // 更改提示泡泡內容
+                let popcontent = '<i class="fa-solid fa-xmark"></i>&nbsp;&nbsp;變更失敗';
+                $(this).attr('data-bs-content', popcontent);
+                // 顯示提示泡泡
+                $(this).popover('show');
+                // 更改顏色 ~ 紅色
+                $('.popover').last().find('.popover-body').css('color', '#ff0000');
+                // 自訂提示泡泡 CSS
+                $('.popover').last().addClass('popover-fail');
+                // 設置一段時間後隱藏提示泡泡
+                setTimeout(function () {
+                    $(this).popover('hide');
+                }.bind(this), 1000); // 這裡的 1000 表示延遲 1 秒後隱藏提示泡泡
+            });
+        };
+
+        // 提示泡泡 ~ popover 初始化
+        function btnPopoverInitialization() {
+            $('[data-bs-toggle="popover"]').popover({
+                // 指定彈出方向為上方
+                placement: 'top',
+                // 不顯示箭頭
+                template: '<div class="popover" role="tooltip"><h3 class="popover-header"></h3><div class="popover-body"></div></div>',
+                // 禁用預設動畫
+                animation: false,
+                // 手動觸發提示泡泡
+                trigger: 'manual',
+                // 顯示 html 元素
+                html: true,
+            });
+        };
+
+        // 獲取下拉式選單的資料類型
+        function getType() {
+            var selectedOption = $("#HardSelect").val();
+            switch (selectedOption) {
+                case "CPU 中央處理器":
+                    return encodeURI("Type=10000");
+                    break;
+                case "GPU 顯示卡":
+                    return encodeURI("Type=10001");
+                    break;
+                case "RAM 記憶體":
+                    return encodeURI("Type=10002");
+                    break;
+                case "MotherBoard 主機板":
+                    return encodeURI("Type=10003");
+                    break;
+                case "SSD 固態硬碟":
+                    return encodeURI("Type=10004");
+                    break;
+                case "HDD 傳統硬碟":
+                    return encodeURI("Type=10005");
+                    break;
+                case "AirCooler 風冷散熱器":
+                    return encodeURI("Type=10006");
+                    break;
+                case "LiquidCooler 水冷散熱器":
+                    return encodeURI("Type=10007");
+                    break;
+                case "CASE 機殼":
+                    return encodeURI("Type=10008");
+                    break;
+                case "PSU 電源供應器":
+                    return encodeURI("Type=10009");
+                    break;
+                case "OS 作業系統":
+                    return encodeURI("Type=10010");
+                    break;
+                default:
+                    return "NoSeclect";
+            };
+        };
+
+        // AJAX 資料載入 datatable
+        function getdatatableData() {
+            let p = getType();
+            // 發送非同步GET請求
+            fetch(`${HardAddress}@Url.Action("HardwareData", "Admin")?${p}`, {
+                method: "GET"
+            }).then(result => {
+                // 此時 result 是一個請求結果的物件
+                // 注意傳回值型態，字串用 text()，JSON 用 json()
+                if (result.ok) {
+                    return result.json();
+                }
+            }).then(data => {
+                // 此時 data 為上一個 then 回傳的資料
+                // 清空表格
+                datatable.clear().draw();
+                // 添加新的資料
+                datatable.rows.add(data).draw();
+                // 欄位事件綁定
+                btnWattEnterEvent();
+                btnWattResetEvent();
+                btnPopoverInitialization();
+            }).catch(error => {
+                alert(error);
+            });
+        };
+
+        $("#HardSelect").change(function () {
+            getdatatableData();
+        });
+
+        // RowDetail 內容
+        function format(d) {
+            let color = "black"; // 默認顏色
+            let RadioId = "recommend" + d.productId;
+            return (
+                `<div id="recommend${d.productId}" style="color: black;"> 推薦設定:
+                                                                                                                    <label style="color: black;"><input type="radio" name="${RadioId}" value="0" ${d.recommend == 0 ? 'checked' : ''}> 無</label>
+                                                                                                                        <label style="color: green;"><input type="radio" name="${RadioId}" value="1" ${d.recommend == 1 ? 'checked' : ''}> 基本</label>
+                                                                                                                        <label style="color: blue;"><input type="radio" name="${RadioId}" value="2" ${d.recommend == 2 ? 'checked' : ''}> 優良</label>
+                                                                                                                        <label style="color: red;"><input type="radio" name="${RadioId}" value="3" ${d.recommend == 3 ? 'checked' : ''}> 完美</label>
+                                                                                                                        <i class="fa-solid fa-spinner fa-spin ms-2"style="color:black;display:none" id="loading${d.productId}"></i>
+                                                                                                                            <span id="result${d.productId}" class="ms-2" style="color: black;"></span>
+                                                                                                                 </div>`
+            );
+        };
+        // 推薦變更事件W
+        function radioevent(rowDetail) {
+            $(rowDetail).on('change', 'input[type="radio"]', function () {
+                // 獲取 Radiobutton 的 ID
+                let itemid = Number($(this).attr('name').slice('9'));
+                let value = Number($(this).val());
+
+                // 發送非同步POST請求 ==> 資料庫資料變更
+                // 顯示進度條
+                $("#loading" + itemid).show();
+                $("#result" + itemid).text("");
+                var data = {
+                    ProductId: itemid,
+                    recommend: value
+                };
+                fetch(`${HardAddress}@Url.Action("recommendChange", "Admin")`, {
+                    method: "POST",
+                    body: JSON.stringify(data),
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                }).then(result => {
+                    // 此時 result 是一個請求結果的物件
+                    // 注意傳回值型態，字串用 text()，JSON 用 json()
+                    $("#loading" + itemid).hide();
+                    //  如過 HTTP 響應的狀態馬碼在 200 到 299 的範圍內 ==> .ok 會回傳 true
+                    if (result.ok) {
+                        return result.text();
+                    }
+                }).then(data => {
+                    // 此時 data 為上一個 then 回傳的資料
+                    $("#result" + itemid).text(data).fadeIn(200, function () {
+                        // 在 fadeIn 完成后延遲 1000 毫秒，執行 fadeOut
+                        $(this).delay(1000).fadeOut(300);
+                    });;
+                }).catch(error => {
+                    $("#result" + itemid).text(data).fadeIn(200, function () {
+                        // 在 fadeIn 完成后延遲 1000 毫秒，執行 fadeOut
+                        $(this).delay(1000).fadeOut(300);
+                    });;
+                    alert(error);
+                });
+
+                // 前端視覺效果
+                let divid = "recommend" + itemid;
+                let targetRow = $(`#${divid}`).parent().parent().prev();
+                let colorclass = "";
+                switch (value) {
+                    case 0:
+                        colorclass = "black-row";
+                        break;
+                    case 1:
+                        colorclass = "green-row";
+                        break;
+                    case 2:
+                        colorclass = "blue-row";
+                        break;
+                    case 3:
+                        colorclass = "red-row";
+                        break;
+                }
+                if (targetRow.hasClass('black-row')) {
+                    targetRow.removeClass('black-row');
+                    targetRow.addClass(colorclass);
+                }
+                else if (targetRow.hasClass('green-row')) {
+                    targetRow.removeClass('green-row');
+                    targetRow.addClass(colorclass);
+                }
+                else if (targetRow.hasClass('blue-row')) {
+                    targetRow.removeClass('blue-row');
+                    targetRow.addClass(colorclass);
+                }
+                else if (targetRow.hasClass('red-row')) {
+                    targetRow.removeClass('red-row');
+                    targetRow.addClass(colorclass);
+                }
+            });
+        }
+
+        // Add event listener for opening and closing details
+        // $('#HardwareManageTable tbody').on('click', 'td.details-control', function () {
+        //     var tr = $(this).closest('tr');
+        //     var row = datatable.row(tr);
+        //     if (row.child.isShown()) {
+        //         // This row is already open - close it
+        //         row.child.hide();
+        //         tr.removeClass('shown');
+        //         $(this).find('.detailIcon').text("▶");
+        //     }
+        //     else {
+        //         // Open this row
+        //         row.child(format(row.data())).show();
+        //         tr.addClass('shown');
+        //         $(this).find('.detailIcon').text("▼");
+
+        //         // 獲取子元素（row.detail）
+        //         var rowDetail = $(tr).next();
+        //         // 綁定事件(推薦變更)
+        //         radioevent(rowDetail);
+        //     }
+        // });
+
+
+
+    });
+</script>
