@@ -1,0 +1,183 @@
+﻿@* PartialView 的局部樣式 *@
+<style asp-add-nested-styles="true">
+
+    /* datatables 樣式設定 */
+
+    #System {
+        padding: 20px;
+        border-radius:20px
+    }
+    /* 每頁數量 文字顏色*/
+    .dataTables_length label {
+        color: white;
+    }
+
+    /* 數量顯示結果 文字顏色*/
+    .dataTables_info {
+        color: white !important;
+    }
+    /* 搜尋 文字顏色*/
+    .dataTables_wrapper .dataTables_filter label {
+        color: white;
+    }
+    /* 分頁按鈕顏色 */
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+        color: white !important;
+    }
+    /* 標題列設定 */
+    thead {
+        background-color: black;
+        color: white;
+    }
+
+    td {
+        color: black !important;
+    }
+
+    /* 間隔空間 */
+    .dataTables_length {
+        margin-left: 10px;
+        margin-bottom: 10px;
+    }
+
+        .dataTables_length label select {
+            border-radius: 5px;
+        }
+
+    .dataTables_filter {
+        margin-right: 10px;
+        margin-bottom: 10px;
+    }
+
+    /* RowDetail Icon setting */
+    td.details-control .detailIcon {
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 15px;
+        color: black;
+    }
+
+    tr.shown td.details-control .detailIcon {
+        color: black;
+    }
+
+    /* 推薦行文字顏色 */
+    .black-row {
+        color: black !important;
+    }
+
+    .green-row {
+        color: green !important;
+    }
+
+    .blue-row {
+        color: blue !important;
+    }
+
+    .red-row {
+        color: red !important;
+    }
+</style>
+@* PartialView 的內容 *@
+<div>
+    <h1>全部遊戲<img src="~/img/loading-block-white.gif" style="margin:20px width:30px;height:30px;display:none" id="HardwareLoading" /></h1>
+    
+    <table id="HardwareManageTable" class="display" data-bs-theme="dark">
+        <thead>
+            <tr>
+                <th></th>
+                <th></th>
+                <th>代碼</th>
+                <th>名稱</th>
+                <th>原始價格</th>
+                <th>現在價格</th>
+                <th>遊戲分級</th>
+                <th>評價</th>
+                <th>評價數量</th>
+                <th>發行商</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+<script>
+    $(document).ready(function () {
+        $("#HardwareLoading").show();
+        let baseAddress = "https://localhost:7097";
+        var dataTable = new DataTable('#HardwareManageTable', {
+            columns: [
+                {
+                    "class": 'details-control',
+                    "orderable": false,
+                    "data": null,
+                    "defaultContent": '<div class="detailIcon">▶</div>',
+                    "width": "3%"
+                },
+                {
+                    "data": "imagePath",
+                    "width": "5%",
+                    "className": "text-center",
+                    "render": function (data, type, row) {
+                        return '<img src="' + data + '" alt="圖片" style="width:150px">';
+                    }
+                },
+                { "data": "appId", "width": "5%" },
+                { "data": "name", "width": "10%" },
+                { "data": "originalPrice", "width": "5%" },
+                { "data": "currentPrice", "width": "5%" },
+                { "data": "ageRating", "width": "5%" },
+                { "data": "comment", "width": "5%" },
+                { "data": "commentNum", "width": "5%" },
+                { "data": "publisher", "width": "5%" },
+            ],
+            fixedHeader: { header: true },
+            language: {
+                url: '//cdn.datatables.net/plug-ins/2.0.3/i18n/zh-HANT.json'
+            },
+            
+            language: {
+                url: '//cdn.datatables.net/plug-ins/2.0.3/i18n/zh-HANT.json'
+            },
+            autoWidth: false,
+            processing: true,
+            createdRow: function (row, data, dataIndex) {
+                if (data.recommend == 0) {
+                    $(row).addClass('black-row');
+                } else if (data.recommend == 1) {
+                    $(row).addClass('green-row');
+                } else if (data.recommend == 2) {
+                    $(row).addClass('blue-row');
+                } else if (data.recommend == 3) {
+                    $(row).addClass('red-row');
+                }
+            }
+        });
+        function getdatatableData() {
+            // 發送非同步GET請求
+            fetch(`${baseAddress}@Url.Action("IndexJson", "Games")`, {
+                method: "GET"
+            }).then(result => {
+                // 此時 result 是一個請求結果的物件
+                // 注意傳回值型態，字串用 text()，JSON 用 json()
+                if (result.ok) {
+                    return result.json();
+                }
+            }).then(data => {
+                // 添加新的資料
+                if (data && data.length > 0) {
+                    dataTable.rows.add(data).draw();
+                }
+                $("#HardwareLoading").hide();
+            }).catch(error => {
+                alert(error);
+            });
+        };
+        getdatatableData();
+        $(".detailIcon").on("click",function(){
+
+        })
+    });
+        
+
+</script>

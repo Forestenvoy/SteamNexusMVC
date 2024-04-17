@@ -246,7 +246,7 @@ namespace SteamNexus.Controllers
         public IActionResult GetIndexPartialView()
         {
             var steamNexusDbContext = _context.Games;
-            return PartialView("_GameIndexManagementPartial", steamNexusDbContext);
+            return PartialView("_GameIndexManagementPartial1", steamNexusDbContext);
         }
 
         [HttpGet]
