@@ -1,736 +1,302 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> @ViewData["Title"] - AdminSystem</title>
-
-    @*CSS*@
-    <link rel="shortcut icon" href="~/lib/mazer/ssets/compiled/svg/favicon.svg" type="image/x-icon">
+    <title>AdminSystem</title>
+    @* Favicon *@
+    <link rel="icon" type="image/x-icon" href="@Url.Content("~/favicon.ico")" asp-append-version="true">
+    @* Mazer UI CSS *@
     <link rel="stylesheet" href="~/lib/mazer/assets/compiled/css/app.css" asp-append-version="true">
-    <link rel="stylesheet" href="~/lib/mazer/assets/compiled/css/app-dark.css">
-    <link rel="stylesheet" href="~/lib/mazer/assets/compiled/css/iconly.css">
-    <style>
-        html, body {
-            height: 100% !important;
-            margin: 0 !important;
-        }
+    <link rel="stylesheet" href="~/lib/mazer/assets/compiled/css/app-dark.css" asp-append-version="true">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
 
-        body {
-            display: flex !important; /*使物件依序排列*/
-            flex-direction: column !important; /*使物件垂直排列*/
-        }
-
-        .wrapperdiv {
-            flex-grow: 1 !important; /*可佔滿垂直剩餘的空間*/
-        }
-
-        .footer {
-            line-height: 1.5;
-        }
-    </style>
+    @* 自定義 CSS *@
+    <link href="~/css/admin.css" rel="stylesheet" />
     @await RenderSectionAsync("Styles", required: false)
 </head>
 <body>
     <script src="~/lib/mazer/assets/static/js/initTheme.js"></script>
     <div id="app">
-        <div id="sidebar" class="sidebar-desktop">
-            <div class="sidebar-wrapper active ps ps--active-y">
+        <div id="sidebar">
+            <div class="sidebar-wrapper active">
                 <div class="sidebar-header position-relative">
                     <div class="d-flex justify-content-between align-items-center">
-                        @* Logo start *@
                         <div class="logo">
-                            <a class="navbar-brand d-inline-flex align-items-center" asp-area="" asp-controller="Home" asp-action="Index">
-                                <div style="font-family: 'Oswald' , sans-serif; font-weight: 500; font-size:20px;">SteamNexus</div>
+                            <a asp-area="" asp-controller="Home" asp-action="Index">
+                                <img class="mx-2" style="width:30px;height:30px;" src="~/img/logo.png" id="logoImg" />
+                                <span class="text-uppercase" style="font-family: 'Oswald' , sans-serif; font-weight: 500; font-size:30px;" id="logoText">SteamNexus</span>
                             </a>
                         </div>
-                        @* Logo end *@
-                        @* 日夜模式切換 start *@
-                        <div class="theme-toggle d-flex gap-2  align-items-center mt-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--system-uicons" width="20" height="20" preserveAspectRatio="xMidYMid meet" viewBox="0 0 21 21">
-                                <g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M10.5 14.5c2.219 0 4-1.763 4-3.982a4.003 4.003 0 0 0-4-4.018c-2.219 0-4 1.781-4 4c0 2.219 1.781 4 4 4zM4.136 4.136L5.55 5.55m9.9 9.9l1.414 1.414M1.5 10.5h2m14 0h2M4.135 16.863L5.55 15.45m9.899-9.9l1.414-1.415M10.5 19.5v-2m0-14v-2" opacity=".3"></path>
-                                    <g transform="translate(-210 -1)">
-                                        <path d="M220.5 2.5v2m6.5.5l-1.5 1.5"></path>
-                                        <circle cx="220.5" cy="11.5" r="4"></circle>
-                                        <path d="m214 5l1.5 1.5m5 14v-2m6.5-.5l-1.5-1.5M214 18l1.5-1.5m-4-5h2m14 0h2"></path>
-                                    </g>
-                                </g>
-                            </svg>
-                            <div class="form-check form-switch fs-6">
-                                <input class="form-check-input  me-0" type="checkbox" id="toggle-dark" style="cursor: pointer">
-                                <label class="form-check-label"></label>
-                            </div>
-                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--mdi" width="20" height="20" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
-                                <path fill="currentColor" d="m17.75 4.09l-2.53 1.94l.91 3.06l-2.63-1.81l-2.63 1.81l.91-3.06l-2.53-1.94L12.44 4l1.06-3l1.06 3l3.19.09m3.5 6.91l-1.64 1.25l.59 1.98l-1.7-1.17l-1.7 1.17l.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95l2.06.05m-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85c-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14c.4-.4.82-.76 1.27-1.08c.75-.53 1.93.36 1.85 1.19c-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82c-2.81 3.14-2.7 7.96.31 10.98c3.02 3.01 7.84 3.12 10.98.31Z">
-                                </path>
-                            </svg>
-                        </div>
-                        @* 日夜模式切換 end *@
+                        @* 選單 X 按鈕(縮放後) start *@
                         <div class="sidebar-toggler  x">
                             <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
                         </div>
+                        @* 選單 X 按鈕(縮放後) end *@
                     </div>
                 </div>
+                @* 日夜模式 start *@
+                <div class="theme-toggle d-flex gap-2  align-items-center mt-2 px-5">
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--system-uicons" width="20" height="20" preserveAspectRatio="xMidYMid meet" viewBox="0 0 21 21">
+                        <g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M10.5 14.5c2.219 0 4-1.763 4-3.982a4.003 4.003 0 0 0-4-4.018c-2.219 0-4 1.781-4 4c0 2.219 1.781 4 4 4zM4.136 4.136L5.55 5.55m9.9 9.9l1.414 1.414M1.5 10.5h2m14 0h2M4.135 16.863L5.55 15.45m9.899-9.9l1.414-1.415M10.5 19.5v-2m0-14v-2" opacity=".3"></path>
+                            <g transform="translate(-210 -1)">
+                                <path d="M220.5 2.5v2m6.5.5l-1.5 1.5"></path>
+                                <circle cx="220.5" cy="11.5" r="4"></circle>
+                                <path d="m214 5l1.5 1.5m5 14v-2m6.5-.5l-1.5-1.5M214 18l1.5-1.5m-4-5h2m14 0h2"></path>
+                            </g>
+                        </g>
+                    </svg>
+                    <div class="form-check form-switch fs-6">
+                        <input class="form-check-input  me-0" type="checkbox" id="toggle-dark" style="cursor: pointer">
+                        <label class="form-check-label"></label>
+                    </div>
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--mdi" width="20" height="20" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
+                        <path fill="currentColor" d="m17.75 4.09l-2.53 1.94l.91 3.06l-2.63-1.81l-2.63 1.81l.91-3.06l-2.53-1.94L12.44 4l1.06-3l1.06 3l3.19.09m3.5 6.91l-1.64 1.25l.59 1.98l-1.7-1.17l-1.7 1.17l.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95l2.06.05m-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85c-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14c.4-.4.82-.76 1.27-1.08c.75-.53 1.93.36 1.85 1.19c-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82c-2.81 3.14-2.7 7.96.31 10.98c3.02 3.01 7.84 3.12 10.98.31Z">
+                        </path>
+                    </svg>
+                </div>
+                @* 日夜模式 end *@
+                @* sidebar 選單 start *@
                 <div class="sidebar-menu">
                     <ul class="menu">
-                        <li class="sidebar-title">Menu</li>
-
-                        <li class="sidebar-item active ">
-                            <a href="index.html" class="sidebar-link">
+                        <li class="sidebar-title">後台系統</li>
+                        <li class="sidebar-item">
+                            <a href="" class="sidebar-link">
                                 <i class="bi bi-grid-fill"></i>
-                                <span>Dashboard</span>
+                                <span>會員管理</span>
                             </a>
-
-
                         </li>
-
                         <li class="sidebar-item  has-sub">
-                            <a href="#" class="sidebar-link">
+                            <a href="" class="sidebar-link">
                                 <i class="bi bi-stack"></i>
-                                <span>Components</span>
+                                <span>硬體管理</span>
                             </a>
-
-                            <ul class="submenu submenu-closed" style="--submenu-height: 731px;">
-
-                                <li class="submenu-item  ">
-                                    <a href="component-accordion.html" class="submenu-link">Accordion</a>
-
+                            <ul class="submenu">
+                                <li class="submenu-item">
+                                    <a href="" class="submenu-link">產品管理</a>
                                 </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="component-alert.html" class="submenu-link">Alert</a>
-
+                                <li class="submenu-item">
+                                    <a href="" class="submenu-link">菜單管理</a>
                                 </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="component-badge.html" class="submenu-link">Badge</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="component-breadcrumb.html" class="submenu-link">Breadcrumb</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="component-button.html" class="submenu-link">Button</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="component-card.html" class="submenu-link">Card</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="component-carousel.html" class="submenu-link">Carousel</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="component-collapse.html" class="submenu-link">Collapse</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="component-dropdown.html" class="submenu-link">Dropdown</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="component-list-group.html" class="submenu-link">List Group</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="component-modal.html" class="submenu-link">Modal</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="component-navs.html" class="submenu-link">Navs</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="component-pagination.html" class="submenu-link">Pagination</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="component-progress.html" class="submenu-link">Progress</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="component-spinner.html" class="submenu-link">Spinner</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="component-toasts.html" class="submenu-link">Toasts</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="component-tooltip.html" class="submenu-link">Tooltip</a>
-
-                                </li>
-
                             </ul>
-
-
                         </li>
-
-                        <li class="sidebar-item  has-sub">
-                            <a href="#" class="sidebar-link">
+                        <li class="sidebar-item">
+                            <a href="" class="sidebar-link">
                                 <i class="bi bi-collection-fill"></i>
-                                <span>Extra Components</span>
+                                <span>遊戲管理</span>
                             </a>
-
-                            <ul class="submenu submenu-closed" style="--submenu-height: 258px;">
-
-                                <li class="submenu-item  ">
-                                    <a href="extra-component-avatar.html" class="submenu-link">Avatar</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="extra-component-divider.html" class="submenu-link">Divider</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="extra-component-date-picker.html" class="submenu-link">Date Picker</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="extra-component-sweetalert.html" class="submenu-link">Sweet Alert</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="extra-component-toastify.html" class="submenu-link">Toastify</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="extra-component-rating.html" class="submenu-link">Rating</a>
-
-                                </li>
-
-                            </ul>
-
-
                         </li>
-
-                        <li class="sidebar-item  has-sub">
-                            <a href="#" class="sidebar-link">
+                        <li class="sidebar-item">
+                            <a href="" class="sidebar-link">
                                 <i class="bi bi-grid-1x2-fill"></i>
-                                <span>Layouts</span>
+                                <span>廣告管理</span>
                             </a>
-
-                            <ul class="submenu submenu-closed" style="--submenu-height: 215px;">
-
-                                <li class="submenu-item  ">
-                                    <a href="layout-default.html" class="submenu-link">Default Layout</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="layout-vertical-1-column.html" class="submenu-link">1 Column</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="layout-vertical-navbar.html" class="submenu-link">Vertical Navbar</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="layout-rtl.html" class="submenu-link">RTL Layout</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="layout-horizontal.html" class="submenu-link">Horizontal Menu</a>
-
-                                </li>
-
-                            </ul>
-
-
                         </li>
-
-                        <li class="sidebar-title">Forms &amp; Tables</li>
-
-                        <li class="sidebar-item  has-sub">
-                            <a href="#" class="sidebar-link">
-                                <i class="bi bi-hexagon-fill"></i>
-                                <span>Form Elements</span>
-                            </a>
-
-                            <ul class="submenu submenu-closed" style="--submenu-height: 258px;">
-
-                                <li class="submenu-item  ">
-                                    <a href="form-element-input.html" class="submenu-link">Input</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="form-element-input-group.html" class="submenu-link">Input Group</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="form-element-select.html" class="submenu-link">Select</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="form-element-radio.html" class="submenu-link">Radio</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="form-element-checkbox.html" class="submenu-link">Checkbox</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="form-element-textarea.html" class="submenu-link">Textarea</a>
-
-                                </li>
-
-                            </ul>
-
-
-                        </li>
-
-                        <li class="sidebar-item  ">
-                            <a href="form-layout.html" class="sidebar-link">
-                                <i class="bi bi-file-earmark-medical-fill"></i>
-                                <span>Form Layout</span>
-                            </a>
-
-
-                        </li>
-
-                        <li class="sidebar-item  has-sub">
-                            <a href="#" class="sidebar-link">
-                                <i class="bi bi-journal-check"></i>
-                                <span>Form Validation</span>
-                            </a>
-
-                            <ul class="submenu submenu-closed" style="--submenu-height: 43px;">
-
-                                <li class="submenu-item  ">
-                                    <a href="form-validation-parsley.html" class="submenu-link">Parsley</a>
-
-                                </li>
-
-                            </ul>
-
-
-                        </li>
-
-                        <li class="sidebar-item  has-sub">
-                            <a href="#" class="sidebar-link">
-                                <i class="bi bi-pen-fill"></i>
-                                <span>Form Editor</span>
-                            </a>
-
-                            <ul class="submenu submenu-closed" style="--submenu-height: 172px;">
-
-                                <li class="submenu-item  ">
-                                    <a href="form-editor-quill.html" class="submenu-link">Quill</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="form-editor-ckeditor.html" class="submenu-link">CKEditor</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="form-editor-summernote.html" class="submenu-link">Summernote</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="form-editor-tinymce.html" class="submenu-link">TinyMCE</a>
-
-                                </li>
-
-                            </ul>
-
-
-                        </li>
-
-                        <li class="sidebar-item  ">
-                            <a href="table.html" class="sidebar-link">
-                                <i class="bi bi-grid-1x2-fill"></i>
-                                <span>Table</span>
-                            </a>
-
-
-                        </li>
-
-                        <li class="sidebar-item  has-sub">
-                            <a href="#" class="sidebar-link">
-                                <i class="bi bi-file-earmark-spreadsheet-fill"></i>
-                                <span>Datatables</span>
-                            </a>
-
-                            <ul class="submenu submenu-closed" style="--submenu-height: 86px;">
-
-                                <li class="submenu-item  ">
-                                    <a href="table-datatable.html" class="submenu-link">Datatable</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="table-datatable-jquery.html" class="submenu-link">Datatable (jQuery)</a>
-
-                                </li>
-
-                            </ul>
-
-
-                        </li>
-
-                        <li class="sidebar-title">Extra UI</li>
-
-                        <li class="sidebar-item  has-sub">
-                            <a href="#" class="sidebar-link">
-                                <i class="bi bi-pentagon-fill"></i>
-                                <span>Widgets</span>
-                            </a>
-
-                            <ul class="submenu submenu-closed" style="--submenu-height: 129px;">
-
-                                <li class="submenu-item  ">
-                                    <a href="ui-widgets-chatbox.html" class="submenu-link">Chatbox</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="ui-widgets-pricing.html" class="submenu-link">Pricing</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="ui-widgets-todolist.html" class="submenu-link">To-do List</a>
-
-                                </li>
-
-                            </ul>
-
-
-                        </li>
-
-                        <li class="sidebar-item  has-sub">
-                            <a href="#" class="sidebar-link">
-                                <i class="bi bi-egg-fill"></i>
-                                <span>Icons</span>
-                            </a>
-
-                            <ul class="submenu submenu-closed" style="--submenu-height: 129px;">
-
-                                <li class="submenu-item  ">
-                                    <a href="ui-icons-bootstrap-icons.html" class="submenu-link">Bootstrap Icons </a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="ui-icons-fontawesome.html" class="submenu-link">Fontawesome</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="ui-icons-dripicons.html" class="submenu-link">Dripicons</a>
-
-                                </li>
-
-                            </ul>
-
-
-                        </li>
-
-                        <li class="sidebar-item  has-sub">
-                            <a href="#" class="sidebar-link">
-                                <i class="bi bi-bar-chart-fill"></i>
-                                <span>Charts</span>
-                            </a>
-
-                            <ul class="submenu submenu-closed" style="--submenu-height: 86px;">
-
-                                <li class="submenu-item  ">
-                                    <a href="ui-chart-chartjs.html" class="submenu-link">ChartJS</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="ui-chart-apexcharts.html" class="submenu-link">Apexcharts</a>
-
-                                </li>
-
-                            </ul>
-
-
-                        </li>
-
-                        <li class="sidebar-item  ">
-                            <a href="ui-file-uploader.html" class="sidebar-link">
-                                <i class="bi bi-cloud-arrow-up-fill"></i>
-                                <span>File Uploader</span>
-                            </a>
-
-
-                        </li>
-
-                        <li class="sidebar-item  has-sub">
-                            <a href="#" class="sidebar-link">
-                                <i class="bi bi-map-fill"></i>
-                                <span>Maps</span>
-                            </a>
-
-                            <ul class="submenu submenu-closed" style="--submenu-height: 86px;">
-
-                                <li class="submenu-item  ">
-                                    <a href="ui-map-google-map.html" class="submenu-link">Google Map</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="ui-map-jsvectormap.html" class="submenu-link">JS Vector Map</a>
-
-                                </li>
-
-                            </ul>
-
-
-                        </li>
-
-                        <li class="sidebar-item  has-sub">
-                            <a href="#" class="sidebar-link">
-                                <i class="bi bi-three-dots"></i>
-                                <span>Multi-level Menu</span>
-                            </a>
-
-                            <ul class="submenu submenu-closed" style="--submenu-height: 86px;">
-
-                                <li class="submenu-item  has-sub">
-                                    <a href="#" class="submenu-link">First Level</a>
-
-                                    <ul class="submenu submenu-level-2 submenu-closed" style="--submenu-height: 106px;">
-
-
-                                        <li class="submenu-item ">
-                                            <a href="ui-multi-level-menu.html" class="submenu-link">Second Level</a>
-                                        </li>
-
-                                        <li class="submenu-item ">
-                                            <a href="#" class="submenu-link">Second Level Menu</a>
-                                        </li>
-
-
-                                    </ul>
-
-                                </li>
-
-                                <li class="submenu-item  has-sub">
-                                    <a href="#" class="submenu-link">Another Menu</a>
-
-                                    <ul class="submenu submenu-level-2 submenu-closed" style="--submenu-height: 63px;">
-
-
-                                        <li class="submenu-item ">
-                                            <a href="#" class="submenu-link">Second Level Menu</a>
-                                        </li>
-
-
-                                    </ul>
-
-                                </li>
-
-                            </ul>
-
-
-                        </li>
-
-                        <li class="sidebar-title">Pages</li>
-
-                        <li class="sidebar-item  ">
-                            <a href="application-email.html" class="sidebar-link">
-                                <i class="bi bi-envelope-fill"></i>
-                                <span>Email Application</span>
-                            </a>
-
-
-                        </li>
-
-                        <li class="sidebar-item  ">
-                            <a href="application-chat.html" class="sidebar-link">
-                                <i class="bi bi-chat-dots-fill"></i>
-                                <span>Chat Application</span>
-                            </a>
-
-
-                        </li>
-
-                        <li class="sidebar-item  ">
-                            <a href="application-gallery.html" class="sidebar-link">
-                                <i class="bi bi-image-fill"></i>
-                                <span>Photo Gallery</span>
-                            </a>
-
-
-                        </li>
-
-                        <li class="sidebar-item  ">
-                            <a href="application-checkout.html" class="sidebar-link">
-                                <i class="bi bi-basket-fill"></i>
-                                <span>Checkout Page</span>
-                            </a>
-
-
-                        </li>
-
-                        <li class="sidebar-item  has-sub">
-                            <a href="#" class="sidebar-link">
-                                <i class="bi bi-person-badge-fill"></i>
-                                <span>Authentication</span>
-                            </a>
-
-                            <ul class="submenu submenu-closed" style="--submenu-height: 129px;">
-
-                                <li class="submenu-item  ">
-                                    <a href="auth-login.html" class="submenu-link">Login</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="auth-register.html" class="submenu-link">Register</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="auth-forgot-password.html" class="submenu-link">Forgot Password</a>
-
-                                </li>
-
-                            </ul>
-
-
-                        </li>
-
-                        <li class="sidebar-item  has-sub">
-                            <a href="#" class="sidebar-link">
-                                <i class="bi bi-x-octagon-fill"></i>
-                                <span>Errors</span>
-                            </a>
-
-                            <ul class="submenu submenu-closed" style="--submenu-height: 129px;">
-
-                                <li class="submenu-item  ">
-                                    <a href="error-403.html" class="submenu-link">403</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="error-404.html" class="submenu-link">404</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="error-500.html" class="submenu-link">500</a>
-
-                                </li>
-
-                            </ul>
-
-
-                        </li>
-
-                        <li class="sidebar-title">Raise Support</li>
-
-                        <li class="sidebar-item  ">
-                            <a href="https://zuramai.github.io/mazer/docs" class="sidebar-link">
-                                <i class="bi bi-life-preserver"></i>
-                                <span>Documentation</span>
-                            </a>
-
-
-                        </li>
-
-                        <li class="sidebar-item  ">
-                            <a href="https://github.com/zuramai/mazer/blob/main/CONTRIBUTING.md" class="sidebar-link">
-                                <i class="bi bi-puzzle"></i>
-                                <span>Contribute</span>
-                            </a>
-
-
-                        </li>
-
-                        <li class="sidebar-item  ">
-                            <a href="https://github.com/zuramai/mazer#donation" class="sidebar-link">
-                                <i class="bi bi-cash"></i>
-                                <span>Donate</span>
-                            </a>
-
-
-                        </li>
-
                     </ul>
                 </div>
-                <div class="ps__rail-x" style="left: 0px; bottom: 0px;"><div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps__rail-y" style="top: 0px; height: 398px; right: 0px;"><div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 90px;"></div></div>
+                @* sidebar 選單 end *@
+                @* 滾動條 start *@
+                <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
+                    <div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;">
+                    </div>
+                </div>
+                <div class="ps__rail-y" style="top: 0px; height: 791px; right: 0px;">
+                    <div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 344px;">
+                    </div>
+                </div>
+                @* 滾動條 end *@
             </div>
         </div>
         @* main start *@
-        <div id="main">
-            <header class="mb-3">
-                <a href="#" class="burger-btn d-block d-xl-none">
-                    <i class="bi bi-justify fs-3"></i>
-                </a>
+        <div id="main" class='layout-navbar navbar-fixed mainbody'>
+            <header>
+                @* navbar start *@
+                <nav class="navbar navbar-expand navbar-light navbar-top">
+                    <div class="container-fluid">
+                        @* 選單縮放按鈕 start *@
+                        <a href="#" class="burger-btn d-block d-xl-none pe-4">
+                            <i class="bi bi-justify fs-3"></i>
+                        </a>
+                        @* 選單縮放按鈕 end *@
+                        @* Title start *@
+                        <h2 class="p-0 d-none d-md-block" id="SystemTitle">SteamNexus Admin Panel</h2>
+                        @* Title end *@
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            <ul class="navbar-nav ms-auto mb-lg-0">
+                                @* 通知系統 start *@
+                                <li class="nav-item dropdown me-3">
+                                    <a class="nav-link active dropdown-toggle text-gray-600" href="#" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
+                                        <i class='bi bi-bell bi-sub fs-4'></i>
+                                        <span class="badge badge-notification bg-danger">5</span>
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-center  dropdown-menu-sm-end notification-dropdown" aria-labelledby="dropdownMenuButton">
+                                        <li class="dropdown-header">
+                                            <h6>通知</h6>
+                                        </li>
+                                        <li class="dropdown-item notification-item">
+                                            <a class="d-flex align-items-center" href="#">
+                                                <div class="notification-icon bg-primary">
+                                                </div>
+                                                <div class="notification-text ms-4">
+                                                    <p class="notification-title font-bold">遊戲價格更新</p>
+                                                    <p class="notification-subtitle font-thin text-sm">555筆變動</p>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li class="dropdown-item notification-item">
+                                            <a class="d-flex align-items-center" href="#">
+                                                <div class="notification-icon bg-success">
+                                                </div>
+                                                <div class="notification-text ms-4">
+                                                    <p class="notification-title font-bold">硬體零件更新</p>
+                                                    <p class="notification-subtitle font-thin text-sm">CPU已更新</p>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <p class="text-center py-2 mb-0"><a href="#">See all notification</a></p>
+                                        </li>
+                                    </ul>
+                                </li>
+                                @* 通知系統 end *@
+                            </ul>
+                            @* 使用者選單 start *@
+                            <div class="dropdown">
+                                <a href="#" data-bs-toggle="dropdown" aria-expanded="false">
+                                    @* 使用者資訊 *@
+                                    <div class="user-menu d-flex">
+                                        <div class="user-name text-end me-3">
+                                            @* 使用者名稱、權限 *@
+                                            <h6 class="mb-0 text-gray-600">王小明</h6>
+                                            <p class="mb-0 text-sm text-gray-600">系統管理員</p>
+                                        </div>
+                                        <div class="user-img d-flex align-items-center">
+                                            @* 大頭照 *@
+                                            <div class="avatar avatar-md">
+                                                <img src="~/lib/mazer/assets/compiled/jpg/2.jpg">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                                @* 功能選單 *@
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton" style="min-width: 11rem;">
+                                    <li>
+                                        <a class="dropdown-item" href="#">
+                                            <i class="icon-mid bi bi-person me-2"></i>
+                                            個人資訊
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="#">
+                                            <i class="icon-mid bi bi-gear me-2"></i>
+                                            設定
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="#">
+                                            <i class="icon-mid bi bi-box-arrow-left me-2"></i>
+                                            登出
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            @* 使用者選單 end *@
+                        </div>
+                    </div>
+                </nav>
+                @* navbar end *@
             </header>
-            <div class="page-heading">
-                <h3>Profile Statistics</h3>
-            </div>
-            <div class="page-content wrapperdiv">
-                    @RenderBody()
-            </div>
-            @* footer start *@
-            <footer>
-                <div class="footer clearfix mb-0 text-muted">
-                    <div class="float-start">
-                        <p>2023 &copy; Mazer</p>
+            <div id="main-content" class="wrapperdiv">
+                <div class="page-heading">
+                    <div class="page-title">
+                        <div class="row">
+                            @* 系統名稱 *@
+                            <div class="col-12 col-md-6 order-md-1">
+                                <h3 id="SystemName"></h3>
+                            </div>
+                            @* 系統選單 *@
+                            <div class="col-12 col-md-6 order-md-2" id="SystemMenu">
+                            </div>
+                        </div>
                     </div>
-                    <div class="float-end">
-                        <p>
-                            Powered by
-                        </p>
-                    </div>
+                    <section class="section">
+                        @RenderBody()
+                    </section>
                 </div>
-            </footer>
-            @* footer end *@
+            </div>
         </div>
         @* main end *@
+        @* footer start *@
+        <footer>
+            <div class="footer clearfix mb-0 text-muted ml-xl-300">
+                <div class="float-start">
+                    <p>2024 SteamNexus</p>
+                </div>
+                <div class="float-end">
+                    <p>
+                        Crafted with by 139 全端 第三組
+                    </p>
+                </div>
+            </div>
+        </footer>
+        @* footer end *@
     </div>
 
     <script src="~/lib/mazer/assets/static/js/components/dark.js"></script>
     <script src="~/lib/mazer/assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js"></script>
-
-
     <script src="~/lib/mazer/assets/compiled/js/app.js"></script>
 
+    <script>
+        const btnTheme = document.querySelector("#toggle-dark");
+
+        function setAdminTheme() { 
+            // 檢測當前主題
+            const theme = document.documentElement.getAttribute('data-bs-theme');
+            const logoText = document.querySelector("#logoText");
+            const logoImg = document.querySelector("#logoImg");
+            
+            if (theme === "dark") {
+                // 切回 白天模式
+                logoText.classList.remove('text-dark');
+                logoText.classList.add('text-white');
+                logoImg.src = '/img/logo.png';
+            }
+            else {
+                // 切回 夜晚模式
+                logoText.classList.remove('text-white');
+                logoText.classList.add('text-dark');
+                logoImg.src = '/img/logo-dark.png';
+            }
+        }
+
+        setAdminTheme();
+
+        function clickAdminTheme() {
+            // 檢測當前主題
+            const theme = document.documentElement.getAttribute('data-bs-theme');
+            const logoText = document.querySelector("#logoText");
+            const logoImg = document.querySelector("#logoImg");
+            if (theme === "dark") {
+                // 切回 夜晚模式
+                logoText.classList.remove('text-white');
+                logoText.classList.add('text-dark');
+                logoImg.src = '/img/logo-dark.png';
+            }
+            else {
+                // 切回 白天模式
+                logoText.classList.remove('text-dark');
+                logoText.classList.add('text-white');
+                logoImg.src = '/img/logo.png';
+            }
+        }
 
 
-    <!-- Need: Apexcharts -->
-    <script src="~/lib/mazer/assets/extensions/apexcharts/apexcharts.min.js"></script>
-    <script src="~/lib/mazer/assets/static/js/pages/dashboard.js"></script>
+        btnTheme.addEventListener("click", event => {
+            clickAdminTheme();
+        });
+
+    </script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

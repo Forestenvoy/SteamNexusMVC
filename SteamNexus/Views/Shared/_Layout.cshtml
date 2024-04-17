@@ -63,7 +63,7 @@
                 <nav class="navbar navbar-dark navbar-expand-lg py-0">
                     <a class="navbar-brand d-inline-flex align-items-center" asp-area="" asp-controller="Home" asp-action="Index">
                         <img class="mx-2" style="width:30px;height:30px;" src="~/img/logo.png" />
-                        <div class="text-uppercase" style="font-family: 'Oswald' , sans-serif; font-weight: 500; font-size:30px;">SteamNexus</div>
+                        <div class="text-uppercase" style="font-family: 'Oswald' , sans-serif; font-weight: 500; font-size:30px;" id="logoText">SteamNexus</div>
                     </a>
                     @* <a href="index.html" class="navbar-brand">
                         <h1 class="text-white fw-bold d-block">High<span class="text-secondary">Tech</span> </h1>
@@ -82,12 +82,10 @@
                             <li class="nav-item">
                                 <a class="nav-link" asp-area="" asp-controller="Admin" asp-action="Index">後台管理</a>
                             </li>
-@*                             <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-controller="PCBuilder" asp-action="Index">硬體測試</a>
-                            </li>
                             <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-controller="Games" asp-action="Index" id="GamesIndex">遊戲資料</a>
-                            </li> *@
+                                <a class="nav-link" asp-area="Administrator" asp-controller="Dashboard" asp-action="Index">AreaTest</a>
+                            </li>
+
                             @* <a href="index.html" class="nav-item nav-link active text-secondary">Home</a>
                             <a href="about.html" class="nav-item nav-link">About</a>
                             <a href="service.html" class="nav-item nav-link">Services</a>
@@ -171,14 +169,8 @@
     <script src="~/js/app.js"></script>
 
 
-   @*  <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script> *@
     @await RenderSectionAsync("Scripts", required: false)
 
-    <script>
-        // container、container-fluid 切換
-    </script>
 
 </body>
 </html>

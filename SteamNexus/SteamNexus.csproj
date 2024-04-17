@@ -8,6 +8,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Areas\Administrator\Data\**" />
+    <Compile Remove="Areas\Administrator\Models\**" />
+    <Content Remove="Areas\Administrator\Data\**" />
+    <Content Remove="Areas\Administrator\Models\**" />
+    <EmbeddedResource Remove="Areas\Administrator\Data\**" />
+    <EmbeddedResource Remove="Areas\Administrator\Models\**" />
+    <None Remove="Areas\Administrator\Data\**" />
+    <None Remove="Areas\Administrator\Models\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="wwwroot\coolpcInfo2.html" />
   </ItemGroup>
 
@@ -26,8 +37,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\Administrator\Data\" />
-    <Folder Include="Areas\Administrator\Models\" />
     <Folder Include="Views\Games\GameViewPartial\" />
   </ItemGroup>
 
