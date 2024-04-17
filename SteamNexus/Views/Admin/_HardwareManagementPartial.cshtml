@@ -34,10 +34,6 @@
     }
 
     /* 推薦設定 文字顏色 */
-/*     .black-row {
-        color: black !important;
-    } */
-
     .green-row {
         color: green !important;
     }
@@ -110,13 +106,13 @@
     <table id="HardwareManageTable" class="display" style="width:100%">
         <thead>
             <tr>
-@*                 <th></th> *@
                 <th data-priority="1">ID</th>
                 <th>產品名稱</th>
                 <th>規格</th>
                 <th>種類</th>
                 <th>價格</th>
                 <th>瓦數</th>
+                <th>推薦</th>
                 <th data-priority="2"></th>
             </tr>
         </thead>
@@ -223,31 +219,44 @@
         var datatable = new DataTable('#HardwareManageTable', {
             // column 定義
             columns: [
-                // {
-                //     "class": 'details-control',
-                //     "orderable": false,
-                //     "data": null,
-                //     "defaultContent": '<div class="detailIcon"></div>',
-                //     "width": "3%"
-                // },
                 { "data": "productId", "width": "5%", "className": "text-center" },
-                { "data": "productName", "width": "25%" },
-                { "data": "specification", "width": "15%" },
-                { "data": "componentClassificationName", "width": "15%", "visible": false },
-                { "data": "price", "width": "8%", "className": "text-center" },
+                { "data": "productName", "width": "35%" },
+                { "data": "specification", "width": "30%" },
+                { "data": "componentClassificationName", "visible": false },
+                { "data": "price", "width": "10%", "className": "text-center" },
                 {
                     "data": "wattage",
-                    "width": "8%",
+                    "width": "10%",
                     "className": "text-center",
-                    // 瓦數 自定義
+                    // 瓦數 ~ 文字輸入方塊 
                     render: function (data, type, row, meta) {
-                        // 取得 productId
-                        let productId = row.productId;
                         // 此處 type 為 'sort' 表示 DataTables 正在進行排序
                         if (type === 'sort') {
                             // 返回元素的值作為排序依據
                             return data;
                         }
+                        // 取得 productId
+                        let productId = row.productId;
+                        // input 欄位 ~ 可編輯
+                        let inputEle = '<input type="text" id="' + productId + "_watt" + '" value="' + data + '" style="width: 50px; text-align: center;" >';
+                        return inputEle;
+                    },
+                    // 將此列的數據類型設置為數字 ~ 排序才會正常運作
+                    "type": "num"
+                },
+                {
+                    "data": "recommend",
+                    "width": "10%",
+                    "className": "text-center",
+                    // 推薦 ~ 下拉式選單
+                    render: function (data, type, row, meta) {
+                        // 此處 type 為 'sort' 表示 DataTables 正在進行排序
+                        if (type === 'sort') {
+                            // 返回元素的值作為排序依據
+                            return data;
+                        }
+                        // 取得 productId
+                        let productId = row.productId;
                         // input 欄位 ~ 可編輯
                         let inputEle = '<input type="text" id="' + productId + "_watt" + '" value="' + data + '" style="width: 50px; text-align: center;" >';
                         return inputEle;
@@ -559,27 +568,27 @@
         }
 
         // Add event listener for opening and closing details
-        $('#HardwareManageTable tbody').on('click', 'td.details-control', function () {
-            var tr = $(this).closest('tr');
-            var row = datatable.row(tr);
-            if (row.child.isShown()) {
-                // This row is already open - close it
-                row.child.hide();
-                tr.removeClass('shown');
-                $(this).find('.detailIcon').text("▶");
-            }
-            else {
-                // Open this row
-                row.child(format(row.data())).show();
-                tr.addClass('shown');
-                $(this).find('.detailIcon').text("▼");
+        // $('#HardwareManageTable tbody').on('click', 'td.details-control', function () {
+        //     var tr = $(this).closest('tr');
+        //     var row = datatable.row(tr);
+        //     if (row.child.isShown()) {
+        //         // This row is already open - close it
+        //         row.child.hide();
+        //         tr.removeClass('shown');
+        //         $(this).find('.detailIcon').text("▶");
+        //     }
+        //     else {
+        //         // Open this row
+        //         row.child(format(row.data())).show();
+        //         tr.addClass('shown');
+        //         $(this).find('.detailIcon').text("▼");
 
-                // 獲取子元素（row.detail）
-                var rowDetail = $(tr).next();
-                // 綁定事件(推薦變更)
-                radioevent(rowDetail);
-            }
-        });
+        //         // 獲取子元素（row.detail）
+        //         var rowDetail = $(tr).next();
+        //         // 綁定事件(推薦變更)
+        //         radioevent(rowDetail);
+        //     }
+        // });
 
 
 
