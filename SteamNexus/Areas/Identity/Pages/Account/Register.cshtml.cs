@@ -73,6 +73,7 @@ namespace SteamNexus.Areas.Identity.Pages.Account
         {
 
             [MaxLength(10)]
+            [Required(ErrorMessage = "請輸入姓名")]
             [Display(Name = "姓名")]
             public string Name { get; set; }
 
@@ -80,27 +81,28 @@ namespace SteamNexus.Areas.Identity.Pages.Account
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Required]
+            [Required(ErrorMessage = "請輸入電子信箱")]
             [EmailAddress]
-            [Display(Name = "Email")]
+            [Display(Name = "電子信箱")]
             public string Email { get; set; }
 
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Required]
+            [Required(ErrorMessage = "請輸入密碼")]
             [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
             [DataType(DataType.Password)]
-            [Display(Name = "Password")]
+            [Display(Name = "密碼")]
             public string Password { get; set; }
 
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
+            [Required(ErrorMessage = "請再次輸入密碼")]
             [DataType(DataType.Password)]
-            [Display(Name = "Confirm password")]
+            [Display(Name = "確認密碼")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
 
@@ -126,10 +128,12 @@ namespace SteamNexus.Areas.Identity.Pages.Account
             [Required(ErrorMessage = "請輸入記憶容量")]
             public int RAM { get; set; }
 
+            [Required(ErrorMessage = "請選擇性別")]
             [Display(Name = "性別")]
             public bool Gender { get; set; } = true;
 
             [Display(Name = "生日")]
+            [Required(ErrorMessage = "請選擇生日")]
             [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)] // 指定日期的顯示格式
             public DateTime Birthday { get; set; }
 
@@ -179,7 +183,8 @@ namespace SteamNexus.Areas.Identity.Pages.Account
                         protocol: Request.Scheme);
 
                     await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                        //$"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>點擊確認您的電子信箱</a>.");
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
@@ -225,3 +230,5 @@ namespace SteamNexus.Areas.Identity.Pages.Account
         }
     }
 }
+
+

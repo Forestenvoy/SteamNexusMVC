@@ -49,7 +49,8 @@ namespace SteamNexus.Areas.Identity.Pages.Account
             var result = await _userManager.ChangeEmailAsync(user, email, code);
             if (!result.Succeeded)
             {
-                StatusMessage = "Error changing email.";
+                //StatusMessage = "Error changing email.";
+                StatusMessage = "更改電子郵件時出現錯誤!!";
                 return Page();
             }
 
@@ -58,12 +59,14 @@ namespace SteamNexus.Areas.Identity.Pages.Account
             var setUserNameResult = await _userManager.SetUserNameAsync(user, email);
             if (!setUserNameResult.Succeeded)
             {
-                StatusMessage = "Error changing user name.";
+                //StatusMessage = "Error changing user name.";
+                StatusMessage = "更改使用者名稱時出現錯誤!!";
                 return Page();
             }
 
             await _signInManager.RefreshSignInAsync(user);
-            StatusMessage = "Thank you for confirming your email change.";
+            //StatusMessage = "Thank you for confirming your email change.";
+            StatusMessage = "感謝您確認您的電子郵件進行變更!!";
             return Page();
         }
     }

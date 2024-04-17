@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
+using SteamNexus;
 using SteamNexus.Data;
 using SteamNexus.Services;
 
@@ -53,6 +55,10 @@ builder.Services.ConfigureApplicationCookie(options => { //³o­Ó¨ç¦¡³]©w¤FÀ³¥Îµ{¦
     options.AccessDeniedPath = "/Identity/Account/AccessDenied"; //¦s¨ú³Q©Úµ´®É¾É¦Vªº­¶­±¸ô®|¡C
     options.SlidingExpiration = true; //¬O§_±Ò¥Î·Æ°Ê¹L´Á®É¶¡¡C
 });
+
+//Email 
+builder.Services.AddTransient<IEmailSender, EmailSendercs>();
+builder.Services.AddControllersWithViews();
 
 
 var app = builder.Build();

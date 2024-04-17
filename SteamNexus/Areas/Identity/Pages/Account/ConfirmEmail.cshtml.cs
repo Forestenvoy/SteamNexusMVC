@@ -45,7 +45,8 @@ namespace SteamNexus.Areas.Identity.Pages.Account
 
             code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
             var result = await _userManager.ConfirmEmailAsync(user, code);
-            StatusMessage = result.Succeeded ? "Thank you for confirming your email." : "Error confirming your email.";
+            //StatusMessage = result.Succeeded ? "Thank you for confirming your email." : "Error confirming your email.";
+            StatusMessage = result.Succeeded ? "感謝您!!請確認您的電子郵件!!!" : "確認您的電子郵件時出現錯誤!!!";
             return Page();
         }
     }
