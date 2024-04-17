@@ -3,14 +3,32 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> AdminSystem</title>
+    <title> @ViewData["Title"] - AdminSystem</title>
 
     @*CSS*@
     <link rel="shortcut icon" href="~/lib/mazer/ssets/compiled/svg/favicon.svg" type="image/x-icon">
-    <link rel="stylesheet" href="~/lib/mazer/assets/compiled/css/app.css">
+    <link rel="stylesheet" href="~/lib/mazer/assets/compiled/css/app.css" asp-append-version="true">
     <link rel="stylesheet" href="~/lib/mazer/assets/compiled/css/app-dark.css">
     <link rel="stylesheet" href="~/lib/mazer/assets/compiled/css/iconly.css">
+    <style>
+        html, body {
+            height: 100% !important;
+            margin: 0 !important;
+        }
 
+        body {
+            display: flex !important; /*使物件依序排列*/
+            flex-direction: column !important; /*使物件垂直排列*/
+        }
+
+        .wrapperdiv {
+            flex-grow: 1 !important; /*可佔滿垂直剩餘的空間*/
+        }
+
+        .footer {
+            line-height: 1.5;
+        }
+    </style>
     @await RenderSectionAsync("Styles", required: false)
 </head>
 <body>
@@ -20,9 +38,14 @@
             <div class="sidebar-wrapper active ps ps--active-y">
                 <div class="sidebar-header position-relative">
                     <div class="d-flex justify-content-between align-items-center">
+                        @* Logo start *@
                         <div class="logo">
-                            <a href="index.html"><img src="./assets/compiled/svg/logo.svg" alt="Logo" srcset=""></a>
+                            <a class="navbar-brand d-inline-flex align-items-center" asp-area="" asp-controller="Home" asp-action="Index">
+                                <div style="font-family: 'Oswald' , sans-serif; font-weight: 500; font-size:20px;">SteamNexus</div>
+                            </a>
                         </div>
+                        @* Logo end *@
+                        @* 日夜模式切換 start *@
                         <div class="theme-toggle d-flex gap-2  align-items-center mt-2">
                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--system-uicons" width="20" height="20" preserveAspectRatio="xMidYMid meet" viewBox="0 0 21 21">
                                 <g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
@@ -43,6 +66,7 @@
                                 </path>
                             </svg>
                         </div>
+                        @* 日夜模式切換 end *@
                         <div class="sidebar-toggler  x">
                             <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
                         </div>
@@ -675,7 +699,7 @@
             <div class="page-heading">
                 <h3>Profile Statistics</h3>
             </div>
-            <div class="page-content">
+            <div class="page-content wrapperdiv">
                     @RenderBody()
             </div>
             @* footer start *@
