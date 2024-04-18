@@ -82,9 +82,16 @@ app.UseRouting();
 
 app.UseAuthorization();
 
+// Administrator Route Setting
 app.MapControllerRoute(
-    name: "default",
+    name: "Area",
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
+// default Route Setting
+app.MapControllerRoute(
+    name: "Default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
 app.MapRazorPages();
 
 app.Run();

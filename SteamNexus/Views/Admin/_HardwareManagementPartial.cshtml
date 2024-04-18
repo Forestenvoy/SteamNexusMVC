@@ -9,26 +9,6 @@
         color: white;
     }
 
-    /* 內容背景色 */
-    tbody tr {
-        background-color: white !important;
-    }
-
-    /* 下拉式選單內容顏色 */
-    #dt-length-0 option {
-        color: black;
-    }
-
-    /* 空資料內容顏色 */
-    .dt-empty {
-        color: black;
-    }
-
-    /* RowGroup 顏色 */
-    .dtrg-group {
-        color: black;
-    }
-
     /* 頂部布局調整 */
     .dt-start {
         padding-left: 10px !important;
@@ -54,10 +34,6 @@
     }
 
     /* 推薦設定 文字顏色 */
-    .black-row {
-        color: black !important;
-    }
-
     .green-row {
         color: green !important;
     }
@@ -73,7 +49,7 @@
     /* 列 按鈕樣式 */
     .row-button {
         border-radius: 5px;
-        background-color: white;
+        background-color: gray;
     }
 
     /* popover 初始樣式 */
@@ -107,9 +83,12 @@
         height: 40px;
     }
 
+    body {
+        table-layout: fixed;
+    }
 </style>
 @* PartialView 的 HTML *@
-<div>
+<div class="position-relative">
     <div class="container-fluid p-2">
         <div class="row">
             <div class="col-12 col-md-4 d-flex align-items-center justify-content-center">
@@ -124,17 +103,17 @@
             </div>
         </div>
     </div>
-    <table id="HardwareManageTable" class="display dt-responsive" style="width:100%">
+    <table id="HardwareManageTable" class="display" style="width:100%">
         <thead>
             <tr>
-                <th></th>
-                <th>ID</th>
+                <th data-priority="1">ID</th>
                 <th>產品名稱</th>
                 <th>規格</th>
                 <th>種類</th>
                 <th>價格</th>
                 <th>瓦數</th>
-                <th></th>
+                <th>推薦</th>
+                <th data-priority="2"></th>
             </tr>
         </thead>
     </table>
@@ -165,7 +144,7 @@
             var data = {
                 Type: itemid
             };
-            fetch(`${HardAddress}@Url.Action("UpdateHardwareOne", "Admin")`, {
+            fetch(`@Url.Action("UpdateHardwareOne", "Admin")`, {
                 method: "POST",
                 body: JSON.stringify(data),
                 headers: {
@@ -203,7 +182,7 @@
             // 顯示進度條
             $("#HardwareLoading").show();
             // 發送非同步POST請求 ==> 資料庫資料變更
-            fetch(`${HardAddress}@Url.Action("UpdateHardwareAll", "Admin")`, {
+            fetch(`@Url.Action("UpdateHardwareAll", "Admin")`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -240,31 +219,44 @@
         var datatable = new DataTable('#HardwareManageTable', {
             // column 定義
             columns: [
-                {
-                    "class": 'details-control',
-                    "orderable": false,
-                    "data": null,
-                    "defaultContent": '<div class="detailIcon">▶</div>',
-                    "width": "3%"
-                },
                 { "data": "productId", "width": "5%", "className": "text-center" },
-                { "data": "productName", "width": "25%" },
-                { "data": "specification", "width": "15%" },
-                { "data": "componentClassificationName", "width": "15%", "visible": false },
-                { "data": "price", "width": "8%", "className": "text-center" },
+                { "data": "productName", "width": "35%" },
+                { "data": "specification", "width": "30%" },
+                { "data": "componentClassificationName", "visible": false },
+                { "data": "price", "width": "10%", "className": "text-center" },
                 {
                     "data": "wattage",
-                    "width": "8%",
+                    "width": "10%",
                     "className": "text-center",
-                    // 瓦數 自定義
+                    // 瓦數 ~ 文字輸入方塊 
                     render: function (data, type, row, meta) {
-                        // 取得 productId
-                        let productId = row.productId;
                         // 此處 type 為 'sort' 表示 DataTables 正在進行排序
                         if (type === 'sort') {
                             // 返回元素的值作為排序依據
                             return data;
                         }
+                        // 取得 productId
+                        let productId = row.productId;
+                        // input 欄位 ~ 可編輯
+                        let inputEle = '<input type="text" id="' + productId + "_watt" + '" value="' + data + '" style="width: 50px; text-align: center;" >';
+                        return inputEle;
+                    },
+                    // 將此列的數據類型設置為數字 ~ 排序才會正常運作
+                    "type": "num"
+                },
+                {
+                    "data": "recommend",
+                    "width": "10%",
+                    "className": "text-center",
+                    // 推薦 ~ 下拉式選單
+                    render: function (data, type, row, meta) {
+                        // 此處 type 為 'sort' 表示 DataTables 正在進行排序
+                        if (type === 'sort') {
+                            // 返回元素的值作為排序依據
+                            return data;
+                        }
+                        // 取得 productId
+                        let productId = row.productId;
                         // input 欄位 ~ 可編輯
                         let inputEle = '<input type="text" id="' + productId + "_watt" + '" value="' + data + '" style="width: 50px; text-align: center;" >';
                         return inputEle;
@@ -309,7 +301,7 @@
             // 資料載入中 gif
             processing: true,
             // 自動寬度 關閉
-            autoWidth: false,
+            autoWidth: true,
             // 資料行樣式
             createdRow: function (row, data, dataIndex) {
                 row.classList.add(data.recommend === 0 ? 'black-row' : data.recommend === 1 ? 'green-row' : data.recommend === 2 ? 'blue-row' : 'red-row');
@@ -341,6 +333,7 @@
                 },
             },
         });
+
 
         // 資料變更 ~ 綁定事件
         function btnWattEnterEvent() {
@@ -575,27 +568,27 @@
         }
 
         // Add event listener for opening and closing details
-        $('#HardwareManageTable tbody').on('click', 'td.details-control', function () {
-            var tr = $(this).closest('tr');
-            var row = datatable.row(tr);
-            if (row.child.isShown()) {
-                // This row is already open - close it
-                row.child.hide();
-                tr.removeClass('shown');
-                $(this).find('.detailIcon').text("▶");
-            }
-            else {
-                // Open this row
-                row.child(format(row.data())).show();
-                tr.addClass('shown');
-                $(this).find('.detailIcon').text("▼");
+        // $('#HardwareManageTable tbody').on('click', 'td.details-control', function () {
+        //     var tr = $(this).closest('tr');
+        //     var row = datatable.row(tr);
+        //     if (row.child.isShown()) {
+        //         // This row is already open - close it
+        //         row.child.hide();
+        //         tr.removeClass('shown');
+        //         $(this).find('.detailIcon').text("▶");
+        //     }
+        //     else {
+        //         // Open this row
+        //         row.child(format(row.data())).show();
+        //         tr.addClass('shown');
+        //         $(this).find('.detailIcon').text("▼");
 
-                // 獲取子元素（row.detail）
-                var rowDetail = $(tr).next();
-                // 綁定事件(推薦變更)
-                radioevent(rowDetail);
-            }
-        });
+        //         // 獲取子元素（row.detail）
+        //         var rowDetail = $(tr).next();
+        //         // 綁定事件(推薦變更)
+        //         radioevent(rowDetail);
+        //     }
+        // });
 
 
 
