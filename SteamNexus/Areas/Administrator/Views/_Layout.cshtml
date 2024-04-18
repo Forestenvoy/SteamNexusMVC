@@ -246,7 +246,7 @@
             const html = document.querySelector("html");
 
             if (theme === "dark") {
-                // 切回 白天模式
+                // 設置 夜晚模式
                 logoText.classList.remove('text-dark');
                 logoText.classList.add('text-white');
                 logoImg.src = '/img/logo.png';
@@ -254,7 +254,7 @@
                 html.classList.add('dark');
             }
             else {
-                // 切回 夜晚模式
+                // 設置 白天模式
                 logoText.classList.remove('text-white');
                 logoText.classList.add('text-dark');
                 logoImg.src = '/img/logo-dark.png';
@@ -271,8 +271,9 @@
             const logoText = document.querySelector("#logoText");
             const logoImg = document.querySelector("#logoImg");
             const html = document.querySelector("html");
+            // 因為是點擊觸發會捕捉到改變前的狀態
             if (theme === "dark") {
-                // 切回 夜晚模式
+                // 切回 白天模式
                 logoText.classList.remove('text-white');
                 logoText.classList.add('text-dark');
                 logoImg.src = '/img/logo-dark.png';
@@ -280,7 +281,7 @@
                 html.classList.add('light');
             }
             else {
-                // 切回 白天模式
+                // 切回 夜晚模式
                 logoText.classList.remove('text-dark');
                 logoText.classList.add('text-white');
                 logoImg.src = '/img/logo.png';
