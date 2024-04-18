@@ -11,7 +11,7 @@
 
     /* 頂部布局調整 */
     .dt-start {
-        padding-left: 10px !important;
+
     }
 
     .dt-end .dt-search {
@@ -20,18 +20,7 @@
 
     .dt-middle {
         text-align: end !important;
-        padding-right: 10px !important;
     }
-
-    /* RowDetail Icon setting */
-/*     td.details-control .detailIcon {
-        cursor: pointer;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 15px;
-        color: black;
-    } */
 
     /* 推薦設定 文字顏色 */
     .green-row {
@@ -88,20 +77,21 @@
     }
 </style>
 @* PartialView 的 HTML *@
-<div class="position-relative">
-    <div class="container-fluid p-2">
-        <div class="row">
-            <div class="col-12 col-md-4 d-flex align-items-center justify-content-center">
-                <select asp-items="@ViewBag.ComputerParts" class="form-select" style="width:250px;height:40px" id="HardSelect">
-                    <option value="" disabled selected hidden>---- 請選擇 ----</option>
-                </select>
-            </div>
-            <div class="col-12 col-md-5 d-flex justify-content-center justify-content-md-start align-items-center">
-                <img src="~/img/loading-block-white.gif" style="width:30px;height:30px;display:none" id="HardwareLoading" />
-                <span id="UpdateResult" style="color:white" class="h3"></span>
-            </div>
+<div class="page-title position-relative">
+    <div class="row">
+        @* 系統名稱 *@
+        <div class="col-12 col-md-6 order-md-1 d-flex justify-content-center justify-content-md-start">
+            <h2 id="SystemName" style="margin-top: 8px;">硬體管理系統</h2>
+        </div>
+        @* 系統選單 *@
+        <div class="col-12 col-md-6 order-md-2 d-flex justify-content-center justify-content-md-end" id="SystemMenu">
+            <select asp-items="@ViewBag.ComputerParts" class="form-select " style="width:250px;height:40px;margin-bottom:8px" id="HardSelect">
+                <option value="" disabled selected hidden>---- 請選擇 ----</option>
+            </select>
         </div>
     </div>
+</div>
+<section class="section">
     <table id="HardwareManageTable" class="display" style="width:100%">
         <thead>
             <tr>
@@ -116,7 +106,9 @@
             </tr>
         </thead>
     </table>
-</div>
+</section>
+<img src="~/img/loading-block-white.gif" style="width:30px;height:30px;display:none" id="HardwareLoading" />
+<span id="UpdateResult" style="color:white" class="h3"></span>
 @* PartialView 的 JavaScript *@
 <script>
     $(document).ready(function () {
@@ -444,7 +436,7 @@
         function getdatatableData() {
             let p = getType();
             // 發送非同步GET請求
-            fetch(`${HardAddress}@Url.Action("HardwareData", "Admin")?${p}`, {
+            fetch(`@Url.Action("HardwareData", "HardwareManagement", new { area = "Administrator" })?${p}`, {
                 method: "GET"
             }).then(result => {
                 // 此時 result 是一個請求結果的物件

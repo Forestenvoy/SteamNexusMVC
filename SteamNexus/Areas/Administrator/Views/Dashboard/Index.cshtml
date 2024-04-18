@@ -87,14 +87,6 @@
                     $("#systemLoading").hide();
                     // 顯示 PartialView 資料
                     $("#System").html(data);
-                    // 顯示 SystemName
-                    const SystemName = `硬體產品管理`;
-                    $("#SystemName").text(SystemName);
-                    // 顯示 SystemMenu
-                    const SystemMenu = `<select  class="form-select" style="width:250px;height:40px" id="HardSelect">
-                            <option value="" disabled selected hidden>---- 請選擇 ----</option>
-                        </select>`;
-                    $("#SystemMenu").html(SystemMenu);
                 }).catch(error => {
                     // Loading 關閉
                     $("#systemLoading").hide();
