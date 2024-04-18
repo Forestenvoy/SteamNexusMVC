@@ -276,10 +276,10 @@
                         // 取得 productId
                         let productId = row.productId;
                         // 編輯按鈕
-                        let editEle = `<button id="${productId}_edit" class="btn btn-secondary Edit-btn d-flex justify-content-between align-items-center" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-pen-to-square" style="color: #0000ff;"></i></button>`;
+                        let editEle = `<button id="${productId}_edit" class="btn btn-primary Edit-btn d-flex justify-content-center align-items-center" style="width:30px;height:30px;" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-pen-to-square" style="color: #ffffff;"></i></button>`;
                         let div = `<div id="${productId}_div">${editEle}</div>`;
                         // 復原按鈕
-                        let resetEle = `<button id="${productId}_reset" class="btn btn-secondary Reset-btn d-flex justify-content-between align-items-center" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-rotate-right" style="color: #ff0000;"></i></button>`;
+                        let resetEle = `<button id="${productId}_reset" class="btn btn-danger Reset-btn d-flex justify-content-center align-items-center" style="width:30px;height:30px;" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-rotate-right" style="color: #ffffff;"></i></button>`;
                         if (type === 'display') {
                             return `${div}&nbsp;&nbsp;&nbsp;${resetEle}`;
                         }
@@ -353,7 +353,7 @@
             // 取得 ID
             let productId = Number($(this).attr('id').slice(0, -5));
             // 更換成確認按鈕
-            let enterEle = `<button id="${productId}_enter" class="btn btn-secondary Enter-btn d-flex justify-content-between align-items-center" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-check" style="color: #00ff00;"></i></button>`;
+            let enterEle = `<button id="${productId}_enter" class="btn btn-success Enter-btn d-flex justify-content-center align-items-center" style="width:30px;height:30px;" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-check" style="color: #ffffff;"></i></button>`;
             $(`#${productId}_div`).html(enterEle);
             
         });
@@ -363,7 +363,7 @@
             // 取得 ID
             let productId = Number($(this).attr('id').slice(0, -6));
             // 更換成編輯按鈕
-            let editEle = `<button id="${productId}_edit" class="btn btn-secondary Edit-btn d-flex justify-content-between align-items-center" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-pen-to-square" style="color: #0000ff;"></i></button>`;
+            let editEle = `<button id="${productId}_edit" class="btn btn-primary Edit-btn d-flex justify-content-center align-items-center" style="width:30px;height:30px;" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-pen-to-square" style="color: #ffffff;"></i></button>`;
             $(`#${productId}_div`).html(editEle);
 
         });
@@ -398,91 +398,91 @@
         // };
 
         // 日夜顏色變更 ~ 自定義
-        function setAdminTheme() {
-            // 檢測當前主題
-            const theme = document.documentElement.getAttribute('data-bs-theme');
-            // 獲取想要變更的自定義元素
-            const btnEdits = document.querySelectorAll('.Edit-btn');
-            const btnEnters = document.querySelectorAll('.Enter-btn');
-            const btnResets = document.querySelectorAll('.Reset-btn');
-            if (theme === "dark") {
-                // 設置 夜晚模式
-                btnEdits.forEach(element => {
-                    element.classList.add('btn-secondary');
-                    element.classList.remove('btn-light');
-                });
-                btnEnters.forEach(element => {
-                    element.classList.add('btn-secondary');
-                    element.classList.remove('btn-light');
-                });
-                btnResets.forEach(element => {
-                    element.classList.add('btn-secondary');
-                    element.classList.remove('btn-light');
-                });
-            }
-            else {
-                // 設置 白天模式
-                btnEdits.forEach(element => {
-                    element.classList.add('btn-light');
-                    element.classList.remove('btn-secondary');
-                });
-                btnEnters.forEach(element => {
-                    element.classList.add('btn-light');
-                    element.classList.remove('btn-secondary');
-                });
-                btnResets.forEach(element => {
-                    element.classList.add('btn-light');
-                    element.classList.remove('btn-secondary');
-                });
-            }
-        }
-        function clickAdminTheme() {
-            // 檢測當前主題
-            const theme = document.documentElement.getAttribute('data-bs-theme');
-            // 獲取想要變更的自定義元素
-            const btnEdits = document.querySelectorAll('.Edit-btn');
-            const btnEnters = document.querySelectorAll('.Enter-btn');
-            const btnResets = document.querySelectorAll('.Reset-btn');
-            // 因為是點擊觸發會捕捉到改變前的狀態
-            if (theme === "dark") {
-                // 切回 白天模式
-                btnEdits.forEach(element => {
-                    element.classList.add('btn-light');
-                    element.classList.remove('btn-secondary');
-                });
-                btnEnters.forEach(element => {
-                    element.classList.add('btn-light');
-                    element.classList.remove('btn-secondary');
-                });
-                btnResets.forEach(element => {
-                    element.classList.add('btn-light');
-                    element.classList.remove('btn-secondary');
-                });
-            }
-            else {
-                // 切回 夜晚模式
-                btnEdits.forEach(element => {
-                    element.classList.add('btn-secondary');
-                    element.classList.remove('btn-light');
-                });
-                btnEnters.forEach(element => {
-                    element.classList.add('btn-secondary');
-                    element.classList.remove('btn-light');
-                });
-                btnResets.forEach(element => {
-                    element.classList.add('btn-secondary');
-                    element.classList.remove('btn-light');
-                });
-            }
-        }
-        btnTheme.addEventListener("click", event => {
-            clickAdminTheme();
-        });
-        // datatables 重新繪製時(包含分頁切換)
-        datatable.on('draw', function () {
-            // 設置日夜顏色
-            setAdminTheme();
-        });
+        // function setAdminTheme() {
+        //     // 檢測當前主題
+        //     const theme = document.documentElement.getAttribute('data-bs-theme');
+        //     // 獲取想要變更的自定義元素
+        //     const btnEdits = document.querySelectorAll('.Edit-btn');
+        //     const btnEnters = document.querySelectorAll('.Enter-btn');
+        //     const btnResets = document.querySelectorAll('.Reset-btn');
+        //     if (theme === "dark") {
+        //         // 設置 夜晚模式
+        //         btnEdits.forEach(element => {
+        //             element.classList.add('btn-secondary');
+        //             element.classList.remove('btn-light');
+        //         });
+        //         btnEnters.forEach(element => {
+        //             element.classList.add('btn-secondary');
+        //             element.classList.remove('btn-light');
+        //         });
+        //         btnResets.forEach(element => {
+        //             element.classList.add('btn-secondary');
+        //             element.classList.remove('btn-light');
+        //         });
+        //     }
+        //     else {
+        //         // 設置 白天模式
+        //         btnEdits.forEach(element => {
+        //             element.classList.add('btn-light');
+        //             element.classList.remove('btn-secondary');
+        //         });
+        //         btnEnters.forEach(element => {
+        //             element.classList.add('btn-light');
+        //             element.classList.remove('btn-secondary');
+        //         });
+        //         btnResets.forEach(element => {
+        //             element.classList.add('btn-light');
+        //             element.classList.remove('btn-secondary');
+        //         });
+        //     }
+        // }
+        // function clickAdminTheme() {
+        //     // 檢測當前主題
+        //     const theme = document.documentElement.getAttribute('data-bs-theme');
+        //     // 獲取想要變更的自定義元素
+        //     const btnEdits = document.querySelectorAll('.Edit-btn');
+        //     const btnEnters = document.querySelectorAll('.Enter-btn');
+        //     const btnResets = document.querySelectorAll('.Reset-btn');
+        //     // 因為是點擊觸發會捕捉到改變前的狀態
+        //     if (theme === "dark") {
+        //         // 切回 白天模式
+        //         btnEdits.forEach(element => {
+        //             element.classList.add('btn-light');
+        //             element.classList.remove('btn-secondary');
+        //         });
+        //         btnEnters.forEach(element => {
+        //             element.classList.add('btn-light');
+        //             element.classList.remove('btn-secondary');
+        //         });
+        //         btnResets.forEach(element => {
+        //             element.classList.add('btn-light');
+        //             element.classList.remove('btn-secondary');
+        //         });
+        //     }
+        //     else {
+        //         // 切回 夜晚模式
+        //         btnEdits.forEach(element => {
+        //             element.classList.add('btn-secondary');
+        //             element.classList.remove('btn-light');
+        //         });
+        //         btnEnters.forEach(element => {
+        //             element.classList.add('btn-secondary');
+        //             element.classList.remove('btn-light');
+        //         });
+        //         btnResets.forEach(element => {
+        //             element.classList.add('btn-secondary');
+        //             element.classList.remove('btn-light');
+        //         });
+        //     }
+        // }
+        // btnTheme.addEventListener("click", event => {
+        //     clickAdminTheme();
+        // });
+        // // datatables 重新繪製時(包含分頁切換)
+        // datatable.on('draw', function () {
+        //     // 設置日夜顏色
+        //     setAdminTheme();
+        // });
 
 
 
