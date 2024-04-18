@@ -27,15 +27,17 @@ namespace SteamNexus.Areas.Administrator.Controllers
             return View();
         }
 
+        // 回傳硬體產品管理頁面 PartialView
         // Administrator/HardwareManagement/ProductManagement
         [HttpGet]
         public IActionResult ProductManagement()
         {
             // 下拉式選單 => 硬體
             ViewBag.ComputerParts = new SelectList(_context.ComputerPartCategories.Select(c => c.Name));
-            return PartialView("_HardwareManagementPartial");
+            return PartialView("_ProductManagementPartial");
         }
 
+        // 根據硬體規格回傳產品列表
         // GET: Admin/HardwareData
         [HttpGet]
         public IActionResult HardwareData(int Type)

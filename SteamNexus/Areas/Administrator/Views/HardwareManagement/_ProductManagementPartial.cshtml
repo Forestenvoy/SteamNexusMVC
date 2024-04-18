@@ -11,7 +11,6 @@
 
     /* 頂部布局調整 */
     .dt-start {
-
     }
 
     .dt-end .dt-search {
@@ -72,8 +71,16 @@
         height: 40px;
     }
 
+    /* 表格的佈局採用固定佈局算法 */
     body {
         table-layout: fixed;
+    }
+
+    /* 欄位預設樣式 */
+    .defaultcellType {
+        border: none; /* 取消邊框 */
+        background-color: transparent; /* 背景透明 */
+        appearance: none; /* 去除默認樣式 */
     }
 </style>
 @* PartialView 的 HTML *@
@@ -114,6 +121,8 @@
     $(document).ready(function () {
 
         let HardAddress = "https://localhost:7097";
+        // 日夜變更按鈕
+        const btnTheme = document.querySelector("#toggle-dark");
 
         // 單一零件更新
         function UpdateOneHardware() {
@@ -219,7 +228,7 @@
                     "data": "wattage",
                     "width": "10%",
                     "className": "text-center",
-                    // 瓦數 ~ 文字輸入方塊 
+                    // 瓦數 ~ 文字輸入方塊
                     render: function (data, type, row, meta) {
                         // 此處 type 為 'sort' 表示 DataTables 正在進行排序
                         if (type === 'sort') {
@@ -229,7 +238,7 @@
                         // 取得 productId
                         let productId = row.productId;
                         // input 欄位 ~ 可編輯
-                        let inputEle = '<input type="text" id="' + productId + "_watt" + '" value="' + data + '" style="width: 50px; text-align: center;" >';
+                        let inputEle = `<input type="text" class="defaultcellType" id="${productId}_watt" value="${data}" style="width: 50px; text-align: center;" disabled>`;
                         return inputEle;
                     },
                     // 將此列的數據類型設置為數字 ~ 排序才會正常運作
@@ -248,9 +257,17 @@
                         }
                         // 取得 productId
                         let productId = row.productId;
-                        // input 欄位 ~ 可編輯
-                        let inputEle = '<input type="text" id="' + productId + "_watt" + '" value="' + data + '" style="width: 50px; text-align: center;" >';
-                        return inputEle;
+                        const isRec1 = data == 0 ? 'selected' : '';
+                        const isRec2 = data == 1 ? 'selected' : '';
+                        const isRec3 = data == 2 ? 'selected' : '';
+                        const isRec4 = data == 3 ? 'selected' : '';
+                        const ele1 = `<option value = "0" ${isRec1}>無</option>`;
+                        const ele2 = `<option value = "1" ${isRec2}>基本</option>`;
+                        const ele3 = `<option value = "2" ${isRec3}>優良</option>`;
+                        const ele4 = `<option value = "3" ${isRec4}>完美</option>`;
+                        // select 欄位 ~ 可編輯
+                        let selectEle = `<select id="${productId}_recommend" class="defaultcellType" disabled>${ele1}${ele2}${ele3}${ele4}</select>`;
+                        return selectEle;
                     },
                     // 將此列的數據類型設置為數字 ~ 排序才會正常運作
                     "type": "num"
@@ -259,20 +276,22 @@
                     "data": null,
                     "orderable": false,
                     "width": "10%",
-                    "className": "text-center",
                     // 按鈕 自定義
                     render: function (data, type, row, meta) {
                         // 取得 productId
                         let productId = row.productId;
+                        // 編輯按鈕
+                        let editEle = `<button id="${productId}_edit" class="btn btn-light Edit-btn" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-pen-to-square" style="color: #0000ff;"></i></button>`;
                         // 確認按鈕
-                        let enterEle = '<button id="' + productId + "_enter" + '" class="row-button" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-check" style="color: #04ff00;"></i></button>';
+                        let enterEle = `<button id="${productId}_enter" class="btn btn-secondary Enter-btn" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-check" style="color: #00ff00;"></i></button>`;
                         // 復原按鈕
-                        let resetEle = '<button id="' + productId + "_reset" + '" class="row-button" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-rotate-right" style="color: #ff0000;"></i></button>';
+                        let resetEle = `<button id="${productId}_reset" class="btn btn-secondary Reset-btn" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-rotate-right" style="color: #ff0000;"></i></button>`;
                         if (type === 'display') {
-                            return `${enterEle}&nbsp;&nbsp;&nbsp;${resetEle}`;
+                            return `${editEle}&nbsp;&nbsp;&nbsp;${resetEle}`;
                         }
                         return data;
-                    }
+                    },
+                    "type": "html"
                 }
             ],
             // 標頭固定
@@ -295,7 +314,16 @@
             autoWidth: true,
             // 資料行樣式
             createdRow: function (row, data, dataIndex) {
-                row.classList.add(data.recommend === 0 ? 'black-row' : data.recommend === 1 ? 'green-row' : data.recommend === 2 ? 'blue-row' : 'red-row');
+                if (data.recommend === 1) {
+                    row.classList.add('green-row');
+                } else if (data.recommend === 2) {
+                    row.classList.add('blue-row');
+                } else if (data.recommend === 3) {
+                    row.classList.add('red-row');
+                }
+                // 為特定行加入 class ==> 不會影響 th
+                $(row).find('td:eq(6)').addClass('d-flex');
+                $(row).find('td:eq(6)').addClass('justify-content-between');
             },
             // 按鈕建立
             layout: {
@@ -326,15 +354,24 @@
         });
 
 
+        // 資料編輯 ~ 綁定事件
+        function btnEditEvent() {
+            // 綁定所有 button 標籤 id 為 _edit 結尾的元素
+            $('button[id$="_edit"]').on('click', function () {
+                // 取得 ID
+                let id = Number($(this).attr('id').slice(0, -5));
+                alert(id);
+
+
+            });
+        };
+
         // 資料變更 ~ 綁定事件
-        function btnWattEnterEvent() {
+        function btnEnterEvent() {
             // 綁定所有 button 標籤 id 為 _enter 結尾的元素
             $('button[id$="_enter"]').on('click', function () {
                 // 取得 ID
                 let id = Number($(this).attr('id').slice(0, -6));
-
-
-
                 // 更改提示泡泡內容
                 let popContent = '<i class="fa-solid fa-check"></i>&nbsp;&nbsp;變更成功';
                 $(this).attr('data-bs-content', popContent);
@@ -352,7 +389,7 @@
         };
 
         // 資料還原 ~ 綁定事件
-        function btnWattResetEvent() {
+        function btnResetEvent() {
             // 綁定所有 button 標籤 id 為 _enter 結尾的元素
             $('button[id$="_reset"]').on('click', function (event) {
                 // 取得 ID
@@ -373,6 +410,46 @@
                 }.bind(this), 1000); // 這裡的 1000 表示延遲 1 秒後隱藏提示泡泡
             });
         };
+
+        // 日夜顏色變更
+        function setAdminTheme() {
+            // 檢測當前主題
+            const theme = document.documentElement.getAttribute('data-bs-theme');
+            // 獲取想要變更的自定義元素
+            const btnEdit = document.querySelector("#logoImg");
+
+            // 
+            if (theme === "dark") {
+                // 切回 白天模式
+            }
+            else {
+                // 切回 夜晚模式
+            }
+        }
+        function clickAdminTheme() {
+            // 檢測當前主題
+            const theme = document.documentElement.getAttribute('data-bs-theme');
+            // 獲取想要變更的自定義元素
+            
+
+            if (theme === "dark") {
+                // 切回 夜晚模式
+            }
+            else {
+                // 切回 白天模式
+
+            }
+        }
+        btnTheme.addEventListener("click", event => {
+            clickAdminTheme();
+        });
+
+
+
+
+
+
+
 
         // 提示泡泡 ~ popover 初始化
         function btnPopoverInitialization() {
@@ -451,8 +528,7 @@
                 // 添加新的資料
                 datatable.rows.add(data).draw();
                 // 欄位事件綁定
-                btnWattEnterEvent();
-                btnWattResetEvent();
+                btnEditEvent();
                 btnPopoverInitialization();
             }).catch(error => {
                 alert(error);
@@ -469,13 +545,13 @@
             let RadioId = "recommend" + d.productId;
             return (
                 `<div id="recommend${d.productId}" style="color: black;"> 推薦設定:
-                                                                                                                    <label style="color: black;"><input type="radio" name="${RadioId}" value="0" ${d.recommend == 0 ? 'checked' : ''}> 無</label>
-                                                                                                                        <label style="color: green;"><input type="radio" name="${RadioId}" value="1" ${d.recommend == 1 ? 'checked' : ''}> 基本</label>
-                                                                                                                        <label style="color: blue;"><input type="radio" name="${RadioId}" value="2" ${d.recommend == 2 ? 'checked' : ''}> 優良</label>
-                                                                                                                        <label style="color: red;"><input type="radio" name="${RadioId}" value="3" ${d.recommend == 3 ? 'checked' : ''}> 完美</label>
-                                                                                                                        <i class="fa-solid fa-spinner fa-spin ms-2"style="color:black;display:none" id="loading${d.productId}"></i>
-                                                                                                                            <span id="result${d.productId}" class="ms-2" style="color: black;"></span>
-                                                                                                                 </div>`
+                                                                                                                                                                    <label style="color: black;"><input type="radio" name="${RadioId}" value="0" ${d.recommend == 0 ? 'checked' : ''}> 無</label>
+                                                                                                                                                                        <label style="color: green;"><input type="radio" name="${RadioId}" value="1" ${d.recommend == 1 ? 'checked' : ''}> 基本</label>
+                                                                                                                                                                        <label style="color: blue;"><input type="radio" name="${RadioId}" value="2" ${d.recommend == 2 ? 'checked' : ''}> 優良</label>
+                                                                                                                                                                        <label style="color: red;"><input type="radio" name="${RadioId}" value="3" ${d.recommend == 3 ? 'checked' : ''}> 完美</label>
+                                                                                                                                                                        <i class="fa-solid fa-spinner fa-spin ms-2"style="color:black;display:none" id="loading${d.productId}"></i>
+                                                                                                                                                                            <span id="result${d.productId}" class="ms-2" style="color: black;"></span>
+                                                                                                                                                                 </div>`
             );
         };
         // 推薦變更事件W
