@@ -109,7 +109,7 @@
             </div>
         </div>
         @* main start *@
-        <div id="main" class='layout-navbar navbar-fixed mainbody'>
+        <div id="main" class='layout-navbar navbar-fixed mainbody position-relative'>
             <header>
                 @* navbar start *@
                 <nav class="navbar navbar-expand navbar-light navbar-top">
@@ -256,18 +256,23 @@
             const theme = document.documentElement.getAttribute('data-bs-theme');
             const logoText = document.querySelector("#logoText");
             const logoImg = document.querySelector("#logoImg");
-            
+            const html = document.querySelector("html");
+
             if (theme === "dark") {
                 // 切回 白天模式
                 logoText.classList.remove('text-dark');
                 logoText.classList.add('text-white');
                 logoImg.src = '/img/logo.png';
+                html.classList.remove('light');
+                html.classList.add('dark');
             }
             else {
                 // 切回 夜晚模式
                 logoText.classList.remove('text-white');
                 logoText.classList.add('text-dark');
                 logoImg.src = '/img/logo-dark.png';
+                html.classList.remove('dark');
+                html.classList.add('light');
             }
         }
 
@@ -278,17 +283,22 @@
             const theme = document.documentElement.getAttribute('data-bs-theme');
             const logoText = document.querySelector("#logoText");
             const logoImg = document.querySelector("#logoImg");
+            const html = document.querySelector("html");
             if (theme === "dark") {
                 // 切回 夜晚模式
                 logoText.classList.remove('text-white');
                 logoText.classList.add('text-dark');
                 logoImg.src = '/img/logo-dark.png';
+                html.classList.remove('dark');
+                html.classList.add('light');
             }
             else {
                 // 切回 白天模式
                 logoText.classList.remove('text-dark');
                 logoText.classList.add('text-white');
                 logoImg.src = '/img/logo.png';
+                html.classList.remove('light');
+                html.classList.add('dark');
             }
         }
 

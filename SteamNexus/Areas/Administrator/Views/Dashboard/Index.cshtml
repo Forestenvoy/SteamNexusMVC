@@ -29,7 +29,7 @@
           referrerpolicy="no-referrer" />
 }
 
-<div class="h-100 position-relative" id="System">
+<div class="h-100" id="System">
     <img src="~/img/loading-white.gif" class="position-absolute top-50 start-50 translate-middle" style="display:none" id="systemLoading" />
 </div>
 
@@ -70,6 +70,7 @@
 
             $("#HardwareProductManageSystem").on("click", function (event) {
                 event.preventDefault();
+                // Loading 顯示
                 $("#systemLoading").show();
                 // 發送非同步GET請求
                 fetch(`@Url.Action("ProductManagement", "HardwareManagement", new { area = "Administrator" })`, {
@@ -82,9 +83,20 @@
                     // 解析 html
                     return response.text();
                 }).then(data => {
+                    // Loading 關閉
                     $("#systemLoading").hide();
+                    // 顯示 PartialView 資料
                     $("#System").html(data);
+                    // 顯示 SystemName
+                    const SystemName = `硬體產品管理`;
+                    $("#SystemName").text(SystemName);
+                    // 顯示 SystemMenu
+                    const SystemMenu = `<select  class="form-select" style="width:250px;height:40px" id="HardSelect">
+                            <option value="" disabled selected hidden>---- 請選擇 ----</option>
+                        </select>`;
+                    $("#SystemMenu").html(SystemMenu);
                 }).catch(error => {
+                    // Loading 關閉
                     $("#systemLoading").hide();
                     // 顯示 throw 的錯誤
                     alert(error);

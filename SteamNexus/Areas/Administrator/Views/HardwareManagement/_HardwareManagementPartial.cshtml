@@ -24,14 +24,14 @@
     }
 
     /* RowDetail Icon setting */
-    td.details-control .detailIcon {
+/*     td.details-control .detailIcon {
         cursor: pointer;
         display: flex;
         justify-content: center;
         align-items: center;
         font-size: 15px;
         color: black;
-    }
+    } */
 
     /* 推薦設定 文字顏色 */
     .green-row {
@@ -92,7 +92,6 @@
     <div class="container-fluid p-2">
         <div class="row">
             <div class="col-12 col-md-4 d-flex align-items-center justify-content-center">
-                <label class="text-white m-0 h3 me-2">硬體選擇</label>
                 <select asp-items="@ViewBag.ComputerParts" class="form-select" style="width:250px;height:40px" id="HardSelect">
                     <option value="" disabled selected hidden>---- 請選擇 ----</option>
                 </select>
