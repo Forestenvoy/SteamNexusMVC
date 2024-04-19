@@ -15,6 +15,55 @@
         text-align: end !important;
     }
 
+    /* 日夜模式 自定義 樣式 */
+    html[data-bs-theme="dark"] .Edit-btn {
+        background-color: #007FFF;
+    }
+
+        html[data-bs-theme="dark"] .Edit-btn svg {
+            color: white;
+        }
+
+    html[data-bs-theme="light"] .Edit-btn {
+        background-color: white;
+    }
+
+        html[data-bs-theme="light"] .Edit-btn svg {
+            color: #007FFF;
+        }
+
+    html[data-bs-theme="dark"] .Enter-btn {
+        background-color: #00FF00;
+    }
+
+        html[data-bs-theme="dark"] .Enter-btn svg {
+            color: white;
+        }
+
+    html[data-bs-theme="light"] .Enter-btn {
+        background-color: white;
+    }
+
+        html[data-bs-theme="light"] .Enter-btn svg {
+            color: #00FF00;
+        }
+
+    html[data-bs-theme="dark"] .Reset-btn {
+        background-color: #FF0000;
+    }
+
+        html[data-bs-theme="dark"] .Reset-btn svg {
+            color: white;
+        }
+
+    html[data-bs-theme="light"] .Reset-btn {
+        background-color: white;
+    }
+
+        html[data-bs-theme="light"] .Reset-btn svg {
+            color: #FF0000;
+        }
+
     /* 推薦設定 文字顏色 */
     .green-row {
         color: green !important;
@@ -86,7 +135,7 @@
         </div>
         @* 系統選單 *@
         <div class="col-12 col-md-6 order-md-2 d-flex justify-content-center justify-content-md-end" id="SystemMenu">
-            <select asp-items="@ViewBag.ComputerParts" class="form-select " style="width:250px;height:40px;margin-bottom:8px" id="HardSelect" data-bs-theme="dark">
+            <select asp-items="@ViewBag.ComputerParts" class="form-select " style="width:250px;height:40px;margin-bottom:8px" id="HardSelect">
                 <option value="" disabled selected hidden>---- 請選擇硬體 ----</option>
             </select>
         </div>
@@ -276,10 +325,10 @@
                         // 取得 productId
                         let productId = row.productId;
                         // 編輯按鈕
-                        let editEle = `<button id="${productId}_edit" class="btn btn-primary Edit-btn d-flex justify-content-center align-items-center" style="width:30px;height:30px;" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-pen-to-square" style="color: #ffffff;"></i></button>`;
+                        let editEle = `<button id="${productId}_edit" class="btn Edit-btn d-flex justify-content-center align-items-center" style="width:30px;height:30px;" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-pen-to-square"></i></button>`;
                         let div = `<div id="${productId}_div">${editEle}</div>`;
                         // 復原按鈕
-                        let resetEle = `<button id="${productId}_reset" class="btn btn-danger Reset-btn d-flex justify-content-center align-items-center" style="width:30px;height:30px;" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-rotate-right" style="color: #ffffff;"></i></button>`;
+                        let resetEle = `<button id="${productId}_reset" class="btn Reset-btn d-flex justify-content-center align-items-center" style="width:30px;height:30px;" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-rotate-right"></i></button>`;
                         if (type === 'display') {
                             return `${div}&nbsp;&nbsp;&nbsp;${resetEle}`;
                         }
@@ -289,7 +338,12 @@
                 }
             ],
             // 標頭固定
-            fixedHeader: true,
+            fixedHeader: {
+                // 固定 header
+                header: true,
+                // 使用導覽欄的高度作為偏移量
+                headerOffset: $('#pageNav').outerHeight(),
+            },
             // 響應式設計
             responsive: true,
             // 語言設定
@@ -353,9 +407,9 @@
             // 取得 ID
             let productId = Number($(this).attr('id').slice(0, -5));
             // 更換成確認按鈕
-            let enterEle = `<button id="${productId}_enter" class="btn btn-success Enter-btn d-flex justify-content-center align-items-center" style="width:30px;height:30px;" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-check" style="color: #ffffff;"></i></button>`;
+            let enterEle = `<button id="${productId}_enter" class="btn Enter-btn d-flex justify-content-center align-items-center" style="width:30px;height:30px;" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-check"></i></button>`;
             $(`#${productId}_div`).html(enterEle);
-            
+
         });
 
         // 資料變更 ~ 當任何具有 Enter-btn 的元素被點擊時觸發
@@ -363,7 +417,7 @@
             // 取得 ID
             let productId = Number($(this).attr('id').slice(0, -6));
             // 更換成編輯按鈕
-            let editEle = `<button id="${productId}_edit" class="btn btn-primary Edit-btn d-flex justify-content-center align-items-center" style="width:30px;height:30px;" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-pen-to-square" style="color: #ffffff;"></i></button>`;
+            let editEle = `<button id="${productId}_edit" class="btn Edit-btn d-flex justify-content-center align-items-center" style="width:30px;height:30px;" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-pen-to-square"></i></button>`;
             $(`#${productId}_div`).html(editEle);
 
         });
