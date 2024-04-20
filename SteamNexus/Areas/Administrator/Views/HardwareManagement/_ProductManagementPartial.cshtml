@@ -211,107 +211,112 @@
         </thead>
     </table>
 </section>
-<img src="~/img/loading-block-white.gif" style="width:30px;height:30px;display:none" id="HardwareLoading" />
-<span id="UpdateResult" style="color:white" class="h3"></span>
+@* 防偽標籤 生成(會是個 input hidden 元素) *@
+@Html.AntiForgeryToken();
+@* 
+    目的: 防止 CSRF 攻擊 
+    也會生成兩個 cookie
+    AntiforgeryCookie => 存的是 防偽標籤 值
+    .AspNetCore.Antiforgery.名稱 => 存的是 防偽標籤的 名稱
+*@
 @* PartialView 的 JavaScript *@
 <script>
     $(document).ready(function () {
 
-        let HardAddress = "https://localhost:7097";
         // 日夜變更按鈕
         const btnTheme = document.querySelector("#toggle-dark");
         const tableThead = document.querySelector("#HardwareThead");
+        let HardAddress = "https://localhost:7097";
+        // // 單一零件更新
+        // function UpdateOneHardware() {
+        //     // 清空結果訊息
+        //     $("#UpdateResult").text("");
+        //     // 取得 零件ID
+        //     let p = getType();
+        //     if (p == "NoSeclect") {
+        //         $("#UpdateResult").text("請選擇要更新的硬體種類").fadeIn(200, function () {
+        //             // 在 fadeIn 完成后延遲 1000 毫秒，執行 fadeOut
+        //             $(this).delay(1000).fadeOut(300);
+        //         });;;
+        //         return;
+        //     }
+        //     // 顯示進度條
+        //     $("#HardwareLoading").show();
+        //     // 發送非同步POST請求 ==> 資料庫資料變更
+        //     let itemid = Number(p.slice(5));
+        //     var data = {
+        //         Type: itemid
+        //     };
+        //     fetch(`@Url.Action("UpdateHardwareOne", "Admin")`, {
+        //         method: "POST",
+        //         body: JSON.stringify(data),
+        //         headers: {
+        //             "Content-Type": "application/json"
+        //         }
+        //     }).then(result => {
+        //         // 此時 result 是一個請求結果的物件
+        //         // 注意傳回值型態，字串用 text()，JSON 用 json()
+        //         $("#HardwareLoading").hide();
+        //         //  如過 HTTP 響應的狀態馬碼在 200 到 299 的範圍內 ==> .ok 會回傳 true
+        //         if (result.ok) {
+        //             return result.text();
+        //         }
+        //     }).then(data => {
+        //         // 此時 data 為上一個 then 回傳的資料
+        //         $("#UpdateResult").text(data).fadeIn(200, function () {
+        //             // 在 fadeIn 完成后延遲 1000 毫秒，執行 fadeOut
+        //             $(this).delay(1000).fadeOut(300);
+        //         });;
+        //         getdatatableData();
+        //     }).catch(error => {
+        //         $("#HardwareLoading").hide();
+        //         $("#UpdateResult").text(data).fadeIn(200, function () {
+        //             // 在 fadeIn 完成后延遲 1000 毫秒，執行 fadeOut
+        //             $(this).delay(1000).fadeOut(300);
+        //         });;
+        //         alert(error);
+        //     });
+        // };
 
-        // 單一零件更新
-        function UpdateOneHardware() {
-            // 清空結果訊息
-            $("#UpdateResult").text("");
-            // 取得 零件ID
-            let p = getType();
-            if (p == "NoSeclect") {
-                $("#UpdateResult").text("請選擇要更新的硬體種類").fadeIn(200, function () {
-                    // 在 fadeIn 完成后延遲 1000 毫秒，執行 fadeOut
-                    $(this).delay(1000).fadeOut(300);
-                });;;
-                return;
-            }
-            // 顯示進度條
-            $("#HardwareLoading").show();
-            // 發送非同步POST請求 ==> 資料庫資料變更
-            let itemid = Number(p.slice(5));
-            var data = {
-                Type: itemid
-            };
-            fetch(`@Url.Action("UpdateHardwareOne", "Admin")`, {
-                method: "POST",
-                body: JSON.stringify(data),
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            }).then(result => {
-                // 此時 result 是一個請求結果的物件
-                // 注意傳回值型態，字串用 text()，JSON 用 json()
-                $("#HardwareLoading").hide();
-                //  如過 HTTP 響應的狀態馬碼在 200 到 299 的範圍內 ==> .ok 會回傳 true
-                if (result.ok) {
-                    return result.text();
-                }
-            }).then(data => {
-                // 此時 data 為上一個 then 回傳的資料
-                $("#UpdateResult").text(data).fadeIn(200, function () {
-                    // 在 fadeIn 完成后延遲 1000 毫秒，執行 fadeOut
-                    $(this).delay(1000).fadeOut(300);
-                });;
-                getdatatableData();
-            }).catch(error => {
-                $("#HardwareLoading").hide();
-                $("#UpdateResult").text(data).fadeIn(200, function () {
-                    // 在 fadeIn 完成后延遲 1000 毫秒，執行 fadeOut
-                    $(this).delay(1000).fadeOut(300);
-                });;
-                alert(error);
-            });
-        };
-
-        // 全零件更新
-        function UpdateAllHardware() {
-            // 清空結果訊息
-            $("#UpdateResult").text("");
-            // 顯示進度條
-            $("#HardwareLoading").show();
-            // 發送非同步POST請求 ==> 資料庫資料變更
-            fetch(`@Url.Action("UpdateHardwareAll", "Admin")`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            }).then(result => {
-                // 此時 result 是一個請求結果的物件
-                // 注意傳回值型態，字串用 text()，JSON 用 json()
-                $("#HardwareLoading").hide();
-                //  如過 HTTP 響應的狀態馬碼在 200 到 299 的範圍內 ==> .ok 會回傳 true
-                if (result.ok) {
-                    return result.text();
-                }
-            }).then(data => {
-                // 此時 data 為上一個 then 回傳的資料
-                $("#UpdateResult").text(data).fadeIn(200, function () {
-                    // 在 fadeIn 完成后延遲 1000 毫秒，執行 fadeOut
-                    $(this).delay(1000).fadeOut(300);
-                });;
-                let p = getType();
-                if (p != "NoSeclect") {
-                    getdatatableData();
-                }
-            }).catch(error => {
-                $("#HardwareLoading").hide();
-                $("#UpdateResult").text(data).fadeIn(200, function () {
-                    // 在 fadeIn 完成后延遲 1000 毫秒，執行 fadeOut
-                    $(this).delay(1000).fadeOut(300);
-                });;
-                alert(error);
-            });
-        };
+        // // 全零件更新
+        // function UpdateAllHardware() {
+        //     // 清空結果訊息
+        //     $("#UpdateResult").text("");
+        //     // 顯示進度條
+        //     $("#HardwareLoading").show();
+        //     // 發送非同步POST請求 ==> 資料庫資料變更
+        //     fetch(`@Url.Action("UpdateHardwareAll", "Admin")`, {
+        //         method: "POST",
+        //         headers: {
+        //             "Content-Type": "application/json"
+        //         }
+        //     }).then(result => {
+        //         // 此時 result 是一個請求結果的物件
+        //         // 注意傳回值型態，字串用 text()，JSON 用 json()
+        //         $("#HardwareLoading").hide();
+        //         //  如過 HTTP 響應的狀態馬碼在 200 到 299 的範圍內 ==> .ok 會回傳 true
+        //         if (result.ok) {
+        //             return result.text();
+        //         }
+        //     }).then(data => {
+        //         // 此時 data 為上一個 then 回傳的資料
+        //         $("#UpdateResult").text(data).fadeIn(200, function () {
+        //             // 在 fadeIn 完成后延遲 1000 毫秒，執行 fadeOut
+        //             $(this).delay(1000).fadeOut(300);
+        //         });;
+        //         let p = getType();
+        //         if (p != "NoSeclect") {
+        //             getdatatableData();
+        //         }
+        //     }).catch(error => {
+        //         $("#HardwareLoading").hide();
+        //         $("#UpdateResult").text(data).fadeIn(200, function () {
+        //             // 在 fadeIn 完成后延遲 1000 毫秒，執行 fadeOut
+        //             $(this).delay(1000).fadeOut(300);
+        //         });;
+        //         alert(error);
+        //     });
+        // };
 
         // 初始化 Datatables
         var datatable = new DataTable('#HardwareManageTable', {
@@ -439,7 +444,7 @@
                             // 按鈕點擊事件
                             action: function (e, dt, node, config) {
                                 // 單一零件更新
-                                UpdateOneHardware();
+                                // UpdateOneHardware();
                             }
                         },
                         {
@@ -448,7 +453,7 @@
                             // 按鈕點擊事件
                             action: function (e, dt, node, config) {
                                 // 全零件更新
-                                UpdateAllHardware();
+                                // UpdateAllHardware();
                             }
                         },
 
@@ -457,8 +462,32 @@
             },
         });
 
+        console.log(document.cookie);
 
-        // 資料編輯 ~ 當任何具有 Edit-btn 的元素被點擊時觸發
+        // 獲取防偽標籤值
+        function getAntiForgeryToken() {
+            // 獲取防偽標籤值 的 Cookie
+            let antiForgeryCookie = document.cookie
+                .split('; ')
+                .find(cookie => cookie.startsWith('AntiforgeryCookie='));
+
+            if (antiForgeryCookie) {
+                let tokenValue = antiForgeryCookie.split('=')[1];
+
+                // 獲取防偽標籤名稱 的 Cookie
+                let tokenName = document.cookie
+                    .split('; ')
+                    .find(cookie => cookie.startsWith('.AspNetCore.Antiforgery.'))
+                    .split('=')[0]
+                    .split('.')[3];
+
+                return { name: tokenName, value: tokenValue };
+            }
+
+            return null;
+        }
+
+        // 資料編輯 ~ 當任何具有 Edit-btn 類別元素被點擊時觸發
         $(document).on('click', '.Edit-btn', function () {
             // 被隱藏的按鈕不能觸發
             if ($(this).css('display') !== 'none') {
@@ -475,7 +504,7 @@
             }
         });
 
-        // 資料變更 ~ 當任何具有 Enter-btn 的元素被點擊時觸發
+        // 資料變更 ~ 當任何具有 Enter-btn 類別元素被點擊時觸發
         $(document).on('click', '.Enter-btn', function () {
             // 被隱藏的按鈕不能觸發
             if ($(this).css('display') !== 'none') {
@@ -485,12 +514,44 @@
                 let editEle = `<button class="${productId}_edit btn Edit-btn d-flex justify-content-center align-items-center" style="width:30px;height:30px;" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-pen-to-square"></i></button>`;
                 $(`#${productId}_div`).html(editEle);
 
-                // 資料庫變更
                 // 取資料 ~ 只取看的見的元素
                 let wattVal = Number($(`.${productId}_watt:visible`).val());
                 let recVal = Number($(`.${productId}_recommend:visible`).val());
-                
 
+
+                // 顯示進度條
+                $("#HardwareLoading").show();
+                // 資料包裝
+                var data = {
+                    ProductId: productId,
+                    Wattage: wattVal,
+                    Recommend: recVal
+                };
+                // 獲取防偽標籤值
+                let csrfToken = document.querySelector('input[name="__Antiforgery__SteamNexus"]').value;
+                //  發送非同步POST請求 ==> 資料庫資料變更
+                fetch(`@Url.Action("ProductDataUpdate", "HardwareManagement", new { area = "Administrator" })`, {
+                    method: "POST",
+                    body: JSON.stringify(data),
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": csrfToken
+                    }
+                }).then(result => {
+                    // 隱藏進度條
+                    $("#HardwareLoading").hide();
+                    //  如過 HTTP 響應的狀態馬碼在 200 到 299 的範圍內 ==> .ok 會回傳 true
+                    if (result.ok) {
+                        // 此時 result 是一個請求結果的物件 => 注意傳回值型態，字串用 text()，JSON 用 json()
+                        return result.text();
+                    }
+                }).then(data => {
+                    // 此時 data 為上一個 then 回傳的資料
+                    console.log(data);
+                }).catch(error => {
+                    // 顯示 錯誤訊息
+                    console.error(error.message);
+                });
 
                 // 恢復預設模式 ~ 關閉 td 編輯功能
                 $(`.${productId}_watt`).attr('disabled', true);
@@ -501,7 +562,7 @@
             }
         });
 
-        // 資料還原 ~ 當任何具有 Enter-btn 的元素被點擊時觸發
+        // 資料還原 ~ 當任何具有 Reset-btn 類別元素被點擊時觸發
         $(document).on('click', '.Reset-btn', function () {
             // 被隱藏的按鈕不能觸發
             if ($(this).css('display') !== 'none') {
@@ -509,6 +570,10 @@
                 let productId = Number($(this).attr('class').slice(0, 5));
             }
         });
+
+
+
+
 
         // function btnResetEvent() {
         //     // 綁定所有 button 標籤 id 為 _enter 結尾的元素
@@ -649,33 +714,33 @@
         //             ProductId: itemid,
         //             recommend: value
         //         };
-        //         fetch(`${HardAddress}@Url.Action("recommendChange", "Admin")`, {
-        //             method: "POST",
-        //             body: JSON.stringify(data),
-        //             headers: {
-        //                 "Content-Type": "application/json"
-        //             }
-        //         }).then(result => {
-        //             // 此時 result 是一個請求結果的物件
-        //             // 注意傳回值型態，字串用 text()，JSON 用 json()
-        //             $("#loading" + itemid).hide();
-        //             //  如過 HTTP 響應的狀態馬碼在 200 到 299 的範圍內 ==> .ok 會回傳 true
-        //             if (result.ok) {
-        //                 return result.text();
-        //             }
-        //         }).then(data => {
-        //             // 此時 data 為上一個 then 回傳的資料
-        //             $("#result" + itemid).text(data).fadeIn(200, function () {
-        //                 // 在 fadeIn 完成后延遲 1000 毫秒，執行 fadeOut
-        //                 $(this).delay(1000).fadeOut(300);
-        //             });;
-        //         }).catch(error => {
-        //             $("#result" + itemid).text(data).fadeIn(200, function () {
-        //                 // 在 fadeIn 完成后延遲 1000 毫秒，執行 fadeOut
-        //                 $(this).delay(1000).fadeOut(300);
-        //             });;
-        //             alert(error);
-        //         });
+        // fetch(`${HardAddress}@Url.Action("recommendChange", "Admin")`, {
+        //     method: "POST",
+        //     body: JSON.stringify(data),
+        //     headers: {
+        //         "Content-Type": "application/json"
+        //     }
+        // }).then(result => {
+        //     // 此時 result 是一個請求結果的物件
+        //     // 注意傳回值型態，字串用 text()，JSON 用 json()
+        //     $("#loading" + itemid).hide();
+        //     //  如過 HTTP 響應的狀態馬碼在 200 到 299 的範圍內 ==> .ok 會回傳 true
+        //     if (result.ok) {
+        //         return result.text();
+        //     }
+        // }).then(data => {
+        //     // 此時 data 為上一個 then 回傳的資料
+        //     $("#result" + itemid).text(data).fadeIn(200, function () {
+        //         // 在 fadeIn 完成后延遲 1000 毫秒，執行 fadeOut
+        //         $(this).delay(1000).fadeOut(300);
+        //     });;
+        // }).catch(error => {
+        //     $("#result" + itemid).text(data).fadeIn(200, function () {
+        //         // 在 fadeIn 完成后延遲 1000 毫秒，執行 fadeOut
+        //         $(this).delay(1000).fadeOut(300);
+        //     });;
+        //     alert(error.message);
+        // });
 
         //         // 前端視覺效果
         //         let divid = "recommend" + itemid;

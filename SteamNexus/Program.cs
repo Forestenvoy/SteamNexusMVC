@@ -29,19 +29,11 @@ builder.Services.AddTransient<CoolPCWebScraping>();
 builder.Services.AddAntiforgery(options =>
 {
     // 指定在 HTML 表單中生成的隱藏欄位的名稱，該欄位將包含防偽標籤值。 <== 默認名稱可能會被猜出來
-    options.FormFieldName = "Antiforgery_SteamNexus";
+    options.FormFieldName = "__Antiforgery__SteamNexus";
     // 防偽標籤名稱
     options.HeaderName = "X-CSRF-TOKEN";
     // 防止 X-Frame-Options 標頭被禁用 <== 網頁不能被攻擊者嵌入到其他網站的 iframe 中
     options.SuppressXFrameOptionsHeader = false;
-
-    // 將防偽標籤值藏在 cookie 中
-    // 設置 CSRF 令牌的 cookie 名稱
-    options.Cookie.Name = "AntiforgeryCookie";
-    // 指定可以存取該 cookie 的網域
-    //options.Cookie.Domain = "example.com";
-    // HTTPOnly ==>  JavaScript 代碼將無法訪問該 cookie，用於防止 XSS 攻擊
-    options.Cookie.HttpOnly = true; 
 });
 
 builder.Services.AddControllersWithViews();

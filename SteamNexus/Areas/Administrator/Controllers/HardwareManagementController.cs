@@ -28,7 +28,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
         }
 
         // 回傳硬體產品管理頁面 PartialView
-        // Administrator/HardwareManagement/ProductManagement
+        // GET: Administrator/HardwareManagement/ProductManagement
         [HttpGet]
         public IActionResult ProductManagement()
         {
@@ -38,7 +38,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
         }
 
         // 根據硬體規格回傳產品列表
-        // GET: Admin/HardwareData
+        // GET: Administrator/HardwareManagement/HardwareData
         [HttpGet]
         public IActionResult HardwareData(int Type)
         {
@@ -59,21 +59,27 @@ namespace SteamNexus.Areas.Administrator.Controllers
             return Json(result);
         }
 
-        // 推薦變更呼叫
-        public class RecommondData
+        // 硬體產品 ViewModel
+        public class HardwareProduct
         {
             [Required]
             [Range(10000, 99999)]
             public int ProductId { get; set; }
 
             [Required]
+            [Range(0, 2000)]
+            public int Wattage { get; set; }
+
+            [Required]
             [Range(0, 4)]
-            public int recommend { get; set; }
+            public int Recommend { get; set; }
         }
 
-        // POST: Admin/recommendChange
+        // 產品資料 Update
+        // POST: Administrator/HardwareManagement/ProductDataUpdate
         [HttpPost]
-        public IActionResult recommendChange([FromBody] RecommondData data)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ProductDataUpdate([FromBody] HardwareProduct data)
         {
             // 如果驗證合法
             if (ModelState.IsValid)
@@ -83,21 +89,35 @@ namespace SteamNexus.Areas.Administrator.Controllers
                     .FirstOrDefault();
                 if (product != null)
                 {
-                    product.Recommend = data.recommend;
-                    _context.SaveChanges();
+                    product.Wattage = data.Wattage;
+                    product.Recommend = data.Recommend;
+                    await _context.SaveChangesAsync();
+                    // 返回 200 狀態碼 ~ 變更成功
                     return Ok("變更成功");
                 }
                 else
                 {
-                    return Ok("找不到產品");
+                    // 返回 404 狀態碼 ~ 找不到產品
+                    return NotFound("找不到產品");
                 }
             }
             else
             {
+                // 返回 400 狀態碼 ~ 驗證不合法
                 return BadRequest(ModelState);
             }
-
         }
+
+
+
+
+
+
+
+
+
+
+
 
         // 單一零件更新
         public class HardwareType
