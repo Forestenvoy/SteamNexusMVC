@@ -125,12 +125,6 @@
         color: red !important;
     }
 
-    /* 列 按鈕樣式 */
-    .row-button {
-        border-radius: 5px;
-        background-color: gray;
-    }
-
     /* popover 初始樣式 */
     .popover {
         /* 初始透明度 0 */
@@ -187,7 +181,7 @@
     <div class="row">
         @* 系統名稱 *@
         <div class="col-12 col-md-6 order-md-1 d-flex justify-content-center justify-content-md-start">
-            <h2 id="SystemName" style="margin-top: 8px;">硬體管理系統</h2>
+            <h2 id="SystemName" style="margin-top: 8px;">產品管理系統</h2>
         </div>
         @* 系統選單 *@
         <div class="col-12 col-md-6 order-md-2 d-flex justify-content-center justify-content-md-end" id="SystemMenu">
@@ -474,7 +468,6 @@
                 let enterEle = `<button class="${productId}_enter btn Enter-btn d-flex justify-content-center align-items-center" style="width:30px;height:30px;" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-check"></i></button>`;
                 $(`#${productId}_div`).html(enterEle);
                 // 編輯模式 ~ 開啟 td 編輯功能
-                console.log($(`#${productId}_watt`));
                 $(`.${productId}_watt`).prop('disabled', false);
                 $(`.${productId}_watt`).removeClass("defaultcellType");
                 $(`.${productId}_recommend`).prop('disabled', false);
@@ -493,6 +486,10 @@
                 $(`#${productId}_div`).html(editEle);
 
                 // 資料庫變更
+                // 取資料 ~ 只取看的見的元素
+                let wattVal = Number($(`.${productId}_watt:visible`).val());
+                let recVal = Number($(`.${productId}_recommend:visible`).val());
+                
 
 
                 // 恢復預設模式 ~ 關閉 td 編輯功能
