@@ -30,7 +30,9 @@
 }
 
 <div class="h-100" id="System">
-    <img src="~/img/loading-white.gif" class="position-absolute top-50 start-50 translate-middle" style="display:none" id="systemLoading" />
+    <div class="spinner-border position-absolute" style="width: 4rem; height: 4rem;top: calc(50% - 28px);left: calc(50% - 28px);display:none" role="status" id="systemLoading">
+        <span class="visually-hidden">Loading...</span>
+    </div>
 </div>
 
 @section Scripts

@@ -120,10 +120,18 @@
     }
 
     /* 欄位預設樣式 */
-    .defaultcellType {
+    html[data-bs-theme="dark"] .defaultcellType {
         border: none; /* 取消邊框 */
         background-color: transparent; /* 背景透明 */
         appearance: none; /* 去除默認樣式 */
+        color: #c2c2d9; /* 文字顏色 */
+    }
+
+    html[data-bs-theme="light"] .defaultcellType {
+        border: none; /* 取消邊框 */
+        background-color: transparent; /* 背景透明 */
+        appearance: none; /* 去除默認樣式 */
+        color: #607080; /* 文字顏色 */
     }
 </style>
 @* PartialView 的 HTML *@
@@ -282,7 +290,7 @@
                         // 取得 productId
                         let productId = row.productId;
                         // input 欄位 ~ 可編輯
-                        let inputEle = `<input type="text" class="defaultcellType" id="${productId}_watt" value="${data}" style="width: 50px; text-align: center;"  disabled>`;
+                        let inputEle = `<input type="text" class="${productId}_watt defaultcellType" value="${data}" style="width: 50px; text-align: center;"  disabled>`;
                         return inputEle;
                     },
                     // 將此列的數據類型設置為數字 ~ 排序才會正常運作
@@ -310,7 +318,7 @@
                         const ele3 = `<option value = "2" ${isRec3}>優良</option>`;
                         const ele4 = `<option value = "3" ${isRec4}>完美</option>`;
                         // select 欄位 ~ 可編輯
-                        let selectEle = `<select id="${productId}_recommend" class="defaultcellType" disabled>${ele1}${ele2}${ele3}${ele4}</select>`;
+                        let selectEle = `<select class="${productId}_recommend defaultcellType" disabled>${ele1}${ele2}${ele3}${ele4}</select>`;
                         return selectEle;
                     },
                     // 將此列的數據類型設置為數字 ~ 排序才會正常運作
@@ -325,10 +333,10 @@
                         // 取得 productId
                         let productId = row.productId;
                         // 編輯按鈕
-                        let editEle = `<button id="${productId}_edit" class="btn Edit-btn d-flex justify-content-center align-items-center" style="width:30px;height:30px;" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-pen-to-square"></i></button>`;
+                        let editEle = `<button class="${productId}_edit btn Edit-btn d-flex justify-content-center align-items-center" style="width:30px;height:30px;" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-pen-to-square"></i></button>`;
                         let div = `<div id="${productId}_div">${editEle}</div>`;
                         // 復原按鈕
-                        let resetEle = `<button id="${productId}_reset" class="btn Reset-btn d-flex justify-content-center align-items-center" style="width:30px;height:30px;" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-rotate-right"></i></button>`;
+                        let resetEle = `<button class="${productId}_reset btn Reset-btn d-flex justify-content-center align-items-center" style="width:30px;height:30px;" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-rotate-right"></i></button>`;
                         if (type === 'display') {
                             return `${div}&nbsp;&nbsp;&nbsp;${resetEle}`;
                         }
@@ -369,6 +377,8 @@
                 } else if (data.recommend === 3) {
                     row.classList.add('red-row');
                 }
+                // 加上 ID
+                $(row).attr('id', data.productId + '_row');
                 // 為特定行加入 class ==> 不會影響 th
                 $(row).find('td:eq(6)').addClass('d-flex');
                 $(row).find('td:eq(6)').addClass('justify-content-between');
@@ -405,16 +415,16 @@
         // 資料編輯 ~ 當任何具有 Edit-btn 的元素被點擊時觸發
         $(document).on('click', '.Edit-btn', function () {
             // 取得 ID
-            let productId = Number($(this).attr('id').slice(0, -5));
+            let productId = Number($(this).attr('class').slice(0, 5));
             // 更換成確認按鈕
-            let enterEle = `<button id="${productId}_enter" class="btn Enter-btn d-flex justify-content-center align-items-center" style="width:30px;height:30px;" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-check"></i></button>`;
+            let enterEle = `<button class="${productId}_enter btn Enter-btn d-flex justify-content-center align-items-center" style="width:30px;height:30px;" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-check"></i></button>`;
             $(`#${productId}_div`).html(enterEle);
-
             // 編輯模式 ~ 開啟 td 編輯功能
-            $(`#${productId}_watt`).attr('disabled', false);
-            $(`#${productId}_watt`).removeClass("defaultcellType");
-            $(`#${productId}_recommend`).attr('disabled', false);
-            $(`#${productId}_recommend`).removeClass("defaultcellType");
+            console.log($(`#${productId}_watt`));
+            $(`.${productId}_watt`).prop('disabled', false);
+            $(`.${productId}_watt`).removeClass("defaultcellType");
+            $(`.${productId}_recommend`).prop('disabled', false);
+            $(`.${productId}_recommend`).removeClass("defaultcellType");
 
 
 
@@ -423,16 +433,15 @@
         // 資料變更 ~ 當任何具有 Enter-btn 的元素被點擊時觸發
         $(document).on('click', '.Enter-btn', function () {
             // 取得 ID
-            let productId = Number($(this).attr('id').slice(0, -6));
+            let productId = Number($(this).attr('class').slice(0, 5));
             // 更換成編輯按鈕
-            let editEle = `<button id="${productId}_edit" class="btn Edit-btn d-flex justify-content-center align-items-center" style="width:30px;height:30px;" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-pen-to-square"></i></button>`;
+            let editEle = `<button class="${productId}_edit btn Edit-btn d-flex justify-content-center align-items-center" style="width:30px;height:30px;" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-pen-to-square"></i></button>`;
             $(`#${productId}_div`).html(editEle);
-
             // 恢復預設模式 ~ 關閉 td 編輯功能
-            $(`#${productId}_watt`).attr('disabled', true);
-            $(`#${productId}_watt`).addClass("defaultcellType");
-            $(`#${productId}_recommend`).attr('disabled', true);
-            $(`#${productId}_recommend`).addClass("defaultcellType");
+            $(`.${productId}_watt`).attr('disabled', true);
+            $(`.${productId}_watt`).addClass("defaultcellType");
+            $(`.${productId}_recommend`).attr('disabled', true);
+            $(`.${productId}_recommend`).addClass("defaultcellType");
 
 
 
@@ -441,7 +450,7 @@
         // 資料還原 ~ 當任何具有 Enter-btn 的元素被點擊時觸發
         $(document).on('click', '.Reset-btn', function () {
             // 取得 ID
-            let productId = Number($(this).attr('id').slice(0, -6));
+            let productId = Number($(this).attr('class').slice(0, 5));
 
         });
 
