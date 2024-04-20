@@ -95,6 +95,34 @@
                 });
             });
 
+
+            $("#GamesManageSystem").on("click", function (event) {
+                event.preventDefault();
+                // Loading 顯示
+                $("#systemLoading").show();
+                // 發送非同步GET請求
+                fetch(`@Url.Action("GetIndexPartialView", "GamesManagement", new { area = "Administrator" })`, {
+                    method: "GET"
+                }).then(response => {
+                    // 確保請求是否成功
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    // 解析 html
+                    return response.text();
+                }).then(data => {
+                    // Loading 關閉
+                    $("#systemLoading").hide();
+                    // 顯示 PartialView 資料
+                    $("#System").html(data);
+                }).catch(error => {
+                    // Loading 關閉
+                    $("#systemLoading").hide();
+                    // 顯示 throw 的錯誤
+                    alert(error);
+                });
+            });
+
         })
     </script>
 }
