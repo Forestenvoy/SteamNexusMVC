@@ -24,6 +24,14 @@
             color: white;
         }
 
+        html[data-bs-theme="dark"] .Edit-btn:hover {
+            background-color: white;
+        }
+
+            html[data-bs-theme="dark"] .Edit-btn:hover svg {
+                color: #007FFF;
+            }
+
     html[data-bs-theme="light"] .Edit-btn {
         background-color: white;
     }
@@ -31,6 +39,14 @@
         html[data-bs-theme="light"] .Edit-btn svg {
             color: #007FFF;
         }
+
+        html[data-bs-theme="light"] .Edit-btn:hover {
+            background-color: #007FFF;
+        }
+
+            html[data-bs-theme="light"] .Edit-btn:hover svg {
+                color: white;
+            }
 
     html[data-bs-theme="dark"] .Enter-btn {
         background-color: #00FF00;
@@ -40,6 +56,14 @@
             color: white;
         }
 
+        html[data-bs-theme="dark"] .Enter-btn:hover {
+            background-color: white;
+        }
+
+            html[data-bs-theme="dark"] .Enter-btn:hover svg {
+                color: #00FF00;
+            }
+
     html[data-bs-theme="light"] .Enter-btn {
         background-color: white;
     }
@@ -47,6 +71,14 @@
         html[data-bs-theme="light"] .Enter-btn svg {
             color: #00FF00;
         }
+
+        html[data-bs-theme="light"] .Enter-btn:hover {
+            background-color: #00FF00;
+        }
+
+            html[data-bs-theme="light"] .Enter-btn:hover svg {
+                color: white;
+            }
 
     html[data-bs-theme="dark"] .Reset-btn {
         background-color: #FF0000;
@@ -56,6 +88,14 @@
             color: white;
         }
 
+        html[data-bs-theme="dark"] .Reset-btn:hover {
+            background-color: white;
+        }
+
+            html[data-bs-theme="dark"] .Reset-btn:hover svg {
+                color: #FF0000;
+            }
+
     html[data-bs-theme="light"] .Reset-btn {
         background-color: white;
     }
@@ -63,6 +103,14 @@
         html[data-bs-theme="light"] .Reset-btn svg {
             color: #FF0000;
         }
+
+        html[data-bs-theme="light"] .Reset-btn:hover {
+            background-color: #FF0000;
+        }
+
+            html[data-bs-theme="light"] .Reset-btn:hover svg {
+                color: white;
+            }
 
     /* 推薦設定 文字顏色 */
     .green-row {
@@ -160,7 +208,11 @@
                 <th>價格</th>
                 <th>瓦數</th>
                 <th>推薦</th>
-                <th data-priority="2"></th>
+                <th data-priority="2" class="text-center">
+                    <div class="spinner-border spinner-border-sm" role="status" style="display:none" id="HardwareLoading">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </th>
             </tr>
         </thead>
     </table>
@@ -414,44 +466,51 @@
 
         // 資料編輯 ~ 當任何具有 Edit-btn 的元素被點擊時觸發
         $(document).on('click', '.Edit-btn', function () {
-            // 取得 ID
-            let productId = Number($(this).attr('class').slice(0, 5));
-            // 更換成確認按鈕
-            let enterEle = `<button class="${productId}_enter btn Enter-btn d-flex justify-content-center align-items-center" style="width:30px;height:30px;" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-check"></i></button>`;
-            $(`#${productId}_div`).html(enterEle);
-            // 編輯模式 ~ 開啟 td 編輯功能
-            console.log($(`#${productId}_watt`));
-            $(`.${productId}_watt`).prop('disabled', false);
-            $(`.${productId}_watt`).removeClass("defaultcellType");
-            $(`.${productId}_recommend`).prop('disabled', false);
-            $(`.${productId}_recommend`).removeClass("defaultcellType");
-
-
-
+            // 被隱藏的按鈕不能觸發
+            if ($(this).css('display') !== 'none') {
+                // 取得 ID
+                let productId = Number($(this).attr('class').slice(0, 5));
+                // 更換成確認按鈕
+                let enterEle = `<button class="${productId}_enter btn Enter-btn d-flex justify-content-center align-items-center" style="width:30px;height:30px;" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-check"></i></button>`;
+                $(`#${productId}_div`).html(enterEle);
+                // 編輯模式 ~ 開啟 td 編輯功能
+                console.log($(`#${productId}_watt`));
+                $(`.${productId}_watt`).prop('disabled', false);
+                $(`.${productId}_watt`).removeClass("defaultcellType");
+                $(`.${productId}_recommend`).prop('disabled', false);
+                $(`.${productId}_recommend`).removeClass("defaultcellType");
+            }
         });
 
         // 資料變更 ~ 當任何具有 Enter-btn 的元素被點擊時觸發
         $(document).on('click', '.Enter-btn', function () {
-            // 取得 ID
-            let productId = Number($(this).attr('class').slice(0, 5));
-            // 更換成編輯按鈕
-            let editEle = `<button class="${productId}_edit btn Edit-btn d-flex justify-content-center align-items-center" style="width:30px;height:30px;" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-pen-to-square"></i></button>`;
-            $(`#${productId}_div`).html(editEle);
-            // 恢復預設模式 ~ 關閉 td 編輯功能
-            $(`.${productId}_watt`).attr('disabled', true);
-            $(`.${productId}_watt`).addClass("defaultcellType");
-            $(`.${productId}_recommend`).attr('disabled', true);
-            $(`.${productId}_recommend`).addClass("defaultcellType");
+            // 被隱藏的按鈕不能觸發
+            if ($(this).css('display') !== 'none') {
+                // 取得 ID
+                let productId = Number($(this).attr('class').slice(0, 5));
+                // 更換成編輯按鈕
+                let editEle = `<button class="${productId}_edit btn Edit-btn d-flex justify-content-center align-items-center" style="width:30px;height:30px;" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-pen-to-square"></i></button>`;
+                $(`#${productId}_div`).html(editEle);
+
+                // 資料庫變更
 
 
+                // 恢復預設模式 ~ 關閉 td 編輯功能
+                $(`.${productId}_watt`).attr('disabled', true);
+                $(`.${productId}_watt`).addClass("defaultcellType");
+                $(`.${productId}_recommend`).attr('disabled', true);
+                $(`.${productId}_recommend`).addClass("defaultcellType");
 
+            }
         });
 
         // 資料還原 ~ 當任何具有 Enter-btn 的元素被點擊時觸發
         $(document).on('click', '.Reset-btn', function () {
-            // 取得 ID
-            let productId = Number($(this).attr('class').slice(0, 5));
-
+            // 被隱藏的按鈕不能觸發
+            if ($(this).css('display') !== 'none') {
+                // 取得 ID
+                let productId = Number($(this).attr('class').slice(0, 5));
+            }
         });
 
         // function btnResetEvent() {
