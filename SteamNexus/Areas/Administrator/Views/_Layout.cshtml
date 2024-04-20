@@ -10,13 +10,28 @@
     <link rel="stylesheet" href="~/lib/mazer/assets/compiled/css/app.css" asp-append-version="true">
     <link rel="stylesheet" href="~/lib/mazer/assets/compiled/css/app-dark.css" asp-append-version="true">
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
-
+    <link href="~/lib/animate/animate.min.css" rel="stylesheet"  asp-append-version="true"/>
     @* 自定義 CSS *@
-    <link href="~/css/admin.css" rel="stylesheet" />
+    <link href="~/css/admin.css" rel="stylesheet"  asp-append-version="true"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap" rel="stylesheet">
+    <link href="~/css/pagepreloader.css" rel="stylesheet" asp-append-version="true"/>
     @await RenderSectionAsync("Styles", required: false)
 </head>
 <body>
     <script src="~/lib/mazer/assets/static/js/initTheme.js"></script>
+    @* 預加載動畫方塊 start *@
+    <div class="pagepreloading-wrapper">
+        @* 方塊本體 *@
+        <div class="pagepreloading la-square-jelly-box la-3x">
+            @* 兩個 div 是陰影部分 *@
+            <div></div>
+            <div></div>
+        </div>
+        <div class="pagepreloading-text"><span class="indie-flower-regular" id="pageLoadingText">Loading </span></div>
+    </div>
+    @* 預加載動畫方塊 end *@
     <div id="app">
         <div id="sidebar">
             <div class="sidebar-wrapper active">
@@ -234,7 +249,8 @@
     <script src="~/lib/mazer/assets/static/js/components/dark.js"></script>
     <script src="~/lib/mazer/assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js"></script>
     <script src="~/lib/mazer/assets/compiled/js/app.js"></script>
-
+    <script src="~/lib/wow/wow.min.js"></script>
+    <script src="~/js/pagepreloader.js"></script>
     <script>
         const btnTheme = document.querySelector("#toggle-dark");
 

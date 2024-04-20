@@ -44,6 +44,16 @@
         .footer {
             line-height:1.5;
         }
+
+        .pagepostloading-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #494544;
+            z-index: 9999;
+        }
     </style>
     <!-- JavaScript Libraries -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -56,6 +66,10 @@
     @await RenderSectionAsync("Styles", required: false)
 </head>
 <body class="bg-dark d-flex flex-column h-100">
+    @* 網頁跳轉動畫 start *@
+    <div class="pagepostloading-wrapper" style="display:none">
+    </div>
+    @* 網頁跳轉動畫 start *@
     <header>
         <!-- header Start -->
         <div class="container-fluid bg-primary" >
@@ -80,12 +94,8 @@
                                 <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-controller="Admin" asp-action="Index">後台管理</a>
+                                <a class="nav-link" asp-area="" asp-controller="Admin" asp-action="Index">後台(old)</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" asp-area="Administrator" asp-controller="Dashboard" asp-action="Index">AreaTest</a>
-                            </li>
-
                             @* <a href="index.html" class="nav-item nav-link active text-secondary">Home</a>
                             <a href="about.html" class="nav-item nav-link">About</a>
                             <a href="service.html" class="nav-item nav-link">Services</a>
@@ -102,6 +112,7 @@
                             <a href="contact.html" class="nav-item nav-link">Contact</a> *@
                         </div>
                     </div>
+                    <a class="nav-link btn btn-secondary mx-2" asp-area="Administrator" asp-controller="Dashboard" asp-action="Index" id="adminlink">後台系統</a>
                     <div class="d-none d-xl-flex flex-shirink-0">
                         <!-- 搜尋 Start -->
                         <form asp-action="Create" class="d-flex flex-row">
@@ -167,6 +178,22 @@
     <!--particles scripts -->
     <script src="~/js/particles.js"></script>
     <script src="~/js/app.js"></script>
+
+    <script>
+        $("#adminlink").on("click", event => {
+            // 阻止默認行為，即跳轉
+            event.preventDefault();
+
+            // 顯示網頁跳轉動畫
+            $(".pagepostloading-wrapper").fadeIn(500);
+
+            // 一秒後執行跳轉
+            setTimeout(function () {
+                window.location.href = event.target.href;
+            }, 500);
+        })
+
+    </script>
 
 
     @await RenderSectionAsync("Scripts", required: false)
