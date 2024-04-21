@@ -9,27 +9,53 @@
     @* Mazer UI CSS *@
     <link rel="stylesheet" href="~/lib/mazer/assets/compiled/css/app.css" asp-append-version="true">
     <link rel="stylesheet" href="~/lib/mazer/assets/compiled/css/app-dark.css" asp-append-version="true">
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet" asp-append-version="true" />
     @* 自定義 CSS *@
-    <link href="~/css/admin.css" rel="stylesheet"  asp-append-version="true"/>
+    <link href="~/css/admin.css" rel="stylesheet" asp-append-version="true" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap" rel="stylesheet">
-    <link href="~/css/pagepreloader.css" rel="stylesheet" asp-append-version="true"/>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet" asp-append-version="true">
+    <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap" rel="stylesheet" asp-append-version="true">
+    <link href="https://fonts.googleapis.com/css2?family=Protest+Revolution&family=Righteous&display=swap" rel="stylesheet" asp-append-version="true">
+    <link href="~/css/pagepreloader.css" rel="stylesheet" asp-append-version="true" />
     @await RenderSectionAsync("Styles", required: false)
 </head>
 <body>
     <script src="~/lib/mazer/assets/static/js/initTheme.js"></script>
     @* 預加載動畫方塊 start *@
     <div class="pagepreloading-wrapper">
-        @* 方塊本體 *@
-        <div class="pagepreloading la-square-jelly-box la-3x">
-            @* 兩個 div 是陰影部分 *@
-            <div></div>
-            <div></div>
+        <div class="pagepreloading-container translate-middle">
+            <div class="d-flex justify-content-center">
+                <div class="d-flex flex-column align-items-center">
+                    <div class="row row1">
+                        <div class="col-2 d-flex justify-content-center align-items-center">
+                            @* 網站商標  *@
+                            <img src="~/img/logo512x512.svg" class="pagepreloading-logo animate__animated animate__zoomInDown" style="animation-duration: 1.5s;" />
+                        </div>
+                        <div class="col-10 d-flex justify-content-center align-items-center">
+                            <div class="pagepreloading-text animate__animated animate__fadeInRightBig" style="animation-delay: 0.9s;">STEAMNEXUS</div>
+                        </div>
+                    </div>
+                    <div class="row row2 d-flex justify-content-around">
+                        <div class="pagepreloading-title animate__animated animate__fadeInLeftBig" style="animation-delay: 1.5s;">D</div>
+                        <div class="pagepreloading-title animate__animated animate__fadeInUpBig" style="animation-delay: 1.7s;">A</div>
+                        <div class="pagepreloading-title animate__animated animate__fadeInRightBig" style="animation-delay: 1.9s;">S</div>
+                        <div class="pagepreloading-title animate__animated animate__fadeInDownBig" style="animation-delay: 2.1s;">H</div>
+                        <div class="pagepreloading-title animate__animated animate__fadeInLeftBig" style="animation-delay: 2.3s;">B</div>
+                        <div class="pagepreloading-title animate__animated animate__fadeInUpBig" style="animation-delay: 2.5s;">O</div>
+                        <div class="pagepreloading-title animate__animated animate__fadeInRightBig" style="animation-delay: 2.7s;">A</div>
+                        <div class="pagepreloading-title animate__animated animate__fadeInDownBig" style="animation-delay: 2.9s;">R</div>
+                        <div class="pagepreloading-title animate__animated animate__fadeInRightBig" style="animation-delay: 3.1s;">D</div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="pagepreloading-text"><span class="indie-flower-regular" id="pageLoadingText">Loading </span></div>
+        @* 方塊本體 *@
+        @*         <div class="pagepreloading la-square-jelly-box la-3x">
+        <div></div>
+        <div></div>
+        </div>
+        <div class="pagepreloading-text"><span class="indie-flower-regular" id="pageLoadingText">Loading </span></div> *@
     </div>
     @* 預加載動畫方塊 end *@
     <div id="app">
@@ -224,7 +250,7 @@
             </header>
             <div id="main-content" class="wrapperdiv">
                 <div class="page-heading">
-                        @RenderBody()
+                    @RenderBody()
                 </div>
             </div>
         </div>
@@ -250,11 +276,11 @@
     <script src="~/lib/mazer/assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js"></script>
     <script src="~/lib/mazer/assets/compiled/js/app.js"></script>
     <script src="~/lib/wow/wow.min.js"></script>
-    <script src="~/js/pagepreloader.js"></script>
+    <script src="~/js/pagepreloader.js" asp-append-version="true"></script>
     <script>
         const btnTheme = document.querySelector("#toggle-dark");
 
-        function setAdminTheme() { 
+        function setAdminTheme() {
             // 檢測當前主題
             const theme = document.documentElement.getAttribute('data-bs-theme');
             const logoText = document.querySelector("#logoText");
