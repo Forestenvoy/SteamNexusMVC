@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SteamNexus.Controllers;
@@ -7,6 +8,7 @@ using SteamNexus.Data;
 using SteamNexus.Models;
 using SteamNexus.Services;
 using System.ComponentModel.DataAnnotations;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SteamNexus.Areas.Administrator.Controllers
 {
@@ -141,7 +143,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
             else
             {
                 // 返回 400 狀態碼 ~ 驗證不合法，同時回傳 ErrorMessage
-                return BadRequest(ModelState);
+                return BadRequest("瓦數範圍介於 0 ~ 2000 之間");
             }
         }
 

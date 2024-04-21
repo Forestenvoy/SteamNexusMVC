@@ -1,0 +1,228 @@
+﻿/* datatables 頂部布局調整 */
+.dt-start {
+}
+
+.dt-end .dt-search {
+    text-align: center !important;
+}
+
+.dt-middle {
+    text-align: end !important;
+}
+
+/* 編輯按鈕 */
+html[data-bs-theme="dark"] .Edit-btn {
+    background-color: #007FFF;
+}
+
+    html[data-bs-theme="dark"] .Edit-btn svg {
+        color: white;
+    }
+
+    html[data-bs-theme="dark"] .Edit-btn:hover {
+        background-color: white;
+    }
+
+        html[data-bs-theme="dark"] .Edit-btn:hover svg {
+            color: #007FFF;
+        }
+
+html[data-bs-theme="light"] .Edit-btn {
+    background-color: white;
+}
+
+    html[data-bs-theme="light"] .Edit-btn svg {
+        color: #007FFF;
+    }
+
+    html[data-bs-theme="light"] .Edit-btn:hover {
+        background-color: #007FFF;
+    }
+
+        html[data-bs-theme="light"] .Edit-btn:hover svg {
+            color: white;
+        }
+
+/* 確認按鈕 */
+html[data-bs-theme="dark"] .Enter-btn {
+    background-color: #00FF00;
+}
+
+    html[data-bs-theme="dark"] .Enter-btn svg {
+        color: white;
+    }
+
+    html[data-bs-theme="dark"] .Enter-btn:hover {
+        background-color: white;
+    }
+
+        html[data-bs-theme="dark"] .Enter-btn:hover svg {
+            color: #00FF00;
+        }
+
+html[data-bs-theme="light"] .Enter-btn {
+    background-color: white;
+}
+
+    html[data-bs-theme="light"] .Enter-btn svg {
+        color: #00FF00;
+    }
+
+    html[data-bs-theme="light"] .Enter-btn:hover {
+        background-color: #00FF00;
+    }
+
+        html[data-bs-theme="light"] .Enter-btn:hover svg {
+            color: white;
+        }
+
+/* 還原按鈕 */
+html[data-bs-theme="dark"] .Reset-btn {
+    background-color: #FF0000;
+}
+
+    html[data-bs-theme="dark"] .Reset-btn svg {
+        color: white;
+    }
+
+    html[data-bs-theme="dark"] .Reset-btn:hover {
+        background-color: white;
+    }
+
+        html[data-bs-theme="dark"] .Reset-btn:hover svg {
+            color: #FF0000;
+        }
+
+html[data-bs-theme="light"] .Reset-btn {
+    background-color: white;
+}
+
+    html[data-bs-theme="light"] .Reset-btn svg {
+        color: #FF0000;
+    }
+
+    html[data-bs-theme="light"] .Reset-btn:hover {
+        background-color: #FF0000;
+    }
+
+        html[data-bs-theme="light"] .Reset-btn:hover svg {
+            color: white;
+        }
+
+/* 推薦設定 文字顏色 */
+.green-row {
+    color: green !important;
+}
+
+.blue-row {
+    color: blue !important;
+}
+
+.red-row {
+    color: red !important;
+}
+
+/* 吐司預設樣式 */
+html[data-bs-theme="dark"] .defaultToast {
+    height: 47px;
+    width: 250px;
+    background-color: black !important;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+html[data-bs-theme="light"] .defaultToast {
+    height: 47px;
+    width: 250px;
+    background-color: white !important;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+.ToastIcon-success {
+    background-color: #00FF00;
+    height: 1.2rem;
+    width: 1.2rem;
+    border-radius: 50%;
+}
+
+html[data-bs-theme="dark"] .ToastIcon-success svg {
+    color: black;
+    width: 1rem;
+    height: 1rem;
+}
+
+html[data-bs-theme="light"] .ToastIcon-success svg {
+    color: white;
+    width: 1rem;
+    height: 1rem;
+}
+
+.ToastIcon-fail {
+    background-color: #FF0000;
+    height: 1.2rem;
+    width: 1.2rem;
+    border-radius: 50%;
+}
+
+html[data-bs-theme="dark"] .ToastIcon-fail svg {
+    color: black;
+    width: 1rem;
+    height: 1rem;
+}
+
+html[data-bs-theme="light"] .ToastIcon-fail svg {
+    color: white;
+    width: 1rem;
+    height: 1rem;
+}
+
+/* popover 成功 CSS */
+.popover-success {
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
+}
+
+/* popover 失敗 CSS */
+.popover-fail {
+    background-color: #f2dede;
+    border-color: #ebccd1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
+}
+
+/* 表格的佈局採用固定佈局算法 */
+body {
+    table-layout: fixed;
+}
+
+/* 欄位預設樣式 */
+html[data-bs-theme="dark"] .defaultcellType {
+    border: none; /* 取消邊框 */
+    background-color: transparent; /* 背景透明 */
+    appearance: none; /* 去除默認樣式 */
+    color: #c2c2d9; /* 文字顏色 */
+}
+
+html[data-bs-theme="light"] .defaultcellType {
+    border: none; /* 取消邊框 */
+    background-color: transparent; /* 背景透明 */
+    appearance: none; /* 去除默認樣式 */
+    color: #607080; /* 文字顏色 */
+}
+
+@media (min-width: 768px) {
+    /* 自定义 CSS 类名，垂直方向上的偏移为 50% */
+    .start-md-0 {
+        left: 0 !important;
+    }
+
+    .translate-md-cancel {
+        transform: translate(0%) !important;
+    }
+}
+
