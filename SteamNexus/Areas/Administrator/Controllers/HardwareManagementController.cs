@@ -70,7 +70,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
             public int ProductId { get; set; }
 
             [Required]
-            [Range(0, 2000)]
+            [Range(0, 2000, ErrorMessage = "瓦數範圍介於 0 ~ 2000 之間")]
             public int Wattage { get; set; }
 
             [Required]
@@ -96,9 +96,6 @@ namespace SteamNexus.Areas.Administrator.Controllers
                         var product = await _context.ProductInformations.FindAsync(data.ProductId);
                         if (product != null)
                         {
-                            // 使用樂觀併發控制
-
-
                             // 更新產品資料
                             product.Wattage = data.Wattage;
                             product.Recommend = data.Recommend;
@@ -114,16 +111,16 @@ namespace SteamNexus.Areas.Administrator.Controllers
                             // 2.校驗：交易執行完畢後，進行提交。這時同步校驗所有交易，如果交易所讀取的資料在讀取之後又被其他交易修改，則產生衝突，交易被中斷(回復)。
                             // 3.寫入：通過校驗階段後，將更新的資料寫入資料庫。
 
-                            // 交易完成 ~ 提交成功 資料庫才會真的異動
+                            // 交易完成 ~ 提交成功，資料庫才會真的異動 !!!
                             await transaction.CommitAsync();
 
                             // 返回 200 狀態碼 ~ 變更成功
-                            return Ok($"{data.ProductId}變更成功");
+                            return Ok($"{data.ProductId} 資料變更成功");
                         }
                         else
                         {
                             // 返回 404 狀態碼 ~ 找不到產品
-                            return NotFound("找不到產品");
+                            return NotFound("資料庫找不到此產品");
                         }
                     }
                     // 解決並行存取衝突
@@ -143,7 +140,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
             }
             else
             {
-                // 返回 400 狀態碼 ~ 驗證不合法
+                // 返回 400 狀態碼 ~ 驗證不合法，同時回傳 ErrorMessage
                 return BadRequest(ModelState);
             }
         }
