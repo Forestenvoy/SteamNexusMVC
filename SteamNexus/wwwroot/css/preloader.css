@@ -256,8 +256,16 @@
     height: 80px;
 }
 
+html[data-bs-theme="light"] .la-square-jelly-box {
+    color: #25396f;
+}
+
 .preloading-text {
     color: white;
     background-color: transparent;
     font-size: 30px;
+}
+
+html[data-bs-theme="light"] .preloading-text {
+    color: #25396f;
 }
