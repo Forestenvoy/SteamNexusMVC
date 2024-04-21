@@ -1,9 +1,7 @@
 ﻿@* PartialView 的 CSS *@
 <style asp-add-nested-styles="true">
 
-    /***** datatables 自訂樣式 *****/
-
-    /* 頂部布局調整 */
+    /* datatables 頂部布局調整 */
     .dt-start {
     }
 
@@ -15,7 +13,7 @@
         text-align: end !important;
     }
 
-    /* 日夜模式 自定義 樣式 */
+    /* 編輯按鈕 */
     html[data-bs-theme="dark"] .Edit-btn {
         background-color: #007FFF;
     }
@@ -48,6 +46,7 @@
                 color: white;
             }
 
+    /* 確認按鈕 */
     html[data-bs-theme="dark"] .Enter-btn {
         background-color: #00FF00;
     }
@@ -80,6 +79,7 @@
                 color: white;
             }
 
+    /* 還原按鈕 */
     html[data-bs-theme="dark"] .Reset-btn {
         background-color: #FF0000;
     }
@@ -213,9 +213,9 @@
 </section>
 @* 防偽標籤 生成(會是個 input hidden 元素) *@
 @Html.AntiForgeryToken();
-@* 
-    目的: 防止 CSRF 攻擊 
-    也會生成兩個 cookie
+@*
+    目的: 防止 CSRF 攻擊
+    也會生成兩個 cookie => HttpOnly=true、SameSite=Strict
     AntiforgeryCookie => 存的是 防偽標籤 值
     .AspNetCore.Antiforgery.名稱 => 存的是 防偽標籤的 名稱
 *@
@@ -517,7 +517,6 @@
                 // 取資料 ~ 只取看的見的元素
                 let wattVal = Number($(`.${productId}_watt:visible`).val());
                 let recVal = Number($(`.${productId}_recommend:visible`).val());
-
 
                 // 顯示進度條
                 $("#HardwareLoading").show();

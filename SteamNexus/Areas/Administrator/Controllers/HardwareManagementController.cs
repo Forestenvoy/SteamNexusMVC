@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using SteamNexus.Controllers;
 using SteamNexus.Data;
 using SteamNexus.Models;
 using SteamNexus.Services;
@@ -14,11 +15,13 @@ namespace SteamNexus.Areas.Administrator.Controllers
     {
         // Dependency Injection
         private readonly SteamNexusDbContext _context;
+        private readonly ILogger<HardwareManagementController> _logger;
         private readonly CoolPCWebScraping _coolPCWebScraping;
         // Constructor
-        public HardwareManagementController(SteamNexusDbContext context, CoolPCWebScraping coolPCWebScraping)
+        public HardwareManagementController(SteamNexusDbContext context, ILogger<HardwareManagementController> logger, CoolPCWebScraping coolPCWebScraping)
         {
             _context = context;
+            _logger = logger;
             _coolPCWebScraping = coolPCWebScraping;
         }
 
@@ -84,21 +87,27 @@ namespace SteamNexus.Areas.Administrator.Controllers
             // 如果驗證合法
             if (ModelState.IsValid)
             {
-                var product = _context.ProductInformations
-                    .Where(p => p.ProductInformationId == data.ProductId)
-                    .FirstOrDefault();
-                if (product != null)
+                try
                 {
-                    product.Wattage = data.Wattage;
-                    product.Recommend = data.Recommend;
-                    await _context.SaveChangesAsync();
-                    // 返回 200 狀態碼 ~ 變更成功
-                    return Ok("變更成功");
+                    var product = await _context.ProductInformations.FindAsync(data.ProductId);
+                    if (product != null)
+                    {
+                        product.Wattage = data.Wattage;
+                        product.Recommend = data.Recommend;
+                        await _context.SaveChangesAsync();
+                        // 返回 200 狀態碼 ~ 變更成功
+                        return Ok($"{data.ProductId}變更成功");
+                    }
+                    else
+                    {
+                        // 返回 404 狀態碼 ~ 找不到產品
+                        return NotFound("找不到產品");
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    // 返回 404 狀態碼 ~ 找不到產品
-                    return NotFound("找不到產品");
+                    // 返回 500 狀態碼 ~ 伺服器內部錯誤
+                    return StatusCode(500, "伺服器內部錯誤：" + ex.Message);
                 }
             }
             else
