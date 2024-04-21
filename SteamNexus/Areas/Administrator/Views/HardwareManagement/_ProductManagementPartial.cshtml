@@ -328,8 +328,7 @@
             let initialWidth = 250;
             // 每次更新寬度 ~ 總共 2000 毫秒 變動 200 次
             let widthChange = 250 / 200;
-
-            // 計時器啟動
+            // 計時器啟動 ~ 10 毫秒執行一次
             var intervalId = setInterval(function () {
                 initialWidth -= widthChange;
                 // 應用更新後的寬度
