@@ -87,27 +87,58 @@ namespace SteamNexus.Areas.Administrator.Controllers
             // 如果驗證合法
             if (ModelState.IsValid)
             {
-                try
+                // 加入 資料庫 交易機制
+                using (var transaction = await _context.Database.BeginTransactionAsync())
                 {
-                    var product = await _context.ProductInformations.FindAsync(data.ProductId);
-                    if (product != null)
+                    try
                     {
-                        product.Wattage = data.Wattage;
-                        product.Recommend = data.Recommend;
-                        await _context.SaveChangesAsync();
-                        // 返回 200 狀態碼 ~ 變更成功
-                        return Ok($"{data.ProductId}變更成功");
+                        // 根據ID查詢要更新的產品 
+                        var product = await _context.ProductInformations.FindAsync(data.ProductId);
+                        if (product != null)
+                        {
+                            // 使用樂觀併發控制
+
+
+                            // 更新產品資料
+                            product.Wattage = data.Wattage;
+                            product.Recommend = data.Recommend;
+
+                            // 設置 EntityState 為 Modified
+                            _context.Entry(product).State = EntityState.Modified;
+
+                            // 儲存變更
+                            await _context.SaveChangesAsync();
+
+                            // 因為欄位有"時間戳記"屬性 ==> 樂觀併發控制
+                            // 1.讀取：交易將資料讀入，這時系統會給交易分派一個時間戳。
+                            // 2.校驗：交易執行完畢後，進行提交。這時同步校驗所有交易，如果交易所讀取的資料在讀取之後又被其他交易修改，則產生衝突，交易被中斷(回復)。
+                            // 3.寫入：通過校驗階段後，將更新的資料寫入資料庫。
+
+                            // 交易完成 ~ 提交成功 資料庫才會真的異動
+                            await transaction.CommitAsync();
+
+                            // 返回 200 狀態碼 ~ 變更成功
+                            return Ok($"{data.ProductId}變更成功");
+                        }
+                        else
+                        {
+                            // 返回 404 狀態碼 ~ 找不到產品
+                            return NotFound("找不到產品");
+                        }
                     }
-                    else
+                    // 解決並行存取衝突
+                    catch (DbUpdateConcurrencyException)
                     {
-                        // 返回 404 狀態碼 ~ 找不到產品
-                        return NotFound("找不到產品");
+                        // 回滾交易
+                        await transaction.RollbackAsync();
+                        // 返回 409 狀態碼 ~ 同時修改衝突
+                        return StatusCode(409, "同時修改衝突，請重新整理後再試");
                     }
-                }
-                catch (Exception ex)
-                {
-                    // 返回 500 狀態碼 ~ 伺服器內部錯誤
-                    return StatusCode(500, "伺服器內部錯誤：" + ex.Message);
+                    catch (Exception ex)
+                    {
+                        // 返回 500 狀態碼 ~ 伺服器內部錯誤
+                        return StatusCode(500, "伺服器內部錯誤：" + ex.Message);
+                    }
                 }
             }
             else

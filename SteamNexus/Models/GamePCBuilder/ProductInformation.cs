@@ -32,6 +32,11 @@ public partial class ProductInformation
 
     public int? Recommend { get; set; } = 0;
 
+    // 時間戳記 ~ 資料異動前當下版本的概念
+    // 樂觀併發控制
+    [Timestamp]
+    public byte[]? Version { get; set; }
+
     public virtual ICollection<ProductCPU> ProductCPUs { get; set; } = new List<ProductCPU>();
 
     public virtual ICollection<ProductGPU> ProductGPUs { get; set; } = new List<ProductGPU>();
