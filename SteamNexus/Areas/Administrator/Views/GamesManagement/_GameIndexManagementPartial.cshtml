@@ -1,93 +1,10 @@
-﻿@* PartialView 的局部樣式 *@
-<style asp-add-nested-styles="true">
-
-    /* datatables 樣式設定 */
-
-    #System {
-        padding: 20px;
-        border-radius:20px
-    }
-    /* 每頁數量 文字顏色*/
-    .dataTables_length label {
-        color: white;
-    }
-
-    /* 數量顯示結果 文字顏色*/
-    .dataTables_info {
-        color: white !important;
-    }
-    /* 搜尋 文字顏色*/
-    .dataTables_wrapper .dataTables_filter label {
-        color: white;
-    }
-    /* 分頁按鈕顏色 */
-    .dataTables_wrapper .dataTables_paginate .paginate_button {
-        color: white !important;
-    }
-    /* 標題列設定 */
-    thead {
-        background-color: black;
-        color: white;
-    }
-
-    td {
-        color: black !important;
-    }
-
-    /* 間隔空間 */
-    .dataTables_length {
-        margin-left: 10px;
-        margin-bottom: 10px;
-    }
-
-        .dataTables_length label select {
-            border-radius: 5px;
-        }
-
-    .dataTables_filter {
-        margin-right: 10px;
-        margin-bottom: 10px;
-    }
-
-    /* RowDetail Icon setting */
-    td.details-control .detailIcon {
-        cursor: pointer;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 15px;
-        color: black;
-    }
-
-    tr.shown td.details-control .detailIcon {
-        color: black;
-    }
-
-    /* 推薦行文字顏色 */
-    .black-row {
-        color: black !important;
-    }
-
-    .green-row {
-        color: green !important;
-    }
-
-    .blue-row {
-        color: blue !important;
-    }
-
-    .red-row {
-        color: red !important;
-    }
-</style>
-@* PartialView 的內容 *@
+﻿@* PartialView 的內容 *@
 <div>
     <h1>全部遊戲<img src="~/img/loading-block-white.gif" style="margin:20px width:30px;height:30px;display:none" id="HardwareLoading" /></h1>
     
-    <table id="HardwareManageTable" class="display" data-bs-theme="dark">
+    <table id="HardwareManageTable" class="display" style="width:100%">
         <thead>
             <tr>
-                <th></th>
                 <th></th>
                 <th>代碼</th>
                 <th>名稱</th>
@@ -108,38 +25,55 @@
         var dataTable = new DataTable('#HardwareManageTable', {
             columns: [
                 {
-                    "class": 'details-control',
-                    "orderable": false,
-                    "data": null,
-                    "defaultContent": '<div class="detailIcon">▶</div>',
-                    "width": "3%"
-                },
-                {
                     "data": "imagePath",
                     "width": "5%",
                     "className": "text-center",
                     "render": function (data, type, row) {
                         return '<img src="' + data + '" alt="圖片" style="width:150px">';
+                    }, responsivePriority: 1
+                },
+                { "data": "appId", "width": "5%",
+                    "render": function (data, type, row) {
+                        return '<label for="appId">' + row.appId + '</label><input type="text" id="appId" name="appId" value="' + row.appId + '" style="display:none" />';
                     }
                 },
-                { "data": "appId", "width": "5%" },
-                { "data": "name", "width": "10%" },
-                { "data": "originalPrice", "width": "5%" },
-                { "data": "currentPrice", "width": "5%" },
+                { "data": "name", responsivePriority: 1, "width": "5%" },
+                { "data": "originalPrice", "width": "2%" },
+                { "data": "currentPrice", responsivePriority: 2, "width": "2%" },
                 { "data": "ageRating", "width": "5%" },
                 { "data": "comment", "width": "5%" },
                 { "data": "commentNum", "width": "5%" },
                 { "data": "publisher", "width": "5%" },
+                {
+                    "data": null,
+                    "orderable": false,
+                    "width": "5%",
+                    "className": "text-center",
+                    // 按鈕 自定義
+                    render: function (data, type, row, meta) {
+                        // 取得 productId
+                        let appIdId = row.appId;
+                        // 編輯按鈕
+                        let enterEle = '<button name="' + appIdId + '" class="table_button" id="table_button" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-pen-to-square"></i></button>';
+                        // 刪除按鈕
+                        let resetEle = '<button name="' + appIdId + '" class="table_button" id="table_button" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-trash"></i></button>';
+                        if (type === 'display') {
+                            return `${enterEle}${resetEle}`;
+                        }
+                        return data;
+                    }, responsivePriority: 1
+                }
             ],
-            fixedHeader: { header: true },
+            // 標頭固定
+            fixedHeader: true,
+            // 響應式設計
+            responsive: true,
             language: {
                 url: '//cdn.datatables.net/plug-ins/2.0.3/i18n/zh-HANT.json'
             },
-            
-            language: {
-                url: '//cdn.datatables.net/plug-ins/2.0.3/i18n/zh-HANT.json'
-            },
-            autoWidth: false,
+            // 自動寬度 關閉
+            autoWidth: true,
+            // 資料載入中 gif
             processing: true,
             createdRow: function (row, data, dataIndex) {
                 if (data.recommend == 0) {
@@ -151,11 +85,12 @@
                 } else if (data.recommend == 3) {
                     $(row).addClass('red-row');
                 }
-            }
+            },
+
         });
         function getdatatableData() {
             // 發送非同步GET請求
-            fetch(`${baseAddress}@Url.Action("IndexJson", "Games")`, {
+            fetch(`@Url.Action("IndexJson", "GamesManagement", new { area = "Administrator" })`, {
                 method: "GET"
             }).then(result => {
                 // 此時 result 是一個請求結果的物件
@@ -169,15 +104,67 @@
                     dataTable.rows.add(data).draw();
                 }
                 $("#HardwareLoading").hide();
+                tableButtonEvent();
+                
             }).catch(error => {
                 alert(error);
             });
         };
         getdatatableData();
-        $(".detailIcon").on("click",function(){
 
-        })
+        // 按下按鈕時文字變成可編輯
+        function tableButtonEvent() {
+            // 綁定所有 button 標籤 id 為 table_button 結尾的元素
+            $('button[id$="table_button"]').on('click', function (event) {
+                event.stopPropagation();
+                
+                //尋找button上父級tr下為label[for="appId"]的子元素
+                var $label = $(this).closest('tr').find('label[for="appId"]');
+                var $input = $(this).closest('tr').find('input#appId');
+
+                //切换标签和输入框的显示状态
+                $label.toggle();
+                $input.toggle();
+
+                $(this).replaceWith('<button id="submit_button">完成</button>');
+                submitButtonEvent();
+            });
+            
+        };
+
+        function submitButtonEvent() {
+            $("#submit_button").on('click', function () {
+                var num = event.target.name
+                event.preventDefault();
+                $("#systemLoading").show();
+                $.ajax({
+                    type: "POST",
+                    data: {
+                        GameId: Number(num),
+                        AppId: Number($("#AppId").val()),
+                        Name: $("#Name").val(),
+                        OriginalPrice: Number($("#OriginalPrice").val()),
+                        AgeRating: $("#AgeRating").val(),
+                        ReleaseDate: $("#ReleaseDate").val(),
+                        Publisher: $("#Publisher").val(),
+                        Description: $("#Description").val(),
+                        ImagePath: $("#ImagePath").val(),
+                        VideoPath: $("#VideoPath").val()
+                    },
+                    url: `@Url.Action("PostEditPartialToDB", "GamesManagement", new { area = "Administrator" })`
+                }).done(data => {
+                    console.log("已完成");
+                    $("#System").html(data);
+                })
+                    .fail(data => {
+                        console.log("失敗");
+                        $("#systemLoading").hide();
+                        $("#System").html(data);
+                    });
+
+            });
+        }
     });
-        
+    
 
 </script>
