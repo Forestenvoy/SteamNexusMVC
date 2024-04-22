@@ -192,13 +192,20 @@ html[data-bs-theme="light"] #HardwareManageTable_wrapper .defaultcellType {
     color: #607080; /* 文字顏色 */
 }
 
+@media (max-width: 768px) {
+    .top-md-0 {
+        top: 0% !important;
+    }
+}
+
 @media (min-width: 768px) {
     .start-md-0 {
-        left: 0 !important;
+        left: 0% !important;
     }
 
     .translate-md-cancel {
         transform: translate(0%) !important;
     }
 }
+
 
