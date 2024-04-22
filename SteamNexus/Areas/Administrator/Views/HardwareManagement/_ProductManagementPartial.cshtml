@@ -1,6 +1,4 @@
-﻿@* PartialView 的 CSS *@
-<link href="~/css/hardwareproductmanagesystem.css" rel="stylesheet" asp-append-version="true" />
-@* PartialView 的 HTML *@
+﻿@* PartialView 的 HTML *@
 <div class="page-title position-relative">
     <div class="row">
         @* 系統名稱 *@
@@ -229,13 +227,15 @@
                 };
                 // 獲取防偽標籤值
                 let csrfToken = document.querySelector('input[name="__Antiforgery__SteamNexus"]').value;
+                // 流水號生成
+                let toastId = Math.floor(Math.random() * 1000);
                 // 吐司元素生成
-                let toast = ToastInitialization(productId);
+                let toast = ToastInitialization(toastId);
                 // 發送吐司
                 ToastContainer.insertAdjacentHTML('afterbegin', toast);
                 // 狀態值
                 let PromiseStatus = false;
-                $(`#${productId}_Toast`).show();
+                $(`#${toastId}_Toast`).show();
                 // 發送非同步POST請求 ==> 資料庫資料變更
                 fetch(`@Url.Action("ProductDataUpdate", "HardwareManagement", new { area = "Administrator" })`, {
                     method: "POST",
@@ -246,8 +246,8 @@
                     }
                 }).then(result => {
                     // 隱藏吐司 loading
-                    $(`#${productId}_Toast_Status`).addClass('animate__zoomOut');
-                    $(`#${productId}_Toast_Status`).hide();
+                    $(`#${toastId}_Toast_Status`).addClass('animate__zoomOut');
+                    $(`#${toastId}_Toast_Status`).hide();
                     // 如過 HTTP 響應的狀態馬碼在 200 到 299 的範圍內 ==> .ok 會回傳 true
                     if (result.ok) {
                         // 此時 result 是一個請求結果的物件 => 注意傳回值型態，字串用 text()，JSON 用 json()
@@ -259,13 +259,12 @@
                     // 此時 data 為上一個 then 回傳的資料
                     if (PromiseStatus) {
                         // 顯示 吐司成功狀態
-                        $(`#${productId}_ToastIcon_success`).addClass('animate__zoomIn').removeClass('d-none');
-                        $(`#${productId}_ToastText`).text(data);
+                        $(`#${toastId}_ToastIcon_success`).addClass('animate__zoomIn').removeClass('d-none');
+                        $(`#${toastId}_ToastText`).text(data);
                         // 顯示進度條
-                        $(`#${productId}_ToastProgress`).show();
-                        console.log($(`#${productId}_ToastProgress_rect`));
+                        $(`#${toastId}_ToastProgress`).show();
                         // 進度條消失
-                        ToastProgressDisappear(productId);
+                        ToastProgressDisappear(toastId);
                         // 恢復預設模式 ~ 關閉 td 編輯功能
                         $(`.${productId}_watt`).attr('disabled', true);
                         $(`.${productId}_watt`).addClass("defaultcellType");
@@ -277,19 +276,19 @@
                     }
                     else {
                         // 顯示 吐司失敗狀態
-                        $(`#${productId}_ToastIcon_fail`).addClass('animate__zoomIn').removeClass('d-none');
-                        $(`#${productId}_ToastText`).text(data);
+                        $(`#${toastId}_ToastIcon_fail`).addClass('animate__zoomIn').removeClass('d-none');
+                        $(`#${toastId}_ToastText`).text(data);
                         // 進度條消失
-                        $(`#${productId}_ToastProgress`).show();
+                        $(`#${toastId}_ToastProgress`).show();
                         // 更改顏色
-                        $(`#${productId}_ToastProgress_rect`).css('fill', '#FF0000');
+                        $(`#${toastId}_ToastProgress_rect`).css('fill', '#FF0000');
                         // 進度條消失
-                        ToastProgressDisappear(productId);
+                        ToastProgressDisappear(toastId);
                     }
                 }).catch(error => {
                     // 顯示 吐司失敗狀態
-                    $(`#${productId}_ToastIcon_fail`).addClass('animate__zoomIn').removeClass('d-none');
-                    $(`#${productId}_ToastText`).text(error.message);
+                    $(`#${toastId}_ToastIcon_fail`).addClass('animate__zoomIn').removeClass('d-none');
+                    $(`#${toastId}_ToastText`).text(error.message);
                 });
             }
         });
@@ -323,7 +322,7 @@
         };
 
         // 吐司進度條消失
-        function ToastProgressDisappear(productId) {
+        function ToastProgressDisappear(toastId) {
             // 初始寬度
             let initialWidth = 250;
             // 每次更新寬度 ~ 總共 2000 毫秒 變動 200 次
@@ -332,12 +331,16 @@
             var intervalId = setInterval(function () {
                 initialWidth -= widthChange;
                 // 應用更新後的寬度
-                $(`#${productId}_ToastProgress_rect`).attr('width', `${initialWidth}px`);
+                $(`#${toastId}_ToastProgress_rect`).attr('width', `${initialWidth}px`);
                 // 寬度小於0停止計時器
                 if (initialWidth <= 0) {
                     clearInterval(intervalId);
                     // 關閉吐司
-                    $(`#${productId}_Toast`).addClass('animate__fadeOutRight').removeClass('d-none');
+                    $(`#${toastId}_Toast`).addClass('animate__fadeOutRight');
+                    // 元素移除
+                    setTimeout(function () { 
+                        $(`#${toastId}_Toast`).remove();
+                    }, 1000);
                 }
             }, 10);
         }
