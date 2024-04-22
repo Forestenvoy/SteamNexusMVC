@@ -133,15 +133,14 @@
         };
 
         function submitButtonEvent() {
-            $("#submit_button").on('click', function () {
-                var num = event.target.name
-                event.preventDefault();
-                $("#systemLoading").show();
+            $("#submit_button").on('click', function (event) {
+                const e = $(this).closest('tr')
+                // alert(e.find('input#appId').val())
                 $.ajax({
                     type: "POST",
                     data: {
-                        GameId: Number(num),
-                        AppId: Number($("#AppId").val()),
+                       
+                        AppId: Number(e.find('input#appId').val()),
                         Name: $("#Name").val(),
                         OriginalPrice: Number($("#OriginalPrice").val()),
                         AgeRating: $("#AgeRating").val(),
@@ -161,7 +160,6 @@
                         $("#systemLoading").hide();
                         $("#System").html(data);
                     });
-
             });
         }
     });
