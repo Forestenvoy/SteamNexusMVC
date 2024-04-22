@@ -1,8 +1,8 @@
 ﻿@* PartialView 的內容 *@
 <div>
-    <h1>全部遊戲<img src="~/img/loading-block-white.gif" style="margin:20px width:30px;height:30px;display:none" id="HardwareLoading" /></h1>
+    <h1>全部遊戲<img src="~/img/loading-block-white.gif" style="margin:20px width:30px;height:30px;display:none" id="GameIndexLoading" /></h1>
     
-    <table id="HardwareManageTable" class="display" style="width:100%">
+    <table id="GameManageTable" class="display" style="width:100%">
         <thead>
             <tr>
                 <th></th>
@@ -20,9 +20,9 @@
 </div>
 <script>
     $(document).ready(function () {
-        $("#HardwareLoading").show();
+        $("#GameIndexLoading").show();
         let baseAddress = "https://localhost:7097";
-        var dataTable = new DataTable('#HardwareManageTable', {
+        var dataTable = new DataTable('#GameManageTable', {
             columns: [
                 {
                     "data": "imagePath",
@@ -103,7 +103,7 @@
                 if (data && data.length > 0) {
                     dataTable.rows.add(data).draw();
                 }
-                $("#HardwareLoading").hide();
+                $("#GameIndexLoading").hide();
                 tableButtonEvent();
                 
             }).catch(error => {
