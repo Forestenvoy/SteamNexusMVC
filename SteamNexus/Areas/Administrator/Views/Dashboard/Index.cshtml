@@ -27,12 +27,21 @@
           integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
           crossorigin="anonymous"
           referrerpolicy="no-referrer" />
+    @* 載入方塊樣式 *@
+    <link href="~/css/preloader.css" rel="stylesheet" />
 }
 
 <div class="h-100" id="System">
-    <img src="~/img/loading-white.gif" class="position-absolute top-50 start-50 translate-middle" style="display:none" id="systemLoading" />
+    <div class="position-absolute top-50 start-50 translate-middle" style="display: none" id="systemLoading">
+        @* 方塊本體 *@
+        <div class="preloading la-square-jelly-box la-3x">
+            @* 下面兩個 div 是 陰影 *@
+            <div></div>
+            <div></div>
+        </div>
+        <div class="preloading-text mt-3"><span class="indie-flower-regular" id="pageLoadingText">Loading </span></div>
+    </div>
 </div>
-
 
 @section Scripts
 {

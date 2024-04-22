@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Identity;
+ï»¿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using SteamNexus;
@@ -25,35 +25,46 @@ builder.Services.AddDbContext<SteamNexusDbContext>(options => options.UseSqlServ
 // Add CoolPCWebScrabing Service
 builder.Services.AddTransient<CoolPCWebScraping>();
 
-builder.Services.AddControllersWithViews();
-
-//µù¥UÅçÃÒ¡B±K½X³W«h¸ê°T
-builder.Services.Configure<IdentityOptions>(options => { //³o­Ó¨ç¦¡³]©w¤F¨­¤ÀÃÑ§O¿ï¶µ¡C
-    options.Password.RequireDigit = true; //±K½X¬O§_»İ­n¥]§t¼Æ¦r¡C
-    options.Password.RequireLowercase = true; //±K½X¬O§_»İ­n¥]§t¤p¼g¦r¥À¡C
-    options.Password.RequireNonAlphanumeric = true; //±K½X¬O§_»İ­n¥]§t«D¦r¥À©Î¼Æ¦rªº¯S®í¦r¤¸¡C
-    options.Password.RequireUppercase = true; //±K½X¬O§_»İ­n¥]§t¤j¼g¦r¥À¡C
-    options.Password.RequiredLength = 8; //³Ì¤Öªº±K½Xªø«×¡C
-    options.Password.RequiredUniqueChars = 1; //±K½X¤¤¤£­«½Æªº¼Æ¦r¡C
-
-    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5); //Âê©w¥Î¤áªº¹w³]®É¶¡¡C
-    options.Lockout.MaxFailedAccessAttempts = 3; //¥Î¤á¤¹³\ªº³Ì¤jµn¤J¥¢±Ñ¦¸¼Æ¡C
-    options.Lockout.AllowedForNewUsers = true; //¬O§_¤¹³\·s¥Î¤á³QÂê©w¡C
-
-    options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+"; //±K½X³]©w¦r¤¸
-    options.User.RequireUniqueEmail = true; //EmailÅçÃÒ¡A°ß¤@­È(¤£¥i­«½Æ)
-
-
-    options.SignIn.RequireConfirmedEmail = true; //¨Ï¥ÎªÌ¬O§_»İ­n½T»{¹q¤l¶l¥ó¦a§}«á¤~¯àµn¤J¡A»İ­nÅçÃÒ¹q¤l¶l¥ó³q¹L«á¤~¯à°÷¨Ï¥Î¡C
+// é…ç½® é˜²å½æ¨™ç±¤ Antiforgery ~ ç”¨æ–¼é˜²æ­¢ CSRF æ”»æ“Š
+builder.Services.AddAntiforgery(options =>
+{
+    // æŒ‡å®šåœ¨ HTML è¡¨å–®ä¸­ç”Ÿæˆçš„éš±è—æ¬„ä½çš„åç¨±ï¼Œè©²æ¬„ä½å°‡åŒ…å«é˜²å½æ¨™ç±¤å€¼ã€‚ <== é»˜èªåç¨±å¯èƒ½æœƒè¢«çŒœå‡ºä¾†
+    options.FormFieldName = "__Antiforgery__SteamNexus";
+    // é˜²å½æ¨™ç±¤åç¨±
+    options.HeaderName = "X-CSRF-TOKEN";
+    // é˜²æ­¢ X-Frame-Options æ¨™é ­è¢«ç¦ç”¨ <== ç¶²é ä¸èƒ½è¢«æ”»æ“Šè€…åµŒå…¥åˆ°å…¶ä»–ç¶²ç«™çš„ iframe ä¸­
+    options.SuppressXFrameOptionsHeader = false;
 });
 
-builder.Services.ConfigureApplicationCookie(options => { //³o­Ó¨ç¦¡³]©w¤FÀ³¥Îµ{¦¡ Cookie ªº¬ÛÃö¿ï¶µ¡C
-    options.Cookie.HttpOnly = true; //Cookie ¬O§_¶È¨Ñ HTTP ¦s¨ú¡C
-    options.Cookie.SecurePolicy = CookieSecurePolicy.Always; //Cookie ¬O§_­n¨D©l²×³z¹L¦w¥ş³s½u (HTTPS) ¶Ç¿é¡C
-    options.ExpireTimeSpan = TimeSpan.FromMinutes(5); //Cookie ªº¹w®É®É¶¡¡C
-    options.LoginPath = "/Identity/Account/Login"; //µn¤J­¶­±ªº¸ô®|¡C
-    options.AccessDeniedPath = "/Identity/Account/AccessDenied"; //¦s¨ú³Q©Úµ´®É¾É¦Vªº­¶­±¸ô®|¡C
-    options.SlidingExpiration = true; //¬O§_±Ò¥Î·Æ°Ê¹L´Á®É¶¡¡C
+builder.Services.AddControllersWithViews();
+
+//è¨»å†Šé©—è­‰ã€å¯†ç¢¼è¦å‰‡è³‡è¨Š
+builder.Services.Configure<IdentityOptions>(options => { //é€™å€‹å‡½å¼è¨­å®šäº†èº«åˆ†è­˜åˆ¥é¸é …ã€‚
+    options.Password.RequireDigit = true; //å¯†ç¢¼æ˜¯å¦éœ€è¦åŒ…å«æ•¸å­—ã€‚
+    options.Password.RequireLowercase = true; //å¯†ç¢¼æ˜¯å¦éœ€è¦åŒ…å«å°å¯«å­—æ¯ã€‚
+    options.Password.RequireNonAlphanumeric = true; //å¯†ç¢¼æ˜¯å¦éœ€è¦åŒ…å«éå­—æ¯æˆ–æ•¸å­—çš„ç‰¹æ®Šå­—å…ƒã€‚
+    options.Password.RequireUppercase = true; //å¯†ç¢¼æ˜¯å¦éœ€è¦åŒ…å«å¤§å¯«å­—æ¯ã€‚
+    options.Password.RequiredLength = 8; //æœ€å°‘çš„å¯†ç¢¼é•·åº¦ã€‚
+    options.Password.RequiredUniqueChars = 1; //å¯†ç¢¼ä¸­ä¸é‡è¤‡çš„æ•¸å­—ã€‚
+
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5); //é–å®šç”¨æˆ¶çš„é è¨­æ™‚é–“ã€‚
+    options.Lockout.MaxFailedAccessAttempts = 3; //ç”¨æˆ¶å…è¨±çš„æœ€å¤§ç™»å…¥å¤±æ•—æ¬¡æ•¸ã€‚
+    options.Lockout.AllowedForNewUsers = true; //æ˜¯å¦å…è¨±æ–°ç”¨æˆ¶è¢«é–å®šã€‚
+
+    options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+"; //å¯†ç¢¼è¨­å®šå­—å…ƒ
+    options.User.RequireUniqueEmail = true; //Emailé©—è­‰ï¼Œå”¯ä¸€å€¼(ä¸å¯é‡è¤‡)
+
+
+    options.SignIn.RequireConfirmedEmail = true; //ä½¿ç”¨è€…æ˜¯å¦éœ€è¦ç¢ºèªé›»å­éƒµä»¶åœ°å€å¾Œæ‰èƒ½ç™»å…¥ï¼Œéœ€è¦é©—è­‰é›»å­éƒµä»¶é€šéå¾Œæ‰èƒ½å¤ ä½¿ç”¨ã€‚
+});
+
+builder.Services.ConfigureApplicationCookie(options => { //é€™å€‹å‡½å¼è¨­å®šäº†æ‡‰ç”¨ç¨‹å¼ Cookie çš„ç›¸é—œé¸é …ã€‚
+    options.Cookie.HttpOnly = true; //Cookie æ˜¯å¦åƒ…ä¾› HTTP å­˜å–ã€‚
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always; //Cookie æ˜¯å¦è¦æ±‚å§‹çµ‚é€éå®‰å…¨é€£ç·š (HTTPS) å‚³è¼¸ã€‚
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(5); //Cookie çš„é æ™‚æ™‚é–“ã€‚
+    options.LoginPath = "/Identity/Account/Login"; //ç™»å…¥é é¢çš„è·¯å¾‘ã€‚
+    options.AccessDeniedPath = "/Identity/Account/AccessDenied"; //å­˜å–è¢«æ‹’çµ•æ™‚å°å‘çš„é é¢è·¯å¾‘ã€‚
+    options.SlidingExpiration = true; //æ˜¯å¦å•Ÿç”¨æ»‘å‹•éæœŸæ™‚é–“ã€‚
 });
 
 //Email 
@@ -81,6 +92,9 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+
+// å•Ÿç”¨ é˜²å½æ¨™ç±¤ cookie æœå‹™
+app.UseAntiforgery();
 
 // Administrator Route Setting
 app.MapControllerRoute(
