@@ -30,7 +30,7 @@
     </table>
 </section>
 @* Toast 彈出式通知 容器 start *@
-<div class="position-fixed top-md-0 bottom-0 start-50 start-md-0 p-3" style="z-index: 11" id="ToastContainer">
+<div class="position-fixed top-md-0 bottom-0 start-50 start-md-0 translate-middle-md-x p-3" style="z-index: 11" id="ToastContainer">
 </div>
 @* Toast 彈出式通知 容器 end *@
 @* 防偽標籤 生成(會是個 input hidden 元素) *@
@@ -50,13 +50,13 @@
             // column 定義
             columns: [
                 { "data": "productId", "width": "5%", "className": "text-center" },
-                { "data": "productName", "width": "35%" },
-                { "data": "specification", "width": "30%" },
+                { "data": "productName", "width": "34%" },
+                { "data": "specification", "width": "29%" },
                 { "data": "componentClassificationName", "visible": false },
-                { "data": "price", "width": "10%", "className": "text-center" },
+                { "data": "price", "width": "8%", "className": "text-center" },
                 {
                     "data": "wattage",
-                    "width": "10%",
+                    "width": "8%",
                     "className": "text-center",
                     // 瓦數 ~ 文字輸入方塊
                     render: function (data, type, row, meta) {
@@ -76,7 +76,7 @@
                 },
                 {
                     "data": "recommend",
-                    "width": "10%",
+                    "width": "8%",
                     "className": "text-center",
                     // 推薦 ~ 下拉式選單
                     render: function (data, type, row, meta) {
@@ -105,7 +105,7 @@
                 {
                     "data": null,
                     "orderable": false,
-                    "width": "10%",
+                    "width": "8%",
                     // 按鈕 自定義
                     render: function (data, type, row, meta) {
                         // 取得 productId
@@ -159,7 +159,7 @@
                 $(row).attr('id', data.productId + '_row');
                 // 為特定行加入 class ==> 不會影響 th
                 $(row).find('td:eq(6)').addClass('d-flex');
-                $(row).find('td:eq(6)').addClass('justify-content-between');
+                $(row).find('td:eq(6)').addClass('justify-content-around');
             },
             // 按鈕建立
             layout: {
@@ -523,73 +523,5 @@
         //         alert(error);
         //     });
         // };
-
-        // RowDetail 內容
-        // function format(d) {
-        //     let color = "black"; // 默認顏色
-        //     let RadioId = "recommend" + d.productId;
-        //     return (
-        //         `<div id="recommend${d.productId}" style="color: black;"> 推薦設定:
-        //                                                                                                                                                                 <label style="color: black;"><input type="radio" name="${RadioId}" value="0" ${d.recommend == 0 ? 'checked' : ''}> 無</label>
-        //                                                                                                                                                                     <label style="color: green;"><input type="radio" name="${RadioId}" value="1" ${d.recommend == 1 ? 'checked' : ''}> 基本</label>
-        //                                                                                                                                                                     <label style="color: blue;"><input type="radio" name="${RadioId}" value="2" ${d.recommend == 2 ? 'checked' : ''}> 優良</label>
-        //                                                                                                                                                                     <label style="color: red;"><input type="radio" name="${RadioId}" value="3" ${d.recommend == 3 ? 'checked' : ''}> 完美</label>
-        //                                                                                                                                                                     <i class="fa-solid fa-spinner fa-spin ms-2"style="color:black;display:none" id="loading${d.productId}"></i>
-        //                                                                                                                                                                         <span id="result${d.productId}" class="ms-2" style="color: black;"></span>
-        //                                                                                                                                                              </div>`
-        //     );
-        // };
-        // 推薦變更事件W
-        // function radioevent(rowDetail) {
-        //     $(rowDetail).on('change', 'input[type="radio"]', function () {
-        //         // 獲取 Radiobutton 的 ID
-        //         let itemid = Number($(this).attr('name').slice('9'));
-        //         let value = Number($(this).val());
-
-        //         // 發送非同步POST請求 ==> 資料庫資料變更
-        //         // 顯示進度條
-        //         $("#loading" + itemid).show();
-        //         $("#result" + itemid).text("");
-        //         var data = {
-        //             ProductId: itemid,
-        //             recommend: value
-        //         };
-        //         // 前端視覺效果
-        //         let divid = "recommend" + itemid;
-        //         let targetRow = $(`#${divid}`).parent().parent().prev();
-        //         let colorclass = "";
-        //         switch (value) {
-        //             case 0:
-        //                 colorclass = "black-row";
-        //                 break;
-        //             case 1:
-        //                 colorclass = "green-row";
-        //                 break;
-        //             case 2:
-        //                 colorclass = "blue-row";
-        //                 break;
-        //             case 3:
-        //                 colorclass = "red-row";
-        //                 break;
-        //         }
-        //         if (targetRow.hasClass('black-row')) {
-        //             targetRow.removeClass('black-row');
-        //             targetRow.addClass(colorclass);
-        //         }
-        //         else if (targetRow.hasClass('green-row')) {
-        //             targetRow.removeClass('green-row');
-        //             targetRow.addClass(colorclass);
-        //         }
-        //         else if (targetRow.hasClass('blue-row')) {
-        //             targetRow.removeClass('blue-row');
-        //             targetRow.addClass(colorclass);
-        //         }
-        //         else if (targetRow.hasClass('red-row')) {
-        //             targetRow.removeClass('red-row');
-        //             targetRow.addClass(colorclass);
-        //         }
-        //     });
-        // }
-
     });
 </script>

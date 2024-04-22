@@ -147,7 +147,22 @@ namespace SteamNexus.Areas.Administrator.Controllers
             }
         }
 
+        // 硬體產品ID ViewModel
+        public class HardwareProductId
+        {
+            [Required]
+            [Range(10000, 99999)]
+            public int ProductId { get; set; }
+        }
 
+        // 單一產品資料 Get
+        // POST: Administrator/HardwareManagement/GetOneHardwareProduct
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> GetOneHardwareProduct([FromBody] HardwareProductId ID)
+        {
+            return Ok($"資料變更成功");
+        }
 
 
 

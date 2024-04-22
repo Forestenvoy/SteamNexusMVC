@@ -196,6 +196,10 @@ html[data-bs-theme="light"] #HardwareManageTable_wrapper .defaultcellType {
     .top-md-0 {
         top: 0% !important;
     }
+
+    .translate-middle-md-x {
+        transform: translate(-50%) !important;
+    }
 }
 
 @media (min-width: 768px) {
