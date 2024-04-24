@@ -27,11 +27,6 @@ namespace SteamNexus.Areas.Administrator.Controllers
             _coolPCWebScraping = coolPCWebScraping;
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
-
         // 回傳硬體產品管理頁面 PartialView
         // GET: Administrator/HardwareManagement/ProductManagement
         [HttpGet]
@@ -146,31 +141,6 @@ namespace SteamNexus.Areas.Administrator.Controllers
                 return BadRequest("瓦數範圍介於 0 ~ 2000 之間");
             }
         }
-
-        // 硬體產品ID ViewModel
-        public class HardwareProductId
-        {
-            [Required]
-            [Range(10000, 99999)]
-            public int ProductId { get; set; }
-        }
-
-        // 單一產品資料 Get
-        // POST: Administrator/HardwareManagement/GetOneHardwareProduct
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> GetOneHardwareProduct([FromBody] HardwareProductId ID)
-        {
-            return Ok($"資料變更成功");
-        }
-
-
-
-
-
-
-
-
 
 
         // 單一零件更新

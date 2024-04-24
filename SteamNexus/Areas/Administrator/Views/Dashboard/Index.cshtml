@@ -29,7 +29,6 @@
           referrerpolicy="no-referrer" />
     @* 載入方塊樣式 *@
     <link href="~/css/preloader.css" rel="stylesheet" />
-    <link href="~/css/hardwareproductmanagesystem.css" rel="stylesheet" asp-append-version="true" />
     @* 硬體產品管理 *@
     <link href="~/css/hardwareproductmanagesystem.css" rel="stylesheet" asp-append-version="true" />
 }
@@ -75,6 +74,9 @@
             integrity="sha512-u3fPA7V8qQmhBPNT5quvaXVa1mnnLSXUep5PS1qo5NRzHwG19aHmNJnj1Q8hpA/nBWZtZD4r4AX6YOt5ynLN2g=="
             crossorigin="anonymous"
             referrerpolicy="no-referrer"></script>
+    @* 動態加載 JS *@
+    <script src="" asp-append-version="true" id="dynamicScript"></script>
+
     @* 側邊導覽 AJAX 後台系統切換 *@
     <script>
         // AJAX 呼叫替換 PartialView
@@ -99,6 +101,23 @@
                     $("#systemLoading").hide();
                     // 顯示 PartialView 資料
                     $("#System").html(data);
+                    // 動態加載 PartialView 所需的 JavaScript
+
+                    // 移除舊的 PartialView JavaScript
+                    // 移除舊的 JavaScript
+                    var oldScript = document.querySelector('#dynamicScript');
+                    if (oldScript) {
+                        oldScript.parentNode.removeChild(oldScript);
+                    }
+                    // 建立新的 PartialView JavaScript
+                    var newScriptElement = document.createElement("script");
+                    let version = new Date().getTime();
+                    newScriptElement.src = `@Url.Content("~/js/hardwareproductmanagement.js")?version=${version}`;
+                    newScriptElement.id = "dynamicScript"; // 保持相同的 ID
+                    // 獲取 body 元素
+                    var bodyElement = document.body;
+                    // 將新的 script 元素插入到 body 元素中的最後一個子元素之前
+                    bodyElement.insertBefore(newScriptElement, bodyElement.lastChild);
                 }).catch(error => {
                     // Loading 關閉
                     $("#systemLoading").hide();

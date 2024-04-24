@@ -42,7 +42,7 @@
     .AspNetCore.Antiforgery.名稱 => 存的是 防偽標籤的 名稱
 *@
 @* PartialView 的 JavaScript *@
-<script>
+@* <script>
     $(document).ready(function () {
 
         // 計算被響應式隱藏的 column
@@ -206,7 +206,6 @@
             responsiveColumnsCount = columns.reduce(function (a, b) {
                 return b === false ? a + 1 : a;
             }, 0);
-            console.log(responsiveColumnsCount);
             if (responsiveColumnsCount === 0) {
                 // 將 展開屬性設定 false
                 $('.Edit-btn').attr('data-slefColumn-isShow', 'false');
@@ -623,4 +622,4 @@
         //     });
         // };
     });
-</script>
+</script> *@
