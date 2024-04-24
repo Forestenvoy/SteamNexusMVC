@@ -175,42 +175,7 @@
                             action: function (e, dt, node, config) {
                                 isrefresh = true;
                                 // 重新整理
-                                getdatatableData();
-
-                                isrefresh = false;
-                                // 如果沒選擇硬體 => 中斷事件
-                                if (!isHardwareChoose) {
-                                    return;
-                                }
-                                // 取得吐司容器元素
-                                let ToastContainer = document.querySelector('#ToastContainer');
-                                // 流水號生成
-                                let toastId = Math.floor(Math.random() * 1000);
-                                // 吐司元素生成
-                                let toast = ToastInitialization(toastId);
-                                // 發送吐司
-                                ToastContainer.insertAdjacentHTML(`afterbegin`, toast);
-                                // 顯示吐司
-                                $(`#${toastId}_Toast`).show();
-                                // 隱藏 載入狀態
-                                $(`#${toastId}_Toast_Status`).hide();
-                                console.log(`btn ${isrefresh}`);
-                                if (isrefresh) {
-                                    // 顯示 吐司成功狀態
-                                    $(`#${toastId}_ToastIcon_success`).addClass('animate__zoomIn').removeClass('d-none');
-                                    $(`#${toastId}_ToastText`).text("重新整理成功");
-                                }
-                                else {
-                                    // 顯示 吐司失敗狀態
-                                    $(`#${toastId}_ToastIcon_fail`).addClass('animate__zoomIn').removeClass('d-none');
-                                    $(`#${toastId}_ToastText`).text("重新整理失敗，請稍後再試");
-                                    // 更改顏色
-                                    $(`#${toastId}_ToastProgress_rect`).css('fill', '#FF0000');
-                                }
-                                // 顯示進度條
-                                $(`#${toastId}_ToastProgress`).show();
-                                // 進度條消失
-                                ToastProgressDisappear(toastId);
+                                getdatatableData();                            
                             }
                         },
                         {
@@ -506,23 +471,32 @@
         // AJAX 資料載入 datatable
         function getdatatableData() {
             let p = getType();
-            // 如果沒選擇，中斷操作
+            // 如果沒選擇硬體 => 中斷事件
             if (p == "NoSeclect") {
-                isHardwareChoose = false;
                 return;
             }
-            isHardwareChoose = true;
+            // 取得吐司容器元素
+            let ToastContainer = document.querySelector('#ToastContainer');
+            // 流水號生成
+            let toastId = Math.floor(Math.random() * 1000);
+            // 吐司元素生成
+            let toast = ToastInitialization(toastId);
             // 發送非同步GET請求
             fetch(`@Url.Action("HardwareData", "HardwareManagement", new { area = "Administrator" })?${p}`, {
                 method: "GET"
             }).then(result => {
                 // 此時 result 是一個請求結果的物件
+                if (isrefresh) {
+                    // 發送吐司
+                    ToastContainer.insertAdjacentHTML(`afterbegin`, toast);
+                    // 顯示吐司
+                    $(`#${toastId}_Toast`).show();
+                    // 隱藏 載入狀態
+                    $(`#${toastId}_Toast_Status`).hide();
+                }
                 // 注意傳回值型態，字串用 text()，JSON 用 json()
                 if (result.ok) {
                     return result.json();
-                }
-                else {
-                    isrefresh = false;
                 }
             }).then(data => {
                 // 此時 data 為上一個 then 回傳的資料
@@ -530,13 +504,32 @@
                 datatable.clear().draw();
                 // 添加新的資料
                 datatable.rows.add(data).draw();
-                isrefresh = true;
-                console.log(`func ${isrefresh}`);
+                if (isrefresh) {
+                    // 顯示 吐司成功狀態
+                    $(`#${toastId}_ToastIcon_success`).addClass('animate__zoomIn').removeClass('d-none');
+                    $(`#${toastId}_ToastText`).text("重新整理成功");
+                    // 顯示進度條
+                    $(`#${toastId}_ToastProgress`).show();
+                    // 進度條消失
+                    ToastProgressDisappear(toastId);
+                }
+                isrefresh = false;
             }).catch(error => {
                 alert(error);
+                if (isrefresh) {
+                    // 顯示 吐司失敗狀態
+                    $(`#${toastId}_ToastIcon_fail`).addClass('animate__zoomIn').removeClass('d-none');
+                    $(`#${toastId}_ToastText`).text("重新整理失敗，請稍後再試");
+                    // 更改顏色
+                    $(`#${toastId}_ToastProgress_rect`).css('fill', '#FF0000');
+                    // 顯示進度條
+                    $(`#${toastId}_ToastProgress`).show();
+                    // 進度條消失
+                    ToastProgressDisappear(toastId);
+                }
                 isrefresh = false;
             });
-            console.log(`func ${isrefresh}`);
+            
         };
 
         // // 單一零件更新
