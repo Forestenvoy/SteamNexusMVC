@@ -16,7 +16,7 @@
     </div>
 </div>
 <section class="section">
-    <table id="MemberManageTable" class="display" style="width:100%">
+    <table id="MemberManageTable" class="display" style="width:100%" ;>
         <thead id="HardwareThead">
             <tr>
                 <th data-priority="1">姓名</th>
@@ -59,22 +59,23 @@
             },
             // column 定義
             columns: [
-                { "data": "name", "width": "10%" },
-                { "data": "email", "width": "10%" },
-                { "data": "gender", "width": "10%" },
-                { "data": "birthday", "width": "10%" },
-                { "data": "cpuId", "width": "10%" },
-                { "data": "gpuId", "width": "10%" },
-                { "data": "ram", "width": "10%" },
+                { "data": "name", "width": "10%", "className": "text-center" },
+                { "data": "email", "width": "10%", "className": "text-center" },
+                { "data": "gender", "width": "10%", "className": "text-center" },
+                { "data": "birthday", "width": "10%", "className": "text-center" },
+                { "data": "cpuId", "width": "10%", "className": "text-center" },
+                { "data": "gpuId", "width": "10%", "className": "text-center" },
+                { "data": "ram", "width": "10%", "className": "text-center" },
                 {
                     "data": "images",
                     "width": "10%",
+                    "className": "text-center",
                     "render": function (data, type, row) {
                         return `<img src="/images/headshots/${data}" alt="Image" style="width: 100px; height: 100px;" />`;
                     }
 
                 },
-                { "data": "power", "width": "10%" },
+                { "data": "power", "width": "10%", "className": "text-center" },
 
                 {
                     "data": null,
