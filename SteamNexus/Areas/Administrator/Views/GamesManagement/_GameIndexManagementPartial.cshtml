@@ -31,6 +31,43 @@
 </div>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
 <script>
+    function ImageChange(event) {
+        $("#imgPreview").attr("src", event.target.value);
+    }
+    function VideoChange(event) {
+        previewVideo(event.target.value, $("#videoPreview"))
+    }
+    $("#PostEditPartialToDB").on("click", function (event) {
+        var num = event.target.name
+        event.preventDefault();
+        $("#systemLoading").show();
+        $.ajax({
+            type: "POST",
+            data: {
+                GameId: Number(num),
+                AppId: Number($("#AppId").val()),
+                Name: $("#Name").val(),
+                OriginalPrice: Number($("#OriginalPrice").val()),
+                AgeRating: $("#AgeRating").val(),
+                ReleaseDate: $("#ReleaseDate").val(),
+                Publisher: $("#Publisher").val(),
+                Description: $("#Description").val(),
+                ImagePath: $("#ImagePath").val(),
+                VideoPath: $("#VideoPath").val()
+            },
+            url: `@Url.Action("PostEditPartialToDB", "GamesManagement", new { area = "Administrator" })`
+        }).done(data => {
+            console.log("已完成");
+            $("#System").html(data);
+        })
+            .fail(data => {
+                console.log("失敗");
+                $("#systemLoading").hide();
+                $("#System").html(data);
+            });
+    });
+</script>
+<script>
     $(document).ready(function () {
         $("#GameIndexLoading").show();
         let baseAddress = "https://localhost:7097";
@@ -126,14 +163,33 @@
         function edit_buttonEvent() {
             // 綁定所有 button 標籤 id 為 edit_button 結尾的元素
             $('button[id$="edit_button"]').on('click', function (event) {
+                event.preventDefault();
                 event.stopPropagation();
                 var val=""
                 const gameGameId = $(this).attr('data-GameId');
-                GetEditPartialView(gameGameId).then(data => {
-                    // 在這裡處理獲取的數據
-                    val = data;
-                    //sweetalert設定
-                    Swal.fire({
+                
+                fetch(`@Url.Action("GetEditPartialView", "GamesManagement", new { area = "Administrator" })?id=${gameGameId}`, {
+                    method: "GET"
+                }).then(response => {
+                    // 確保請求是否成功
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    // 解析 html
+                    return response.text();
+                }).then(val => {
+                    if (val) {
+                        showSwal(val);
+                    }
+                }).catch(error => {
+                    alert(error);
+                }).finally(() => {
+                    // 异步操作完成后启用按钮
+                    $(this).prop('disabled', false);
+                });
+
+                async function showSwal(val) {
+                    const { value: formValues } = await Swal.fire({
                         title: "Multiple inputs",
                         html: `${val}`,
                         focusConfirm: false,
@@ -144,7 +200,10 @@
                             ];
                         }
                     });
-                })
+                    if (formValues) {
+                        Swal.fire(JSON.stringify(formValues));
+                    }
+                }
             });
 
         };

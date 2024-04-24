@@ -122,7 +122,6 @@
     function VideoChange(event) {
         previewVideo(event.target.value, $("#videoPreview"))
     }
-    var baseAddress = "https://localhost:7097";
     $("#PostEditPartialToDB").on("click", function (event) {
         var num = event.target.name
         event.preventDefault();
@@ -141,7 +140,7 @@
                 ImagePath: $("#ImagePath").val(),
                 VideoPath: $("#VideoPath").val()
             },
-            url: `${baseAddress}/Admin/PostEditPartialToDB`
+            url: `@Url.Action("PostEditPartialToDB", "GamesManagement", new { area = "Administrator" })`
         }).done(data => {
             console.log("已完成");
             $("#System").html(data);

@@ -352,37 +352,37 @@ namespace SteamNexus.Controllers
         //        return View(Create);
         //    }
 
-        //    // GET: Games/Edit/5
-        //    public async Task<IActionResult> Edit(int id )
-        //    {
-        //        if (id == null)
-        //        {
-        //            return NotFound();
-        //        }
+        // GET: Games/Edit/5
+        public async Task<IActionResult> Edit(int id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-        //        var game = await _context.Games.FindAsync(id);
-        //        EditViewModel ViewModel = new EditViewModel
-        //        {
-        //            GameId= id,
-        //            AppId = game.AppId,
-        //            Name = game.Name,
-        //            OriginalPrice = game.OriginalPrice,
-        //            AgeRating = game.AgeRating,
-        //            ReleaseDate = game.ReleaseDate,
-        //            Publisher = game.Publisher,
-        //            Description = game.Description,
-        //            ImagePath = game.ImagePath,
-        //            VideoPath = game.VideoPath
-        //        };
+            var game = await _context.Games.FindAsync(id);
+            EditViewModel ViewModel = new EditViewModel
+            {
+                GameId = id,
+                AppId = game.AppId,
+                Name = game.Name,
+                OriginalPrice = game.OriginalPrice,
+                AgeRating = game.AgeRating,
+                ReleaseDate = game.ReleaseDate,
+                Publisher = game.Publisher,
+                Description = game.Description,
+                ImagePath = game.ImagePath,
+                VideoPath = game.VideoPath
+            };
 
-        //        if (game == null)
-        //        {
-        //            return NotFound();
-        //        }
-        //        //ViewData["MinReqId"] = new SelectList(_context.MinimumRequirements, "MinReqId", "MinReqId", game.MinReqId);
-        //        //ViewData["RecReqId"] = new SelectList(_context.RecommendedRequirements, "RecReqId", "RecReqId", game.RecReqId);
-        //        return View(ViewModel);
-        //    }
+            if (game == null)
+            {
+                return NotFound();
+            }
+            //ViewData["MinReqId"] = new SelectList(_context.MinimumRequirements, "MinReqId", "MinReqId", game.MinReqId);
+            //ViewData["RecReqId"] = new SelectList(_context.RecommendedRequirements, "RecReqId", "RecReqId", game.RecReqId);
+            return View(ViewModel);
+        }
 
         //    // POST: Games/Edit/5
         //    // To protect from overposting attacks, enable the specific properties you want to bind to.
