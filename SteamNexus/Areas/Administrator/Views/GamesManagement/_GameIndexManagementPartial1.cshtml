@@ -1,0 +1,256 @@
+﻿@model IEnumerable<SteamNexus.Models.Game>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="d-flex justify-content-center py-3">
+    <h1>遊戲資料管理</h1>
+</div>
+<div class=" d-flex justify-content-center my-2">
+    <button class="btn btn-dark w-50">
+        <a id="Create" asp-action="Create">新增遊戲</a>
+    </button>
+</div>
+
+
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @* @Html.DisplayNameFor(model => model.ImagePath) *@
+
+                </th>
+                @* <th>
+                @Html.DisplayNameFor(model => model.MinReq)
+                </th>
+                <th>
+                @Html.DisplayNameFor(model => model.RecReq)
+                </th> *@
+                <th>
+                    @* @Html.DisplayNameFor(model => model.AppId) *@
+                    代碼
+                </th>
+                <th style="width:30px">
+                    名稱
+                    @* @Html.DisplayNameFor(model => model.Name) *@
+                </th>
+                <th class="mx-1">
+                    原始價格
+                    @* @Html.DisplayNameFor(model => model.OriginalPrice) *@
+                </th>
+                <th>
+                    現在價格
+                    @* @Html.DisplayNameFor(model => model.CurrentPrice) *@
+                </th>
+                @* <th>
+                @Html.DisplayNameFor(model => model.LowestPrice)
+                </th> *@
+                <th>
+                    遊戲分級
+                    @* @Html.DisplayNameFor(model => model.AgeRating) *@
+                </th>
+                <th>
+                    評價
+                    @* @Html.DisplayNameFor(model => model.Comment) *@
+                </th>
+                <th>
+                    評價數量
+                    @* @Html.DisplayNameFor(model => model.CommentNum) *@
+                </th>
+                @* <th>
+                @Html.DisplayNameFor(model => model.ReleaseDate)
+                </th> *@
+                <th style="width:10px">
+                    發行商
+                    @* @Html.DisplayNameFor(model => model.Publisher) *@
+                </th>
+                @* <th>
+                @Html.DisplayNameFor(model => model.Description)
+                </th> *@
+                @* <th>
+                @Html.DisplayNameFor(model => model.Players)
+                </th>
+                <th>
+                @Html.DisplayNameFor(model => model.PeakPlayers)
+                </th> *@
+
+                @* <th>
+                @Html.DisplayNameFor(model => model.VideoPath)
+                </th> *@
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        <img src=@item.ImagePath title=@item.Name style="width:150px"></img>
+                        @* @Html.DisplayFor(modelItem => item.ImagePath) *@
+                    </td>
+                    @* <td>
+                @Html.DisplayFor(modelItem => item.MinReq.MinReqId)
+                </td>
+                <td>
+                @Html.DisplayFor(modelItem => item.RecReq.RecReqId)
+                </td> *@
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AppId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.OriginalPrice)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CurrentPrice)
+                    </td>
+                    @*<td>
+                @Html.DisplayFor(modelItem => item.LowestPrice)
+                </td> *@
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AgeRating)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Comment)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CommentNum)
+                    </td>
+                    @* <td>
+                @Html.DisplayFor(modelItem => item.ReleaseDate)
+                </td> *@
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Publisher)
+                    </td>
+                    @* <td>
+                @Html.DisplayFor(modelItem => item.Description)
+                </td> *@
+                    @* <td>
+                @Html.DisplayFor(modelItem => item.Players)
+                </td>
+                <td>
+                @Html.DisplayFor(modelItem => item.PeakPlayers)
+                </td> *@
+
+                    @* <td>
+                @Html.DisplayFor(modelItem => item.VideoPath)
+                </td> *@
+                    <td>
+                        <button class="btn btn-dark">
+                            <a class="edit-button" asp-action="Edit" name="@Html.DisplayFor(modelItem => item.GameId)" asp-route-id="@item.GameId">編輯</a>
+                        </button>
+                        <button class="btn btn-dark">
+                            <a class="details-button" asp-action="Details" asp-route-id="@item.GameId" name="@Html.DisplayFor(modelItem => item.GameId)">查看</a>
+                        </button>
+                        <button class="btn btn-dark">
+                            <a class="delete-button" asp-action="Delete" asp-route-id="@item.GameId" name="@Html.DisplayFor(modelItem => item.GameId)">刪除</a>
+                        </button>
+                        @* <a asp-action="Edit" asp-route-id="@item.GameId">Edit</a>
+                    <a asp-action="Details" asp-route-id="@item.GameId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.GameId">Delete</a> *@
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
+
+<script>
+    var baseAddress = "https://localhost:7097";
+    $("#Create").on("click", function (event) {
+        event.preventDefault();
+        $("#systemLoading").show();
+        // 發送非同步GET請求
+        fetch(`${baseAddress}@Url.Action("GetCreatPartialView", "Admin")`, {
+            method: "GET"
+        }).then(response => {
+            // 確保請求是否成功
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            // 解析 html
+            return response.text();
+        }).then(data => {
+            $("#systemLoading").hide();
+            $("#System").html(data);
+        }).catch(error => {
+            $("#systemLoading").hide();
+            // 顯示 throw 的錯誤
+            alert(error);
+        });
+    });
+    $(".edit-button").on("click", function (event) {
+        var id = event.target.name;
+        event.preventDefault();
+        $("#systemLoading").show();
+        // 發送非同步GET請求
+        fetch(`${baseAddress}@Url.Action("GetEditPartialView", "Admin")?id=${id}`, {
+            method: "GET"
+        }).then(response => {
+            // 確保請求是否成功
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            // 解析 html
+            return response.text();
+        }).then(data => {
+            $("#systemLoading").hide();
+            $("#System").html(data);
+        }).catch(error => {
+            $("#systemLoading").hide();
+            // 顯示 throw 的錯誤
+            alert(error);
+        });
+    });
+    $(".details-button").on("click", function (event) {
+        var id = event.target.name;
+        event.preventDefault();
+        $("#systemLoading").show();
+        // 發送非同步GET請求
+        fetch(`${baseAddress}@Url.Action("GetDetailsPartialView", "Admin")?id=${id}`, {
+            method: "GET"
+        }).then(response => {
+            // 確保請求是否成功
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            // 解析 html
+            return response.text();
+        }).then(data => {
+            $("#systemLoading").hide();
+            $("#System").html(data);
+        }).catch(error => {
+            $("#systemLoading").hide();
+            // 顯示 throw 的錯誤
+            alert(error);
+        });
+    });
+    $(".delete-button").on("click", function (event) {
+        var id = event.target.name;
+        event.preventDefault();
+        $("#systemLoading").show();
+        // 發送非同步GET請求
+        fetch(`${baseAddress}@Url.Action("GetDeletePartialView", "Admin")?id=${id}`, {
+            method: "GET"
+        }).then(response => {
+            // 確保請求是否成功
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            // 解析 html
+            return response.text();
+        }).then(data => {
+            $("#systemLoading").hide();
+            $("#System").html(data);
+        }).catch(error => {
+            $("#systemLoading").hide();
+            // 顯示 throw 的錯誤
+            alert(error);
+        });
+    });
+</script>

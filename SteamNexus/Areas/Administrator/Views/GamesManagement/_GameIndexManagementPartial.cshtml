@@ -1,4 +1,5 @@
 ﻿@* PartialView 的內容 *@
+
 <div>
     <h1>全部遊戲<img src="~/img/loading-block-white.gif" style="margin:20px width:30px;height:30px;display:none" id="GameIndexLoading" /></h1>
     
@@ -18,6 +19,7 @@
         </thead>
     </table>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
 <script>
     $(document).ready(function () {
         $("#GameIndexLoading").show();
@@ -32,11 +34,7 @@
                         return '<img src="' + data + '" alt="圖片" style="width:150px">';
                     }, responsivePriority: 1
                 },
-                { "data": "appId", "width": "5%",
-                    "render": function (data, type, row) {
-                        return '<label for="appId">' + row.appId + '</label><input type="text" id="appId" name="appId" value="' + row.appId + '" style="display:none" />';
-                    }
-                },
+                { "data": "appId", "width": "5%"},
                 { "data": "name", responsivePriority: 1, "width": "5%" },
                 { "data": "originalPrice", "width": "2%" },
                 { "data": "currentPrice", responsivePriority: 2, "width": "2%" },
@@ -52,11 +50,12 @@
                     // 按鈕 自定義
                     render: function (data, type, row, meta) {
                         // 取得 productId
-                        let appIdId = row.appId;
+                        let name = row.name;
+                        let GameId = row.gameId;
                         // 編輯按鈕
-                        let enterEle = '<button name="' + appIdId + '" class="table_button" id="table_button" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-pen-to-square"></i></button>';
+                        let enterEle = '<button id="edit_button" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-pen-to-square"></i></button>';
                         // 刪除按鈕
-                        let resetEle = '<button name="' + appIdId + '" class="table_button" id="table_button" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-trash"></i></button>';
+                        let resetEle = '<button data-GameId="' + GameId + '"  data-name="' + name + '" id="delete_button" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-trash"></i></button>';
                         if (type === 'display') {
                             return `${enterEle}${resetEle}`;
                         }
@@ -105,19 +104,107 @@
                 }
                 $("#GameIndexLoading").hide();
                 tableButtonEvent();
-                
             }).catch(error => {
-                alert(error);
+                console.log(error);
             });
         };
         getdatatableData();
 
-        // 按下按鈕時文字變成可編輯
+        //編輯
+        function tableButtonEvent() {
+            // 綁定所有 button 標籤 id 為 edit_button 結尾的元素
+            $('button[id$="edit_button"]').on('click', function (event) {
+                event.stopPropagation();
+                //sweetalert設定
+                Swal.fire({
+                    title: "Good job!",
+                    text: "You clicked the button!",
+                    icon: "success"
+                });
+            });
+        };
+
+        //刪除
+        function tableButtonEvent() {
+            // 綁定所有 button 標籤 id 為 delete_button 結尾的元素
+            $('button[id$="delete_button"]').on('click', function (event) {
+                //抓取delete_button自訂屬性的值
+                const gameName = $(this).attr('data-name');
+                const gameGameId = $(this).attr('data-GameId');
+                
+                event.stopPropagation();
+                //sweetalert設定
+                const swalWithBootstrapButtons = Swal.mixin({
+                    customClass: {
+                        confirmButton: "btn btn-success",
+                        cancelButton: "btn btn-danger"
+                    },
+                    buttonsStyling: false
+                });
+                swalWithBootstrapButtons.fire({
+                    title: `你確定要刪除${gameName}?`,
+                    text: "您將無法恢復此狀態！",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "是的，我要刪除！",
+                    cancelButtonText: "不，我再考慮一下",
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: "POST",
+                            data: {
+                                id: Number(gameGameId)
+                            },
+                            url: `@Url.Action("PostDeletePartialToDB", "GamesManagement", new { area = "Administrator" })`
+                        }).done(data => {
+                            $("#systemLoading").hide();
+                            $("#System").html(data);
+                        }).fail(data => {
+                            $("#systemLoading").hide();
+                            $("#System").html(data);
+                        });
+
+                        swalWithBootstrapButtons.fire({
+                            title: `已刪除${gameName}`,
+                            text: "此操作無法復原",
+                            icon: "success"
+                        });
+                        
+                        
+                    } else if (
+                        /* Read more about handling dismissals below */
+                        result.dismiss === Swal.DismissReason.cancel
+                    ) {
+                        swalWithBootstrapButtons.fire({
+                            title: `未刪除${gameName}`,
+                            // text: "遊戲未刪除 :)",
+                            icon: "error"
+                        });
+                    }
+                });
+            });
+        };
+    });
+    
+
+</script>
+
+
+
+        
+@* { "data": "appId", "width": "5%",
+                    "render": function (data, type, row) {
+                        return '<label for="appId">' + row.appId + '</label>
+<input type="text" id="appId" name="appId" value="' + row.appId + '" style="display:none" />';
+                    }
+                },
+                    // 按下按鈕時文字變成可編輯
         function tableButtonEvent() {
             // 綁定所有 button 標籤 id 為 table_button 結尾的元素
             $('button[id$="table_button"]').on('click', function (event) {
                 event.stopPropagation();
-                
+
                 //尋找button上父級tr下為label[for="appId"]的子元素
                 var $label = $(this).closest('tr').find('label[for="appId"]');
                 var $input = $(this).closest('tr').find('input#appId');
@@ -129,7 +216,7 @@
                 $(this).replaceWith('<button id="submit_button">完成</button>');
                 submitButtonEvent();
             });
-            
+
         };
 
         function submitButtonEvent() {
@@ -139,7 +226,7 @@
                 $.ajax({
                     type: "POST",
                     data: {
-                       
+
                         AppId: Number(e.find('input#appId').val()),
                         Name: $("#Name").val(),
                         OriginalPrice: Number($("#OriginalPrice").val()),
@@ -161,8 +248,4 @@
                         $("#System").html(data);
                     });
             });
-        }
-    });
-    
-
-</script>
+        } *@
