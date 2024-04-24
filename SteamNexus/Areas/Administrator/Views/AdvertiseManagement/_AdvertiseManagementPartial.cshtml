@@ -1,0 +1,120 @@
+﻿@* PartialView 的 CSS *@
+<style asp-add-nested-styles="true">
+
+    /***** datatables 自訂樣式 *****/
+
+    /* 標題列設定 */
+    thead {
+        background-color: black;
+        color: white;
+    }
+
+    /* 頂部布局調整 */
+    .dt-start {
+    }
+
+    .dt-end .dt-search {
+        text-align: center !important;
+    }
+
+    .dt-middle {
+        text-align: end !important;
+    }
+
+    body {
+        table-layout: fixed;
+    }
+</style>
+
+@* PartialView 的 HTML *@
+<div class="page-title position-relative">
+    <div class="row">
+        @* 系統名稱 *@
+        <div class="col-12 col-md-6 order-md-1 d-flex justify-content-center justify-content-md-start">
+            <h2 id="SystemName" style="margin-top: 8px;">廣告管理系統</h2>
+        </div>
+        @* 系統選單 *@
+        <div class="col-12 col-md-6 order-md-2 d-flex justify-content-center justify-content-md-end" id="SystemMenu">
+            @* <select asp-items="@ViewBag.ComputerParts" class="form-select " style="width:250px;height:40px;margin-bottom:8px" id="HardSelect">
+                <option value="" disabled selected hidden>---- 請選擇硬體 ----</option>
+            </select> *@
+        </div>
+    </div>
+</div>
+<section class="section">
+    <table id="AdvertiseManageTable" class="display" style="width:100%">
+        <thead>
+            <tr>
+                <th data-priority="1">Title</th>
+                <th>Url</th>
+                <th>ImagePath</th>
+                <th>Discription</th>
+                <th data-priority="2"></th>
+            </tr>
+        </thead>
+    </table>
+</section>
+@* PartialView 的 JavaScript *@
+<script>
+    $(document).ready(function () {
+        let HardAddress = "https://localhost:7097";
+        var datatable = new DataTable('#AdvertiseManageTable', {
+            ajax: {
+                type: "GET",
+                url: "/AdvertiseManagementController/AdvertiseManagementJson",
+                dataSrc: function (json) { return json; }
+            },
+            columns:[
+                { "data": "advertisementId", "width":"10%"}
+            ]
+        })
+    });
+</script>
+
+@* @model IEnumerable<SteamNexus.Models.Advertisement>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Url)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ImagePath)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Discription)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Url)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ImagePath)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Discription)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.AdvertisementId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.AdvertisementId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.AdvertisementId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table> *@
