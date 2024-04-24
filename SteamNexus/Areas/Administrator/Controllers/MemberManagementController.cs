@@ -35,11 +35,12 @@ namespace SteamNexus.Areas.Administrator.Controllers
             {
                 result.Name,
                 result.Email,
-                result.Gender,
+               Gender = result.Gender ? "男" : "女",
                 birthday = result.Birthday.ToShortDateString(),
                 result.CPUId,
                 result.GPUId,
                 result.RAM,
+                result.Images,
                 result.Power,
 
             });

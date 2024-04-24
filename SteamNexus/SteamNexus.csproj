@@ -38,6 +38,7 @@
 
   <ItemGroup>
     <Folder Include="Views\Games\GameViewPartial\" />
+    <Folder Include="wwwroot\images\headshots\" />
   </ItemGroup>
 
 </Project>

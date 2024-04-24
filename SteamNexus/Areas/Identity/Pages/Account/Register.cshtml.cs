@@ -29,14 +29,16 @@ namespace SteamNexus.Areas.Identity.Pages.Account
         private readonly IUserStore<ApplicationUser> _userStore;
         private readonly IUserEmailStore<ApplicationUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
-        private readonly IEmailSender _emailSender;
+        private readonly IEmailSender _emailSender; //Email
+        private readonly IWebHostEnvironment _webHost; //image
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             IUserStore<ApplicationUser> userStore,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            IWebHostEnvironment webHost)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -44,6 +46,7 @@ namespace SteamNexus.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _webHost = webHost;
         }
 
         /// <summary>
@@ -137,6 +140,8 @@ namespace SteamNexus.Areas.Identity.Pages.Account
             [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)] // 指定日期的顯示格式
             public DateTime Birthday { get; set; }
 
+            public IFormFile Images { get; set; }
+
         }
 
 
@@ -150,6 +155,7 @@ namespace SteamNexus.Areas.Identity.Pages.Account
         {
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
             if (ModelState.IsValid)
             {
                 var user = CreateUser();
@@ -163,6 +169,29 @@ namespace SteamNexus.Areas.Identity.Pages.Account
                 user.PhoneNumber = Input.PhoneNumber;
                 user.Birthday = Input.Birthday;
 
+                //獲取上傳圖片
+                var imagesFile = Input.Images;
+
+                if (imagesFile != null && imagesFile.Length > 0)
+                {
+                    //Guid.NewGuid().ToString():將圖片轉成字串(亂數)；Path.GetExtension(imagesFile.FileName):擷取圖片附檔名
+                    string filename = Guid.NewGuid().ToString() + Path.GetExtension(imagesFile.FileName);
+                    //圖片儲存路徑
+                    string uploadfolder = Path.Combine(_webHost.WebRootPath, "images/headshots");
+                    string filepath = Path.Combine(uploadfolder, filename);
+
+                    //創建一個fileStream對象做圖片處理
+                    using (var fileStream = new FileStream(filepath, FileMode.Create))
+                    {
+                        await imagesFile.CopyToAsync(fileStream);
+                    }
+                    user.Images = filename;
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Please upload an image.");
+                    return Page();
+                }
 
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
