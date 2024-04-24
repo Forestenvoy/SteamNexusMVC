@@ -45,11 +45,11 @@
     <table id="AdvertiseManageTable" class="display" style="width:100%">
         <thead>
             <tr>
-                <th data-priority="1">Title</th>
+                <th data-priority="1">advertisementId</th>
+                <th>Title</th>
                 <th>Url</th>
                 <th>ImagePath</th>
                 <th>Discription</th>
-                <th data-priority="2"></th>
             </tr>
         </thead>
     </table>
@@ -61,12 +61,32 @@
         var datatable = new DataTable('#AdvertiseManageTable', {
             ajax: {
                 type: "GET",
-                url: "/AdvertiseManagementController/AdvertiseManagementJson",
+                url: `@Url.Action("AdvertiseManagementJson", "AdvertiseManagement", new { area = "Administrator" })`,
                 dataSrc: function (json) { return json; }
             },
             columns:[
-                { "data": "advertisementId", "width":"10%"}
-            ]
+                { "data": "advertisementId", "width":"20%"},
+                { "data": "title", "width": "20%" },
+                { "data": "url", "width": "20%" },
+                { "data": "imagePath", "width": "20%" },
+                { "data": "discription", "width": "20%" }
+            ],
+            fixedHeader: {
+                // 固定 header
+                header: true,
+                // 使用導覽欄的高度作為偏移量
+                headerOffset: $('#pageNav').outerHeight(),
+            },
+            // 響應式設計
+            responsive: true,
+            // 語言設定
+            language: {
+                url: '//cdn.datatables.net/plug-ins/2.0.3/i18n/zh-HANT.json',
+            },
+            // 預設排序 ~ 根據第一個欄位 升冪排序
+            order: [[1, 'asc']],
+            // 自動寬度 關閉
+            autoWidth: true,
         })
     });
 </script>

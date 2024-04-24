@@ -138,7 +138,7 @@
                 // Loading 顯示
                 $("#systemLoading").show();
                 // 發送非同步GET請求
-                fetch(`@Url.Action("AdvertiseManagementJson", "AdvertiseManagement", new { area = "Administrator" })`, {
+                fetch(`@Url.Action("AdvertiseManagement", "AdvertiseManagement", new { area = "Administrator" })`, {
                     method: "GET"
                 }).then(response => {
                     // 確保請求是否成功

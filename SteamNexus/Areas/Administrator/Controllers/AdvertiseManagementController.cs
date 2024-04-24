@@ -16,13 +16,6 @@ namespace SteamNexus.Areas.Administrator.Controllers
             _context = context;
         }
 
-
-        // GET: AdvertiseManagementController
-        public IActionResult Index()
-        {
-            return View();
-        }
-
         public JsonResult AdvertiseManagementJson()
         {
             return Json(_context.Advertisements);
@@ -31,7 +24,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
         [HttpGet]
         public IActionResult AdvertiseManagement()
         {
-            return PartialView("_AdvertiseManagementPartial", _context.Advertisements);
+            return PartialView("_AdvertiseManagementPartial");
         }
 
         // GET: AdvertiseManagementController/Details/5
