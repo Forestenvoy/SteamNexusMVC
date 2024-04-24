@@ -74,35 +74,35 @@ html[data-bs-theme="light"] #HardwareManageTable_wrapper .Enter-btn {
         }
 
 /* 還原按鈕 */
-html[data-bs-theme="dark"] #HardwareManageTable_wrapper .Reset-btn {
+html[data-bs-theme="dark"] #HardwareManageTable_wrapper .Cancell-btn {
     background-color: #FF0000;
 }
 
-    html[data-bs-theme="dark"] #HardwareManageTable_wrapper .Reset-btn svg {
+    html[data-bs-theme="dark"] #HardwareManageTable_wrapper .Cancell-btn svg {
         color: white;
     }
 
-    html[data-bs-theme="dark"] #HardwareManageTable_wrapper .Reset-btn:hover {
+    html[data-bs-theme="dark"] #HardwareManageTable_wrapper .Cancell-btn:hover {
         background-color: white;
     }
 
-        html[data-bs-theme="dark"] #HardwareManageTable_wrapper .Reset-btn:hover svg {
+        html[data-bs-theme="dark"] #HardwareManageTable_wrapper .Cancell-btn:hover svg {
             color: #FF0000;
         }
 
-html[data-bs-theme="light"] #HardwareManageTable_wrapper .Reset-btn {
+html[data-bs-theme="light"] #HardwareManageTable_wrapper .Cancell-btn {
     background-color: white;
 }
 
-    html[data-bs-theme="light"] #HardwareManageTable_wrapper .Reset-btn svg {
+    html[data-bs-theme="light"] #HardwareManageTable_wrapper .Cancell-btn svg {
         color: #FF0000;
     }
 
-    html[data-bs-theme="light"] #HardwareManageTable_wrapper .Reset-btn:hover {
+    html[data-bs-theme="light"] #HardwareManageTable_wrapper .Cancell-btn:hover {
         background-color: #FF0000;
     }
 
-        html[data-bs-theme="light"] #HardwareManageTable_wrapper .Reset-btn:hover svg {
+        html[data-bs-theme="light"] #HardwareManageTable_wrapper .Cancell-btn:hover svg {
             color: white;
         }
 
