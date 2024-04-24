@@ -1,5 +1,15 @@
 ﻿@* PartialView 的內容 *@
+<style>
+    .label_newClass::after{
+        background-color:rgba(0,0,0,0) !important;
+        margin-bottom:5px;
+    }
 
+    .form-control {
+        padding-bottom: 0.1rem !important;
+        width: -webkit-fill-available !important;
+    }
+</style>
 <div>
     <h1>全部遊戲<img src="~/img/loading-block-white.gif" style="margin:20px width:30px;height:30px;display:none" id="GameIndexLoading" /></h1>
     
@@ -53,7 +63,7 @@
                         let name = row.name;
                         let GameId = row.gameId;
                         // 編輯按鈕
-                        let enterEle = '<button id="edit_button" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-pen-to-square"></i></button>';
+                        let enterEle = '<button data-GameId="' + GameId + '"  data-name="' + name + '" id="edit_button" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-pen-to-square"></i></button>';
                         // 刪除按鈕
                         let resetEle = '<button data-GameId="' + GameId + '"  data-name="' + name + '" id="delete_button" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-trash"></i></button>';
                         if (type === 'display') {
@@ -87,6 +97,7 @@
             },
 
         });
+
         function getdatatableData() {
             // 發送非同步GET請求
             fetch(`@Url.Action("IndexJson", "GamesManagement", new { area = "Administrator" })`, {
@@ -103,7 +114,8 @@
                     dataTable.rows.add(data).draw();
                 }
                 $("#GameIndexLoading").hide();
-                tableButtonEvent();
+                edit_buttonEvent();
+                delete_buttonEvent();
             }).catch(error => {
                 console.log(error);
             });
@@ -111,21 +123,58 @@
         getdatatableData();
 
         //編輯
-        function tableButtonEvent() {
+        function edit_buttonEvent() {
             // 綁定所有 button 標籤 id 為 edit_button 結尾的元素
             $('button[id$="edit_button"]').on('click', function (event) {
+                var val=""
+                const gameGameId = $(this).attr('data-GameId');
+                GetEditPartialView(gameGameId).then(data => {
+                    // 在這裡處理獲取的數據
+                    val = data;
+                })
+
                 event.stopPropagation();
                 //sweetalert設定
                 Swal.fire({
-                    title: "Good job!",
-                    text: "You clicked the button!",
-                    icon: "success"
+                    title: "Multiple inputs",
+                    html: val,
+                    focusConfirm: false,
+                    preConfirm: () => {
+                        return [
+                            document.getElementById("swal-input1").value,
+                            document.getElementById("swal-input2").value
+                        ];
+                    }
+                    
                 });
+                if (formValues) {
+                    Swal.fire(JSON.stringify(formValues));
+                }
             });
+
         };
 
+        //ajax抓取EditPartialView
+        function GetEditPartialView(gameGameId) {
+            console.log(gameGameId)
+            var id = `id=${gameGameId}`;
+            return fetch(`@Url.Action("GetEditPartialView", "GamesManagement", new { area = "Administrator" })?${id}`, {
+                method: "GET"
+            }).then(response => {
+                // 確保請求是否成功
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                // 解析 html
+                return response.text();
+            }).catch(error => {
+                alert(error);
+            })
+        }
+        
+
         //刪除
-        function tableButtonEvent() {
+        function delete_buttonEvent() {
             // 綁定所有 button 標籤 id 為 delete_button 結尾的元素
             $('button[id$="delete_button"]').on('click', function (event) {
                 //抓取delete_button自訂屬性的值

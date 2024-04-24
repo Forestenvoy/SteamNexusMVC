@@ -102,7 +102,6 @@ namespace SteamNexus.Areas.Administrator.Controllers
         [HttpGet]
         public IActionResult GetEditPartialView(int id)
         {
-
             var game = _context.Games.FindAsync(id).Result;
 
             EditViewModel ViewModel = new EditViewModel
@@ -123,7 +122,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
             {
                 return NotFound();
             }
-            return PartialView("_GameEditeManagementPartial", ViewModel);
+            return PartialView("_GameEditManagementPartial", ViewModel);
         }
         [HttpPost]
         public async Task<IActionResult> PostEditPartialToDB(Game game)

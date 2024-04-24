@@ -1,0 +1,155 @@
+﻿@model SteamNexus.ViewModels.Game.EditViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Game</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="GameId" />
+            @*             <div class="form-group">
+            <label asp-for="MinReqId" class="control-label"></label>
+            <select asp-for="MinReqId" class="form-control" asp-items="ViewBag.MinReqId"></select>
+            <span asp-validation-for="MinReqId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+            <label asp-for="RecReqId" class="control-label"></label>
+            <select asp-for="RecReqId" class="form-control" asp-items="ViewBag.RecReqId"></select>
+            <span asp-validation-for="RecReqId" class="text-danger"></span>
+            </div> *@
+            <div class="form-group">
+                <label asp-for="AppId" class="control-label"></label>
+                <input asp-for="AppId" class="form-control" />
+                <span asp-validation-for="AppId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="OriginalPrice" class="control-label"></label>
+                <input asp-for="OriginalPrice" class="form-control" />
+                <span asp-validation-for="OriginalPrice" class="text-danger"></span>
+            </div>
+            @*             <div class="form-group">
+            <label asp-for="CurrentPrice" class="control-label"></label>
+            <input asp-for="CurrentPrice" class="form-control" />
+            <span asp-validation-for="CurrentPrice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+            <label asp-for="LowestPrice" class="control-label"></label>
+            <input asp-for="LowestPrice" class="form-control" />
+            <span asp-validation-for="LowestPrice" class="text-danger"></span>
+            </div> *@
+            <div class="form-group">
+                <label asp-for="AgeRating" class="control-label"></label>
+                <input asp-for="AgeRating" class="form-control" />
+                <span asp-validation-for="AgeRating" class="text-danger"></span>
+            </div>
+            @*             <div class="form-group">
+            <label asp-for="Comment" class="control-label"></label>
+            <input asp-for="Comment" class="form-control" />
+            <span asp-validation-for="Comment" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+            <label asp-for="CommentNum" class="control-label"></label>
+            <input asp-for="CommentNum" class="form-control" />
+            <span asp-validation-for="CommentNum" class="text-danger"></span>
+            </div> *@
+            <div class="form-group">
+                <label asp-for="ReleaseDate" class="control-label"></label>
+                <input asp-for="ReleaseDate" class="form-control" />
+                <span asp-validation-for="ReleaseDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Publisher" class="control-label"></label>
+                <input asp-for="Publisher" class="form-control" />
+                <span asp-validation-for="Publisher" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            @*             <div class="form-group">
+            <label asp-for="Players" class="control-label"></label>
+            <input asp-for="Players" class="form-control" />
+            <span asp-validation-for="Players" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+            <label asp-for="PeakPlayers" class="control-label"></label>
+            <input asp-for="PeakPlayers" class="form-control" />
+            <span asp-validation-for="PeakPlayers" class="text-danger"></span>
+            </div> *@
+            <div class="form-group">
+                <img id="imgPreview" src="@Html.DisplayFor(modelItem => modelItem.ImagePath)" title="上無內容" style="width:250px;" /><br>
+                <label asp-for="ImagePath" class="control-label"></label>
+                <input asp-for="ImagePath" class="form-control" onchange="ImageChange(event)" />
+                <span asp-validation-for="ImagePath" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <video id="videoPreview" width="250" height="240" controls autoplay muted src="@Html.DisplayFor(modelItem => modelItem.VideoPath)"></video><br>
+                <label asp-for="VideoPath" class="control-label"></label>
+                <input asp-for="VideoPath" class="form-control" onchange="VideoChange(event)" />
+                <span asp-validation-for="VideoPath" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input id="PostEditPartialToDB" name="@Html.DisplayFor(modelItem => modelItem.GameId)" type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+<script src="~/js/site.js" asp-append-version="true"></script>
+<script>
+    function ImageChange(event) {
+        previewImage(event.target.value, $("#imgPreview"))
+    }
+    function VideoChange(event) {
+        previewVideo(event.target.value, $("#videoPreview"))
+    }
+    var baseAddress = "https://localhost:7097";
+    $("#PostEditPartialToDB").on("click", function (event) {
+        var num = event.target.name
+        event.preventDefault();
+        $("#systemLoading").show();
+        $.ajax({
+            type: "POST",
+            data: {
+                GameId: Number(num),
+                AppId: Number($("#AppId").val()),
+                Name: $("#Name").val(),
+                OriginalPrice: Number($("#OriginalPrice").val()),
+                AgeRating: $("#AgeRating").val(),
+                ReleaseDate: $("#ReleaseDate").val(),
+                Publisher: $("#Publisher").val(),
+                Description: $("#Description").val(),
+                ImagePath: $("#ImagePath").val(),
+                VideoPath: $("#VideoPath").val()
+            },
+            url: `${baseAddress}/Admin/PostEditPartialToDB`
+        }).done(data => {
+            console.log("已完成");
+            $("#System").html(data);
+        })
+            .fail(data => {
+                console.log("失敗");
+                $("#systemLoading").hide();
+                $("#System").html(data);
+            });
+    });
+</script>
