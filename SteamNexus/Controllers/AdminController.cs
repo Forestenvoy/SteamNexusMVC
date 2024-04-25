@@ -294,9 +294,9 @@ namespace SteamNexus.Controllers
             EditViewModel ViewModel = new EditViewModel
             {
                 GameId= id,
-                AppId = game.AppId,
+                AppId = (int)game.AppId,
                 Name = game.Name,
-                OriginalPrice = game.OriginalPrice,
+                OriginalPrice = (int)game.OriginalPrice,
                 AgeRating = game.AgeRating,
                 ReleaseDate = game.ReleaseDate,
                 Publisher = game.Publisher,

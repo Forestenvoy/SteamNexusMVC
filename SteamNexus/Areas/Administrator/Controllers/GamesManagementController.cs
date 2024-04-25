@@ -125,8 +125,20 @@ namespace SteamNexus.Areas.Administrator.Controllers
             return PartialView("_GameEditManagementPartial", ViewModel);
         }
         [HttpPost]
-        public async Task<IActionResult> PostEditPartialToDB(Game game)
+        public async Task<IActionResult> PostEditPartialToDB(EditViewModel ViewModel)
         {
+            var game = _context.Games.FindAsync(ViewModel.GameId).Result;
+            game.GameId = ViewModel.GameId;
+            game.AppId = ViewModel.AppId;
+            game.Name = ViewModel.Name;
+            game.OriginalPrice = ViewModel.OriginalPrice;
+            game.AgeRating = ViewModel.AgeRating;
+            game.ReleaseDate = ViewModel.ReleaseDate;
+            game.Publisher = ViewModel.Publisher;
+            game.Description = ViewModel.Description;
+            game.ImagePath = ViewModel.ImagePath;
+            game.VideoPath = ViewModel.VideoPath;
+
             //if (id != game.GameId)
             //{
             //    return NotFound();
@@ -136,11 +148,13 @@ namespace SteamNexus.Areas.Administrator.Controllers
             {
                 try
                 {
+                    //_context.Entry(game).State = EntityState.Modified;
                     _context.Update(game);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
+                    Console.WriteLine("錯誤");
                     if (!GameExists(game.GameId))
                     {
                         return NotFound();

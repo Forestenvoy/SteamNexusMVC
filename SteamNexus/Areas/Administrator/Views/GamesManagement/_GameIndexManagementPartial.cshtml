@@ -42,36 +42,7 @@
         $("#videoPreview").attr("src", event.target.value);
     }
 
-    function submitonclick(event) {
-        event.preventDefault();
-        var num = event.target.name
-        $("#systemLoading").show();
-        $.ajax({
-            type: "POST",
-            data: {
-                GameId: Number(num),
-                AppId: Number($("#AppId").val()),
-                Name: $("#Name").val(),
-                OriginalPrice: Number($("#OriginalPrice").val()),
-                AgeRating: $("#AgeRating").val(),
-                ReleaseDate: $("#ReleaseDate").val(),
-                Publisher: $("#Publisher").val(),
-                Description: $("#Description").val(),
-                ImagePath: $("#ImagePath").val(),
-                VideoPath: $("#VideoPath").val()
-            },
-            url: `@Url.Action("PostEditPartialToDB", "GamesManagement", new { area = "Administrator" })`
-        }).done(data => {
-            console.log("已完成");
-            $("#System").html(data);
-        })
-            .fail(data => {
-                console.log("失敗");
-                $("#systemLoading").hide();
-                $("#System").html(data);
-            });
-    }
-    // $("#PostEditPartialToDB").on("click", function (event) {
+    // function submitonclick(event) {
     //     event.preventDefault();
     //     var num = event.target.name
     //     $("#systemLoading").show();
@@ -99,7 +70,36 @@
     //             $("#systemLoading").hide();
     //             $("#System").html(data);
     //         });
-    // });
+    // }
+    $(".swal2-confirm swal2-styled").on("click", function (event) {
+        event.preventDefault();
+        var num = event.target.name
+        $("#systemLoading").show();
+        $.ajax({
+            type: "POST",
+            data: {
+                GameId: Number(num),
+                AppId: Number($("#AppId").val()),
+                Name: $("#Name").val(),
+                OriginalPrice: Number($("#OriginalPrice").val()),
+                AgeRating: $("#AgeRating").val(),
+                ReleaseDate: $("#ReleaseDate").val(),
+                Publisher: $("#Publisher").val(),
+                Description: $("#Description").val(),
+                ImagePath: $("#ImagePath").val(),
+                VideoPath: $("#VideoPath").val()
+            },
+            url: `@Url.Action("PostEditPartialToDB", "GamesManagement", new { area = "Administrator" })`
+        }).done(data => {
+            console.log("已完成");
+            $("#System").html(data);
+        })
+            .fail(data => {
+                console.log("失敗");
+                $("#systemLoading").hide();
+                $("#System").html(data);
+            });
+    });
 </script>
 <script>
     $(document).ready(function () {
@@ -227,12 +227,37 @@
                     const { value: formValues } = await Swal.fire({
                         html: `${val}`,
                         focusConfirm: false,
-                        showConfirmButton:false,
+                        confirmButtonText:"確認",
+                        
                         preConfirm: () => {
-                            return [
-                                document.getElementById("swal-input1").value,
-                                document.getElementById("swal-input2").value
-                            ];
+                            alert($("#PostEditPartialToDB").prop("name"))
+                            event.preventDefault();
+                            var num = $("#PostEditPartialToDB").prop("name")
+                            $("#systemLoading").show();
+                            $.ajax({
+                                type: "POST",
+                                data: {
+                                    GameId: Number(num),
+                                    AppId: Number($("#AppId").val()),
+                                    Name: $("#Name").val(),
+                                    OriginalPrice: Number($("#OriginalPrice").val()),
+                                    AgeRating: $("#AgeRating").val(),
+                                    ReleaseDate: $("#ReleaseDate").val(),
+                                    Publisher: $("#Publisher").val(),
+                                    Description: $("#Description").val(),
+                                    ImagePath: $("#ImagePath").val(),
+                                    VideoPath: $("#VideoPath").val()
+                                },
+                                url: `@Url.Action("PostEditPartialToDB", "GamesManagement", new { area = "Administrator" })`
+                            }).done(data => {
+                                console.log("已完成");
+                                $("#System").html(data);
+                            })
+                            .fail(data => {
+                                console.log("失敗");
+                                $("#systemLoading").hide();
+                                $("#System").html(data);
+                            });
                         }
                     });
                     if (formValues) {
