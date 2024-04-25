@@ -9,6 +9,10 @@
         padding-bottom: 0.1rem !important;
         width: -webkit-fill-available !important;
     }
+
+    .swal2-html-container {
+        overflow: hidden !important;
+    }
 </style>
 <div>
     <h1>全部遊戲<img src="~/img/loading-block-white.gif" style="margin:20px width:30px;height:30px;display:none" id="GameIndexLoading" /></h1>
@@ -35,11 +39,12 @@
         $("#imgPreview").attr("src", event.target.value);
     }
     function VideoChange(event) {
-        previewVideo(event.target.value, $("#videoPreview"))
+        $("#videoPreview").attr("src", event.target.value);
     }
-    $("#PostEditPartialToDB").on("click", function (event) {
-        var num = event.target.name
+
+    function submitonclick(event) {
         event.preventDefault();
+        var num = event.target.name
         $("#systemLoading").show();
         $.ajax({
             type: "POST",
@@ -65,7 +70,36 @@
                 $("#systemLoading").hide();
                 $("#System").html(data);
             });
-    });
+    }
+    // $("#PostEditPartialToDB").on("click", function (event) {
+    //     event.preventDefault();
+    //     var num = event.target.name
+    //     $("#systemLoading").show();
+    //     $.ajax({
+    //         type: "POST",
+    //         data: {
+    //             GameId: Number(num),
+    //             AppId: Number($("#AppId").val()),
+    //             Name: $("#Name").val(),
+    //             OriginalPrice: Number($("#OriginalPrice").val()),
+    //             AgeRating: $("#AgeRating").val(),
+    //             ReleaseDate: $("#ReleaseDate").val(),
+    //             Publisher: $("#Publisher").val(),
+    //             Description: $("#Description").val(),
+    //             ImagePath: $("#ImagePath").val(),
+    //             VideoPath: $("#VideoPath").val()
+    //         },
+    //         url: `@Url.Action("PostEditPartialToDB", "GamesManagement", new { area = "Administrator" })`
+    //     }).done(data => {
+    //         console.log("已完成");
+    //         $("#System").html(data);
+    //     })
+    //         .fail(data => {
+    //             console.log("失敗");
+    //             $("#systemLoading").hide();
+    //             $("#System").html(data);
+    //         });
+    // });
 </script>
 <script>
     $(document).ready(function () {
@@ -188,11 +222,12 @@
                     $(this).prop('disabled', false);
                 });
 
+                //叫出編輯的MVC 畫面
                 async function showSwal(val) {
                     const { value: formValues } = await Swal.fire({
-                        title: "Multiple inputs",
                         html: `${val}`,
                         focusConfirm: false,
+                        showConfirmButton:false,
                         preConfirm: () => {
                             return [
                                 document.getElementById("swal-input1").value,

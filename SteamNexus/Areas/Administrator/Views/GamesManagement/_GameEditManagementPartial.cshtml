@@ -4,12 +4,12 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+<h1>@Html.DisplayFor(modelItem => modelItem.Name)</h1>
 
-<h4>Game</h4>
+<h4>遊戲編輯</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="justify-content-center ">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="GameId" />
@@ -25,17 +25,17 @@
             </div> *@
             <div class="form-group">
                 <label asp-for="AppId" class="control-label"></label>
-                <input asp-for="AppId" class="form-control" />
+                <input asp-for="AppId" class="form-control text-center" />
                 <span asp-validation-for="AppId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
+                <input asp-for="Name" class="form-control text-center" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="OriginalPrice" class="control-label"></label>
-                <input asp-for="OriginalPrice" class="form-control" />
+                <input asp-for="OriginalPrice" class="form-control text-center" />
                 <span asp-validation-for="OriginalPrice" class="text-danger"></span>
             </div>
             @*             <div class="form-group">
@@ -50,7 +50,7 @@
             </div> *@
             <div class="form-group">
                 <label asp-for="AgeRating" class="control-label"></label>
-                <input asp-for="AgeRating" class="form-control" />
+                <input asp-for="AgeRating" class="form-control text-center" />
                 <span asp-validation-for="AgeRating" class="text-danger"></span>
             </div>
             @*             <div class="form-group">
@@ -65,17 +65,18 @@
             </div> *@
             <div class="form-group">
                 <label asp-for="ReleaseDate" class="control-label"></label>
-                <input asp-for="ReleaseDate" class="form-control" />
+                <input asp-for="ReleaseDate" class="form-control text-center" />
                 <span asp-validation-for="ReleaseDate" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Publisher" class="control-label"></label>
-                <input asp-for="Publisher" class="form-control" />
+                <input asp-for="Publisher" class="form-control text-center" />
                 <span asp-validation-for="Publisher" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
+                <textarea class="form-control text-center" id="Description" name="Description" rows="5">@Html.DisplayFor(modelItem => modelItem.Description)</textarea>
+                @* <input asp-for="Description" class="form-control text-center" /> *@
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
             @*             <div class="form-group">
@@ -89,25 +90,25 @@
             <span asp-validation-for="PeakPlayers" class="text-danger"></span>
             </div> *@
             <div class="form-group">
-                <img id="imgPreview" src="@Html.DisplayFor(modelItem => modelItem.ImagePath)" title="上無內容" style="width:250px;" /><br>
+                <img id="imgPreview" width="250" src="@Html.DisplayFor(modelItem => modelItem.ImagePath)" title="上無內容"/><br>
                 <label asp-for="ImagePath" class="control-label"></label>
                 <input asp-for="ImagePath" class="form-control" onchange="ImageChange(event)" />
                 <span asp-validation-for="ImagePath" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <video id="videoPreview" width="250" height="240" controls autoplay muted src="@Html.DisplayFor(modelItem => modelItem.VideoPath)"></video><br>
+                <video id="videoPreview" width="250" controls autoplay muted src="@Html.DisplayFor(modelItem => modelItem.VideoPath)"></video><br>
                 <label asp-for="VideoPath" class="control-label"></label>
                 <input asp-for="VideoPath" class="form-control" onchange="VideoChange(event)" />
                 <span asp-validation-for="VideoPath" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input id="PostEditPartialToDB" name="@Html.DisplayFor(modelItem => modelItem.GameId)" type="submit" value="Save" class="btn btn-primary" />
+                <input id="PostEditPartialToDB" name="@Html.DisplayFor(modelItem => modelItem.GameId)" type="submit" value="Save" class="btn btn-primary" onclick="submitonclick(event)" />
             </div>
         </form>
     </div>
 </div>
 
-<div>
+<div class="form-group">
     <a asp-action="Index">Back to List</a>
 </div>
 
@@ -115,7 +116,7 @@
     await Html.RenderPartialAsync("_ValidationScriptsPartial");
 }
 <script src="~/js/site.js" asp-append-version="true"></script>
-<script>
+@* <script>
     function ImageChange(event) {
         previewImage(event.target.value, $("#imgPreview"))
     }
@@ -151,4 +152,4 @@
                 $("#System").html(data);
             });
     });
-</script>
+</script> *@
