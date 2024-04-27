@@ -125,6 +125,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
             return PartialView("_GameEditManagementPartial", ViewModel);
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> PostEditPartialToDB(EditViewModel ViewModel)
         {
             var game = _context.Games.FindAsync(ViewModel.GameId).Result;
