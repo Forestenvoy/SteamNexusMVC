@@ -4,10 +4,6 @@
     ViewData["Title"] = "Edit";
 }
 
-@{
-    await Html.RenderPartialAsync("_ValidationScriptsPartial");
-}
-
 <h1>@Html.DisplayFor(modelItem => modelItem.Name)</h1>
 
 <h4>遊戲編輯</h4>
@@ -113,11 +109,16 @@
     </div>
 </div>
 
+
+@{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+
 @* <div class="form-group">
     <a asp-action="Index">Back to List</a>
 </div> *@
-
 <script src="~/js/site.js" asp-append-version="true"></script>
+
 @* <script>
     function ImageChange(event) {
         previewImage(event.target.value, $("#imgPreview"))

@@ -35,15 +35,6 @@
 </div>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
 <script>
-    function ImageChange(event) {
-        $("#imgPreview").attr("src", event.target.value);
-    }
-    function VideoChange(event) {
-        $("#videoPreview").attr("src", event.target.value);
-    }
-
-</script>
-<script>
     $(document).ready(function () {
         $("#GameIndexLoading").show();
         let baseAddress = "https://localhost:7097";
@@ -90,25 +81,11 @@
             fixedHeader: true,
             // 響應式設計
             responsive: true,
-            language: {
-                url: '//cdn.datatables.net/plug-ins/2.0.3/i18n/zh-HANT.json'
-            },
+            language: {url: '//cdn.datatables.net/plug-ins/2.0.3/i18n/zh-HANT.json'},
             // 自動寬度 關閉
             autoWidth: true,
             // 資料載入中 gif
-            processing: true,
-            createdRow: function (row, data, dataIndex) {
-                if (data.recommend == 0) {
-                    $(row).addClass('black-row');
-                } else if (data.recommend == 1) {
-                    $(row).addClass('green-row');
-                } else if (data.recommend == 2) {
-                    $(row).addClass('blue-row');
-                } else if (data.recommend == 3) {
-                    $(row).addClass('red-row');
-                }
-            },
-
+            processing: true
         });
 
         function getdatatableData() {
@@ -127,7 +104,6 @@
                     dataTable.rows.add(data).draw();
                 }
                 $("#GameIndexLoading").hide();
-                edit_buttonEvent();
                 
             }).catch(error => {
                 console.log(error);
@@ -136,104 +112,95 @@
         getdatatableData();
 
         //編輯
-        function edit_buttonEvent() {
-            // 綁定所有 button 標籤 id 為 edit_button 結尾的元素
-            $('button[id$="edit_button"]').on('click', function (event) {
-                event.preventDefault();
-                event.stopPropagation();
-                var val=""
-                const gameGameId = $(this).attr('data-GameId');
-                
-                fetch(`@Url.Action("GetEditPartialView", "GamesManagement", new { area = "Administrator" })?id=${gameGameId}`, {
-                    method: "GET"
-                }).then(response => {
-                    // 確保請求是否成功
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    // 解析 html
-                    return response.text();
-                }).then(val => {
-                    if (val) {
-                        showSwal(val);
-                    }
-                }).catch(error => {
-                    alert(error);
-                }).finally(() => {
-                    // 异步操作完成后启用按钮
-                    $(this).prop('disabled', false);
+        $(document).on('click', 'button[id$="edit_button"]', function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            var val = ""
+            const gameGameId = $(this).attr('data-GameId');
+
+            //優先載入js 在執行fetch
+            $.getScript("/js/GameEdit.js")
+                .done(function (script, textStatus) {
+                    console.log("加载成功");
+                    // 执行加载的脚本
+                    //ajex呼叫EditPartialView
+                    fetch(`@Url.Action("GetEditPartialView", "GamesManagement", new { area = "Administrator" })?id=${gameGameId}`, {
+                        method: "GET"
+                    }).then(response => {
+                        // 確保請求是否成功
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        // 解析 html
+                        return response.text();
+                    }).then(val => {
+                        if (val) {
+                            showSwal(val);
+                        }
+                    }).catch(error => {
+                        alert(error);
+                    }).finally(() => {
+                        // 异步操作完成后启用按钮
+                        $(this).prop('disabled', false);
+                    });
+                })
+                .fail(function (jqxhr, settings, exception) {
+                    console.error("加载失败");
                 });
 
-                //叫出編輯的MVC 畫面
-                async function showSwal(val) {
-                    const { value: formValues } = await Swal.fire({
-                        html: `${val}`,
-                        focusConfirm: false,
-                        confirmButtonText:"確認",
-                        preConfirm: () => {
-                            alert($("#PostEditPartialToDB").prop("name"))
-                            event.preventDefault();
-                            var num = $("#PostEditPartialToDB").prop("name")
-                            var token = $('input[name="__Antiforgery__SteamNexus"]').val();
-                            $("#systemLoading").show();
-                            $.ajax({
-                                type: "POST",
-                                data: {
-                                    GameId: Number(num),
-                                    AppId: $("#AppId").val(),
-                                    Name: $("#Name").val(),
-                                    OriginalPrice: Number($("#OriginalPrice").val()),
-                                    AgeRating: $("#AgeRating").val(),
-                                    ReleaseDate: $("#ReleaseDate").val(),
-                                    Publisher: $("#Publisher").val(),
-                                    Description: $("#Description").val(),
-                                    ImagePath: $("#ImagePath").val(),
-                                    VideoPath: $("#VideoPath").val(),
-                                    __Antiforgery__SteamNexus: token
-                                },
-                                url: `@Url.Action("PostEditPartialToDB", "GamesManagement", new { area = "Administrator" })`
-                            }).done(data => {
-                                if (data.includes("<h1>全部遊戲")) {
-                                    console.log("已完成");
-                                    $("#System").html(data);
-                                } else {
-                                    console.log("內容有錯");
-                                    showSwal(data);
-                                }
-                            })
+            //叫出編輯的MVC 畫面
+            async function showSwal(val) {
+                const { value: formValues } = await Swal.fire({
+                    html: `${val}`,
+                    focusConfirm: false, //設定初始聚焦為第一個input元素 而不是"確認"按鈕
+                    confirmButtonText: "確認", //按鈕文字
+                    preConfirm: () => {   //在按下確認後所發生的事情
+                        event.preventDefault();
+                        var num = $("#PostEditPartialToDB").prop("name") //我把GameId藏在這裡
+                        var token = $('input[name="__Antiforgery__SteamNexus"]').val(); //擷取防偽標籤的值
+                        $("#systemLoading").show();
+                        $.ajax({
+                            type: "POST",
+                            data: {
+                                GameId: Number(num),
+                                AppId: $("#AppId").val(),
+                                Name: $("#Name").val(),
+                                OriginalPrice: Number($("#OriginalPrice").val()),
+                                AgeRating: $("#AgeRating").val(),
+                                ReleaseDate: $("#ReleaseDate").val(),
+                                Publisher: $("#Publisher").val(),
+                                Description: $("#Description").val(),
+                                ImagePath: $("#ImagePath").val(),
+                                VideoPath: $("#VideoPath").val(),
+                                __Antiforgery__SteamNexus: token  //防偽標籤傳送點
+                            },
+                            url: `@Url.Action("PostEditPartialToDB", "GamesManagement", new { area = "Administrator" })`
+                        }).done(data => {
+                            //若資料驗證有錯server會回傳editview 若正確他會回傳indexview 用if來辨識他是否為indexview
+                            if (data.includes("<h1>全部遊戲")) {
+                                console.log("已完成");
+                                $("#System").html(data);
+                            } else {
+                                console.log("內容有錯");
+                                showSwal(data);
+                            }
+                        })
                             .fail(data => {
                                 console.log("失敗");
                                 $("#systemLoading").hide();
                                 $("#System").html(data);
                             });
-                        }
-                    });
-                    // if (formValues) {
-                    //     Swal.fire(JSON.stringify(formValues));
-                    // }
-                }
-            });
-
-        };
-
-        //ajax抓取EditPartialView
-        function GetEditPartialView(gameGameId) {
-            console.log(gameGameId)
-            var id = `id=${gameGameId}`;
-            return fetch(`@Url.Action("GetEditPartialView", "GamesManagement", new { area = "Administrator" })?${id}`, {
-                method: "GET"
-            }).then(response => {
-                // 確保請求是否成功
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                // 解析 html
-                return response.text();
-            }).catch(error => {
-                alert(error);
-            })
-        }
+                    }
+                });
+                // if (formValues) {
+                //     Swal.fire(JSON.stringify(formValues));
+                // }
+            }
         
+        })
+
+
+        // 刪除
         // 綁定所有 button 標籤 id 為 delete_button 結尾的元素
         $(document).on('click', 'button[id$="delete_button"]', function (event) {
             //抓取delete_button自訂屬性的值
