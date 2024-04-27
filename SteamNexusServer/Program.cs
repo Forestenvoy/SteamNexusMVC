@@ -10,6 +10,16 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// 加入 CORS 策略
+string MyAllowSpecificOrigins = "AllowAny";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(
+        name: MyAllowSpecificOrigins,
+        policy => policy.WithOrigins("*").WithMethods("*").WithHeaders("*")
+    );
+});
+
 // DataBase Connection String
 var SteamNexusConnectionString = builder.Configuration.GetConnectionString("SteamNexus");
 // Add SteamNexusDbContext
@@ -23,6 +33,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+
+// 套院 CORS 設定
+app.UseCors();
 
 app.UseHttpsRedirection();
 
