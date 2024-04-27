@@ -170,7 +170,6 @@
                         html: `${val}`,
                         focusConfirm: false,
                         confirmButtonText:"確認",
-                        
                         preConfirm: () => {
                             alert($("#PostEditPartialToDB").prop("name"))
                             event.preventDefault();
@@ -181,7 +180,7 @@
                                 type: "POST",
                                 data: {
                                     GameId: Number(num),
-                                    AppId: Number($("#AppId").val()),
+                                    AppId: $("#AppId").val(),
                                     Name: $("#Name").val(),
                                     OriginalPrice: Number($("#OriginalPrice").val()),
                                     AgeRating: $("#AgeRating").val(),
@@ -194,8 +193,13 @@
                                 },
                                 url: `@Url.Action("PostEditPartialToDB", "GamesManagement", new { area = "Administrator" })`
                             }).done(data => {
-                                console.log("已完成");
-                                $("#System").html(data);
+                                if (data.includes("<h1>全部遊戲")) {
+                                    console.log("已完成");
+                                    $("#System").html(data);
+                                } else {
+                                    console.log("內容有錯");
+                                    showSwal(data);
+                                }
                             })
                             .fail(data => {
                                 console.log("失敗");
@@ -204,9 +208,9 @@
                             });
                         }
                     });
-                    if (formValues) {
-                        Swal.fire(JSON.stringify(formValues));
-                    }
+                    // if (formValues) {
+                    //     Swal.fire(JSON.stringify(formValues));
+                    // }
                 }
             });
 

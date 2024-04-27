@@ -128,25 +128,20 @@ namespace SteamNexus.Areas.Administrator.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> PostEditPartialToDB(EditViewModel ViewModel)
         {
-            var game = _context.Games.FindAsync(ViewModel.GameId).Result;
-            game.GameId = ViewModel.GameId;
-            game.AppId = ViewModel.AppId;
-            game.Name = ViewModel.Name;
-            game.OriginalPrice = ViewModel.OriginalPrice;
-            game.AgeRating = ViewModel.AgeRating;
-            game.ReleaseDate = ViewModel.ReleaseDate;
-            game.Publisher = ViewModel.Publisher;
-            game.Description = ViewModel.Description;
-            game.ImagePath = ViewModel.ImagePath;
-            game.VideoPath = ViewModel.VideoPath;
-
-            //if (id != game.GameId)
-            //{
-            //    return NotFound();
-            //}
-
             if (ModelState.IsValid)
             {
+                var game = _context.Games.FindAsync(ViewModel.GameId).Result;
+                game.GameId = ViewModel.GameId;
+                game.AppId = ViewModel.AppId;
+                game.Name = ViewModel.Name;
+                game.OriginalPrice = ViewModel.OriginalPrice;
+                game.AgeRating = ViewModel.AgeRating;
+                game.ReleaseDate = ViewModel.ReleaseDate;
+                game.Publisher = ViewModel.Publisher;
+                game.Description = ViewModel.Description;
+                game.ImagePath = ViewModel.ImagePath;
+                game.VideoPath = ViewModel.VideoPath;
+
                 try
                 {
                     //_context.Entry(game).State = EntityState.Modified;
@@ -169,7 +164,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
             }
             //ViewData["MinReqId"] = new SelectList(_context.MinimumRequirements, "MinReqId", "MinReqId", game.MinReqId);
             //ViewData["RecReqId"] = new SelectList(_context.RecommendedRequirements, "RecReqId", "RecReqId", game.RecReqId);
-            return GetIndexPartialView();
+            return PartialView("_GameEditManagementPartial", ViewModel);
         }
 
         [HttpGet]

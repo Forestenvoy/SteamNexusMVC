@@ -14,7 +14,7 @@
 <hr />
 <div class="row">
     <div class="justify-content-center ">
-        <form asp-action="Edit">
+        <form asp-controller="GamesManagement" asp-action="PostEditPartialToDB" asp-area="Administrator">
             @Html.AntiForgeryToken()
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="GameId" />
@@ -107,18 +107,15 @@
                 <span asp-validation-for="VideoPath" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input id="PostEditPartialToDB" name="@Html.DisplayFor(modelItem => modelItem.GameId)" type="submit" value="Save" class="btn btn-primary" onclick="submitonclick(event)" />
+                <input id="PostEditPartialToDB" name="@Html.DisplayFor(modelItem => modelItem.GameId)" type="submit" value="Save" class="btn btn-primary" style="display:none" onclick="submitonclick(event)" />
             </div>
         </form>
     </div>
 </div>
 
-<div class="form-group">
+@* <div class="form-group">
     <a asp-action="Index">Back to List</a>
-</div>
-@{
-    await Html.RenderPartialAsync("_ValidationScriptsPartial");
-}
+</div> *@
 
 <script src="~/js/site.js" asp-append-version="true"></script>
 @* <script>
