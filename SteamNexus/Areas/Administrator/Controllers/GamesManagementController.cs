@@ -70,33 +70,45 @@ namespace SteamNexus.Areas.Administrator.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostCreatPartialToDB(Game game)
+        public async Task<IActionResult> PostCreatPartialToDB(CreateViewModel Create)
         {
-            var steamNexusDbContext = _context.Games;
-
             if (ModelState.IsValid)
             {
+                Game game = new Game
+                {
+                    AppId = Create.AppId,
+                    Name = Create.Name,
+                    OriginalPrice = Create.OriginalPrice,
+                    AgeRating = Create.AgeRating,
+                    ReleaseDate = Create.ReleaseDate,
+                    Publisher = Create.Publisher,
+                    Description = Create.Description,
+                    ImagePath = Create.ImagePath,
+                    VideoPath = Create.VideoPath,
+                };
 
-                //Game game = new Game
-                //{
-                //    AppId = Create.AppId,
-                //    Name = Create.Name,
-                //    OriginalPrice = Create.OriginalPrice,
-                //    AgeRating = Create.AgeRating,
-                //    ReleaseDate = Create.ReleaseDate,
-                //    Publisher = Create.Publisher,
-                //    Description = Create.Description,
-                //    ImagePath = Create.ImagePath,
-                //    VideoPath = Create.VideoPath,
-                //};
-
-                _context.Games.Add(game);
-                await _context.SaveChangesAsync();
+                try
+                {
+                    _context.Games.Add(game);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    Console.WriteLine("錯誤");
+                    if (!GameExists(game.GameId))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
                 return GetIndexPartialView();
             }
 
 
-            return GetIndexPartialView();
+            return PartialView("_GameCreateManagementPartial", Create);
         }
 
         [HttpGet]

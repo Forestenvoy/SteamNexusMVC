@@ -85,7 +85,51 @@
             // 自動寬度 關閉
             autoWidth: true,
             // 資料載入中 gif
-            processing: true
+            processing: true,
+            //Create按鈕建立
+            layout: {
+                topMiddle: {
+                    buttons: [
+                        {
+                            text: '新增遊戲',
+                            // 按鈕點擊事件
+                            action: function (e, dt, node, config) {
+                                
+                                event.preventDefault();
+                                event.stopPropagation();
+
+                                $.getScript("/js/GameEdit.js")
+                                    .done(function (script, textStatus) {
+                                        console.log("加载成功");
+                                        fetch(`@Url.Action("GetCreatPartialView", "GamesManagement", new { area = "Administrator" })`, {
+                                            method: "GET"
+                                        }).then(response => {
+                                            // 確保請求是否成功
+                                            if (!response.ok) {
+                                                throw new Error('Network response was not ok');
+                                            }
+                                            // 解析 html
+                                            return response.text();
+                                        }).then(val => {
+                                            if (val) {
+                                                showSwal(val, `@Url.Action("PostCreatPartialToDB", "GamesManagement", new { area = "Administrator" })`);
+                                            }
+                                        }).catch(error => {
+                                            alert(error);
+                                        }).finally(() => {
+                                            // 异步操作完成后启用按钮
+                                            $(this).prop('disabled', false);
+                                        });
+                                    })
+                                    .fail(function (jqxhr, settings, exception) {
+                                        console.error("加载失败");
+                                    });
+                            }
+                        }
+
+                    ]
+                },
+            },
         });
 
         function getdatatableData() {
@@ -111,7 +155,7 @@
         };
         getdatatableData();
 
-        //編輯
+        //編輯:叫出編輯的MVC 畫面
         $(document).on('click', 'button[id$="edit_button"]', function (event) {
             event.preventDefault();
             event.stopPropagation();
@@ -135,7 +179,7 @@
                         return response.text();
                     }).then(val => {
                         if (val) {
-                            showSwal(val);
+                            showSwal(val, `@Url.Action("PostEditPartialToDB", "GamesManagement", new { area = "Administrator" })`);
                         }
                     }).catch(error => {
                         alert(error);
@@ -147,61 +191,59 @@
                 .fail(function (jqxhr, settings, exception) {
                     console.error("加载失败");
                 });
-
-            //叫出編輯的MVC 畫面
-            async function showSwal(val) {
-                const { value: formValues } = await Swal.fire({
-                    html: `${val}`,
-                    focusConfirm: false, //設定初始聚焦為第一個input元素 而不是"確認"按鈕
-                    confirmButtonText: "確認", //按鈕文字
-                    preConfirm: () => {   //在按下確認後所發生的事情
-                        event.preventDefault();
-                        var num = $("#PostEditPartialToDB").prop("name") //我把GameId藏在這裡
-                        var token = $('input[name="__Antiforgery__SteamNexus"]').val(); //擷取防偽標籤的值
-                        $("#systemLoading").show();
-                        $.ajax({
-                            type: "POST",
-                            data: {
-                                GameId: Number(num),
-                                AppId: $("#AppId").val(),
-                                Name: $("#Name").val(),
-                                OriginalPrice: Number($("#OriginalPrice").val()),
-                                AgeRating: $("#AgeRating").val(),
-                                ReleaseDate: $("#ReleaseDate").val(),
-                                Publisher: $("#Publisher").val(),
-                                Description: $("#Description").val(),
-                                ImagePath: $("#ImagePath").val(),
-                                VideoPath: $("#VideoPath").val(),
-                                __Antiforgery__SteamNexus: token  //防偽標籤傳送點
-                            },
-                            url: `@Url.Action("PostEditPartialToDB", "GamesManagement", new { area = "Administrator" })`
-                        }).done(data => {
-                            //若資料驗證有錯server會回傳editview 若正確他會回傳indexview 用if來辨識他是否為indexview
-                            if (data.includes("<h1>全部遊戲")) {
-                                console.log("已完成");
-                                $("#System").html(data);
-                            } else {
-                                console.log("內容有錯");
-                                showSwal(data);
-                            }
-                        })
-                            .fail(data => {
-                                console.log("失敗");
-                                $("#systemLoading").hide();
-                                $("#System").html(data);
-                            });
-                    }
-                });
-                // if (formValues) {
-                //     Swal.fire(JSON.stringify(formValues));
-                // }
-            }
-        
         })
 
+        //將編輯內容傳至後端
+        async function showSwal(val,urlValue) {
+            const { value: formValues } = await Swal.fire({
+                html: `${val}`,
+                focusConfirm: false, //設定初始聚焦為第一個input元素 而不是"確認"按鈕
+                confirmButtonText: "確認", //按鈕文字
+                preConfirm: () => {   //在按下確認後所發生的事情
+                    event.preventDefault();
+                    var num = $("#PostEditPartialToDB").prop("name") //我把GameId藏在這裡
+                    var token = $('input[name="__Antiforgery__SteamNexus"]').val(); //擷取防偽標籤的值
+                    $("#systemLoading").show();
+                    console.log(urlValue)
+                    $.ajax({
+                        type: "POST",
+                        data: {
+                            GameId: num,
+                            AppId: $("#AppId").val(),
+                            Name: $("#Name").val(),
+                            OriginalPrice: $("#OriginalPrice").val(),
+                            AgeRating: $("#AgeRating").val(),
+                            ReleaseDate: $("#ReleaseDate").val(),
+                            Publisher: $("#Publisher").val(),
+                            Description: $("#Description").val(),
+                            ImagePath: $("#ImagePath").val(),
+                            VideoPath: $("#VideoPath").val(),
+                            __Antiforgery__SteamNexus: token  //防偽標籤傳送點
+                        },
+                        url: urlValue
+                    }).done(data => {
+                        //若資料驗證有錯server會回傳editview 若正確他會回傳indexview 用if來辨識他是否為indexview
+                        if (data.includes("<h1>全部遊戲")) {
+                            console.log("已完成");
+                            $("#System").html(data);
+                        } else {
+                            console.log("內容有錯");
+                            showSwal(data, urlValue);
+                        }
+                    })
+                        .fail(data => {
+                            console.log("失敗");
+                            $("#systemLoading").hide();
+                            $("#System").html(data);
+                        });
+                }
+            });
+            // if (formValues) {
+            //     Swal.fire(JSON.stringify(formValues));
+            // }
+        }
 
-        // 刪除
-        // 綁定所有 button 標籤 id 為 delete_button 結尾的元素
+        // 刪除:綁定所有 button 標籤 id 為 delete_button 結尾的元素
         $(document).on('click', 'button[id$="delete_button"]', function (event) {
             //抓取delete_button自訂屬性的值
             const gameName = $(this).attr('data-name');
