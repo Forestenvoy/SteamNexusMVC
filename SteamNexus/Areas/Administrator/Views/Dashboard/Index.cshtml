@@ -101,23 +101,6 @@
                     $("#systemLoading").hide();
                     // 顯示 PartialView 資料
                     $("#System").html(data);
-                    // 動態加載 PartialView 所需的 JavaScript
-
-                    // 移除舊的 PartialView JavaScript
-                    // 移除舊的 JavaScript
-                    var oldScript = document.querySelector('#dynamicScript');
-                    if (oldScript) {
-                        oldScript.parentNode.removeChild(oldScript);
-                    }
-                    // 建立新的 PartialView JavaScript
-                    var newScriptElement = document.createElement("script");
-                    let version = new Date().getTime();
-                    newScriptElement.src = `@Url.Content("~/js/hardwareproductmanagement.js")?version=${version}`;
-                    newScriptElement.id = "dynamicScript"; // 保持相同的 ID
-                    // 獲取 body 元素
-                    var bodyElement = document.body;
-                    // 將新的 script 元素插入到 body 元素中的最後一個子元素之前
-                    bodyElement.insertBefore(newScriptElement, bodyElement.lastChild);
                 }).catch(error => {
                     // Loading 關閉
                     $("#systemLoading").hide();
