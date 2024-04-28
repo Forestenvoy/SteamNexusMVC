@@ -1,14 +1,17 @@
-﻿// 引入官方元件
-import Vue from 'vue'
-import VueRouter from 'vue-router'
+﻿import { createRouter, createWebHistory } from 'vue-router'
+import Home from '@/views/Home.vue'
+import About from '@/views/About.vue'
+import Brazil from '@/views/Brazil.vue'
 
-// 引入自定義元件
-import Hello from '@/components/HelloWorld.vue'
+const routes = [
+    { path: '/', name: 'Home', component: Home },
+    { path: '/about', name: 'About', component: About },
+    { path: '/brazil', name: 'brazil', component: Brazil },
+]
 
-// 啟用 VueRouter 元件
-Vue.use(VueRouter)
+const router = createRouter({ 
+    history: createWebHistory(),
+    routes
+})
 
-// 匯出給 entry 使用
-export default new VueRouter({
-
-});
+export default router
