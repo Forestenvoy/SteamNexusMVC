@@ -71,7 +71,7 @@
                     "width": "10%",
                     "className": "text-center",
                     "render": function (data, type, row) {
-                        return `<img src="/images/headshots/${data}" alt="Image" style="width: 100px; height: 100px;" />`;
+                        return data? `<img src="/images/headshots/${data}" alt="Image" style="width: 100px; height: 100px;" />` : "No Image";
                     }
 
                 },
