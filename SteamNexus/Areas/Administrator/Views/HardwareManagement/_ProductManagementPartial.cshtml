@@ -215,9 +215,8 @@
         datatable.on('responsive-display.dt', function (e, datatable, row, showHide, update) {
 
         });
-
-
-
+        
+        $(document).off('click', '.Edit-btn');
         // 資料編輯 ~ 當任何具有 Edit-btn 類別元素被點擊時觸發
         $(document).on('click', '.Edit-btn', function () {
             // 被隱藏的按鈕不能觸發
@@ -268,6 +267,8 @@
             }
         });
 
+
+        $(document).off('click', '.Enter-btn');
         // 資料變更確認 ~ 當任何具有 Enter-btn 類別元素被點擊時觸發
         $(document).on('click', '.Enter-btn', function () {
             // 被隱藏的按鈕不能觸發
@@ -355,6 +356,8 @@
             }
         });
 
+
+        $(document).off('click', '.Cancell-btn');
         // 資料變更取消 ~ 當任何具有 Cancell-btn 類別元素被點擊時觸發
         $(document).on('click', '.Cancell-btn', function () {
             // 被隱藏的按鈕不能觸發
