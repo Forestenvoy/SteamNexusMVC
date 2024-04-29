@@ -368,12 +368,14 @@ namespace SteamNexus.Services
                     {
                         // 例外排除
                         if (optgroups[i][j].Substring(0, 8) == "&#x2764;" ||
-                            optgroups[i][j].Substring(0, 8) == "&#x21AA;")
+                            optgroups[i][j].Substring(0, 8) == "&#x21AA;" ||
+                            optgroups[i][j].IndexOf("[狂加購]") != -1)
                         {
                             continue;
                         }
 
                         //Console.WriteLine(optgroups[i][j]);
+
 
                         // 找到各段資訊的索引值斷點
                         int NameEnd = optgroups[i][j].IndexOf("讀");
@@ -382,14 +384,16 @@ namespace SteamNexus.Services
 
                         if (NameEnd == -1 || SpecEnd == -1 || PriceFirst == -1) { continue; }
 
-                        // 名稱、規格
+                        //// 名稱、規格
                         string Name = optgroups[i][j].Substring(0, NameEnd).Trim();
                         string Spec = optgroups[i][j].Substring(NameEnd, SpecEnd - NameEnd).Trim();
-                        // 價格
+                        //// 價格
                         string PriceStr = optgroups[i][j].Substring(PriceFirst);
                         int Price = 0;
 
+
                         int PriceEnd = PriceStr.IndexOf(" ");
+                        if(PriceEnd == -1) { PriceEnd = PriceStr.Length; }
                         Price = int.Parse(PriceStr.Substring(1, PriceEnd - 1));
 
                         //Console.WriteLine($"{Name} {Spec} {Price}");

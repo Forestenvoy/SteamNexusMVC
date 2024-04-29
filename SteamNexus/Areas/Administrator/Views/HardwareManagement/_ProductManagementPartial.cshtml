@@ -1,6 +1,4 @@
-﻿@* PartialView 的 CSS *@
-<link href="~/css/hardwareproductmanagesystem.css" rel="stylesheet" asp-append-version="true" />
-@* PartialView 的 HTML *@
+﻿@* PartialView 的 HTML *@
 <div class="page-title position-relative">
     <div class="row">
         @* 系統名稱 *@
@@ -47,18 +45,24 @@
 <script>
     $(document).ready(function () {
 
+        // 計算被響應式隱藏的 column
+        var responsiveColumnsCount = 0;
+        // 重新整理檢測
+        var isrefresh = false;
+        var isHardwareChoose = false;
+
         // 初始化 Datatables
         var datatable = new DataTable('#HardwareManageTable', {
             // column 定義
             columns: [
                 { "data": "productId", "width": "5%", "className": "text-center" },
-                { "data": "productName", "width": "35%" },
-                { "data": "specification", "width": "30%" },
+                { "data": "productName", "width": "34%" },
+                { "data": "specification", "width": "29%" },
                 { "data": "componentClassificationName", "visible": false },
-                { "data": "price", "width": "10%", "className": "text-center" },
+                { "data": "price", "width": "8%", "className": "text-center" },
                 {
                     "data": "wattage",
-                    "width": "10%",
+                    "width": "8%",
                     "className": "text-center",
                     // 瓦數 ~ 文字輸入方塊
                     render: function (data, type, row, meta) {
@@ -78,7 +82,7 @@
                 },
                 {
                     "data": "recommend",
-                    "width": "10%",
+                    "width": "8%",
                     "className": "text-center",
                     // 推薦 ~ 下拉式選單
                     render: function (data, type, row, meta) {
@@ -107,18 +111,16 @@
                 {
                     "data": null,
                     "orderable": false,
-                    "width": "10%",
+                    "width": "8%",
                     // 按鈕 自定義
                     render: function (data, type, row, meta) {
                         // 取得 productId
                         let productId = row.productId;
                         // 編輯按鈕
-                        let editEle = `<button class="${productId}_edit btn Edit-btn d-flex justify-content-center align-items-center" style="width:30px;height:30px;" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-pen-to-square"></i></button>`;
-                        let div = `<div id="${productId}_div">${editEle}</div>`;
-                        // 復原按鈕
-                        let resetEle = `<button class="${productId}_reset btn Reset-btn d-flex justify-content-center align-items-center" style="width:30px;height:30px;" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-rotate-right"></i></button>`;
+                        let editEle = `<button class="${productId}_edit btn Edit-btn d-flex justify-content-center align-items-center" style="width:30px;height:30px;" data-slefColumn-isShow="false"><i class="fa-solid fa-pen-to-square"></i></button>`;
+                        let div = `<div class="d-flex justify-content-between" id="${productId}_div">${editEle}</div>`;
                         if (type === 'display') {
-                            return `${div}&nbsp;&nbsp;&nbsp;${resetEle}`;
+                            return `${div}`;
                         }
                         return data;
                     },
@@ -161,28 +163,35 @@
                 $(row).attr('id', data.productId + '_row');
                 // 為特定行加入 class ==> 不會影響 th
                 $(row).find('td:eq(6)').addClass('d-flex');
-                $(row).find('td:eq(6)').addClass('justify-content-between');
+                $(row).find('td:eq(6)').addClass('justify-content-center');
             },
             // 按鈕建立
             layout: {
                 topMiddle: {
                     buttons: [
                         {
-                            // 按鈕顯示的文本
+                            text: '重新整理',
+                            // 按鈕點擊事件
+                            action: function (e, dt, node, config) {
+                                isrefresh = true;
+                                // 重新整理
+                                getdatatableData();
+                            }
+                        },
+                        {
                             text: '單一零件更新',
                             // 按鈕點擊事件
                             action: function (e, dt, node, config) {
                                 // 單一零件更新
-                                // UpdateOneHardware();
+                                UpdateOneHardware();
                             }
                         },
                         {
-                            // 按鈕顯示的文本
                             text: '全零件更新',
                             // 按鈕點擊事件
                             action: function (e, dt, node, config) {
                                 // 全零件更新
-                                // UpdateAllHardware();
+                                UpdateAllHardware();
                             }
                         },
 
@@ -191,24 +200,76 @@
             },
         });
 
+        // 響應式cloumn重構事件
+        datatable.on('responsive-resize', function (e, datatable, columns) {
+            // 計算隱藏的行數
+            responsiveColumnsCount = columns.reduce(function (a, b) {
+                return b === false ? a + 1 : a;
+            }, 0);
+            if (responsiveColumnsCount === 0) {
+                // 將 展開屬性設定 false
+                $('.Edit-btn').attr('data-slefColumn-isShow', 'false');
+            }
+        });
+        // 子行展開收縮事件觸發
+        datatable.on('responsive-display.dt', function (e, datatable, row, showHide, update) {
+
+        });
+        
+        $(document).off('click', '.Edit-btn');
         // 資料編輯 ~ 當任何具有 Edit-btn 類別元素被點擊時觸發
         $(document).on('click', '.Edit-btn', function () {
             // 被隱藏的按鈕不能觸發
             if ($(this).css('display') !== 'none') {
+                // 檢測有隱藏的行數
+                // if (responsiveColumnsCount > 0) {
+                //     // 檢查使用者有沒有展開
+                //     if ($(this).attr('data-slefColumn-isShow') === 'false') {
+                //         // 取得吐司容器元素
+                //         let ToastContainer = document.querySelector('#ToastContainer');
+                //         // 流水號生成
+                //         let toastId = Math.floor(Math.random() * 1000);
+                //         // 吐司元素生成
+                //         let toast = ToastInitialization(toastId);
+                //         // 發送吐司
+                //         ToastContainer.insertAdjacentHTML(`afterbegin`, toast);
+                //         $(`#${toastId}_Toast`).show();
+                //         // 隱藏 載入狀態
+                //         $(`#${toastId}_Toast_Status`).hide();
+                //         // 顯示 吐司失敗狀態
+                //         $(`#${toastId}_ToastIcon_fail`).addClass('animate__zoomIn').removeClass('d-none');
+                //         $(`#${toastId}_ToastText`).text("請先展開該列");
+                //         // 進度條消失
+                //         $(`#${toastId}_ToastProgress`).show();
+                //         // 更改顏色
+                //         $(`#${toastId}_ToastProgress_rect`).css('fill', '#FF0000');
+                //         // 進度條消失
+                //         ToastProgressDisappear(toastId);
+                //         return;
+                //     }
+                // }
                 // 取得 ID
                 let productId = Number($(this).attr('class').slice(0, 5));
-                // 更換成確認按鈕
-                let enterEle = `<button class="${productId}_enter btn Enter-btn d-flex justify-content-center align-items-center" style="width:30px;height:30px;" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-check"></i></button>`;
-                $(`#${productId}_div`).html(enterEle);
+                // 取資料 ~ 只取看的見的元素
+                let wattVal = Number($(`.${productId}_watt:visible`).val());
+                let recVal = Number($(`.${productId}_recommend:visible`).val());
+                // 確認按鈕
+                let enterEle = `<button class="${productId}_enter btn Enter-btn d-flex justify-content-center align-items-center" style="width:30px;height:30px;"><i class="fa-solid fa-check"></i></button>`;
+                // 取消按鈕
+                let cancellEle = `<button class="${productId}_reset btn Cancell-btn d-flex justify-content-center align-items-center" style="width:30px;height:30px;" data-origin="${wattVal},${recVal}"><i class="fa-solid fa-xmark"></i></button>`;
+                $(`#${productId}_div`).html(`${enterEle}&nbsp;&nbsp;&nbsp;${cancellEle}`);
                 // 編輯模式 ~ 開啟 td 編輯功能
                 $(`.${productId}_watt`).prop('disabled', false);
                 $(`.${productId}_watt`).removeClass("defaultcellType");
                 $(`.${productId}_recommend`).prop('disabled', false);
                 $(`.${productId}_recommend`).removeClass("defaultcellType");
+
             }
         });
 
-        // 資料變更 ~ 當任何具有 Enter-btn 類別元素被點擊時觸發
+
+        $(document).off('click', '.Enter-btn');
+        // 資料變更確認 ~ 當任何具有 Enter-btn 類別元素被點擊時觸發
         $(document).on('click', '.Enter-btn', function () {
             // 被隱藏的按鈕不能觸發
             if ($(this).css('display') !== 'none') {
@@ -229,13 +290,15 @@
                 };
                 // 獲取防偽標籤值
                 let csrfToken = document.querySelector('input[name="__Antiforgery__SteamNexus"]').value;
+                // 流水號生成
+                let toastId = Math.floor(Math.random() * 1000);
                 // 吐司元素生成
-                let toast = ToastInitialization(productId);
+                let toast = ToastInitialization(toastId);
                 // 發送吐司
-                ToastContainer.insertAdjacentHTML('afterbegin', toast);
+                ToastContainer.insertAdjacentHTML(`afterbegin`, toast);
                 // 狀態值
                 let PromiseStatus = false;
-                $(`#${productId}_Toast`).show();
+                $(`#${toastId}_Toast`).show();
                 // 發送非同步POST請求 ==> 資料庫資料變更
                 fetch(`@Url.Action("ProductDataUpdate", "HardwareManagement", new { area = "Administrator" })`, {
                     method: "POST",
@@ -246,8 +309,8 @@
                     }
                 }).then(result => {
                     // 隱藏吐司 loading
-                    $(`#${productId}_Toast_Status`).addClass('animate__zoomOut');
-                    $(`#${productId}_Toast_Status`).hide();
+                    $(`#${toastId}_Toast_Status`).addClass('animate__zoomOut');
+                    $(`#${toastId}_Toast_Status`).hide();
                     // 如過 HTTP 響應的狀態馬碼在 200 到 299 的範圍內 ==> .ok 會回傳 true
                     if (result.ok) {
                         // 此時 result 是一個請求結果的物件 => 注意傳回值型態，字串用 text()，JSON 用 json()
@@ -259,13 +322,12 @@
                     // 此時 data 為上一個 then 回傳的資料
                     if (PromiseStatus) {
                         // 顯示 吐司成功狀態
-                        $(`#${productId}_ToastIcon_success`).addClass('animate__zoomIn').removeClass('d-none');
-                        $(`#${productId}_ToastText`).text(data);
+                        $(`#${toastId}_ToastIcon_success`).addClass('animate__zoomIn').removeClass('d-none');
+                        $(`#${toastId}_ToastText`).text(data);
                         // 顯示進度條
-                        $(`#${productId}_ToastProgress`).show();
-                        console.log($(`#${productId}_ToastProgress_rect`));
+                        $(`#${toastId}_ToastProgress`).show();
                         // 進度條消失
-                        ToastProgressDisappear(productId);
+                        ToastProgressDisappear(toastId);
                         // 恢復預設模式 ~ 關閉 td 編輯功能
                         $(`.${productId}_watt`).attr('disabled', true);
                         $(`.${productId}_watt`).addClass("defaultcellType");
@@ -277,30 +339,45 @@
                     }
                     else {
                         // 顯示 吐司失敗狀態
-                        $(`#${productId}_ToastIcon_fail`).addClass('animate__zoomIn').removeClass('d-none');
-                        $(`#${productId}_ToastText`).text(data);
+                        $(`#${toastId}_ToastIcon_fail`).addClass('animate__zoomIn').removeClass('d-none');
+                        $(`#${toastId}_ToastText`).text(data);
                         // 進度條消失
-                        $(`#${productId}_ToastProgress`).show();
+                        $(`#${toastId}_ToastProgress`).show();
                         // 更改顏色
-                        $(`#${productId}_ToastProgress_rect`).css('fill', '#FF0000');
+                        $(`#${toastId}_ToastProgress_rect`).css('fill', '#FF0000');
                         // 進度條消失
-                        ToastProgressDisappear(productId);
+                        ToastProgressDisappear(toastId);
                     }
                 }).catch(error => {
                     // 顯示 吐司失敗狀態
-                    $(`#${productId}_ToastIcon_fail`).addClass('animate__zoomIn').removeClass('d-none');
-                    $(`#${productId}_ToastText`).text(error.message);
+                    $(`#${toastId}_ToastIcon_fail`).addClass('animate__zoomIn').removeClass('d-none');
+                    $(`#${toastId}_ToastText`).text(error.message);
                 });
             }
         });
 
-        // 資料還原 ~ 當任何具有 Reset-btn 類別元素被點擊時觸發
-        $(document).on('click', '.Reset-btn', function () {
+
+        $(document).off('click', '.Cancell-btn');
+        // 資料變更取消 ~ 當任何具有 Cancell-btn 類別元素被點擊時觸發
+        $(document).on('click', '.Cancell-btn', function () {
             // 被隱藏的按鈕不能觸發
             if ($(this).css('display') !== 'none') {
                 // 取得 ID
                 let productId = Number($(this).attr('class').slice(0, 5));
-
+                // 取得原始資料
+                let origin = $(this).attr('data-origin').split(',');
+                let wattVal = Number(origin[0]);
+                let recVal = Number(origin[1]);
+                // 恢復預設模式 ~ 關閉 td 編輯功能
+                $(`.${productId}_watt`).attr('disabled', true);
+                $(`.${productId}_watt`).val(wattVal);
+                $(`.${productId}_watt`).addClass("defaultcellType");
+                $(`.${productId}_recommend`).attr('disabled', true);
+                $(`.${productId}_recommend`).val(recVal);
+                $(`.${productId}_recommend`).addClass("defaultcellType");
+                // 更換成編輯按鈕
+                let editEle = `<button class="${productId}_edit btn Edit-btn d-flex justify-content-center align-items-center" style="width:30px;height:30px;" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-pen-to-square"></i></button>`;
+                $(`#${productId}_div`).html(editEle);
             }
         });
 
@@ -323,7 +400,7 @@
         };
 
         // 吐司進度條消失
-        function ToastProgressDisappear(productId) {
+        function ToastProgressDisappear(toastId) {
             // 初始寬度
             let initialWidth = 250;
             // 每次更新寬度 ~ 總共 2000 毫秒 變動 200 次
@@ -332,12 +409,16 @@
             var intervalId = setInterval(function () {
                 initialWidth -= widthChange;
                 // 應用更新後的寬度
-                $(`#${productId}_ToastProgress_rect`).attr('width', `${initialWidth}px`);
+                $(`#${toastId}_ToastProgress_rect`).attr('width', `${initialWidth}px`);
                 // 寬度小於0停止計時器
                 if (initialWidth <= 0) {
                     clearInterval(intervalId);
                     // 關閉吐司
-                    $(`#${productId}_Toast`).addClass('animate__fadeOutRight').removeClass('d-none');
+                    $(`#${toastId}_Toast`).addClass(`animate__fadeOutRight`);
+                    // 元素移除
+                    setTimeout(function () {
+                        $(`#${toastId}_Toast`).remove();
+                    }, 1000);
                 }
             }, 10);
         }
@@ -392,11 +473,29 @@
         // AJAX 資料載入 datatable
         function getdatatableData() {
             let p = getType();
+            // 如果沒選擇硬體 => 中斷事件
+            if (p == "NoSeclect") {
+                return;
+            }
+            // 取得吐司容器元素
+            let ToastContainer = document.querySelector('#ToastContainer');
+            // 流水號生成
+            let toastId = Math.floor(Math.random() * 1000);
+            // 吐司元素生成
+            let toast = ToastInitialization(toastId);
             // 發送非同步GET請求
             fetch(`@Url.Action("HardwareData", "HardwareManagement", new { area = "Administrator" })?${p}`, {
                 method: "GET"
             }).then(result => {
                 // 此時 result 是一個請求結果的物件
+                if (isrefresh) {
+                    // 發送吐司
+                    ToastContainer.insertAdjacentHTML(`afterbegin`, toast);
+                    // 顯示吐司
+                    $(`#${toastId}_Toast`).show();
+                    // 隱藏 載入狀態
+                    $(`#${toastId}_Toast_Status`).hide();
+                }
                 // 注意傳回值型態，字串用 text()，JSON 用 json()
                 if (result.ok) {
                     return result.json();
@@ -407,168 +506,91 @@
                 datatable.clear().draw();
                 // 添加新的資料
                 datatable.rows.add(data).draw();
+                if (isrefresh) {
+                    // 顯示 吐司成功狀態
+                    $(`#${toastId}_ToastIcon_success`).addClass('animate__zoomIn').removeClass('d-none');
+                    $(`#${toastId}_ToastText`).text("重新整理成功");
+                    // 顯示進度條
+                    $(`#${toastId}_ToastProgress`).show();
+                    // 進度條消失
+                    ToastProgressDisappear(toastId);
+                }
+                isrefresh = false;
+            }).catch(error => {
+                alert(error);
+                if (isrefresh) {
+                    // 顯示 吐司失敗狀態
+                    $(`#${toastId}_ToastIcon_fail`).addClass('animate__zoomIn').removeClass('d-none');
+                    $(`#${toastId}_ToastText`).text("重新整理失敗，請稍後再試");
+                    // 更改顏色
+                    $(`#${toastId}_ToastProgress_rect`).css('fill', '#FF0000');
+                    // 顯示進度條
+                    $(`#${toastId}_ToastProgress`).show();
+                    // 進度條消失
+                    ToastProgressDisappear(toastId);
+                }
+                isrefresh = false;
+            });
+
+        };
+
+        // // 單一零件更新
+        function UpdateOneHardware() {
+            // 取得 零件ID
+            let p = getType();
+            if (p == "NoSeclect") {
+                return;
+            }
+            // 發送非同步POST請求 ==> 資料庫資料變更
+            let itemid = Number(p.slice(5));
+            var data = {
+                Type: itemid
+            };
+            fetch(`@Url.Action("UpdateHardwareOne", "HardwareManagement", new { area = "Administrator" })`, {
+                method: "POST",
+                body: JSON.stringify(data),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }).then(result => {
+                // 此時 result 是一個請求結果的物件
+                // 注意傳回值型態，字串用 text()，JSON 用 json()
+                //  如過 HTTP 響應的狀態馬碼在 200 到 299 的範圍內 ==> .ok 會回傳 true
+                if (result.ok) {
+                    return result.text();
+                }
+            }).then(data => {
+                // 此時 data 為上一個 then 回傳的資料
+                getdatatableData();
             }).catch(error => {
                 alert(error);
             });
         };
 
-        // // 單一零件更新
-        // function UpdateOneHardware() {
-        //     // 清空結果訊息
-        //     $("#UpdateResult").text("");
-        //     // 取得 零件ID
-        //     let p = getType();
-        //     if (p == "NoSeclect") {
-        //         $("#UpdateResult").text("請選擇要更新的硬體種類").fadeIn(200, function () {
-        //             // 在 fadeIn 完成后延遲 1000 毫秒，執行 fadeOut
-        //             $(this).delay(1000).fadeOut(300);
-        //         });;;
-        //         return;
-        //     }
-        //     // 顯示進度條
-        //     $("#HardwareLoading").show();
-        //     // 發送非同步POST請求 ==> 資料庫資料變更
-        //     let itemid = Number(p.slice(5));
-        //     var data = {
-        //         Type: itemid
-        //     };
-        //     fetch(`@Url.Action("UpdateHardwareOne", "Admin")`, {
-        //         method: "POST",
-        //         body: JSON.stringify(data),
-        //         headers: {
-        //             "Content-Type": "application/json"
-        //         }
-        //     }).then(result => {
-        //         // 此時 result 是一個請求結果的物件
-        //         // 注意傳回值型態，字串用 text()，JSON 用 json()
-        //         $("#HardwareLoading").hide();
-        //         //  如過 HTTP 響應的狀態馬碼在 200 到 299 的範圍內 ==> .ok 會回傳 true
-        //         if (result.ok) {
-        //             return result.text();
-        //         }
-        //     }).then(data => {
-        //         // 此時 data 為上一個 then 回傳的資料
-        //         $("#UpdateResult").text(data).fadeIn(200, function () {
-        //             // 在 fadeIn 完成后延遲 1000 毫秒，執行 fadeOut
-        //             $(this).delay(1000).fadeOut(300);
-        //         });;
-        //         getdatatableData();
-        //     }).catch(error => {
-        //         $("#HardwareLoading").hide();
-        //         $("#UpdateResult").text(data).fadeIn(200, function () {
-        //             // 在 fadeIn 完成后延遲 1000 毫秒，執行 fadeOut
-        //             $(this).delay(1000).fadeOut(300);
-        //         });;
-        //         alert(error);
-        //     });
-        // };
-
         // // 全零件更新
-        // function UpdateAllHardware() {
-        //     // 清空結果訊息
-        //     $("#UpdateResult").text("");
-        //     // 顯示進度條
-        //     $("#HardwareLoading").show();
-        //     // 發送非同步POST請求 ==> 資料庫資料變更
-        //     fetch(`@Url.Action("UpdateHardwareAll", "Admin")`, {
-        //         method: "POST",
-        //         headers: {
-        //             "Content-Type": "application/json"
-        //         }
-        //     }).then(result => {
-        //         // 此時 result 是一個請求結果的物件
-        //         // 注意傳回值型態，字串用 text()，JSON 用 json()
-        //         $("#HardwareLoading").hide();
-        //         //  如過 HTTP 響應的狀態馬碼在 200 到 299 的範圍內 ==> .ok 會回傳 true
-        //         if (result.ok) {
-        //             return result.text();
-        //         }
-        //     }).then(data => {
-        //         // 此時 data 為上一個 then 回傳的資料
-        //         $("#UpdateResult").text(data).fadeIn(200, function () {
-        //             // 在 fadeIn 完成后延遲 1000 毫秒，執行 fadeOut
-        //             $(this).delay(1000).fadeOut(300);
-        //         });;
-        //         let p = getType();
-        //         if (p != "NoSeclect") {
-        //             getdatatableData();
-        //         }
-        //     }).catch(error => {
-        //         $("#HardwareLoading").hide();
-        //         $("#UpdateResult").text(data).fadeIn(200, function () {
-        //             // 在 fadeIn 完成后延遲 1000 毫秒，執行 fadeOut
-        //             $(this).delay(1000).fadeOut(300);
-        //         });;
-        //         alert(error);
-        //     });
-        // };
-
-        // RowDetail 內容
-        // function format(d) {
-        //     let color = "black"; // 默認顏色
-        //     let RadioId = "recommend" + d.productId;
-        //     return (
-        //         `<div id="recommend${d.productId}" style="color: black;"> 推薦設定:
-        //                                                                                                                                                                 <label style="color: black;"><input type="radio" name="${RadioId}" value="0" ${d.recommend == 0 ? 'checked' : ''}> 無</label>
-        //                                                                                                                                                                     <label style="color: green;"><input type="radio" name="${RadioId}" value="1" ${d.recommend == 1 ? 'checked' : ''}> 基本</label>
-        //                                                                                                                                                                     <label style="color: blue;"><input type="radio" name="${RadioId}" value="2" ${d.recommend == 2 ? 'checked' : ''}> 優良</label>
-        //                                                                                                                                                                     <label style="color: red;"><input type="radio" name="${RadioId}" value="3" ${d.recommend == 3 ? 'checked' : ''}> 完美</label>
-        //                                                                                                                                                                     <i class="fa-solid fa-spinner fa-spin ms-2"style="color:black;display:none" id="loading${d.productId}"></i>
-        //                                                                                                                                                                         <span id="result${d.productId}" class="ms-2" style="color: black;"></span>
-        //                                                                                                                                                              </div>`
-        //     );
-        // };
-        // 推薦變更事件W
-        // function radioevent(rowDetail) {
-        //     $(rowDetail).on('change', 'input[type="radio"]', function () {
-        //         // 獲取 Radiobutton 的 ID
-        //         let itemid = Number($(this).attr('name').slice('9'));
-        //         let value = Number($(this).val());
-
-        //         // 發送非同步POST請求 ==> 資料庫資料變更
-        //         // 顯示進度條
-        //         $("#loading" + itemid).show();
-        //         $("#result" + itemid).text("");
-        //         var data = {
-        //             ProductId: itemid,
-        //             recommend: value
-        //         };
-        //         // 前端視覺效果
-        //         let divid = "recommend" + itemid;
-        //         let targetRow = $(`#${divid}`).parent().parent().prev();
-        //         let colorclass = "";
-        //         switch (value) {
-        //             case 0:
-        //                 colorclass = "black-row";
-        //                 break;
-        //             case 1:
-        //                 colorclass = "green-row";
-        //                 break;
-        //             case 2:
-        //                 colorclass = "blue-row";
-        //                 break;
-        //             case 3:
-        //                 colorclass = "red-row";
-        //                 break;
-        //         }
-        //         if (targetRow.hasClass('black-row')) {
-        //             targetRow.removeClass('black-row');
-        //             targetRow.addClass(colorclass);
-        //         }
-        //         else if (targetRow.hasClass('green-row')) {
-        //             targetRow.removeClass('green-row');
-        //             targetRow.addClass(colorclass);
-        //         }
-        //         else if (targetRow.hasClass('blue-row')) {
-        //             targetRow.removeClass('blue-row');
-        //             targetRow.addClass(colorclass);
-        //         }
-        //         else if (targetRow.hasClass('red-row')) {
-        //             targetRow.removeClass('red-row');
-        //             targetRow.addClass(colorclass);
-        //         }
-        //     });
-        // }
-
+        function UpdateAllHardware() {
+            // 發送非同步POST請求 ==> 資料庫資料變更
+            fetch(`@Url.Action("UpdateHardwareAll", "HardwareManagement", new { area = "Administrator" })`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }).then(result => {
+                // 此時 result 是一個請求結果的物件
+                // 注意傳回值型態，字串用 text()，JSON 用 json()
+                //  如過 HTTP 響應的狀態馬碼在 200 到 299 的範圍內 ==> .ok 會回傳 true
+                if (result.ok) {
+                    return result.text();
+                }
+            }).then(data => {
+                // 此時 data 為上一個 then 回傳的資料
+                let p = getType();
+                if (p != "NoSeclect") {
+                    getdatatableData();
+                }
+            }).catch(error => {
+                alert(error);
+            });
+        };
     });
 </script>

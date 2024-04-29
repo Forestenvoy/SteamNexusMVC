@@ -1,129 +1,126 @@
 ﻿/* datatables 頂部布局調整 */
-.dt-start {
-}
-
-.dt-end .dt-search {
+#HardwareManageTable_wrapper .dt-end .dt-search {
     text-align: center !important;
 }
 
-.dt-middle {
+#HardwareManageTable_wrapper .dt-middle {
     text-align: end !important;
 }
 
 /* 編輯按鈕 */
-html[data-bs-theme="dark"] .Edit-btn {
+html[data-bs-theme="dark"] #HardwareManageTable_wrapper .Edit-btn {
     background-color: #007FFF;
 }
 
-    html[data-bs-theme="dark"] .Edit-btn svg {
+    html[data-bs-theme="dark"] #HardwareManageTable_wrapper .Edit-btn svg {
         color: white;
     }
 
-    html[data-bs-theme="dark"] .Edit-btn:hover {
+    html[data-bs-theme="dark"] #HardwareManageTable_wrapper .Edit-btn:hover {
         background-color: white;
     }
 
-        html[data-bs-theme="dark"] .Edit-btn:hover svg {
+        html[data-bs-theme="dark"] #HardwareManageTable_wrapper .Edit-btn:hover svg {
             color: #007FFF;
         }
 
-html[data-bs-theme="light"] .Edit-btn {
+html[data-bs-theme="light"] #HardwareManageTable_wrapper .Edit-btn {
     background-color: white;
 }
 
-    html[data-bs-theme="light"] .Edit-btn svg {
+    html[data-bs-theme="light"] #HardwareManageTable_wrapper .Edit-btn svg {
         color: #007FFF;
     }
 
-    html[data-bs-theme="light"] .Edit-btn:hover {
+    html[data-bs-theme="light"] #HardwareManageTable_wrapper .Edit-btn:hover {
         background-color: #007FFF;
     }
 
-        html[data-bs-theme="light"] .Edit-btn:hover svg {
+        html[data-bs-theme="light"] #HardwareManageTable_wrapper .Edit-btn:hover svg {
             color: white;
         }
 
 /* 確認按鈕 */
-html[data-bs-theme="dark"] .Enter-btn {
+html[data-bs-theme="dark"] #HardwareManageTable_wrapper .Enter-btn {
     background-color: #00FF00;
 }
 
-    html[data-bs-theme="dark"] .Enter-btn svg {
+    html[data-bs-theme="dark"] #HardwareManageTable_wrapper .Enter-btn svg {
         color: white;
     }
 
-    html[data-bs-theme="dark"] .Enter-btn:hover {
+    html[data-bs-theme="dark"] #HardwareManageTable_wrapper .Enter-btn:hover {
         background-color: white;
     }
 
-        html[data-bs-theme="dark"] .Enter-btn:hover svg {
+        html[data-bs-theme="dark"] #HardwareManageTable_wrapper .Enter-btn:hover svg {
             color: #00FF00;
         }
 
-html[data-bs-theme="light"] .Enter-btn {
+html[data-bs-theme="light"] #HardwareManageTable_wrapper .Enter-btn {
     background-color: white;
 }
 
-    html[data-bs-theme="light"] .Enter-btn svg {
+    html[data-bs-theme="light"] #HardwareManageTable_wrapper .Enter-btn svg {
         color: #00FF00;
     }
 
-    html[data-bs-theme="light"] .Enter-btn:hover {
+    html[data-bs-theme="light"] #HardwareManageTable_wrapper .Enter-btn:hover {
         background-color: #00FF00;
     }
 
-        html[data-bs-theme="light"] .Enter-btn:hover svg {
+        html[data-bs-theme="light"] #HardwareManageTable_wrapper .Enter-btn:hover svg {
             color: white;
         }
 
 /* 還原按鈕 */
-html[data-bs-theme="dark"] .Reset-btn {
+html[data-bs-theme="dark"] #HardwareManageTable_wrapper .Cancell-btn {
     background-color: #FF0000;
 }
 
-    html[data-bs-theme="dark"] .Reset-btn svg {
+    html[data-bs-theme="dark"] #HardwareManageTable_wrapper .Cancell-btn svg {
         color: white;
     }
 
-    html[data-bs-theme="dark"] .Reset-btn:hover {
+    html[data-bs-theme="dark"] #HardwareManageTable_wrapper .Cancell-btn:hover {
         background-color: white;
     }
 
-        html[data-bs-theme="dark"] .Reset-btn:hover svg {
+        html[data-bs-theme="dark"] #HardwareManageTable_wrapper .Cancell-btn:hover svg {
             color: #FF0000;
         }
 
-html[data-bs-theme="light"] .Reset-btn {
+html[data-bs-theme="light"] #HardwareManageTable_wrapper .Cancell-btn {
     background-color: white;
 }
 
-    html[data-bs-theme="light"] .Reset-btn svg {
+    html[data-bs-theme="light"] #HardwareManageTable_wrapper .Cancell-btn svg {
         color: #FF0000;
     }
 
-    html[data-bs-theme="light"] .Reset-btn:hover {
+    html[data-bs-theme="light"] #HardwareManageTable_wrapper .Cancell-btn:hover {
         background-color: #FF0000;
     }
 
-        html[data-bs-theme="light"] .Reset-btn:hover svg {
+        html[data-bs-theme="light"] #HardwareManageTable_wrapper .Cancell-btn:hover svg {
             color: white;
         }
 
 /* 推薦設定 文字顏色 */
-.green-row {
+#HardwareManageTable_wrapper .green-row {
     color: green !important;
 }
 
-.blue-row {
+#HardwareManageTable_wrapper .blue-row {
     color: blue !important;
 }
 
-.red-row {
+#HardwareManageTable_wrapper .red-row {
     color: red !important;
 }
 
 /* 吐司預設樣式 */
-html[data-bs-theme="dark"] .defaultToast {
+html[data-bs-theme="dark"]  .defaultToast {
     height: 47px;
     width: 250px;
     background-color: black !important;
@@ -175,54 +172,44 @@ html[data-bs-theme="light"] .ToastIcon-fail svg {
     height: 1rem;
 }
 
-/* popover 成功 CSS */
-.popover-success {
-    background-color: #dff0d8;
-    border-color: #d6e9c6;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 40px;
-}
-
-/* popover 失敗 CSS */
-.popover-fail {
-    background-color: #f2dede;
-    border-color: #ebccd1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 40px;
-}
-
 /* 表格的佈局採用固定佈局算法 */
 body {
     table-layout: fixed;
 }
 
 /* 欄位預設樣式 */
-html[data-bs-theme="dark"] .defaultcellType {
+html[data-bs-theme="dark"] #HardwareManageTable_wrapper .defaultcellType {
     border: none; /* 取消邊框 */
     background-color: transparent; /* 背景透明 */
     appearance: none; /* 去除默認樣式 */
     color: #c2c2d9; /* 文字顏色 */
 }
 
-html[data-bs-theme="light"] .defaultcellType {
+html[data-bs-theme="light"] #HardwareManageTable_wrapper .defaultcellType {
     border: none; /* 取消邊框 */
     background-color: transparent; /* 背景透明 */
     appearance: none; /* 去除默認樣式 */
     color: #607080; /* 文字顏色 */
 }
 
+/*@media (max-width: 768px) {
+    .top-md-0 {
+        top: 0% !important;
+    }
+
+    .translate-middle-md-x {
+        transform: translate(-50%) !important;
+    }
+}
+
 @media (min-width: 768px) {
-    /* 自定义 CSS 类名，垂直方向上的偏移为 50% */
     .start-md-0 {
-        left: 0 !important;
+        left: 0% !important;
     }
 
     .translate-md-cancel {
         transform: translate(0%) !important;
     }
-}
+}*/
+
 
