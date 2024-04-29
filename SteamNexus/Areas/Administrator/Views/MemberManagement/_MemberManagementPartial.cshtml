@@ -1,0 +1,113 @@
+﻿@* PartialView 的 CSS *@
+<link href="~/css/hardwareproductmanagesystem.css" rel="stylesheet" asp-append-version="true" />
+@* PartialView 的 HTML *@
+<div class="page-title position-relative">
+    <div class="row">
+        @* 系統名稱 *@
+        <div class="col-12 col-md-6 order-md-1 d-flex justify-content-center justify-content-md-start">
+            <h2 id="SystemName" style="margin-top: 8px;">產品管理系統</h2>
+        </div>
+        @* 系統選單 *@
+        <div class="col-12 col-md-6 order-md-2 d-flex justify-content-center justify-content-md-end" id="SystemMenu">
+            <select asp-items="@ViewBag.ComputerParts" class="form-select " style="width:250px;height:40px;margin-bottom:8px" id="HardSelect">
+                <option value="" disabled selected hidden>---- 請選擇硬體 ----</option>
+            </select>
+        </div>
+    </div>
+</div>
+<section class="section">
+    <table id="MemberManageTable" class="display" style="width:100%" ;>
+        <thead id="HardwareThead">
+            <tr>
+                <th data-priority="1">姓名</th>
+                <th>信箱</th>
+                <th>性別</th>
+                <th>生日</th>
+                <th>CPU</th>
+                <th>GPU</th>
+                <th>記憶體</th>
+                <th>個人照</th>
+                <th>權限</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+    </table>
+</section>
+@* Toast 彈出式通知 容器 start *@
+<div class="position-fixed top-0 start-50 translate-middle-x p-3" style="z-index: 11" id="ToastContainer">
+</div>
+@* Toast 彈出式通知 容器 end *@
+@* 防偽標籤 生成(會是個 input hidden 元素) *@
+@Html.AntiForgeryToken();
+@*
+    目的: 防止 CSRF 攻擊
+    也會生成兩個 cookie => HttpOnly=true、SameSite=Strict
+    AntiforgeryCookie => 存的是 防偽標籤 值
+    .AspNetCore.Antiforgery.名稱 => 存的是 防偽標籤的 名稱
+*@
+@* PartialView 的 JavaScript *@
+<script>
+    $(document).ready(function () {
+        let HardAddress = "https://localhost:7097";
+        
+        // 初始化 Datatables
+        var datatable = new DataTable('#MemberManageTable', {
+            ajax: {
+            type:"GET",
+            url: `@Url.Action("MemberData", "MemberManagement", new { area = "Administrator" })`,
+                dataSrc: function (json) { return json; }
+            },
+            // column 定義
+            columns: [
+                { "data": "name", "width": "10%", "className": "text-center" },
+                { "data": "email", "width": "10%", "className": "text-center" },
+                { "data": "gender", "width": "10%", "className": "text-center" },
+                { "data": "birthday", "width": "10%", "className": "text-center" },
+                { "data": "cpuId", "width": "10%", "className": "text-center" },
+                { "data": "gpuId", "width": "10%", "className": "text-center" },
+                { "data": "ram", "width": "10%", "className": "text-center" },
+                {
+                    "data": "images",
+                    "width": "10%",
+                    "className": "text-center",
+                    "render": function (data, type, row) {
+                        return data? `<img src="/images/headshots/${data}" alt="Image" style="width: 100px; height: 100px;" />` : "No Image";
+                    }
+
+                },
+                { "data": "power", "width": "10%", "className": "text-center" },
+
+                {
+                    "data": null,
+                    "width": "10%",
+                    "render": function (data, type, row) {
+                        return `
+                            <button class="btn btn-danger mb-2" onclick="editFunction(${data.id})"><i class="bi bi-pencil-square"></i></button>
+                            <button class="btn btn-danger mb-2" onclick="createFunction(${data.id})"><i class="bi bi-trash3-fill"></i></button>
+                                <button class="btn btn-danger" onclick="detailsFunction(${data.id})"><i class="bi bi-ticket-detailed"></i></button>
+                                `;
+                    }
+                },
+            ],
+            // 標頭固定
+            fixedHeader: {
+                // 固定 header
+                header: true,
+                // 使用導覽欄的高度作為偏移量
+                headerOffset: $('#pageNav').outerHeight(),
+            },
+            // 響應式設計
+            responsive: true,
+            // 語言設定
+            language: {
+                url: '//cdn.datatables.net/plug-ins/2.0.3/i18n/zh-HANT.json',
+            },
+            // 預設排序 ~ 根據第一個欄位 升冪排序
+            order: [[1, 'asc']],
+            // 自動寬度 關閉
+            autoWidth: true,
+           
+        });
+
+    });
+</script>

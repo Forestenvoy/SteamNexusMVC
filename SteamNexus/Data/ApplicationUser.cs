@@ -22,5 +22,8 @@ namespace SteamNexus.Data
 
         [MaxLength(50)]
         public int RAM { get; set; }
+
+        [MaxLength(200)]
+        public string Images { get; set; } = null;
     }
 }

@@ -9,7 +9,7 @@
 
 <div class="row">
     <div class="col-md-4">
-        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post" autocomplete="off">
+        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post" autocomplete="off" enctype="multipart/form-data">
             <h2>Create a new account.</h2>
             <hr />
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
@@ -69,6 +69,13 @@
                 <label asp-for="Input.RAM" style="color:black">@Html.DisplayNameFor(a => a.Input.RAM)</label>
                 <span asp-validation-for="Input.RAM" class="text-danger"></span>
             </div>
+            @* 圖片追加 *@
+            <div class="form-group mb-2">
+                <label asp-for="Input.Images" class="control-label"></label>
+                <input asp-for="Input.Images" class="form-control" type="file" />
+                <span asp-validation-for="Input.Images" class="text-danger"></span>
+            </div>
+
             <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
         </form>
     </div>
