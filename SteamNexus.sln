@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SteamNexusServer", "SteamNe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SteamNexusSPA", "SteamNexusSPA\SteamNexusSPA.csproj", "{AA3898A6-58DE-4D35-B02E-D0DC03AD333B}"
 EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "SteamNexus_Client", "SteamNexus_Client\SteamNexus_Client.esproj", "{54041F3B-2BDE-40F1-B725-03714883EFD4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,12 @@ Global
 		{AA3898A6-58DE-4D35-B02E-D0DC03AD333B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AA3898A6-58DE-4D35-B02E-D0DC03AD333B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AA3898A6-58DE-4D35-B02E-D0DC03AD333B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{54041F3B-2BDE-40F1-B725-03714883EFD4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54041F3B-2BDE-40F1-B725-03714883EFD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54041F3B-2BDE-40F1-B725-03714883EFD4}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{54041F3B-2BDE-40F1-B725-03714883EFD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54041F3B-2BDE-40F1-B725-03714883EFD4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{54041F3B-2BDE-40F1-B725-03714883EFD4}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
