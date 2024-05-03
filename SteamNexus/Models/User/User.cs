@@ -6,14 +6,14 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SteamNexus.Models;
 
-public partial class Users
+public partial class User
 {
     [Key]
     [Required]
-    public int MemberId { get; set; }
+    public int UserId { get; set; }
 
     [Required]
-    [EmailAddress]
+    [MaxLength(100)]
     public string Email { get; set; }
 
     [Required]
@@ -24,17 +24,17 @@ public partial class Users
     [MaxLength(50)]
     public string Name { get; set; }
 
-    [Required]
-    public bool? Gender { get; set; }
+    public bool? Gender { get; set; } = true;
 
-    [Required]
-    [MaxLength(10)]
-    public string Phone { get; set; }
+    #nullable enable
+    [MaxLength(20)]
+    public string? Phone { get; set; }
 
-    [Required]
-    public DateOnly? Birthday { get; set; }
+    public DateTime? Birthday { get; set; }
 
     [MaxLength(200)]
     public string? Photo { get; set; }
+
+    public virtual ICollection<Role> Roles { get; set; } = new List<Role>();
 
 }

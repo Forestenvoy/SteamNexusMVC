@@ -12,6 +12,10 @@ namespace SteamNexus.Data
         {
         }
 
+        public virtual DbSet<User> Users { get; set; }
+
+        //public virtual DbSet<Role> Roles { get; set; }
+
         public virtual DbSet<Advertisement> Advertisements { get; set; }
 
         public virtual DbSet<CommonQuestion> CommonQuestions { get; set; }
@@ -54,6 +58,31 @@ namespace SteamNexus.Data
         // Model 屬性設定
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<User>(entity =>
+            {
+                // 主鍵設定
+                // ValueGeneratedOnAdd 插入新的實體時，值自動生成
+                // UseIdentityColumn(10000, 1) 識別碼起始值和增量
+                entity.Property(e => e.UserId)
+                    .ValueGeneratedOnAdd()
+                    .UseIdentityColumn(10000, 1);
+            });
+
+            modelBuilder.Entity<Role>(entity =>
+            {
+                // 主鍵設定
+                // ValueGeneratedOnAdd 插入新的實體時，值自動生成
+                // UseIdentityColumn(10000, 1) 識別碼起始值和增量
+                entity.Property(e => e.RoleId)
+                    .ValueGeneratedOnAdd()
+                    .UseIdentityColumn(10000, 1);
+
+                entity.HasOne(d => d.User).WithMany(p => p.Roles)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Roles_Users");
+            });
+
             modelBuilder.Entity<Advertisement>(entity =>
             {
                 // 主鍵設定
