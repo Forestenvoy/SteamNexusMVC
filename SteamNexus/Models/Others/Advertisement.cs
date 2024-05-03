@@ -24,6 +24,9 @@ public partial class Advertisement
     [MaxLength(300)]
     public string ImagePath { get; set; }
 
+    [Required]
+    public bool IsShow { get; set; }
+
     #nullable enable
 
     [MaxLength(200)]

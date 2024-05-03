@@ -9,12 +9,9 @@
         color: white;
     }
 
-    /* 頂部布局調整 */
-    .dt-start {
-    }
-
     .dt-end .dt-search {
         text-align: center !important;
+        /* 將搜索框的文字內容設置為居中對齊 */
     }
 
     .dt-middle {
@@ -23,6 +20,7 @@
 
     body {
         table-layout: fixed;
+        /* 將表格的列寬設置為固定值，以確保列寬不會根據內容而自動調整 */
     }
 </style>
 
@@ -45,11 +43,12 @@
     <table id="AdvertiseManageTable" class="display" style="width:100%">
         <thead>
             <tr>
-                <th data-priority="1">advertisementId</th>
-                <th>Title</th>
+                <th>ID</th>
+                <th>標題</th>
                 <th>Url</th>
-                <th>ImagePath</th>
-                <th>Discription</th>
+                <th>圖片</th>
+                <th>說明</th>
+                <th>狀態</th>
             </tr>
         </thead>
     </table>
@@ -57,25 +56,91 @@
 @* PartialView 的 JavaScript *@
 <script>
     $(document).ready(function () {
-        let HardAddress = "https://localhost:7097";
+        let baseAddress = "https://localhost:7097";
+        // var datatable = new DataTable('#AdvertiseManageTable', {
+        //     ajax: {
+        //         type: "GET",
+        //         url: `@Url.Action("AdvertiseManagementJson", "AdvertiseManagement", new { area = "Administrator" })`,
+        //         dataSrc: function (json) { return json; }
+        //     },
+        //     columns:[
+        //         { "data": "advertisementId", "width":"20%"},
+        //         { "data": "title", "width": "20%" },
+        //         { "data": "url", "width": "20%" },
+        //         { "data": "imagePath", "width": "20%" },
+        //         { "data": "discription", "width": "20%" }
+        //     ],
+        //     fixedHeader: {
+        //         // 固定 header
+        //         header: true,
+        //         // 使用導覽欄的高度作為偏移量
+        //         headerOffset: $('#pageNav').outerHeight(),
+        //     },
+        //     // 響應式設計
+        //     responsive: true,
+        //     // 語言設定
+        //     language: {
+        //         url: '//cdn.datatables.net/plug-ins/2.0.3/i18n/zh-HANT.json',
+        //     },
+        //     // 預設排序 ~ 根據第一個欄位 升冪排序
+        //     order: [[1, 'asc']],
+        //     // 自動寬度 關閉
+        //     autoWidth: true,
+        // })
         var datatable = new DataTable('#AdvertiseManageTable', {
-            ajax: {
-                type: "GET",
-                url: `@Url.Action("AdvertiseManagementJson", "AdvertiseManagement", new { area = "Administrator" })`,
-                dataSrc: function (json) { return json; }
-            },
-            columns:[
-                { "data": "advertisementId", "width":"20%"},
-                { "data": "title", "width": "20%" },
-                { "data": "url", "width": "20%" },
-                { "data": "imagePath", "width": "20%" },
-                { "data": "discription", "width": "20%" }
+            columns: [
+                { "data": "advertisementId", "width": "5%" },
+                { "data": "title", "width": "10%" },
+                { "data": "url", "width": "15%" },
+                {
+                    "data": "imagePath", "width": "15%",
+                    "className": "text-center",
+                    "render": function (data, type, row) {
+                        return `<img src="/AdImages/${data}" alt="Image" style="width:80%" />`;
+                    }, responsivePriority: 1
+                },
+                { "data": "discription", "width": "10%" },
+                {
+                    "data": "isShow",
+                    "width": "8%",
+                    "className": "text-center",
+                    // 推薦 ~ 下拉式選單
+                    render: function (data, type, row) {
+                        // data: 欄位的資料值
+                        // type: render 的呼叫類型，例如 'display', 'filter', 'sort', 'type'
+                        // row: 包含整列資料的物件
+                        let AdId = row.advertisementId;
+                        const Show = data ? 'checked' : '';
+                        const UnShow = data ? '' : 'checked';
+                        let showEle = `<input type="radio" name = "${AdId}" value = "true" data - AdId="${AdId}" id = "${AdId}Show" ${Show}> <label for= "${AdId}Show" >上架</label>`;
+                        let unShowEle = `<input type="radio" name="${AdId}" value="false" data-AdId="${AdId}" id="${AdId}UnShow" ${UnShow}><label for="${AdId}UnShow">下架</label>`;
+                        return `${showEle}<br/>${unShowEle}`;
+                    }
+                },
+                {
+                    "data": null,
+                    "orderable": false,
+                    "width": "5%",
+                    "className": "text-center",
+                    // 按鈕 自定義
+                    render: function (data, type, row) {
+                        // 取得 productId
+                        let title = row.title;
+                        let AdId = row.advertisementId;
+                        // 編輯按鈕
+                        let editEle = '<button data-AdId="' + AdId + '"  data-title="' + title + '" id="edit_button" data-bs-toggle="popover" data-bs-content="nothing"><i class="bi bi-pencil-square"></i></button>';
+                        // 刪除按鈕
+                        let deletEle = '<button data-AdId="' + AdId + '"  data-title="' + title + '" id="delete_button" data-bs-toggle="popover" data-bs-content="nothing"><i class="bi bi-trash3"></i></button>';
+                        if (type === 'display') {
+                            return `${editEle}${deletEle}`;
+                        }
+                        return data;
+                    }, responsivePriority: 1
+                }
             ],
             fixedHeader: {
                 // 固定 header
-                header: true,
-                // 使用導覽欄的高度作為偏移量
-                headerOffset: $('#pageNav').outerHeight(),
+                header: true
             },
             // 響應式設計
             responsive: true,
@@ -84,10 +149,26 @@
                 url: '//cdn.datatables.net/plug-ins/2.0.3/i18n/zh-HANT.json',
             },
             // 預設排序 ~ 根據第一個欄位 升冪排序
-            order: [[1, 'asc']],
-            // 自動寬度 關閉
+            order: [[0, 'asc']],
+            // 自動寬度 開啟
             autoWidth: true,
-        })
+        });
+
+        // 使用 Fetch API 取得資料並設定至 DataTable
+        fetch('@Url.Action("AdvertiseManagementJson", "AdvertiseManagement", new { area = "Administrator" })')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(jsonData => {
+                datatable.clear().rows.add(jsonData).draw();
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+            });
+
     });
 </script>
 
