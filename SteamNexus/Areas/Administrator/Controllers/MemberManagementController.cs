@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SteamNexus.Data;
+using SteamNexus.ViewModels.Game;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace SteamNexus.Areas.Administrator.Controllers
@@ -8,10 +10,10 @@ namespace SteamNexus.Areas.Administrator.Controllers
 
     public class MemberManagementController : Controller
     {
-        private ApplicationDbContext _application;
+        private SteamNexusDbContext _application;
         private readonly IWebHostEnvironment _webHost;  //上傳圖片使用
 
-        public MemberManagementController(ApplicationDbContext application, IWebHostEnvironment webHostEnvironment)
+        public MemberManagementController(SteamNexusDbContext application, IWebHostEnvironment webHostEnvironment)
         {
             _application = application;
             _webHost = webHostEnvironment;
@@ -36,12 +38,9 @@ namespace SteamNexus.Areas.Administrator.Controllers
                 result.Name,
                 result.Email,
                Gender = result.Gender ? "男" : "女",
-                birthday = result.Birthday.ToShortDateString(),
-                result.CPUId,
-                result.GPUId,
-                result.RAM,
-                result.Images,
-                result.Power,
+                birthday = result.Birthday.ToString(),
+                result.Phone,
+                result.Photo,
 
             });
             return Json(result);

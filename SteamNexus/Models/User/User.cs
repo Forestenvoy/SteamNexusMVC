@@ -24,7 +24,7 @@ public partial class User
     [MaxLength(50)]
     public string Name { get; set; }
 
-    public bool? Gender { get; set; } = true;
+    public bool Gender { get; set; } = true;
 
     #nullable enable
     [MaxLength(20)]
