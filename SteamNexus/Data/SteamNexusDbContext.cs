@@ -14,7 +14,7 @@ namespace SteamNexus.Data
 
         public virtual DbSet<User> Users { get; set; }
 
-        //public virtual DbSet<Role> Roles { get; set; }
+        public virtual DbSet<Role> Roles { get; set; }
 
         public virtual DbSet<Advertisement> Advertisements { get; set; }
 
