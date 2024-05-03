@@ -67,6 +67,8 @@ builder.Services.ConfigureApplicationCookie(options => { //這個函式設定了
     options.SlidingExpiration = true; //是否啟用滑動過期時間。
 });
 
+
+
 //Email 
 builder.Services.AddTransient<IEmailSender, EmailSendercs>();
 builder.Services.AddControllersWithViews();
