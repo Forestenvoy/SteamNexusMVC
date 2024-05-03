@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using SteamNexus;
@@ -38,6 +39,21 @@ builder.Services.AddAntiforgery(options =>
 
 builder.Services.AddControllersWithViews();
 
+#region cookie驗證
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
+{
+    //未登入時未自動導入到這個網址
+    option.LoginPath = new PathString("/Home/Index");
+
+    //未授權角色會自動移轉到此網址
+    option.AccessDeniedPath = new PathString("/Home/NoRole");
+});
+
+#endregion
+
+#region identity註冊驗證、密碼規則
+
 //註冊驗證、密碼規則資訊
 builder.Services.Configure<IdentityOptions>(options => { //這個函式設定了身分識別選項。
     options.Password.RequireDigit = true; //密碼是否需要包含數字。
@@ -67,10 +83,13 @@ builder.Services.ConfigureApplicationCookie(options => { //這個函式設定了
     options.SlidingExpiration = true; //是否啟用滑動過期時間。
 });
 
+#endregion
+
+#region 驗證Email發送
 //Email 
 builder.Services.AddTransient<IEmailSender, EmailSendercs>();
 builder.Services.AddControllersWithViews();
-
+#endregion
 
 var app = builder.Build();
 
@@ -90,6 +109,10 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+//cookie登入
+app.UseCookiePolicy();
+app.UseAuthentication();
 
 app.UseAuthorization();
 

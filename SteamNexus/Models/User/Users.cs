@@ -2,36 +2,39 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace SteamNexus.Models;
 
-public partial class Member
+public partial class Users
 {
+    [Key]
+    [Required]
     public int MemberId { get; set; }
 
+    [Required]
+    [EmailAddress]
     public string Email { get; set; }
 
+    [Required]
+    [MaxLength(20)]
     public string Password { get; set; }
 
+    [Required]
+    [MaxLength(50)]
     public string Name { get; set; }
 
+    [Required]
     public bool? Gender { get; set; }
 
+    [Required]
+    [MaxLength(10)]
     public string Phone { get; set; }
 
+    [Required]
     public DateOnly? Birthday { get; set; }
 
-    public string Photo { get; set; }
+    [MaxLength(200)]
+    public string? Photo { get; set; }
 
-    public int Cpuid { get; set; }
-
-    public int Gpuid { get; set; }
-
-    public int Ram { get; set; }
-
-    public virtual CPU Cpu { get; set; }
-
-    public virtual ICollection<GameFollow> GameFollows { get; set; } = new List<GameFollow>();
-
-    public virtual GPU Gpu { get; set; }
 }

@@ -17,5 +17,5 @@ public partial class GameFollow
 
     public virtual Game Game { get; set; }
 
-    public virtual Member Member { get; set; }
+    public virtual User Member { get; set; }
 }
