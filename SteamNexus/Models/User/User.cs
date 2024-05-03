@@ -13,6 +13,11 @@ public partial class User
     public int UserId { get; set; }
 
     [Required]
+    public int RoleId { get; set; }
+
+    public virtual Role Role { get; set; }
+
+    [Required]
     [MaxLength(100)]
     public string Email { get; set; }
 
@@ -34,7 +39,5 @@ public partial class User
 
     [MaxLength(200)]
     public string? Photo { get; set; }
-
-    public virtual ICollection<Role> Roles { get; set; } = new List<Role>();
 
 }

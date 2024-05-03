@@ -66,6 +66,11 @@ namespace SteamNexus.Data
                 entity.Property(e => e.UserId)
                     .ValueGeneratedOnAdd()
                     .UseIdentityColumn(10000, 1);
+
+                entity.HasOne(d => d.Role).WithMany(p => p.Users)
+                    .HasForeignKey(d => d.RoleId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Users_Roles");
             });
 
             modelBuilder.Entity<Role>(entity =>
@@ -76,11 +81,6 @@ namespace SteamNexus.Data
                 entity.Property(e => e.RoleId)
                     .ValueGeneratedOnAdd()
                     .UseIdentityColumn(10000, 1);
-
-                entity.HasOne(d => d.User).WithMany(p => p.Roles)
-                    .HasForeignKey(d => d.UserId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Roles_Users");
             });
 
             modelBuilder.Entity<Advertisement>(entity =>
