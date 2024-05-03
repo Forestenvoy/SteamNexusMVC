@@ -31,7 +31,16 @@ public partial class MinimumRequirement
     [Required]
     public int RAM { get; set; } = 4;
 
-    #nullable enable
+#nullable enable
+
+    [MaxLength(100)]
+    public string? OriCpu { get; set; }
+
+    [MaxLength(100)]
+    public string? OriGpu { get; set; }
+
+    [MaxLength(100)]
+    public string? OriRam { get; set; }
 
     [MaxLength(100)]
     public string? OS { get; set; }
