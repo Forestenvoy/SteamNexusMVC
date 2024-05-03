@@ -289,6 +289,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
             {
                 for (int GameId = 10000; GameId <= num; GameId++)
                 {
+                    Console.WriteLine(GameId);
                     await Task.Delay(1400);
 
                     allNum++;
@@ -427,41 +428,111 @@ namespace SteamNexus.Areas.Administrator.Controllers
             int errNum = 0;
             string player_count = "";
 
-            for (int GameId = 10000; GameId <= 10200; GameId++)
+            for (int GameId = 10000; GameId <= num; GameId++)
             {
                 allNum++;
                 Console.WriteLine(GameId);
-                await Task.Delay(1400);
+                //await Task.Delay(1400);
                 var game = await _context.Games.FindAsync(GameId);
-                int? AppId = game.AppId;
                 if (game == null)
                 {
                     continue;// 如果找不到遊戲，繼續下一個遊戲的處理
                 }
-                HttpResponseMessage Response = await client.GetAsync($"https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?format=json&appid={AppId}");
-                Response.EnsureSuccessStatusCode();
-
-                string data = await Response.Content.ReadAsStringAsync();
-                dynamic jsonData = JsonConvert.DeserializeObject(data);
+                int? AppId = game.AppId;
                 try
                 {
-                    player_count = jsonData["response"]["player_count"];
-                    int.TryParse(player_count, out int players);
-
-                    PlayersHistory playersHistory = new PlayersHistory
-                    {
-                        GameId = GameId,
-                        Players = players
-                    };
-
+                    HttpResponseMessage Response = await client.GetAsync($"https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?format=json&appid={AppId}");
+                    Response.EnsureSuccessStatusCode();
+                    string data = await Response.Content.ReadAsStringAsync();
+                    dynamic jsonData = JsonConvert.DeserializeObject(data);
                     try
                     {
-                        _context.PlayersHistories.Add(playersHistory);
-                        await _context.SaveChangesAsync();
+                        player_count = jsonData["response"]["player_count"];
+                        int.TryParse(player_count, out int players);
+
+                        PlayersHistory playersHistory = new PlayersHistory
+                        {
+                            GameId = GameId,
+                            Players = players
+                        };
+
+                        try
+                        {
+                            _context.PlayersHistories.Add(playersHistory);
+                            await _context.SaveChangesAsync();
+                        }
+                        catch
+                        {
+                            return "傳回資料庫錯誤";
+                        }
                     }
                     catch
                     {
-                        return "傳回資料庫錯誤";
+                        errNum++;
+                        continue;
+                    }
+                }
+                catch
+                {
+                    continue;
+                }
+                
+
+                
+            }
+            return "總次數:" + allNum + "\nAPI找不到次數:" + errNum;
+        }
+
+        //拿取評論(更新)
+        [HttpGet]
+        public async Task<string> GetNumberOfCommentsDataToDB()
+        {
+            HttpClient client = new HttpClient();
+            client.DefaultRequestHeaders.Add("Accept-Language", "zh-TW");
+            int? num = _context.Games.OrderByDescending(g => g.GameId).FirstOrDefault()?.GameId ?? 0;
+            int allNum = 0;
+            int errNum = 0;
+            string CommentsNum = "";
+            string CommentsWord = "";
+            for (int GameId = 10000; GameId <= num; GameId++)
+            {
+                Console.WriteLine(GameId);
+
+                allNum++;
+                var game = await _context.Games.FindAsync(GameId);
+                if (game == null)
+                {
+                    continue;// 如果找不到遊戲，繼續下一個遊戲的處理
+                }
+
+                int? AppId = game.AppId;
+
+                try
+                {
+                    HttpResponseMessage Response = await client.GetAsync($"https://store.steampowered.com/appreviews/{AppId}?purchase_type=all&language=all");
+                    Response.EnsureSuccessStatusCode();
+                    string data = await Response.Content.ReadAsStringAsync();
+                    dynamic jsonData = JsonConvert.DeserializeObject(data);
+                    string Comments = jsonData["review_score"];
+                    Comments = Comments.Replace(",", "");
+                    Match numberOfComments = Regex.Match(Comments, @"\d+");
+                    Match wordOfComments = Regex.Match(Comments, @"壓倒性好評|極度好評|大多好評|褒貶不一|壓倒性負評|大多負評");
+                    CommentsWord = wordOfComments.Value.Replace(">", "");
+                    CommentsWord = CommentsWord.Replace("<", "");
+                    CommentsNum = numberOfComments.Value;
+
+                    int.TryParse(CommentsNum, out int CommentsNums);
+                    game.Comment = CommentsWord;
+                    game.CommentNum = CommentsNums;
+                    try
+                    {
+                        //_context.Entry(game).State = EntityState.Modified;
+                        _context.Update(game);
+                        await _context.SaveChangesAsync();
+                    }
+                    catch (DbUpdateConcurrencyException)
+                    {
+                        Console.WriteLine($"{GameId}錯誤");
                     }
                 }
                 catch
