@@ -22,8 +22,10 @@
                 <th data-priority="1">姓名</th>
                 <th>信箱</th>
                 <th>性別</th>
+                <th>電話</th>
                 <th>生日</th>
                 <th>個人照</th>
+                <th>權限</th>
                 <th>操作</th>
             </tr>
         </thead>
@@ -50,7 +52,7 @@
         var datatable = new DataTable('#MemberManageTable', {
             ajax: {
             type:"GET",
-            url: `@Url.Action("MemberData", "MemberManagement", new { area = "Administrator" })`,
+                url: `@Url.Action("GetUsersWithRoles", "MemberManagement", new { area = "Administrator" })`,
                 dataSrc: function (json) { return json; }
             },
             // column 定義
@@ -59,6 +61,7 @@
                 { "data": "email", "width": "10%", "className": "text-center" },
                 { "data": "gender", "width": "10%", "className": "text-center" },
                 { "data": "birthday", "width": "10%", "className": "text-center" },
+                { "data": "phone", "width": "10%", "className": "text-center" },
                 {
                     "data": "photo",
                     "width": "10%",
@@ -68,6 +71,7 @@
                     }
 
                 },
+                { "data": "roleName", "width": "10%", "className": "text-center" },
                 {
                     "data": null,
                     "orderable": false,
