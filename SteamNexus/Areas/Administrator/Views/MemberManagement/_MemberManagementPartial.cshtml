@@ -5,13 +5,13 @@
     <div class="row">
         @* 系統名稱 *@
         <div class="col-12 col-md-6 order-md-1 d-flex justify-content-center justify-content-md-start">
-            <h2 id="SystemName" style="margin-top: 8px;">產品管理系統</h2>
+            <h2 id="SystemName" style="margin-top: 8px;">會員管理系統</h2>
         </div>
         @* 系統選單 *@
         <div class="col-12 col-md-6 order-md-2 d-flex justify-content-center justify-content-md-end" id="SystemMenu">
-            <select asp-items="@ViewBag.ComputerParts" class="form-select " style="width:250px;height:40px;margin-bottom:8px" id="HardSelect">
+@*             <select asp-items="@ViewBag.ComputerParts" class="form-select " style="width:250px;height:40px;margin-bottom:8px" id="HardSelect">
                 <option value="" disabled selected hidden>---- 請選擇硬體 ----</option>
-            </select>
+            </select> *@
         </div>
     </div>
 </div>
@@ -31,6 +31,7 @@
         </thead>
     </table>
 </section>
+
 @* Toast 彈出式通知 容器 start *@
 <div class="position-fixed top-0 start-50 translate-middle-x p-3" style="z-index: 11" id="ToastContainer">
 </div>
@@ -110,6 +111,16 @@
             // 自動寬度 關閉
             autoWidth: true,
            
+        });
+
+        $(document).ready(function () {
+            $('#exampleModal').on('click', '.edit_button', function () {
+                console.log("编辑按钮被点击");
+            });
+
+            $('#exampleModal').on('click', '.delete_button', function () {
+                console.log("删除按钮被点击");
+            });
         });
 
     });
