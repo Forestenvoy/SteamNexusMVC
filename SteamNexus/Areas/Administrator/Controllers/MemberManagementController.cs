@@ -67,6 +67,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
                 .Join(_application.Roles, u => u.RoleId, r => r.RoleId,
                 (u, r) => new
                 {
+                    UserId = u.UserId,
                     Name = u.Name,
                     Email = u.Email,
                     Gender = u.Gender ? "男" : "女",
