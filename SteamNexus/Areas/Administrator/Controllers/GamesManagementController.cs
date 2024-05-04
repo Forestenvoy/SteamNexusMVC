@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using HtmlAgilityPack;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.Differencing;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -8,6 +9,7 @@ using SteamNexus.ViewModels.Game;
 using System;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
 
 namespace SteamNexus.Areas.Administrator.Controllers
 {
@@ -275,7 +277,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
             return _context.Games.Any(e => e.GameId == id);
         }
 
-        //(API)Game-Price抓取寫回程式庫
+        //(API)Game-Price抓取寫回程式庫(更新)
         [HttpGet]
         public async Task<string> GetGamePriceDataToDB()
         {
@@ -416,8 +418,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
             return "總次數:" + allNum + "\nAPI找不到次數:" + errNum + "\n價錢錯誤次數:" + priceErrNum;
         }
 
-
-        //拿取在線人數(更新)
+        //(API)拿取在線人數(新增)
         [HttpGet]
         public async Task<string> GetOnlineUsersDataToDB()
         {
@@ -476,14 +477,11 @@ namespace SteamNexus.Areas.Administrator.Controllers
                 {
                     continue;
                 }
-                
-
-                
             }
             return "總次數:" + allNum + "\nAPI找不到次數:" + errNum;
         }
 
-        //拿取評論(更新)
+        //(API)拿取評論(更新)
         [HttpGet]
         public async Task<string> GetNumberOfCommentsDataToDB()
         {
@@ -540,6 +538,139 @@ namespace SteamNexus.Areas.Administrator.Controllers
                     errNum++;
                     continue;
                 }
+            }
+            return "總次數:" + allNum + "\nAPI找不到次數:" + errNum;
+        }
+
+        //(API)拿取配備(新增)
+        public async Task<string> GetMinReqDataToDB()
+        {
+            HttpClient client = new HttpClient();
+            client.DefaultRequestHeaders.Add("Accept-Language", "zh-TW");
+            int? num = _context.Games.OrderByDescending(g => g.GameId).FirstOrDefault()?.GameId ?? 0;
+            int allNum = 0;
+            int errNum = 0;
+            string MinReqData = "";
+
+            for (int GameId = 10201; GameId <= 10400; GameId++)
+            {
+                MinimumRequirement MinReqDB = new MinimumRequirement()
+                {
+                    OriCpu = "Intel Core i5-12400",
+                    OriGpu = "Intel Iris Xe"
+                };
+
+                MinReqDB.GameId = GameId;
+                Console.WriteLine(GameId);
+
+                allNum++;
+                var game = await _context.Games.FindAsync(GameId);
+                if (game == null)
+                {
+                    continue;// 如果找不到遊戲，繼續下一個遊戲的處理
+                }
+
+                int? AppId = game.AppId;
+
+                try
+                {
+                    HttpResponseMessage Response = await client.GetAsync($"https://store.steampowered.com/api/appdetails?appids={AppId}&l=zh-tw");
+                    Response.EnsureSuccessStatusCode();
+                    string data = await Response.Content.ReadAsStringAsync();
+                    dynamic jsonData = JsonConvert.DeserializeObject(data);
+                    dynamic gameInfo = jsonData[$"{AppId}"]["data"]["pc_requirements"];
+                    MinReqData = gameInfo["minimum"];
+                    //RecReqData = gameInfo["recommended"];
+
+                    var doc = new HtmlDocument();
+                    doc.LoadHtml(MinReqData);
+
+                    // 找到包含最低配備的 <ul> 元素
+                    var ulElement = doc.DocumentNode.SelectSingleNode("//ul[@class='bb_ul']");
+
+                    // 從 <ul> 元素中提取所有的 <strong> 元素
+                    var liElements = ulElement.SelectNodes("li");
+
+                    // 輸出提取到的最低配備項目
+                    foreach (var liElement in liElements)
+                    {
+                        //抓取li中的strong用來給switch辨識欄位
+                        string strongText = liElement.SelectSingleNode("strong")?.InnerText.Trim();
+                        //.InnerText用來抓取文本內容,不會抓到HTML標籤
+                        string liText = liElement.InnerText.Trim();
+                        if (strongText == null)
+                        {
+                            continue;
+                        }
+                        switch (strongText)
+                        {
+                            case "作業系統:":
+                                MinReqDB.OS = liText.Replace("作業系統:", "").Trim();
+                                break;
+                            case "處理器:":
+                                MinReqDB.OriCpu = liText.Replace("處理器:", "").Trim();
+                                break;
+                            case "記憶體:":
+                                string RAM = liText.Replace("記憶體:", "").Trim();
+                                MinReqDB.OriRam = RAM;
+                                Match MatchRAM = Regex.Match(RAM, @"\d{1,2}");
+
+                                int parsedRAM;
+                                if (int.TryParse(MatchRAM.Value, out parsedRAM))
+                                {
+                                    // 解析成功，parsedRAM 變數存儲了轉換後的整數值
+                                    MinReqDB.RAM = parsedRAM;
+                                }
+                                else
+                                {
+                                    // 解析失敗，可能是因為記憶體大小的格式不正確
+                                    Console.WriteLine("記憶體大小格式不正確");
+                                }
+                                MinReqDB.OriRam = liText.Replace("記憶體:", "").Trim();
+                                break;
+                            case "顯示卡:":
+                                MinReqDB.OriGpu = liText.Replace("顯示卡:", "").Trim();
+                                break;
+                            case "DirectX:":
+                                MinReqDB.DirectX = liText.Replace("DirectX:", "").Trim();
+                                break;
+                            case "網路:":
+                                MinReqDB.Network = liText.Replace("網路:", "").Trim();
+                                break;
+                            case "儲存空間:":
+                                MinReqDB.Storage = liText.Replace("儲存空間:", "").Trim();
+                                break;
+                            case "備註:":
+                                MinReqDB.Note = liText.Replace("備註:", "").Trim();
+                                break;
+                            case "音效卡:":
+                                MinReqDB.Audio = liText.Replace("音效卡:", "").Trim();
+                                break;
+                            case "作業系統 *:":
+                                MinReqDB.OS = liText.Replace("作業系統 *:", "").Trim();
+                                break;
+                            default:
+                                Console.WriteLine("錯誤");
+                                break;
+                        };
+                        
+                    }
+                    Console.WriteLine($"遊戲最低需求:CPU:{MinReqDB.OriCpu},顯示卡:{MinReqDB.OriGpu},記憶體:{MinReqDB.OriRam},{MinReqDB.RAM},作業系統:{MinReqDB.OS},DirectX版本:{MinReqDB.DirectX},網路需求:{MinReqDB.Network},儲存空間:{MinReqDB.Storage},音效卡:{MinReqDB.Audio},備註:{MinReqDB.Note}");
+                    try
+                    {
+                        _context.MinimumRequirements.Add(MinReqDB);
+                        await _context.SaveChangesAsync();
+                    }
+                    catch
+                    {
+                        errNum++;
+                        return "傳回資料庫錯誤";
+                    }
+                }
+                catch
+                {
+                    Console.WriteLine("找不到API");
+                };
             }
             return "總次數:" + allNum + "\nAPI找不到次數:" + errNum;
         }

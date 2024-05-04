@@ -33,16 +33,16 @@ public partial class MinimumRequirement
 
 #nullable enable
 
-    [MaxLength(100)]
+    [MaxLength(300)]
     public string? OriCpu { get; set; }
 
-    [MaxLength(100)]
+    [MaxLength(300)]
     public string? OriGpu { get; set; }
 
-    [MaxLength(100)]
+    [MaxLength(300)]
     public string? OriRam { get; set; }
 
-    [MaxLength(100)]
+    [MaxLength(300)]
     public string? OS { get; set; }
 
     [MaxLength(100)]
@@ -57,7 +57,7 @@ public partial class MinimumRequirement
     [MaxLength(100)]
     public string? Audio { get; set; }
 
-    [MaxLength(500)]
+    [MaxLength(5000)]
     public string? Note { get; set; }
 
 }

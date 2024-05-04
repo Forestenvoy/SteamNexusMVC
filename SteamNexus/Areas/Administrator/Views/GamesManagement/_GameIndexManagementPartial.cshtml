@@ -212,6 +212,48 @@
                                     console.log(error);
                                 });
                             }
+                        },
+                        {
+                            text: '抓取最低配備',
+                            // 按鈕點擊事件
+                            action: function (e, dt, node, config) {
+                                event.preventDefault();
+                                event.stopPropagation();
+                                fetch(`@Url.Action("GetMinReqDataToDB", "GamesManagement", new { area = "Administrator" })`, {
+                                    method: "GET"
+                                }).then(result => {
+                                    // 此時 result 是一個請求結果的物件
+                                    // 注意傳回值型態，字串用 text()，JSON 用 json()
+                                    if (result.ok) {
+                                        return result.text();
+                                    }
+                                }).then(data => {
+                                    console.log(data);
+                                }).catch(error => {
+                                    console.log(error);
+                                });
+                            }
+                        },
+                        {
+                            text: '抓取最高配備',
+                            // 按鈕點擊事件
+                            action: function (e, dt, node, config) {
+                                event.preventDefault();
+                                event.stopPropagation();
+                                fetch(`@Url.Action("GetReqDataToDB", "GamesManagement", new { area = "Administrator" })`, {
+                                    method: "GET"
+                                }).then(result => {
+                                    // 此時 result 是一個請求結果的物件
+                                    // 注意傳回值型態，字串用 text()，JSON 用 json()
+                                    if (result.ok) {
+                                        return result.text();
+                                    }
+                                }).then(data => {
+                                    console.log(data);
+                                }).catch(error => {
+                                    console.log(error);
+                                });
+                            }
                         }
 
                     ]
