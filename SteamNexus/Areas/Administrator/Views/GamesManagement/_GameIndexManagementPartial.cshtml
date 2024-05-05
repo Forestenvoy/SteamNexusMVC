@@ -219,7 +219,7 @@
                             action: function (e, dt, node, config) {
                                 event.preventDefault();
                                 event.stopPropagation();
-                                fetch(`@Url.Action("GetMinReqDataToDB", "GamesManagement", new { area = "Administrator" })`, {
+                                fetch(`@Url.Action("GetDataToDB", "GamesManagement", new { area = "Administrator" })?isMinimumRequirement=true`, {
                                     method: "GET"
                                 }).then(result => {
                                     // 此時 result 是一個請求結果的物件
@@ -240,7 +240,7 @@
                             action: function (e, dt, node, config) {
                                 event.preventDefault();
                                 event.stopPropagation();
-                                fetch(`@Url.Action("GetReqDataToDB", "GamesManagement", new { area = "Administrator" })`, {
+                                fetch(`@Url.Action("GetDataToDB", "GamesManagement", new { area = "Administrator" })?isMinimumRequirement=false`, {
                                     method: "GET"
                                 }).then(result => {
                                     // 此時 result 是一個請求結果的物件

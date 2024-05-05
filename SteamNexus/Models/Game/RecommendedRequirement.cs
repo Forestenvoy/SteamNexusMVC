@@ -35,7 +35,7 @@ public partial class RecommendedRequirement
     [MaxLength(300)]
     public string? OriCpu { get; set; }
 
-    [MaxLength(300)]
+    [MaxLength(1000)]
     public string? OriGpu { get; set; }
 
     [MaxLength(300)]
@@ -53,7 +53,7 @@ public partial class RecommendedRequirement
     [MaxLength(100)]
     public string? Storage { get; set; }
 
-    [MaxLength(100)]
+    [MaxLength(300)]
     public string? Audio { get; set; }
 
     [MaxLength(5000)]
