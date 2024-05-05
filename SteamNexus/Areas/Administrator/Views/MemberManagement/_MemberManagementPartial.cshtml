@@ -65,6 +65,10 @@
                     <span class="input-group-text" id="inputGroup-sizing-lg" style="color:white">生日：</span>
                     <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" id="user_birthday">
                 </div>
+                <div class="input-group input-group-lg mb-3">
+                    <span class="input-group-text" id="inputGroup-sizing-lg" style="color:white">權限：</span>
+                    <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" id="user_purview" readonly>
+                </div>
                 <div class="input-group input-group-lg">
                     <span class="input-group-text" id="inputGroup-sizing-lg" style="color:white">大頭照：</span>
                     @* <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" id="user_photo"> *@
@@ -109,6 +113,10 @@
                 <div class="input-group input-group-lg mb-3">
                     <span class="input-group-text" id="inputGroup-sizing-lg" style="color:white">生日：</span>
                     <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" id="user_birthday_del" readonly>
+                </div>
+                <div class="input-group input-group-lg mb-3">
+                    <span class="input-group-text" id="inputGroup-sizing-lg" style="color:white">權限：</span>
+                    <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" id="user_purview_del" readonly>
                 </div>
                 <div class="input-group input-group-lg">
                     <span class="input-group-text" id="inputGroup-sizing-lg" style="color:white">大頭照：</span>
@@ -193,11 +201,12 @@
                         let Phone = row.phone
                         let Birthday = row.birthday
                         let Photo = row.photo
+                        let RoleName = row.roleName;
                         // 編輯按鈕
-                        let enterEle = `<button class="btn btn-danger" data-userid="${UserId}" data-name="${Name}" data-email="${Email}"  data-gender="${Gender}" data-phone="${Phone}" data-birthday="${Birthday}" data-photo="${Photo}" id="edit_btn" data-bs-toggle="popover" data-bs-content="nothing"><i class="bi bi-pencil-square"></i></button>`;
+                        let enterEle = `<button class="btn btn-danger" data-userid="${UserId}" data-name="${Name}" data-email="${Email}"  data-gender="${Gender}" data-phone="${Phone}" data-birthday="${Birthday}" data-photo="${Photo}" data-rolename="${RoleName}" id="edit_btn" data-bs-toggle="popover" data-bs-content="nothing"><i class="bi bi-pencil-square"></i></button>`;
                         // 刪除按鈕
                         // let resetEle = '<button class="btn btn-danger" data-userId="' + UserId + '"  data-name="' + Name + '" data-email="' + Email + '" id="delete_btn" data-bs-toggle="popover" data-bs-content="nothing"><i class="bi bi-trash3-fill"></i></button>';
-                        let resetEle = `<button class="btn btn-danger" data-userid="${UserId}" data-name="${Name}" data-email="${Email}"  data-gender="${Gender}" data-phone="${Phone}" data-birthday="${Birthday}" data-photo="${Photo}" " id="delete_btn" data-bs-toggle="popover" data-bs-content="nothing"><i class="bi bi-trash3-fill"></i></button>`;
+                        let resetEle = `<button class="btn btn-danger" data-userid="${UserId}" data-name="${Name}" data-email="${Email}"  data-gender="${Gender}" data-phone="${Phone}" data-birthday="${Birthday}" data-photo="${Photo}" data-rolename="${RoleName}" " id="delete_btn" data-bs-toggle="popover" data-bs-content="nothing"><i class="bi bi-trash3-fill"></i></button>`;
 
                         if (type === 'display') {
                             return `${enterEle}&nbsp;${resetEle}`;
@@ -233,12 +242,15 @@
             const email = $(this).data("email");
             const gender = $(this).data("gender");
             const phone = $(this).data("phone");
+
             let birthday = $(this).data("birthday");
-            const photo = $(this).data("photo");
             if (birthday) {
                 birthday = birthday.split(' ')[0];  // 取得日期部分，忽略時間
             }
-            console.log(`Edit button clicked for User ID: ${userId}, Name:${name}, Email:${email}, Gender:${gender}, Phone:${phone}, Birthday:${birthday}, Photo:${photo}`);
+
+            const photo = $(this).data("photo");
+            const rolenaem = $(this).data("rolename");
+            console.log(`Edit button clicked for User ID: ${userId}, Name:${name}, Email:${email}, Gender:${gender}, Phone:${phone}, Birthday:${birthday}, Roles:${rolenaem}, Photo:${photo}`);
 
             // 設定模態窗口中 "顯示" 數值
             $("#user_name").val(name);
@@ -246,6 +258,7 @@
             $("#user_gender").val(gender);
             $("#user_phone").val(phone);
             $("#user_birthday").val(birthday);
+            $("#user_purview").val(rolenaem);
             $("#user_photo").val(photo);
 
 
@@ -262,11 +275,14 @@
             const email = $(this).data("email");
             const gender = $(this).data("gender");
             const phone = $(this).data("phone");
+
             let birthday = $(this).data("birthday");
-            const photo = $(this).data("photo");
             if (birthday) {
                 birthday = birthday.split(' ')[0];  // 取得日期部分，忽略時間
             }
+
+            const photo = $(this).data("photo");
+            const rolenaem = $(this).data("rolename");
             console.log(`Edit button clicked for User ID: ${userId}, Name:${name}, Email:${email}, Gender:${gender}, Phone:${phone}, Birthday:${birthday}, Photo:${photo}`);
             
 
@@ -276,6 +292,7 @@
             $("#user_gender_del").val(gender);
             $("#user_phone_del").val(phone);
             $("#user_birthday_del").val(birthday);
+            $("#user_purview_del").val(rolenaem);
             $("#user_photo_del").val(photo);
 
             // 顯示窗口
@@ -283,6 +300,7 @@
             $('#delModal').modal('show');
         });
 
+        //刪除資料
         $('#delete').on('click', function () {
             const userId = $(this).data('userid'); // 從 'delete' 按鈕獲取 userId
             console.log("Deleting user ID:", userId); // 確認這裡是否正確獲取 userId

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using SteamNexus.Data;
 using SteamNexus.Models;
 using SteamNexus.ViewModels.Game;
+using System.ComponentModel.DataAnnotations;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace SteamNexus.Areas.Administrator.Controllers
@@ -48,6 +49,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
         }
         #endregion
 
+
         #region JsonRolesName
         public JsonResult RolesData()
         {
@@ -59,6 +61,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
 
         }
         #endregion
+
 
         #region Json結合User and Roles
         public IActionResult GetUsersWithRoles()
@@ -80,6 +83,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
             return Json(result);
         }
         #endregion
+
 
         #region 會員資料刪除
         [HttpPost]
@@ -105,6 +109,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
             }
         }
         #endregion
+
 
     }
 }
