@@ -70,10 +70,8 @@
                         let editEle = '<button data-GameId="' + GameId + '"  data-name="' + name + '" id="edit_button" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-pen-to-square"></i></button>';
                         // 刪除按鈕
                         let deleteEle = '<button data-GameId="' + GameId + '"  data-name="' + name + '" id="delete_button" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-trash"></i></button>';
-                        // 更新按鈕
-                        let updateEle = '<button data-GameId="' + GameId + '"  data-name="' + name + '" id="update_button" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-trash"></i></button>';
                         if (type === 'display') {
-                            return `${editEle}${deleteEle}${updateEle}`;
+                            return `${editEle}${deleteEle}`;
                         }
                         return data;
                     }, responsivePriority: 1

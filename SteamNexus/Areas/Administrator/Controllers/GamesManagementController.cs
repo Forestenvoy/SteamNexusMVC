@@ -296,6 +296,11 @@ namespace SteamNexus.Areas.Administrator.Controllers
 
                     allNum++;
                     var game = await _context.Games.FindAsync(GameId);
+                    PriceHistory PriceHistory = new PriceHistory
+                    {
+                        GameId = GameId
+                    };
+
                     if (game == null)
                     {
                         continue;// 如果找不到遊戲，繼續下一個遊戲的處理
@@ -316,10 +321,12 @@ namespace SteamNexus.Areas.Administrator.Controllers
                         {
                             game.OriginalPrice = 0;
                             game.CurrentPrice = 0;
+                            PriceHistory.Price = 0;
                             try
                             {
                                 //_context.Entry(game).State = EntityState.Modified;
                                 _context.Update(game);
+                                _context.PriceHistories.Add(PriceHistory);
                                 await _context.SaveChangesAsync();
                             }
                             catch (DbUpdateConcurrencyException)
@@ -337,10 +344,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
                         }
                         else
                         {
-                            PriceHistory PriceHistory = new PriceHistory
-                            {
-                                GameId = GameId
-                            };
+                            
                             dynamic price = gameInfo["price_overview"];
                             string initial_formatted = price["initial_formatted"];
                             string finalFormatted = price["final_formatted"];
@@ -357,6 +361,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
                                     int.TryParse(finalPrice, out int prices);
                                     game.OriginalPrice = prices;
                                     game.CurrentPrice = prices;
+                                    PriceHistory.Price = prices;
                                 }
                                 else
                                 {
@@ -381,24 +386,6 @@ namespace SteamNexus.Areas.Administrator.Controllers
                                     game.OriginalPrice = initial;
                                     game.CurrentPrice = final;
                                     PriceHistory.Price = final;
-                                    try
-                                    {
-                                        //_context.Entry(game).State = EntityState.Modified;
-                                        _context.PriceHistories.Add(PriceHistory);
-                                        await _context.SaveChangesAsync();
-                                    }
-                                    catch (DbUpdateConcurrencyException)
-                                    {
-                                        Console.WriteLine("錯誤");
-                                        if (!GameExists(game.GameId))
-                                        {
-                                            return "錯誤";
-                                        }
-                                        else
-                                        {
-                                            continue;
-                                        }
-                                    }
                                 }
                                 else
                                 {
@@ -410,6 +397,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
                             {
                                 //_context.Entry(game).State = EntityState.Modified;
                                 _context.Update(game);
+                                _context.PriceHistories.Add(PriceHistory);
                                 await _context.SaveChangesAsync();
                             }
                             catch (DbUpdateConcurrencyException)
@@ -492,6 +480,21 @@ namespace SteamNexus.Areas.Administrator.Controllers
                     }
                     catch
                     {
+                        PlayersHistory playersHistory = new PlayersHistory
+                        {
+                            GameId = GameId,
+                            Players = 0
+                        };
+
+                        try
+                        {
+                            _context.PlayersHistories.Add(playersHistory);
+                            await _context.SaveChangesAsync();
+                        }
+                        catch
+                        {
+                            return "傳回資料庫錯誤";
+                        }
                         errNum++;
                         continue;
                     }
