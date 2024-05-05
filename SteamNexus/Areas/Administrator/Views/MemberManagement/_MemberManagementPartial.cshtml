@@ -15,6 +15,8 @@
         </div>
     </div>
 </div>
+
+@* Datatables設定 *@
 <section class="section">
     <table id="MemberManageTable" class="display" style="width:100%" ;>
         <thead id="HardwareThead">
@@ -33,7 +35,9 @@
     </table>
 </section>
 
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+@* 編輯的浮動視窗 *@
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -63,13 +67,59 @@
                 </div>
                 <div class="input-group input-group-lg">
                     <span class="input-group-text" id="inputGroup-sizing-lg" style="color:white">大頭照：</span>
-                    <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" id="user_photo">
+                    @* <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" id="user_photo"> *@
+                    @* <img src="/images/headshots/880a17e0-67cb-4f66-b261-d20deec17333.jpg" class="img-thumbnail" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" id="user_photo"> *@
+                    <img src="/images/headshots" class="img-thumbnail" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" id="user_photo">
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-@*                 <button type="button" class="btn btn-primary">Save changes</button> *@
+                <button type="button" class="btn btn-primary">儲存修改</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉視窗</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@* 刪除的浮動視窗 *@
+<div class="modal fade" id="delModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">會員資料刪除</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group input-group-lg mb-3">
+                    <span class="input-group-text" id="inputGroup-sizing-lg" style="color:white">姓名：</span>
+                    <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" id="user_name_del" readonly>
+                </div>
+                <div class="input-group input-group-lg mb-3">
+                    <span class="input-group-text" id="inputGroup-sizing-lg" style="color:white">Email：</span>
+                    <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" id="user_email_del" readonly>
+                </div>
+                <div class="input-group input-group-lg mb-3">
+                    <span class="input-group-text" id="inputGroup-sizing-lg" style="color:white">性別：</span>
+                    <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" id="user_gender_del" readonly>
+                </div>
+                <div class="input-group input-group-lg mb-3">
+                    <span class="input-group-text" id="inputGroup-sizing-lg" style="color:white">電話：</span>
+                    <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" id="user_phone_del" readonly>
+                </div>
+                <div class="input-group input-group-lg mb-3">
+                    <span class="input-group-text" id="inputGroup-sizing-lg" style="color:white">生日：</span>
+                    <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" id="user_birthday_del" readonly>
+                </div>
+                <div class="input-group input-group-lg">
+                    <span class="input-group-text" id="inputGroup-sizing-lg" style="color:white">大頭照：</span>
+                    @* <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" id="user_photo_del"> *@
+                    @* <img src="/images/headshots/880a17e0-67cb-4f66-b261-d20deec17333.jpg" class="img-thumbnail" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" id="user_photo_del"> *@
+                    <img src="/images/headshots" class="img-thumbnail" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" id="user_photo_del">
+                </div>
+            </div>
+            <div class="modal-footer">
                 <button type="button" class="btn btn-primary">刪除</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉視窗</button>
             </div>
         </div>
     </div>
@@ -106,8 +156,19 @@
                 { "data": "name", "width": "10%", "className": "text-center" },
                 { "data": "email", "width": "10%", "className": "text-center" },
                 { "data": "gender", "width": "10%", "className": "text-center" },
-                { "data": "birthday", "width": "10%", "className": "text-center" },
                 { "data": "phone", "width": "10%", "className": "text-center" },
+                {
+                    "data": "birthday",
+                    "width": "10%",
+                    "className": "text-center",
+                    "render": function (data, type, row) {
+                        if (type === 'display' && data) {
+                            let date = new Date(data);
+                            return `${date.getFullYear()}-${('0' + (date.getMonth() + 1)).slice(-2)}-${('0' + date.getDate()).slice(-2)}`;
+                        }
+                        return data;
+                    }
+                },
                 {
                     "data": "photo",
                     "width": "10%",
@@ -165,17 +226,21 @@
            
         });
 
+        //編輯浮動視窗內容顯示
         $(document).on('click', '#edit_btn', function () {
             const userId = $(this).data('userid');
             const name = $(this).data('name');
             const email = $(this).data("email");
             const gender = $(this).data("gender");
             const phone = $(this).data("phone");
-            const birthday = $(this).data("birthday");
+            let birthday = $(this).data("birthday");
             const photo = $(this).data("photo");
+            if (birthday) {
+                birthday = birthday.split(' ')[0];  // 取得日期部分，忽略時間
+            }
             console.log(`Edit button clicked for User ID: ${userId}, Name:${name}, Email:${email}, Gender:${gender}, Phone:${phone}, Birthday:${birthday}, Photo:${photo}`);
 
-            // 設定模態窗口中 "姓名" 輸入框的值
+            // 設定模態窗口中 "顯示" 數值
             $("#user_name").val(name);
             $("#user_email").val(email);
             $("#user_gender").val(gender);
@@ -183,31 +248,38 @@
             $("#user_birthday").val(birthday);
             $("#user_photo").val(photo);
 
-            // 顯示模態窗口
-            $('#exampleModal').modal('show');
+
+            // 顯示窗口
+            $('#editModal').modal('show');
 
         });
 
+
+        //刪除浮動視窗內容顯示
         $(document).on('click', '#delete_btn', function () {
             const userId = $(this).data('userid');
             const name = $(this).data('name');
             const email = $(this).data("email");
             const gender = $(this).data("gender");
             const phone = $(this).data("phone");
-            const birthday = $(this).data("birthday");
+            let birthday = $(this).data("birthday");
             const photo = $(this).data("photo");
+            if (birthday) {
+                birthday = birthday.split(' ')[0];  // 取得日期部分，忽略時間
+            }
             console.log(`Edit button clicked for User ID: ${userId}, Name:${name}, Email:${email}, Gender:${gender}, Phone:${phone}, Birthday:${birthday}, Photo:${photo}`);
+            
 
-            // 設定模態窗口中 "姓名" 輸入框的值
-            $("#user_name").val(name);
-            $("#user_email").val(email);
-            $("#user_gender").val(gender);
-            $("#user_phone").val(phone);
-            $("#user_birthday").val(birthday);
-            $("#user_photo").val(photo);
+            // 設定模態窗口中 "顯示" 數值
+            $("#user_name_del").val(name);
+            $("#user_email_del").val(email);
+            $("#user_gender_del").val(gender);
+            $("#user_phone_del").val(phone);
+            $("#user_birthday_del").val(birthday);
+            $("#user_photo_del").val(photo);
 
-            // 顯示模態窗口
-            $('#exampleModal').modal('show');
+            // 顯示窗口
+            $('#delModal').modal('show');
         });
 
     });
