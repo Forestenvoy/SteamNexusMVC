@@ -118,7 +118,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary">刪除</button>
+                <button id="delete" type="button" class="btn btn-primary">刪除</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉視窗</button>
             </div>
         </div>
@@ -279,7 +279,33 @@
             $("#user_photo_del").val(photo);
 
             // 顯示窗口
+            $('#delete').data('userid', userId);
             $('#delModal').modal('show');
+        });
+
+        $('#delete').on('click', function () {
+            const userId = $(this).data('userid'); // 從 'delete' 按鈕獲取 userId
+            console.log("Deleting user ID:", userId); // 確認這裡是否正確獲取 userId
+
+            $.ajax({
+                url: '/Administrator/MemberManagement/DeleteUser',
+                type: 'POST',
+                data: {
+                    id: userId, // 確保這裡使用正確的參數名稱
+                    __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                },
+                success: function (response) {
+                    if (response.success) {
+                        alert('刪除成功');
+                        location.reload();
+                    } else {
+                        alert('刪除失敗: ' + response.message);
+                    }
+                },
+                error: function (error) {
+                    alert('發生錯誤: ' + error.responseText);
+                }
+            });
         });
 
     });

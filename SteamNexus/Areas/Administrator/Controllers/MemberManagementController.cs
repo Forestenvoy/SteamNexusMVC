@@ -80,5 +80,31 @@ namespace SteamNexus.Areas.Administrator.Controllers
             return Json(result);
         }
         #endregion
+
+        #region 會員資料刪除
+        [HttpPost]
+        public async Task<IActionResult> DeleteUser(int id)
+        {
+            try
+            {
+                var user = await _application.Users.FindAsync(id);
+                if (user == null)
+                {
+                    // 加入調試信息，確認ID值和數據庫內是否匹配
+                    return Json(new { success = false, message = "用戶未找到，ID: " + id });
+                }
+
+                _application.Users.Remove(user);
+                await _application.SaveChangesAsync();
+                return Json(new { success = true, message = "用戶已刪除" });
+            }
+            catch (Exception ex)
+            {
+                //記錄錯誤
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+        #endregion
+
     }
 }
