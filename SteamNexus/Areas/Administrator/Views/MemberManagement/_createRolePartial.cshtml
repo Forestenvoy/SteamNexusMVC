@@ -1,0 +1,197 @@
+﻿@* PartialView 的 CSS *@
+<link href="~/css/hardwareproductmanagesystem.css" rel="stylesheet" asp-append-version="true" />
+@* PartialView 的 HTML *@
+<div class="page-title position-relative">
+    <div class="row">
+        @* 系統名稱 *@
+        <div class="col-12 col-md-6 order-md-1 d-flex justify-content-center justify-content-md-start">
+            <h2 id="SystemName" style="margin-top: 8px;">權限管理系統</h2>
+        </div>
+        @* 系統選單 *@
+        <div class="col-12 col-md-6 order-md-2 d-flex justify-content-center justify-content-md-end" id="SystemMenu">
+            @*             <select asp-items="@ViewBag.ComputerParts" class="form-select " style="width:250px;height:40px;margin-bottom:8px" id="HardSelect">
+            <option value="" disabled selected hidden>---- 請選擇硬體 ----</option>
+            </select> *@
+            <button class="btn btn-danger" id="createRoles">新增權限</button>
+        </div>
+            
+    </div>
+</div>
+
+@* Datatables設定 *@
+<section class="section">
+    <table id="RolesManageTable" class="display" style="width:100%" ;>
+        <thead id="HardwareThead">
+            <tr>
+                <th data-priority="1">編號</th>
+                <th>名稱</th>
+                <th>刪除</th>
+            </tr>
+        </thead>
+    </table>
+</section>
+
+<div class="modal fade" id="createrole" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">新增權限</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="createRoles">
+            <div class="input-group input-group-lg mb-3">
+                <span class="input-group-text" id="inputGroup-sizing-lg" style="color:white">權限名稱：</span>
+                        <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" id="Roles_name" pattern="[A-Za-z]+" title="只能輸入大小寫英文">
+            </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="crate">新增</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉視窗</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+@* Toast 彈出式通知 容器 start *@
+<div class="position-fixed top-0 start-50 translate-middle-x p-3" style="z-index: 11" id="ToastContainer">
+</div>
+@* Toast 彈出式通知 容器 end *@
+@* 防偽標籤 生成(會是個 input hidden 元素) *@
+@Html.AntiForgeryToken();
+@*
+    目的: 防止 CSRF 攻擊
+    也會生成兩個 cookie => HttpOnly=true、SameSite=Strict
+    AntiforgeryCookie => 存的是 防偽標籤 值
+    .AspNetCore.Antiforgery.名稱 => 存的是 防偽標籤的 名稱
+*@
+@* PartialView 的 JavaScript *@
+<script>
+    $(document).ready(function () {
+        let HardAddress = "https://localhost:7097";
+
+        // 初始化 Datatables
+        var datatable = new DataTable('#RolesManageTable', {
+            ajax: {
+                type: "GET",
+                url: `@Url.Action("RolesData", "MemberManagement", new { area = "Administrator" })`,
+                dataSrc: function (json) { return json; }
+            },
+            // column 定義
+            columns: [
+                { "data": "roleId", "width": "10%", "className": "text-center" },
+                { "data": "roleName", "width": "10%", "className": "text-center" },
+                {
+                    "data": null,
+                    "orderable": false,
+                    "width": "10%",
+                    "className": "text-center",
+                    render: function (data, type, row, meta) {
+                        // 取得 roleId
+                        let RoleId = row.roleId;
+                        let RoleName = row.roleName;
+                        // 刪除按鈕
+                        let resetEle = `<button class="btn btn-danger del-btn" data-roleid="${row.roleId}" data-rolename="${RoleName}" data-bs-toggle="popover" data-bs-content="nothing"><i class="bi bi-trash3-fill"></i></button>`;
+
+
+                        if (type === 'display') {
+                            return `${resetEle}`;
+                        }
+                        return data;
+                    }, responsivePriority: 1
+                },
+            ],
+            // 標頭固定
+            fixedHeader: {
+                // 固定 header
+                header: true,
+                // 使用導覽欄的高度作為偏移量
+                headerOffset: $('#pageNav').outerHeight(),
+            },
+            // 響應式設計
+            responsive: true,
+            // 語言設定
+            language: {
+                url: '//cdn.datatables.net/plug-ins/2.0.3/i18n/zh-HANT.json',
+            },
+            // 預設排序 ~ 根據第一個欄位 升冪排序
+            order: [[1, 'asc']],
+            // 自動寬度 關閉
+            autoWidth: true,
+
+        });
+
+        $(document).on('click', '#createRoles', function () {
+
+            // 顯示窗口
+            $('#createrole').modal('show');
+        });
+
+        $(document).on('click', '#crate', function () {
+            // 收集表單數據
+            var roleName = $('#Roles_name').val();
+
+            // 檢查輸入是否為空
+            if (roleName === '') {
+                alert('請輸入權限名稱');
+                return;
+            }
+
+            // 創建 POST 請求的數據對象
+            var postData = {
+                RoleName: roleName
+            };
+
+            // 發送 AJAX 請求
+            $.ajax({
+                url: '/Administrator/MemberManagement/CreateRole', // 修改為實際的 URL 路徑
+                type: 'POST',
+                data: postData,
+                success: function (response) {
+                    // 處理回應
+                    if (response.success) {
+                        alert('新增成功');
+                        $('#createrole').modal('hide'); // 關閉模態窗口
+                        // 重新加載或更新 DataTable
+                        $('#RolesManageTable').DataTable().ajax.reload();
+                    } else {
+                        alert('新增失敗: 請輸入英文大小寫');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    // 使用更詳細的錯誤信息
+                    alert('請求失敗: ' + xhr.responseText);
+                }
+            });
+        });
+
+
+        $(document).on('click', '.del-btn', function () {
+            const roleId = $(this).data('roleid');
+            console.log("Deleting Role ID:", roleId);
+        
+            $.ajax({
+                url: '/Administrator/MemberManagement/DeleteRole',
+                type: 'POST',
+                data: {
+                    id: roleId, // 確保這裡使用正確的參數名稱
+                    __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val() //防偽標記
+                },
+                success: function (response) {
+                    if (response.success) {
+                        alert('刪除成功');
+                        location.reload();
+                    } else {
+                        alert('刪除失敗: ' + response.message);
+                    }
+                },
+                error: function (error) {
+                    alert('發生錯誤: ' + error.responseText);
+                }
+            });
+        });
+
+    });
+</script>
