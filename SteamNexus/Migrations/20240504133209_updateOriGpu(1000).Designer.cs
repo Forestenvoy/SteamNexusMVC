@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SteamNexus.Data;
 
@@ -11,9 +12,11 @@ using SteamNexus.Data;
 namespace SteamNexus.Migrations
 {
     [DbContext(typeof(SteamNexusDbContext))]
-    partial class SteamNexusDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240504133209_updateOriGpu(1000)")]
+    partial class updateOriGpu1000
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -279,8 +282,8 @@ namespace SteamNexus.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MinReqId"), 10000L);
 
                     b.Property<string>("Audio")
-                        .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int>("CPUId")
                         .HasColumnType("int");
@@ -502,8 +505,8 @@ namespace SteamNexus.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RecReqId"), 10000L);
 
                     b.Property<string>("Audio")
-                        .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int>("CPUId")
                         .HasColumnType("int");
@@ -560,23 +563,6 @@ namespace SteamNexus.Migrations
                     b.ToTable("RecommendedRequirements");
                 });
 
-            modelBuilder.Entity("SteamNexus.Models.Role", b =>
-                {
-                    b.Property<int>("RoleId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RoleId"), 10000L);
-
-                    b.Property<string>("RoleName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("RoleId");
-
-                    b.ToTable("Roles");
-                });
-
             modelBuilder.Entity("SteamNexus.Models.Tag", b =>
                 {
                     b.Property<int>("TagId")
@@ -616,53 +602,6 @@ namespace SteamNexus.Migrations
                     b.HasIndex("TagId");
 
                     b.ToTable("TagGroups");
-                });
-
-            modelBuilder.Entity("SteamNexus.Models.User", b =>
-                {
-                    b.Property<int>("UserId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"), 10000L);
-
-                    b.Property<DateTime?>("Birthday")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<bool>("Gender")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("Phone")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("Photo")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
-
-                    b.HasKey("UserId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("SteamNexus.Models.ComponentClassification", b =>
@@ -850,17 +789,6 @@ namespace SteamNexus.Migrations
                     b.Navigation("Tag");
                 });
 
-            modelBuilder.Entity("SteamNexus.Models.User", b =>
-                {
-                    b.HasOne("SteamNexus.Models.Role", "Role")
-                        .WithMany("Users")
-                        .HasForeignKey("RoleId")
-                        .IsRequired()
-                        .HasConstraintName("FK_Users_Roles");
-
-                    b.Navigation("Role");
-                });
-
             modelBuilder.Entity("SteamNexus.Models.CPU", b =>
                 {
                     b.Navigation("MinimumRequirements");
@@ -916,11 +844,6 @@ namespace SteamNexus.Migrations
                     b.Navigation("ProductGPUs");
 
                     b.Navigation("ProductRAMs");
-                });
-
-            modelBuilder.Entity("SteamNexus.Models.Role", b =>
-                {
-                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("SteamNexus.Models.Tag", b =>
