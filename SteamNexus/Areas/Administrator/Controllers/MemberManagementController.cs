@@ -14,13 +14,15 @@ namespace SteamNexus.Areas.Administrator.Controllers
 
     public class MemberManagementController : Controller
     {
+        private readonly ILogger<MemberManagementController> _logger;
         private SteamNexusDbContext _application;
         private readonly IWebHostEnvironment _webHost;  //上傳圖片使用
 
-        public MemberManagementController(SteamNexusDbContext application, IWebHostEnvironment webHostEnvironment)
+        public MemberManagementController(SteamNexusDbContext application, IWebHostEnvironment webHostEnvironment, ILogger<MemberManagementController> logger)
         {
             _application = application;
             _webHost = webHostEnvironment;
+            _logger = logger;
         }
 
         public IActionResult Index()
@@ -116,31 +118,17 @@ namespace SteamNexus.Areas.Administrator.Controllers
         #region EditViewModel
         public partial class EditUserViewModel
         {
-            [Key]
             [Required]
             public int UserId { get; set; }
 
             [Required]
-            public int RoleId { get; set; }
-
-            [Required]
             public string RoleName { get; set; }
 
-            public virtual Role Role { get; set; }
 
             [Required]
             [MaxLength(100)]
             [EmailAddress]
             public string Email { get; set; }
-
-            [Required]
-            [MaxLength(20)]
-            public string Password { get; set; }
-
-            [DataType(DataType.Password)]
-            [Display(Name = "Confirm password")]
-            [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
-            public string ConfirmPassword { get; set; }
 
             [Required]
             [MaxLength(50)]
@@ -158,60 +146,12 @@ namespace SteamNexus.Areas.Administrator.Controllers
             [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)] // 指定日期的顯示格式
             public DateTime? Birthday { get; set; }
 
-            [MaxLength(200)]
-            public IFormFile? Photo { get; set; }
+            
+            //public IFormFile? Photo { get; set; }
 
         }
-
         #endregion
 
-        //[HttpPost]
-        //public async Task<ActionResult> EditUser([FromForm] EditUserViewModel data)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        // 使用 Join 查找特定用戶並更新其角色
-        //        var user = (from u in _application.Users
-        //                    join r in _application.Roles on u.RoleId equals r.RoleId
-        //                    where u.UserId == data.UserId
-        //                    select new { User = u, Role = r }).FirstOrDefault();
-
-        //        if (user != null)
-        //        {
-        //            user.User.Name = data.Name;
-        //            user.User.Email = data.Email;
-        //            user.User.Phone = data.Phone;
-        //            user.User.Gender = data.Gender;
-        //            user.User.Birthday = data.Birthday;
-
-        //            // 查找新的角色ID
-        //            var newRole = _application.Roles.FirstOrDefault(r => r.RoleName == data.RoleName);
-        //            if (newRole != null)
-        //            {
-        //                user.User.RoleId = newRole.RoleId;  // 更新角色ID
-        //            }
-
-        //            // 處理檔案上傳
-        //            if (data.Photo != null && data.Photo.Length > 0)
-        //            {
-        //                string filename = Guid.NewGuid().ToString() + Path.GetExtension(data.Photo.FileName);
-        //                string uploadfolder = Path.Combine(_webHost.WebRootPath, "images/headshots");
-        //                string filepath = Path.Combine(uploadfolder, filename);
-
-        //                using (var fileStream = new FileStream(filepath, FileMode.Create))
-        //                {
-        //                    await data.Photo.CopyToAsync(fileStream);
-        //                }
-
-        //                user.User.Photo = filename;
-        //            }
-
-        //            await _application.SaveChangesAsync();
-        //            return RedirectToAction("SuccessPage");
-        //        }
-        //    }
-        //    return View(data);
-        //}
 
         [HttpPost]
         public async Task<ActionResult> EditUser([FromForm] EditUserViewModel data)
@@ -219,7 +159,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
             if (ModelState.IsValid)
             {
                 var user = await _application.Users
-                            .Include(u => u.Role)  // 使用 Include 載入相關的角色資料
+                            .Include(u => u.Role)
                             .FirstOrDefaultAsync(u => u.UserId == data.UserId);
 
                 if (user == null)
@@ -227,6 +167,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
                     return NotFound($"無法找到ID為 {data.UserId} 的用戶。");
                 }
 
+                user.UserId = data.UserId;
                 user.Name = data.Name;
                 user.Email = data.Email;
                 user.Phone = data.Phone;
@@ -237,33 +178,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
                 var newRole = await _application.Roles.FirstOrDefaultAsync(r => r.RoleName == data.RoleName);
                 if (newRole != null && newRole.RoleId != user.RoleId)
                 {
-                    user.RoleId = newRole.RoleId;  // 只在角色有變化時更新角色ID
-                }
-
-                // 處理檔案上傳
-                if (data.Photo != null && data.Photo.Length > 0)
-                {
-                    // 刪除舊的圖片
-                    if (!string.IsNullOrEmpty(user.Photo))
-                    {
-                        var oldFilePath = Path.Combine(_webHost.WebRootPath, "images/headshots", user.Photo);
-                        if (System.IO.File.Exists(oldFilePath))
-                        {
-                            System.IO.File.Delete(oldFilePath);
-                        }
-                    }
-
-                    // 儲存新的圖片
-                    string filename = Guid.NewGuid().ToString() + Path.GetExtension(data.Photo.FileName);
-                    string uploadfolder = Path.Combine(_webHost.WebRootPath, "images/headshots");
-                    string filepath = Path.Combine(uploadfolder, filename);
-
-                    using (var fileStream = new FileStream(filepath, FileMode.Create))
-                    {
-                        await data.Photo.CopyToAsync(fileStream);
-                    }
-
-                    user.Photo = filename;
+                    user.RoleId = newRole.RoleId;
                 }
 
                 await _application.SaveChangesAsync();
@@ -272,6 +187,64 @@ namespace SteamNexus.Areas.Administrator.Controllers
             return View(data);  // 返回表單與驗證錯誤
         }
 
+        //[HttpPost]
+        //public async Task<ActionResult> EditUser([FromForm] EditUserViewModel data)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        var user = await _application.Users
+        //                    .Include(u => u.Role)  // 使用 Include 載入相關的角色資料
+        //                    .FirstOrDefaultAsync(u => u.UserId == data.UserId);
+
+        //        if (user == null)
+        //        {
+        //            return NotFound($"無法找到ID為 {data.UserId} 的用戶。");
+        //        }
+
+        //        user.Name = data.Name;
+        //        user.Email = data.Email;
+        //        user.Phone = data.Phone;
+        //        user.Gender = data.Gender;
+        //        user.Birthday = data.Birthday;
+
+        //        // 查找新的角色ID
+        //        var newRole = await _application.Roles.FirstOrDefaultAsync(r => r.RoleName == data.RoleName);
+        //        if (newRole != null && newRole.RoleId != user.RoleId)
+        //        {
+        //            user.RoleId = newRole.RoleId;  // 只在角色有變化時更新角色ID
+        //        }
+
+        //        // 處理檔案上傳
+        //        if (data.Photo != null && data.Photo.Length > 0)
+        //        {
+        //            // 刪除舊的圖片
+        //            if (!string.IsNullOrEmpty(user.Photo))
+        //            {
+        //                var oldFilePath = Path.Combine(_webHost.WebRootPath, "images/headshots", user.Photo);
+        //                if (System.IO.File.Exists(oldFilePath))
+        //                {
+        //                    System.IO.File.Delete(oldFilePath);
+        //                }
+        //            }
+
+        //            // 儲存新的圖片
+        //            string filename = Guid.NewGuid().ToString() + Path.GetExtension(data.Photo.FileName);
+        //            string uploadfolder = Path.Combine(_webHost.WebRootPath, "images/headshots");
+        //            string filepath = Path.Combine(uploadfolder, filename);
+
+        //            using (var fileStream = new FileStream(filepath, FileMode.Create))
+        //            {
+        //                await data.Photo.CopyToAsync(fileStream);
+        //            }
+
+        //            user.Photo = filename;
+        //        }
+
+        //        await _application.SaveChangesAsync();
+        //        return RedirectToAction("SuccessPage");  // 或其他適當的成功頁面
+        //    }
+        //    return View(data);  // 返回表單與驗證錯誤
+        //}
 
 
         //權限
@@ -309,6 +282,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
         #endregion
 
 
+        #region 刪除腳色
         [HttpPost]
         public async Task<IActionResult> DeleteRole(int id)
         {
@@ -331,6 +305,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
                 return Json(new { success = false, message = ex.Message });
             }
         }
+        #endregion
 
     }
 }

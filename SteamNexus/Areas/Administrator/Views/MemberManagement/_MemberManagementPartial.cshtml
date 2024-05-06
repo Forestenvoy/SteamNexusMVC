@@ -1,4 +1,6 @@
-﻿@* PartialView 的 CSS *@
+﻿@model SteamNexus.Areas.Administrator.Controllers.MemberManagementController
+
+@* PartialView 的 CSS *@
 <link href="~/css/hardwareproductmanagesystem.css" rel="stylesheet" asp-append-version="true" />
 @* PartialView 的 HTML *@
 <div class="page-title position-relative">
@@ -47,6 +49,10 @@
             <div class="modal-body">
                 <form id="editUserForm" enctype="multipart/form-data">
                     <div class="input-group input-group-lg mb-3">
+                        <span class="input-group-text" id="inputGroup-sizing-lg" style="color:white">編號：</span>
+                        <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" id="user_userid" readonly>
+                    </div>
+                    <div class="input-group input-group-lg mb-3">
                         <span class="input-group-text" id="inputGroup-sizing-lg" style="color:white">姓名：</span>
                         <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" id="user_name">
                     </div>
@@ -70,10 +76,11 @@
                         <span class="input-group-text" id="inputGroup-sizing-lg" style="color:white">權限：</span>
                         <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" id="user_purview">
                     </div>
-                    <div class="input-group input-group-lg">
+@*                     <div class="input-group input-group-lg">
                         <span class="input-group-text" id="inputGroup-sizing-lg" style="color:white">大頭照：</span>
-                        <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" id="user_photo">
-                    </div>
+                        <input type="file" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" id="user_photo">
+                        <img src="" class="img-thumbnail" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" id="user_display_photo">
+                    </div> *@
                 </form>
             </div>
             <div class="modal-footer">
@@ -122,7 +129,7 @@
                     <span class="input-group-text" id="inputGroup-sizing-lg" style="color:white">大頭照：</span>
                     @* <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" id="user_photo_del"> *@
                     @* <img src="/images/headshots/880a17e0-67cb-4f66-b261-d20deec17333.jpg" class="img-thumbnail" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" id="user_photo_del"> *@
-                    <img src="/images/headshots" class="img-thumbnail" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" id="user_photo_del">
+                    <img src="" class="img-thumbnail" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" id="user_photo_del">
                 </div>
             </div>
             <div class="modal-footer">
@@ -253,13 +260,15 @@
             console.log(`Edit button clicked for User ID: ${userId}, Name:${name}, Email:${email}, Gender:${gender}, Phone:${phone}, Birthday:${birthday}, Roles:${rolenaem}, Photo:${photo}`);
 
             // 設定模態窗口中 "顯示" 數值
+            $("#user_userid").val(userId);
             $("#user_name").val(name);
             $("#user_email").val(email);
             $("#user_gender").val(gender);
             $("#user_phone").val(phone);
             $("#user_birthday").val(birthday);
             $("#user_purview").val(rolenaem);
-            $("#user_photo").val(photo);
+            // $("#user_photo").val(photo);
+            // $("#user_display_photo").attr('src', `/images/headshots/${photo}`);
 
 
             // 顯示窗口
@@ -268,79 +277,96 @@
         });
 
 
-        $(document).ready(function () {
+            $(document).ready(function () {
 
-            // 使用事件委托進行綁定，無論元素何時被加入到 DOM 中都可以工作
-            $(document).on('click', '#saveButton', function () {
-                console.log("Save button was clicked.");
-                submitEdit();
+                // 使用事件委托進行綁定，無論元素何時被加入到 DOM 中都可以工作
+                $(document).on('click', '#saveButton', function () {
+                    console.log("Save button was clicked.");
+                    submitEdit();
+                });
+
+                function submitEdit() {
+                    console.log("Executing submitEdit function.");
+                    var formElement = document.getElementById('editUserForm');
+                    var formData = new FormData(formElement);
+
+                    // 添加使用者 ID
+                    var userid = document.getElementById('user_userid').value;
+                    formData.append('UserId', userid);
+
+
+                    // 添加姓名
+                    var name = document.getElementById('user_name').value;
+                    formData.append('Name', name);
+
+                    // 添加電子信箱
+                    var email = document.getElementById('user_email').value;
+                    formData.append('Email', email);
+
+                    // 添加性別並以布林值添加
+                    var genderValue = document.getElementById('user_gender').value;
+                    formData.append('Gender', genderValue === '男');
+
+                    // 添加電話
+                    var phone = document.getElementById('user_phone').value;
+                    formData.append('Phone', phone);
+
+                    // 添加生日
+                    var birthday = document.getElementById('user_birthday').value;
+                    formData.append('Birthday', birthday);
+
+                    // 添加權限
+                    var role = document.getElementById('user_purview').value;
+                    formData.append('RoleName', role); // 確保這裡的 ID 與您的表單中的元素 ID 相匹配
+                    
+
+                    // 檢查是否有檔案被選擇，並且添加到 FormData
+                    // var photoInput = document.getElementById('user_photo');
+                    // if (photoInput && photoInput.length > 0) {
+                    //     formData.append('Photo', photoInput.files[0]);
+                    // }
+
+                    // var photoInput = document.getElementById('user_photo');
+                    // if (photoInput.files.length > 0) {
+                    //     formData.append('Photo', photoInput.files[0]);
+                    // }
+                    console.log(`Edit button clicked for User ID: ${userid}, Name:${name}, Email:${email}, Gender:${genderValue}, Phone:${phone}, Birthday:${birthday}, Roles:${role}`);
+
+                    $.ajax({
+                        url: `@Url.Action("EditUser", "MemberManagement", new { area = "Administrator" })`,
+                        type: 'POST',
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        success: function (response) {
+                            $('#editModal').modal('hide');
+                            alert('用戶資料已更新');
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('更新失敗:', xhr.responseText);
+                            alert('更新失敗: ' + xhr.responseText); // 顯示後端返回的錯誤訊息
+                        }
+                    });
+                }
             });
 
-            function submitEdit() {
-                console.log("Executing submitEdit function.");
-                var formElement = document.getElementById('editUserForm');
-                var formData = new FormData(formElement);
-
-                // 添加姓名
-                var name = document.getElementById('user_name').value;
-                formData.append('Name', name);
-
-                // 添加電子信箱
-                var email = document.getElementById('user_email').value;
-                formData.append('Email', email);
-
-                // 添加性別並以布林值添加
-                var genderValue = document.getElementById('user_gender').value;
-                formData.append('Gender', genderValue === '男');
-
-                // 添加電話
-                var phone = document.getElementById('user_phone').value;
-                formData.append('Phone', phone);
-
-                // 添加生日
-                var birthday = document.getElementById('user_birthday').value;
-                formData.append('Birthday', birthday);
-
-                // 添加權限
-                var role = document.getElementById('user_purview').value;
-                formData.append('RoleName', role); // 確保這裡的 ID 與您的表單中的元素 ID 相匹配
-
-
-                // 檢查是否有檔案被選擇，並且添加到 FormData
-                var photoInput = document.getElementById('user_photo');
-                if (photoInput && photoInput.length > 0) {
-                    formData.append('Photo', photoInput.files[0]);
-                }
-
-
-                $.ajax({
-                    url: `@Url.Action("EditUser", "MemberManagement", new { area = "Administrator" })`,
-                    type: 'POST',
-                    data: formData,
-                    contentType: false,
-                    processData: false,
-                    success: function (response) {
-                        $('#editModal').modal('hide');
-                        alert('用戶資料已更新');
-                    },
-                    error: function (error) {
-                        console.error('更新失敗:', error);
-                    }
-                });
-            }
-        });
 
         //選擇圖片並預覽
-        // $('#user_photo_input').change(function () {
-        //     if (this.files && this.files[0]) {
-        //         var reader = new FileReader();
-        //         reader.onload = function (e) {
-        //             $('#user_photo_preview').attr('src', e.target.result);
-        //             $('#user_photo_preview').show();
-        //         };
-        //         reader.readAsDataURL(this.files[0]);
-        //     }
-        // });
+        $(document).ready(function () {
+            // 監聽檔案選擇器的變更事件
+            $('#user_photo').on('change', function (event) {
+                var file = event.target.files[0];  // 獲取檔案
+                var reader = new FileReader();  // 創建 FileReader 對象
+
+                // 當檔案被讀取完成後觸發的事件
+                reader.onload = function (e) {
+                    $('#user_display_photo').attr('src', e.target.result);  // 設置圖片顯示
+                };
+
+                // 讀取檔案
+                reader.readAsDataURL(file);
+            });
+        });
 
 
         //刪除浮動視窗內容顯示
@@ -368,7 +394,8 @@
             $("#user_phone_del").val(phone);
             $("#user_birthday_del").val(birthday);
             $("#user_purview_del").val(rolenaem);
-            $("#user_photo_del").val(photo);
+            // $("#user_photo_del").val(photo);
+            $("#user_photo_del").attr('src', `/images/headshots/${photo}`);
 
             // 顯示窗口
             $('#delete').data('userid', userId);
