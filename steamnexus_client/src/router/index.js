@@ -2,9 +2,9 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 import FrontendLayout from '@/views/frontend/FrontendLayout.vue'
 
-// const BackendLayout = () => import('@/views/backend/BackendLayout.vue')
-import BackendLayout from '@/views/backend/BackendLayout.vue'
-import ProductManage from '@/components/Backend/hardware/ProductManage.vue'
+const BackendLayout = () => import('@/views/backend/BackendLayout.vue')
+// import BackendLayout from '@/views/backend/BackendLayout.vue'
+import ProductManage from '@/components/backend/hardware/ProductManage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),

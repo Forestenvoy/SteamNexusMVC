@@ -1,5 +1,5 @@
 <template>
-  <h1>123</h1>
+  <h1>ProductManage</h1>
 </template>
 <script>
 export default {}

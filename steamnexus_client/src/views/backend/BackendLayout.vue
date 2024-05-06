@@ -13,9 +13,9 @@
   </footer>
 </template>
 <script setup>
-import SideBar from '@/components/Backend/sidebar/SideBar.vue'
-import MainBody from '@/components/Backend/mainbody/MainBody.vue'
-import { onMounted, onBeforeMount } from 'vue'
+import SideBar from '@/components/backend/SideBar.vue'
+import MainBody from '@/components/backend/MainBody.vue'
+import { onMounted } from 'vue'
 
 // 動態重新加載指定的 JavaScript 文件 (Mazer UI)
 function reloadScripts(paths) {
@@ -35,13 +35,14 @@ function reloadScripts(paths) {
   })
 }
 
-onBeforeMount(() => {
+onMounted(() => {
   reloadScripts([
     '/mazer/assets/static/js/components/dark.js',
     '/mazer/assets/static/js/initTheme.js',
     '/mazer/assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js',
     '/mazer/assets/compiled/js/app.js'
   ])
+  console.log('BackendLayout')
 })
 onMounted(() => {})
 </script>

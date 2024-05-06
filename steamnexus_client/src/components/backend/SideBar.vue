@@ -33,13 +33,23 @@
           <!-- 叉叉 按鈕 end -->
         </div>
       </div>
+      <!-- SideBar 選單 -->
       <div class="sidebar-menu">
         <ul class="menu">
-          <li class="sidebar-item">
-            <a href="" class="sidebar-link" id="MemberManageSystem">
-              <i class="bi bi-grid-fill"></i>
+          <li class="sidebar-title">後台系統</li>
+          <li class="sidebar-item has-sub">
+            <a href="" class="sidebar-link">
+              <i class="bi bi-stack"></i>
               <span>會員管理</span>
             </a>
+            <ul class="submenu">
+              <li class="submenu-item">
+                <a href="" class="submenu-link" id="MemberManageSystem">會員資料</a>
+              </li>
+              <li class="submenu-item">
+                <a href="" class="submenu-link" id="RolesManageSystem">權限管理</a>
+              </li>
+            </ul>
           </li>
           <li class="sidebar-item has-sub">
             <a href="" class="sidebar-link">
@@ -48,13 +58,7 @@
             </a>
             <ul class="submenu">
               <li class="submenu-item">
-                <router-link
-                  href=""
-                  class="submenu-link"
-                  id="HardwareProductManageSystem"
-                  to="/admin/productManage"
-                  >產品管理</router-link
-                >
+                <a href="" class="submenu-link" id="HardwareProductManageSystem">產品管理</a>
               </li>
               <li class="submenu-item">
                 <a href="" class="submenu-link">菜單管理</a>
@@ -80,6 +84,7 @@
           </li>
         </ul>
       </div>
+      <!-- 滾動條 -->
       <div class="ps__rail-x" style="left: 0px; bottom: 0px">
         <div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px"></div>
       </div>
