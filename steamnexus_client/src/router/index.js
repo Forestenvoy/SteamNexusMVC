@@ -4,6 +4,7 @@ import FrontendLayout from '@/views/frontend/FrontendLayout.vue'
 
 // const BackendLayout = () => import('@/views/backend/BackendLayout.vue')
 import BackendLayout from '@/views/backend/BackendLayout.vue'
+import ProductManage from '@/components/Backend/hardware/ProductManage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -12,7 +13,14 @@ const router = createRouter({
     {
       path: '/admin',
       component: BackendLayout,
-      name: 'BackendLayout'
+      name: 'BackendLayout',
+      children: [
+        {
+          path: 'productManage',
+          name: 'ProductManage',
+          component: ProductManage
+        }
+      ]
     },
     // 前台系統首頁
     {

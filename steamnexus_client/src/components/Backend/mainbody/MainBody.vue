@@ -96,7 +96,7 @@
     </header>
     <div id="main-content" class="wrapperdiv">
       <div class="page-heading">
-        <!-- router-view -->
+        <router-view></router-view>
       </div>
     </div>
   </div>
