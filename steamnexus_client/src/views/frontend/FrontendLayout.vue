@@ -1,5 +1,5 @@
 <template>
-  <div></div>
+  <button class="btn btn-primary" @click="$router.push('/admin')">Back</button>
 </template>
 <script>
 export default {}
