@@ -22,7 +22,7 @@ public partial class User
     public string Email { get; set; }
 
     [Required]
-    [MaxLength(20)]
+    [MaxLength(500)]
     public string Password { get; set; }
 
     [Required]
