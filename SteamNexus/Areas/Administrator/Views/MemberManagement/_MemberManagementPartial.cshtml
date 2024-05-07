@@ -157,7 +157,7 @@
 
 
 @* 新增會員的浮動式窗 *@
-<div class="modal fade" id="createmember" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+@* <div class="modal fade" id="createmember" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -211,6 +211,79 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" id="crate">新增</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="cratemember">關閉視窗</button>
+            </div>
+        </div>
+    </div>
+</div> *@
+
+<div class="modal fade" id="createmember" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">新增會員</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="createMemberForm">
+
+                    <!-- 第一部分 -->
+                    <div id="part1">
+                        <div class="input-group input-group-lg mb-3">
+                            <span class="input-group-text" id="inputGroup-sizing-lg" style="color:white">Email：</span>
+                            <input type="email" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" id="email" placeholder="請輸入您的電子信箱" required maxlength="100">
+                        </div>
+                        <div class="input-group input-group-lg mb-3">
+                            <span class="input-group-text" id="inputGroup-sizing-lg" style="color:white">密碼：</span>
+                            <input type="password" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" id="Password" placeholder="請輸入您的密碼" required maxlength="20">
+                        </div>
+                        <div class="input-group input-group-lg mb-3">
+                            <span class="input-group-text" id="inputGroup-sizing-lg" style="color:white">確認密碼：</span>
+                            <input type="password" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" id="ConfirmPassword" placeholder="請再次輸入您的密碼" required maxlength="20">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" id="nextStep">下一步</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="cratemember">關閉視窗</button>
+                        </div>
+                    </div>
+
+                    <!-- 第二部分 -->
+                    <div id="part2" style="display:none;">
+                        <div class="input-group input-group-lg mb-3">
+                            <span class="input-group-text" id="inputGroup-sizing-lg" style="color:white">姓名：</span>
+                            <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" id="name" placeholder="請輸入您的姓名" required maxlength="50">
+                        </div>
+                        <div class="input-group input-group-lg mb-3">
+                            <span class="input-group-text" id="inputGroup-sizing-lg" style="color:white">生日：</span>
+                            <input type="date" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" id="birthday">
+                        </div>
+                        <div class="input-group input-group-lg mb-3">
+                            <span class="input-group-text" id="inputGroup-sizing-lg" style="color:white">電話：</span>
+                            <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" id="phone" pattern="^09\d{8}$" maxlength="10" placeholder="手機號碼必須以09開頭且是10位數字">
+                        </div>
+                        <div class="input-group input-group-lg mb-3">
+                            <span class="input-group-text" id="inputGroup-sizing-lg" style="color:white">性別：</span>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input text-center" type="radio" name="gender" id="male" value="true" checked>
+                                <label class="form-check-label" for="male">男</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input text-center" type="radio" name="gender" id="female" value="false">
+                                <label class="form-check-label" for="female">女</label>
+                            </div>
+                        </div>
+                        <div class="input-group input-group-lg">
+                            <span class="input-group-text" id="inputGroup-sizing-lg" style="color:white">大頭照：</span>
+                            <input type="file" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" id="photo">
+                            <img src="" class="img-thumbnail" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" id="display_photo">
+                        </div>
+                        <div class="modal-footer mt-2">
+                            <button type="button" class="btn btn-primary" id="crate">新增</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="cratemember">關閉視窗</button>
+                        </div>
+
+                    </div>
+
+                </form>
             </div>
         </div>
     </div>
@@ -512,6 +585,11 @@
 
         //新增會員
         $(document).ready(function () {
+            $('#nextStep').click(function () {
+                $('#part1').hide();
+                $('#part2').show();
+            });
+
             $('#crate').click(function () {
                 var email = $('#email').val();
                 var password = $('#Password').val();
@@ -553,23 +631,24 @@
                     success: function (response) {
                         if (response.success) {
                             alert('新增會員成功');
+                            resetAndPrepareForm();
                             $('#createmember').modal('hide'); // 關閉模態窗
                             // 可在此處更新或重新加載資料表等界面元素
                             $('#MemberManageTable').DataTable().ajax.reload();
+                            
+                            //  // 重置表單
+                            // $('#email').val('');
+                            // $('#Password').val('');
+                            // $('#ConfirmPassword').val('');
+                            // $('#name').val('');
+                            // $('#birthday').val('');
+                            // $('#phone').val('');
+                            // $('input[name="gender"]').prop('checked', false);
+                            // $('#photo').val('');
 
-                            // 重置表單
-                            $('#email').val('');
-                            $('#Password').val('');
-                            $('#ConfirmPassword').val('');
-                            $('#name').val('');
-                            $('#birthday').val('');
-                            $('#phone').val('');
-                            $('input[name="gender"]').prop('checked', false);
-                            $('#photo').val('');
-
-                            // 額外處理，清空檔案輸入元素並重置圖片預覽
-                            $('#photo').replaceWith($('#photo').clone(true));
-                            $('#display_photo').attr('src', ''); // 清空圖片預覽
+                            // // 額外處理，清空檔案輸入元素並重置圖片預覽
+                            // $('#photo').replaceWith($('#photo').clone(true));
+                            // $('#display_photo').attr('src', ''); // 清空圖片預覽
 
                         } else {
                             alert('新增會員失敗: ' + response.message);
@@ -579,10 +658,32 @@
                         alert('發生錯誤: ' + xhr.responseText);
                     }
                 });
+
+                function resetAndPrepareForm() {
+                    // 重置表單
+                    $('#email').val('');
+                    $('#Password').val('');
+                    $('#ConfirmPassword').val('');
+                    $('#name').val('');
+                    $('#birthday').val('');
+                    $('#phone').val('');
+                    $('input[name="gender"]').prop('checked', false);
+                    $('#photo').val('');
+
+                    // 額外處理，清空檔案輸入元素並重置圖片預覽
+                    $('#photo').replaceWith($('#photo').clone(true));
+                    $('#display_photo').attr('src', ''); // 清空圖片預覽
+
+                    // 顯示第一部分並隱藏第二部分
+                    $('#part1').show();
+                    $('#part2').hide();
+                }
+
             });
         });
 
 
+        //重製表單
         // $(document).ready(function () {
         //     // 綁定點擊事件到關閉視窗按鈕
         //     $('button[data-bs-dismiss="cratemember"]').click(function () {
@@ -633,6 +734,11 @@
                 $('#photo').replaceWith($('#photo').clone(true));
                 $('#display_photo').attr('src', ''); // 清空圖片預覽
 
+                // 顯示第一部分並隱藏第二部分
+                $('#part1').show();
+                $('#part2').hide();
+
+                // 隱藏模態窗口
                 $('#createmember').modal('hide');
             }
         });
