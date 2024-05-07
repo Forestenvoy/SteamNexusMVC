@@ -2,14 +2,19 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using SteamNexus.Data;
-using SteamNexus.Models;
-using SteamNexus.ViewModels.Game;
+using SteamNexus_Server.Data;
+using SteamNexus_Server.Models;
+using SteamNexus_Server.ViewModels.Game;
 using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Cors;
+using SteamNexus.ViewModels.Game;
 
 namespace SteamNexus.Areas.Administrator.Controllers
 {
-    [Area("Administrator")]
+    // 套用 CORS 策略
+    [EnableCors("AllowAny")]
+    [Route("api/[controller]")]
+    [ApiController]
     public class GamesManagementController : Controller
     {
         private readonly SteamNexusDbContext _context;
@@ -52,7 +57,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
         }
 
 
-        [HttpGet]
+        [HttpGet("GetIndexPartialView")]
         public IActionResult GetIndexPartialView()
         {
             var steamNexusDbContext = _context.Games;
@@ -60,19 +65,19 @@ namespace SteamNexus.Areas.Administrator.Controllers
         }
 
         //GameDataTable設定
-        [HttpGet]
+        [HttpGet("IndexJson")]
         public async Task<JsonResult> IndexJson()
         {
             return Json(_context.Games);
         }
 
-        [HttpGet]
+        [HttpGet("GetCreatPartialView")]
         public IActionResult GetCreatPartialView()
         {
             return PartialView("_GameCreateManagementPartial");
         }
 
-        [HttpPost]
+        [HttpPost("PostCreatPartialToDB")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> PostCreatPartialToDB(CreateViewModel Create)
         {
@@ -115,7 +120,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
             return PartialView("_GameCreateManagementPartial", Create);
         }
 
-        [HttpGet]
+        [HttpGet("GetEditPartialView")]
         public IActionResult GetEditPartialView(int id)
         {
             var game = _context.Games.FindAsync(id).Result;
@@ -140,7 +145,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
             }
             return PartialView("_GameEditManagementPartial", ViewModel);
         }
-        [HttpPost]
+        [HttpPost("PostEditPartialToDB")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> PostEditPartialToDB(EditViewModel ViewModel)
         {
@@ -218,7 +223,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
             return PartialView("_GameDetailsManagementPartial", ViewModel);
         }
 
-        [HttpGet]
+        [HttpGet("GetDeletePartialView")]
         public IActionResult GetDeletePartialView(int id)
         {
 
@@ -254,7 +259,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
             return PartialView("_GameDeleteManagementPartial", ViewModel);
         }
 
-        [HttpPost]
+        [HttpPost("PostDeletePartialToDB")]
         public async Task<IActionResult> PostDeletePartialToDB(int id)
         {
             var game = _context.Games.FindAsync(id).Result;
@@ -268,14 +273,13 @@ namespace SteamNexus.Areas.Administrator.Controllers
             return GetIndexPartialView();
         }
 
-
         private bool GameExists(int id)
         {
             return _context.Games.Any(e => e.GameId == id);
         }
 
         //(API)Game-Price抓取寫回程式庫(更新)
-        [HttpGet]
+        [HttpGet("GetGamePriceDataToDB")]
         public async Task<string> GetGamePriceDataToDB()
         {
             HttpClient client = new HttpClient();
@@ -427,7 +431,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
         }
 
         //(API)拿取在線人數(新增)
-        [HttpGet]
+        [HttpGet("GetOnlineUsersDataToDB")]
         public async Task<string> GetOnlineUsersDataToDB()
         {
             HttpClient client = new HttpClient();
@@ -505,7 +509,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
         }
 
         //(API)拿取評論(更新)
-        [HttpGet]
+        [HttpGet("GetNumberOfCommentsDataToDB")]
         public async Task<string> GetNumberOfCommentsDataToDB()
         {
             HttpClient client = new HttpClient();
@@ -566,6 +570,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
         }
 
         //(API)拿取配備(新增)
+        [HttpGet("GetDataToDB")]
         public async Task<string> GetDataToDB(bool isMinimumRequirement)
         {
             HttpClient client = new HttpClient();
