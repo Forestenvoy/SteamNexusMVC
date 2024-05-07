@@ -14,6 +14,7 @@
 @*             <select asp-items="@ViewBag.ComputerParts" class="form-select " style="width:250px;height:40px;margin-bottom:8px" id="HardSelect">
                 <option value="" disabled selected hidden>---- 請選擇硬體 ----</option>
             </select> *@
+            <button class="btn btn-danger" id="createMember">新增會員</button>
         </div>
     </div>
 </div>
@@ -148,6 +149,67 @@
             </div>
             <div class="modal-footer">
                 <button id="delete" type="button" class="btn btn-primary">刪除</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉視窗</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@* 新增會員的浮動式窗 *@
+<div class="modal fade" id="createmember" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">新增會員</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="createMember">
+                    <div class="input-group input-group-lg mb-3">
+                        <span class="input-group-text" id="inputGroup-sizing-lg" style="color:white">Email：</span>
+                        <input type="email" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" id="email" placeholder="請輸入您的電子信箱" required maxlength="100">
+                    </div>
+                    <div class="input-group input-group-lg mb-3">
+                        <span class="input-group-text" id="inputGroup-sizing-lg" style="color:white">密碼：</span>
+                        <input type="password" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" id="Password" placeholder="請輸入您的密碼" required maxlength="20">
+                    </div>
+                    <div class="input-group input-group-lg mb-3">
+                        <span class="input-group-text" id="inputGroup-sizing-lg" style="color:white">確認密碼：</span>
+                        <input type="password" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" id="ConfirmPassword" placeholder="請再次輸入您的密碼" required maxlength="20">
+                    </div>
+                    <div class="input-group input-group-lg mb-3">
+                        <span class="input-group-text" id="inputGroup-sizing-lg" style="color:white">姓名：</span>
+                        <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" id="name" placeholder="請輸入您的姓名" required maxlength="50">
+                    </div>
+                    <div class="input-group input-group-lg mb-3">
+                        <span class="input-group-text" id="inputGroup-sizing-lg" style="color:white">生日：</span>
+                        <input type="date" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" id="birthday">
+                    </div>
+                    <div class="input-group input-group-lg mb-3">
+                        <span class="input-group-text" id="inputGroup-sizing-lg" style="color:white">電話：</span>
+                        <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" id="phone" pattern="^09\d{8}$" maxlength="10" placeholder="手機號碼必須以09開頭且是10位數字">
+                    </div>
+                    <div class="input-group input-group-lg mb-3">
+                        <span class="input-group-text" id="inputGroup-sizing-lg" style="color:white">性別：</span>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input text-center" type="radio" name="gender" id="male" value="true" checked>
+                            <label class="form-check-label" for="male">男</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input text-center" type="radio" name="gender" id="female" value="false">
+                            <label class="form-check-label" for="female">女</label>
+                        </div>
+                    </div>
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-text" id="inputGroup-sizing-lg" style="color:white">大頭照：</span>
+                        <input type="file" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" id="photo">
+                        <img src="" class="img-thumbnail" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" id="display_photo">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="crate">新增</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉視窗</button>
             </div>
         </div>
@@ -439,6 +501,104 @@
                 }
             });
         });
+
+
+        //顯示新增會員浮動式窗
+        $(document).on('click', '#createMember', function () {
+
+            // 顯示窗口
+            $('#createmember').modal('show');
+        });
+
+        //新增會員
+        $(document).ready(function () {
+            $('#crate').click(function () {
+                var email = $('#email').val();
+                var password = $('#Password').val();
+                var confirmPassword = $('#ConfirmPassword').val();
+                var name = $('#name').val();
+                var birthday = $('#birthday').val();
+                var phone = $('#phone').val();
+                var gender = $('input[name="gender"]:checked').val();
+                var photo = $('#photo')[0].files[0];
+
+                // 基本驗證
+                if (!email || !password || !confirmPassword || !name) {
+                    alert('必填欄位不能為空！');
+                    return;
+                }
+                if (password !== confirmPassword) {
+                    alert('兩次密碼輸入不一致！');
+                    return;
+                }
+
+                // 創建 FormData 對象以方便文件上傳
+                var formData = new FormData();
+                formData.append('Email', email);
+                formData.append('Password', password);
+                formData.append('ConfirmPassword', confirmPassword);
+                formData.append('Name', name);
+                formData.append('Birthday', birthday);
+                formData.append('Phone', phone);
+                formData.append('Gender', gender);
+                formData.append('Photo', photo);
+
+                // AJAX 請求
+                $.ajax({
+                    url: '/Administrator/MemberManagement/CreateMember', // 確認實際的 URL 路徑
+                    type: 'POST',
+                    data: formData,
+                    contentType: false, // 必須設為 false 才能正確傳送文件
+                    processData: false, // 必須設為 false 才能使用 FormData
+                    success: function (response) {
+                        if (response.success) {
+                            alert('新增會員成功');
+                            $('#createmember').modal('hide'); // 關閉模態窗
+                            // 可在此處更新或重新加載資料表等界面元素
+                            $('#MemberManageTable').DataTable().ajax.reload();
+
+                            // 重置表單
+                            $('#email').val('');
+                            $('#Password').val('');
+                            $('#ConfirmPassword').val('');
+                            $('#name').val('');
+                            $('#birthday').val('');
+                            $('#phone').val('');
+                            $('input[name="gender"]').prop('checked', false);
+                            $('#photo').val('');
+
+                            // 額外處理，清空檔案輸入元素並重置圖片預覽
+                            $('#photo').replaceWith($('#photo').clone(true));
+                            $('#display_photo').attr('src', ''); // 清空圖片預覽
+
+                        } else {
+                            alert('新增會員失敗: ' + response.message);
+                        }
+                    },
+                    error: function (xhr) {
+                        alert('發生錯誤: ' + xhr.responseText);
+                    }
+                });
+            });
+        });
+
+
+        選擇圖片並預覽(新增)
+        $(document).ready(function () {
+            // 監聽檔案選擇器的變更事件
+            $('#photo').on('change', function (event) {
+                var file = event.target.files[0];  // 獲取檔案
+                var reader = new FileReader();  // 創建 FileReader 對象
+
+                // 當檔案被讀取完成後觸發的事件
+                reader.onload = function (e) {
+                    $('#display_photo').attr('src', e.target.result);  // 設置圖片顯示
+                };
+                // 讀取檔案
+                reader.readAsDataURL(file);
+            });
+        });
+
 
     });
 </script>
