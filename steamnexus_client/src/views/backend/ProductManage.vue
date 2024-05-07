@@ -12,7 +12,7 @@
         style="width: 250px; height: 40px; margin-bottom: 8px"
         @change="selectHardware($event)"
       >
-        <option value="" disabled selected hidden>---- 請選擇硬體 ----</option>
+        <option value="0" disabled selected hidden>---- 請選擇硬體 ----</option>
         <option v-for="item in HardwareSelect" :key="item.id" :value="item.id">
           {{ item.name }}
         </option>
@@ -59,8 +59,6 @@ import { dataTableConfig } from '@/components/backend/hardware/dataTableConfig.j
 
 // 從環境變數取得 API BASE URL
 const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
-
-console.log('API URL:', apiUrl)
 
 // 初始化 DataTables
 let dataTable = null
@@ -316,6 +314,7 @@ onMounted(() => {
 // 路由離開時觸發
 onBeforeRouteLeave(() => {
   // 銷毀 DataTable
+  dataTable.clear().draw()
   dataTable.destroy()
   dataTable = null
   // 事件監聽器移除
