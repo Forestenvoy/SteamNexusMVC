@@ -17,7 +17,6 @@ import { CContainer } from '@coreui/vue'
 import AppFooter from '@/components/backend/share/AppFooter.vue'
 import AppHeader from '@/components/backend/share/AppHeader.vue'
 import AppSidebar from '@/components/backend/share/AppSidebar.vue'
-// datatables
 </script>
 <style scoped>
 @media (min-width: 1750px) {
