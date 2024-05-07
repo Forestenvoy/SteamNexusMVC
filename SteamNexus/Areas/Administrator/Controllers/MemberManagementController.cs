@@ -90,7 +90,34 @@ namespace SteamNexus.Areas.Administrator.Controllers
         #endregion
 
 
-        #region 會員資料刪除
+        #region 會員資料刪除無刪除圖片
+        //[HttpPost]
+        //public async Task<IActionResult> DeleteUser(int id)
+        //{
+        //    try
+        //    {
+        //        var user = await _application.Users.FindAsync(id);
+        //        if (user == null)
+        //        {
+        //            // 加入調試信息，確認ID值和數據庫內是否匹配
+        //            return Json(new { success = false, message = "用戶未找到，ID: " + id });
+        //        }
+
+        //        _application.Users.Remove(user);
+        //        await _application.SaveChangesAsync();
+        //        return Json(new { success = true, message = "用戶已刪除" });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        //記錄錯誤
+        //        return Json(new { success = false, message = ex.Message });
+        //    }
+        //}
+        #endregion
+
+
+        #region 會員資料刪除並移除圖片
+
         [HttpPost]
         public async Task<IActionResult> DeleteUser(int id)
         {
@@ -101,6 +128,16 @@ namespace SteamNexus.Areas.Administrator.Controllers
                 {
                     // 加入調試信息，確認ID值和數據庫內是否匹配
                     return Json(new { success = false, message = "用戶未找到，ID: " + id });
+                }
+
+                // 刪除用戶的圖片
+                if (!string.IsNullOrEmpty(user.Photo) && user.Photo != "default.jpg")
+                {
+                    var filePath = Path.Combine(_webHost.WebRootPath, "images/headshots", user.Photo);
+                    if (System.IO.File.Exists(filePath))
+                    {
+                        System.IO.File.Delete(filePath);
+                    }
                 }
 
                 _application.Users.Remove(user);
@@ -114,6 +151,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
             }
         }
         #endregion
+
 
         #region EditViewModel
         public partial class EditUserViewModel
@@ -138,7 +176,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
 
             #nullable enable
             [MaxLength(10)]
-            [RegularExpression(@"^09\d{8}$", ErrorMessage = "手機號碼輸入錯誤。請依照範例輸入09xxxxxxxx")]
+            [RegularExpression(@"^09\d{8}$", ErrorMessage = "手機號碼必須以09開頭並且是10位數字")]
             [Required(ErrorMessage = "請輸入手機號碼")]
             public string? Phone { get; set; }
 
@@ -151,6 +189,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
 
         }
         #endregion
+
 
         #region 修改資料更新成功無圖片
         //[HttpPost]
@@ -191,6 +230,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
         #endregion
 
 
+        #region 修改資料
         [HttpPost]
         public async Task<ActionResult> EditUser([FromForm] EditUserViewModel data)
         {
@@ -269,14 +309,12 @@ namespace SteamNexus.Areas.Administrator.Controllers
 
                     user.Photo = filename;
                 }
-
-
                 await _application.SaveChangesAsync();
                 return RedirectToAction("MemberManagement");  // 或其他適當的成功頁面
             }
             return View(data);  // 返回表單與驗證錯誤
         }
-
+        #endregion
 
         //權限
         public IActionResult GetRoles()
