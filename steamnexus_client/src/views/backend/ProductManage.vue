@@ -33,6 +33,7 @@
     </table>
   </section>
 </template>
+
 <script setup>
 import $ from 'jquery'
 // Datatables
@@ -44,7 +45,21 @@ import 'datatables.net-responsive-dt'
 
 import { onMounted } from 'vue'
 
+// 從環境變數取得 API BASE URL
+const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
+
+console.log('API URL:', apiUrl)
+
+// 宣告硬體選單陣列
+// const HardwareSelect = ref([])
+
+// function getHardwareSelect() {
+
+// };
+
 onMounted(() => {
+  // 取得硬體選單 by AJAX
+
   // 初始化 Datatables
   new DataTable('#HardwareManageTable', {
     // column 定義
