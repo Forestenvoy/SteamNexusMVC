@@ -76,11 +76,11 @@
                         <span class="input-group-text" id="inputGroup-sizing-lg" style="color:white">權限：</span>
                         <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" id="user_purview">
                     </div>
-@*                     <div class="input-group input-group-lg">
+                    <div class="input-group input-group-lg">
                         <span class="input-group-text" id="inputGroup-sizing-lg" style="color:white">大頭照：</span>
                         <input type="file" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" id="user_photo">
                         <img src="" class="img-thumbnail" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" id="user_display_photo">
-                    </div> *@
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">
@@ -268,7 +268,7 @@
             $("#user_birthday").val(birthday);
             $("#user_purview").val(rolenaem);
             // $("#user_photo").val(photo);
-            // $("#user_display_photo").attr('src', `/images/headshots/${photo}`);
+            $("#user_display_photo").attr('src', `/images/headshots/${photo}`);
 
 
             // 顯示窗口
@@ -321,16 +321,11 @@
                     
 
                     // 檢查是否有檔案被選擇，並且添加到 FormData
-                    // var photoInput = document.getElementById('user_photo');
-                    // if (photoInput && photoInput.length > 0) {
-                    //     formData.append('Photo', photoInput.files[0]);
-                    // }
-
-                    // var photoInput = document.getElementById('user_photo');
-                    // if (photoInput.files.length > 0) {
-                    //     formData.append('Photo', photoInput.files[0]);
-                    // }
-                    console.log(`Edit button clicked for User ID: ${userid}, Name:${name}, Email:${email}, Gender:${genderValue}, Phone:${phone}, Birthday:${birthday}, Roles:${role}`);
+                    var photoInput = document.getElementById('user_photo');
+                    if (photoInput.files && photoInput.files.length > 0) {
+                        formData.append('Photo', photoInput.files[0]);
+                    }
+                    console.log(`Edit button clicked for User ID: ${userid}, Name:${name}, Email:${email}, Gender:${genderValue}, Phone:${phone}, Birthday:${birthday}, Roles:${role}, Photo:${photoInput}`);
 
                     $.ajax({
                         url: `@Url.Action("EditUser", "MemberManagement", new { area = "Administrator" })`,
@@ -341,6 +336,7 @@
                         success: function (response) {
                             $('#editModal').modal('hide');
                             alert('用戶資料已更新');
+                            location.reload()
                         },
                         error: function (xhr, status, error) {
                             console.error('更新失敗:', xhr.responseText);
@@ -348,7 +344,9 @@
                         }
                     });
                 }
+
             });
+
 
 
         //選擇圖片並預覽
