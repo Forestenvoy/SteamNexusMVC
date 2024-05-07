@@ -167,7 +167,7 @@
             });
         });
 
-
+        //刪除權限
         $(document).on('click', '.del-btn', function () {
             const roleId = $(this).data('roleid');
             console.log("Deleting Role ID:", roleId);
@@ -182,7 +182,7 @@
                 success: function (response) {
                     if (response.success) {
                         alert('刪除成功');
-                        location.reload();
+                        $('#RolesManageTable').DataTable().ajax.reload();
                     } else {
                         alert('刪除失敗: ' + response.message);
                     }
