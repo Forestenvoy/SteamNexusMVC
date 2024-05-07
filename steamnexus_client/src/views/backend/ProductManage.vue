@@ -13,6 +13,7 @@
         id="HardSelect"
       >
         <option value="" disabled selected hidden>---- 請選擇硬體 ----</option>
+        <option v-for="item in HardwareSelect" :key="item" :value="item">{{ item }}</option>
       </select>
     </div>
   </div>
@@ -43,25 +44,43 @@ import 'datatables.net-rowgroup-dt'
 import 'datatables.net-buttons-dt'
 import 'datatables.net-responsive-dt'
 
-import { onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
+import { onBeforeRouteLeave } from 'vue-router'
 
 // 從環境變數取得 API BASE URL
 const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
 console.log('API URL:', apiUrl)
 
+// 初始化 Datatables
+let datatable = null
+
 // 宣告硬體選單陣列
-// const HardwareSelect = ref([])
-
-// function getHardwareSelect() {
-
-// };
+const HardwareSelect = ref([])
+// 取得硬體選單資料
+function getHardwareSelect() {
+  // 發送非同步 GET 請求
+  fetch(`${apiUrl}/api/HardwareManage/GetComputerParts`, { method: 'GET' })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok')
+      }
+      return response.json()
+    })
+    .then((data) => {
+      HardwareSelect.value = data
+      console.log(HardwareSelect.value)
+    })
+    .catch((error) => {
+      console.error('There was a problem with the fetch operation:', error)
+    })
+}
 
 onMounted(() => {
   // 取得硬體選單 by AJAX
-
+  getHardwareSelect()
   // 初始化 Datatables
-  new DataTable('#HardwareManageTable', {
+  datatable = new DataTable('#HardwareManageTable', {
     // column 定義
     columns: [
       { data: 'productId', width: '5%', className: 'text-center' },
@@ -207,6 +226,13 @@ onMounted(() => {
       }
     }
   })
+})
+
+// 路由離開時觸發
+onBeforeRouteLeave(() => {
+  // 銷毀 DataTable
+  datatable.destroy()
+  datatable = null
 })
 </script>
 <style>
