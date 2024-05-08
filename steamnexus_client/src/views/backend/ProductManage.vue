@@ -9,7 +9,8 @@
       <select
         class="form-select mb-0"
         style="width: 250px; height: 40px; margin-bottom: 8px"
-        @change="selectHardware($event)"
+        @change="selectHardware()"
+        v-model="selectedItem"
       >
         <option value="0" disabled selected hidden>---- 請選擇硬體 ----</option>
         <option v-for="item in HardwareSelect" :key="item.id" :value="item.id">
@@ -51,7 +52,7 @@ import 'datatables.net-rowgroup-dt'
 import 'datatables.net-buttons-dt'
 import 'datatables.net-responsive-dt'
 
-import { onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { onBeforeRouteLeave } from 'vue-router'
 
 import { dataTableConfig } from '@/components/backend/hardware/dataTableConfig.js'
@@ -65,8 +66,14 @@ import {
 // 從環境變數取得 API BASE URL
 const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
+// 宣告 硬體選擇 初始值
+const selectedItem = ref('0')
+
 // 初始化 DataTables
 let dataTable = null
+
+// 重新整理 判斷
+let isRefresh = false
 
 // DataTable Config 加入按鈕
 const myDataTablesConfig = {
@@ -79,9 +86,9 @@ const myDataTablesConfig = {
           text: '重新整理',
           // 按鈕點擊事件
           action: function () {
-            // isrefresh = true
+            isRefresh = true
             // 重新整理
-            // getdatatableData()
+            getDataTableData()
           }
         },
         {
@@ -105,25 +112,81 @@ const myDataTablesConfig = {
   }
 }
 
-// dataTable 資料載入
-function selectHardware(event) {
-  const hardwareId = event.target.value
-  fetch(`${apiUrl}/api/HardwareManage/GetProductData?Type=${hardwareId}`, { method: 'GET' })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok')
+function getDataTableData() {
+  // 如果沒選擇硬體 => 中斷事件
+  if (selectedItem.value == '0') {
+    return
+  }
+  let ToastContainer = null
+  let toastId = 0
+  let toast = null
+
+  // 如果是 -重新整理-
+  if (isRefresh) {
+    // 取得吐司容器元素
+    ToastContainer = document.querySelector('#ToastContainer')
+    // 流水號生成
+    toastId = Math.floor(Math.random() * 1000)
+    // 吐司元素生成
+    toast = ToastInitialization(toastId)
+  }
+  const hardwareId = selectedItem.value
+  // 發送非同步GET請求
+  fetch(`${apiUrl}/api/HardwareManage/GetProductData?Type=${hardwareId}`, {
+    method: 'GET'
+  })
+    .then((result) => {
+      // 此時 result 是一個請求結果的物件
+      if (isRefresh) {
+        // 發送吐司
+        ToastContainer.insertAdjacentHTML(`afterbegin`, toast)
+        // 顯示吐司
+        $(`#${toastId}_Toast`).show()
+        // 隱藏 載入狀態
+        $(`#${toastId}_Toast_Status`).hide()
       }
-      return response.json()
+      // 注意傳回值型態，字串用 text()，JSON 用 json()
+      if (result.ok) {
+        return result.json()
+      }
     })
     .then((data) => {
+      // 此時 data 為上一個 then 回傳的資料
       // 清空表格
       dataTable.clear().draw()
       // 添加新的資料
       dataTable.rows.add(data).draw()
+      if (isRefresh) {
+        // 顯示 吐司成功狀態
+        $(`#${toastId}_ToastIcon_success`).addClass('animate__zoomIn').removeClass('d-none')
+        $(`#${toastId}_ToastText`).text('重新整理成功')
+        // 顯示進度條
+        $(`#${toastId}_ToastProgress`).show()
+        // 進度條消失
+        ToastProgressDisappear(toastId)
+      }
+      isRefresh = false
     })
     .catch((error) => {
-      console.error('There was a problem with the fetch operation:', error)
+      alert(error)
+      if (isRefresh) {
+        // 顯示 吐司失敗狀態
+        $(`#${toastId}_ToastIcon_fail`).addClass('animate__zoomIn').removeClass('d-none')
+        $(`#${toastId}_ToastText`).text('重新整理失敗，請稍後再試')
+        // 更改顏色
+        $(`#${toastId}_ToastProgress_rect`).css('fill', '#FF0000')
+        // 顯示進度條
+        $(`#${toastId}_ToastProgress`).show()
+        // 進度條消失
+        ToastProgressDisappear(toastId)
+      }
+      isRefresh = false
     })
+}
+
+// dataTable 資料載入
+function selectHardware() {
+  getDataTableData()
 }
 
 onMounted(() => {
