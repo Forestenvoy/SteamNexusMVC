@@ -4,11 +4,11 @@
       <h2 id="SystemName" style="margin-top: 8px">產品管理系統</h2>
     </div>
     <div
-      class="col-12 col-md-6 order-md-2 d-flex justify-content-center justify-content-md-end"
+      class="col-12 col-md-6 order-md-2 d-flex justify-content-center justify-content-md-end align-items-center"
       id="SystemMenu"
     >
       <select
-        class="form-select"
+        class="form-select mb-0"
         style="width: 250px; height: 40px; margin-bottom: 8px"
         @change="selectHardware($event)"
       >
@@ -44,8 +44,8 @@
 </template>
 
 <script setup>
+// 核心模組 import
 import $ from 'jquery'
-// Datatables
 import DataTable from 'datatables.net-dt'
 import 'datatables.net-fixedheader-dt'
 import 'datatables.net-rowgroup-dt'
@@ -156,33 +156,6 @@ onMounted(() => {
   $(document).on('click', '.Edit-btn', function () {
     // 被隱藏的按鈕不能觸發
     if ($(this).css('display') !== 'none') {
-      // 檢測有隱藏的行數
-      // if (responsiveColumnsCount > 0) {
-      //     // 檢查使用者有沒有展開
-      //     if ($(this).attr('data-slefColumn-isShow') === 'false') {
-      //         // 取得吐司容器元素
-      //         let ToastContainer = document.querySelector('#ToastContainer');
-      //         // 流水號生成
-      //         let toastId = Math.floor(Math.random() * 1000);
-      //         // 吐司元素生成
-      //         let toast = ToastInitialization(toastId);
-      //         // 發送吐司
-      //         ToastContainer.insertAdjacentHTML(`afterbegin`, toast);
-      //         $(`#${toastId}_Toast`).show();
-      //         // 隱藏 載入狀態
-      //         $(`#${toastId}_Toast_Status`).hide();
-      //         // 顯示 吐司失敗狀態
-      //         $(`#${toastId}_ToastIcon_fail`).addClass('animate__zoomIn').removeClass('d-none');
-      //         $(`#${toastId}_ToastText`).text("請先展開該列");
-      //         // 進度條消失
-      //         $(`#${toastId}_ToastProgress`).show();
-      //         // 更改顏色
-      //         $(`#${toastId}_ToastProgress_rect`).css('fill', '#FF0000');
-      //         // 進度條消失
-      //         ToastProgressDisappear(toastId);
-      //         return;
-      //     }
-      // }
       // 取得 ID
       let productId = Number($(this).attr('class').slice(0, 5))
       // 取資料 ~ 只取看的見的元素
