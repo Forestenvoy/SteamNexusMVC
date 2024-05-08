@@ -2,6 +2,22 @@
 
 @* PartialView 的 CSS *@
 <link href="~/css/hardwareproductmanagesystem.css" rel="stylesheet" asp-append-version="true" />
+
+<style>
+    .valid-feedback {
+        color: green;
+        display: none;
+        /* 預設不顯示，除非添加此類 */
+    }
+
+    .invalid-feedback {
+        color: red;
+        display: none;
+        /* 預設不顯示，除非添加此類 */
+    }
+
+</style>
+
 @* PartialView 的 HTML *@
 <div class="page-title position-relative">
     <div class="row">
@@ -240,6 +256,7 @@
                         <div class="input-group input-group-lg mb-3">
                             <span class="input-group-text" id="inputGroup-sizing-lg" style="color:white">確認密碼：</span>
                             <input type="password" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" id="ConfirmPassword" placeholder="請再次輸入您的密碼" required maxlength="20">
+                            <div id="passwordMismatchFeedback" class="invalid-feedback">密碼與確認密碼不一致</div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-primary" id="nextStep">下一步</button>
@@ -264,11 +281,11 @@
                         <div class="input-group input-group-lg mb-3">
                             <span class="input-group-text" id="inputGroup-sizing-lg" style="color:white">性別：</span>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input text-center" type="radio" name="gender" id="male2" value="true" checked>
+                                <input class="form-check-input text-center" type="radio" name="gender2" id="male2" value="true" checked>
                                 <label class="form-check-label" for="male">男</label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input text-center" type="radio" name="gender" id="female2" value="false">
+                                <input class="form-check-input text-center" type="radio" name="gender2" id="female2" value="false">
                                 <label class="form-check-label" for="female">女</label>
                             </div>
                         </div>
@@ -598,7 +615,7 @@
                 var name = $('#name').val();
                 var birthday = $('#birthday').val();
                 var phone = $('#phone').val();
-                var gender = $('input[name="gender"]:checked').val();
+                var gender2 = $('input[name="gender"]:checked').val();
                 var photo = $('#photo')[0].files[0];
 
                 // 基本驗證
@@ -619,7 +636,7 @@
                 formData.append('Name', name);
                 formData.append('Birthday', birthday);
                 formData.append('Phone', phone);
-                formData.append('Gender', gender);
+                formData.append('Gender', gender2);
                 formData.append('Photo', photo);
 
                 // AJAX 請求
@@ -636,7 +653,7 @@
                             $('#createmember').modal('hide'); // 關閉模態窗
                             // 可在此處更新或重新加載資料表等界面元素
                             $('#MemberManageTable').DataTable().ajax.reload();
-                            
+
                             //  // 重置表單
                             // $('#email').val('');
                             // $('#Password').val('');
@@ -663,13 +680,20 @@
                 function resetAndPrepareForm() {
                     // 重置表單
                     $('#email').val('');
+                    $('#emailFeedback').text('').hide();
+                    $('#email, #Password, #ConfirmPassword').removeClass('is-valid is-invalid');
                     $('#Password').val('');
                     $('#ConfirmPassword').val('');
+                    $('#passwordMismatchFeedback').hide();
                     $('#name').val('');
                     $('#birthday').val('');
                     $('#phone').val('');
                     $('input[name="gender"]').prop('checked', false);
                     $('#photo').val('');
+
+                    // 隱藏並清空所有反饋訊息
+                    $('.invalid-feedback').text('').hide();
+                    $('.valid-feedback').text('').hide();
 
                     // 額外處理，清空檔案輸入元素並重置圖片預覽
                     $('#photo').replaceWith($('#photo').clone(true));
@@ -685,6 +709,7 @@
 
 
         //重製表單
+
         // $(document).ready(function () {
         //     // 綁定點擊事件到關閉視窗按鈕
         //     $('button[data-bs-dismiss="cratemember"]').click(function () {
@@ -706,7 +731,6 @@
         //     });
         // });
 
-
         $(document).ready(function () {
             // 綁定點擊事件到關閉視窗按鈕
             $('button[data-bs-dismiss="cratemember"]').click(function () {
@@ -723,8 +747,11 @@
             function resetForm() {
                 // 重置表單
                 $('#email').val('');
+                $('#emailFeedback').text('').hide();
+                $('#email, #Password, #ConfirmPassword').removeClass('is-valid is-invalid');
                 $('#Password').val('');
                 $('#ConfirmPassword').val('');
+                $('#passwordMismatchFeedback').hide();
                 $('#name').val('');
                 $('#birthday').val('');
                 $('#phone').val('');
@@ -742,6 +769,74 @@
                 // 隱藏模態窗口
                 $('#createmember').modal('hide');
             }
+        });
+
+        //確認Email是否存在，如已存在會即時顯示通知
+        $(document).ready(function () {
+            $('#email').on('input', function () {
+                var email = $(this).val();
+                if (email) {
+                    $.ajax({
+                        url: '@Url.Action("CheckEmailExists", "MemberManagement", new { area = "Administrator" })',  // 確保路徑正確
+                        data: { email: email },
+                        method: 'GET',
+                        success: function (isAvailable) {
+                            var feedbackElement = $('#emailFeedback');
+                            if (isAvailable) {
+                                feedbackElement.text('Email 可用').removeClass('invalid-feedback').addClass('valid-feedback');
+                                $('#email').removeClass('is-invalid').addClass('is-valid');
+                            } else {
+                                feedbackElement.text('該 Email 已被使用').removeClass('valid-feedback').addClass('invalid-feedback');
+                                $('#email').removeClass('is-valid').addClass('is-invalid');
+                            }
+                            feedbackElement.show();  // 確保提示信息顯示
+                        },
+                        error: function () {
+                            $('#emailFeedback').text('無法檢查 Email').addClass('invalid-feedback');
+                            $('#emailFeedback').show();
+                        }
+                    });
+                } else {
+                    $('#emailFeedback').hide();  // 當 Email 欄位為空時，不顯示任何反饋
+                }
+            });
+        });
+
+
+        //驗證密碼與確認密碼是否一致
+        $('#Password, #ConfirmPassword').on('input', function () {
+            var password = $('#Password').val();
+            var confirmPassword = $('#ConfirmPassword').val();
+            if (password !== confirmPassword) {
+                $('#passwordMismatchFeedback').show();
+                $('#ConfirmPassword').addClass('is-invalid');
+            } else {
+                $('#passwordMismatchFeedback').hide();
+                $('#ConfirmPassword').removeClass('is-invalid').addClass('is-valid');
+            }
+        });
+
+        // 驗證 Email 和密碼是否通過
+        function validateForm() {
+            var emailIsValid = $('#email').hasClass('is-valid');
+            var passwordIsValid = !$('#passwordMismatchFeedback').is(':visible');
+            //Email、Password、ConfirmPassword空值時，無法點擊下一步
+            var inputsAreNotEmpty = $('#email').val() !== '' && $('#Password').val() !== '' && $('#ConfirmPassword').val() !== ''; 
+            return emailIsValid && passwordIsValid && inputsAreNotEmpty;
+        }
+
+        // 綁定輸入框的變化事件來即時更新按鈕的狀態
+        $('#email, #Password, #ConfirmPassword').on('input change', function () {
+            if (validateForm()) {
+                $('#nextStep').prop('disabled', false);
+            } else {
+                $('#nextStep').prop('disabled', true);
+            }
+        });
+
+        // 初始化時也檢查一次
+        $(document).ready(function () {
+            $('#nextStep').prop('disabled', true); // 初始禁用下一步按鈕
         });
 
         //選擇圖片並預覽(新增)
