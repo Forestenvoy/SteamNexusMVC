@@ -68,6 +68,43 @@ const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 // 初始化 DataTables
 let dataTable = null
 
+// DataTable Config 加入按鈕
+const myDataTablesConfig = {
+  ...dataTableConfig,
+  // 按鈕建立
+  layout: {
+    topMiddle: {
+      buttons: [
+        {
+          text: '重新整理',
+          // 按鈕點擊事件
+          action: function () {
+            // isrefresh = true
+            // 重新整理
+            // getdatatableData()
+          }
+        },
+        {
+          text: '單一零件更新',
+          // 按鈕點擊事件
+          action: function () {
+            // 單一零件更新
+            // UpdateOneHardware()
+          }
+        },
+        {
+          text: '全零件更新',
+          // 按鈕點擊事件
+          action: function () {
+            // 全零件更新
+            // UpdateAllHardware()
+          }
+        }
+      ]
+    }
+  }
+}
+
 // dataTable 資料載入
 function selectHardware(event) {
   const hardwareId = event.target.value
@@ -93,7 +130,7 @@ onMounted(() => {
   // 取得硬體選單 by AJAX
   getHardwareSelect()
   // 初始化 DataTables
-  dataTable = new DataTable('#HardwareManageTable', dataTableConfig)
+  dataTable = new DataTable('#HardwareManageTable', myDataTablesConfig)
   // 事件監聽器
   // 資料編輯 ~ 當任何具有 Edit-btn 類別元素被點擊時觸發
   $(document).on('click', '.Edit-btn', function () {

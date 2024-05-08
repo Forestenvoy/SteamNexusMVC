@@ -19,9 +19,14 @@ import AppHeader from '@/components/backend/share/AppHeader.vue'
 import AppSidebar from '@/components/backend/share/AppSidebar.vue'
 </script>
 <style scoped>
+@media (min-width: 1650px) {
+  .container {
+    max-width: 1400px;
+  }
+}
 @media (min-width: 1750px) {
   .container {
-    max-width: 1700px;
+    max-width: 1600px;
   }
 }
 </style>
