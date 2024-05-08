@@ -9,7 +9,7 @@
       <select
         class="form-select mb-0"
         style="width: 250px; height: 40px; margin-bottom: 8px"
-        @change="selectHardware($event, dataTable)"
+        @change="selectHardware($event)"
       >
         <option value="0" disabled selected hidden>---- 請選擇硬體 ----</option>
         <option v-for="item in HardwareSelect" :key="item.id" :value="item.id">
@@ -58,6 +58,7 @@ import { dataTableConfig } from '@/components/backend/hardware/dataTableConfig.j
 import {
   getHardwareSelect,
   ToastInitialization,
+  ToastProgressDisappear,
   HardwareSelect
 } from '@/components/backend/hardware/productManageMethods.js'
 
@@ -88,30 +89,6 @@ function selectHardware(event) {
     })
 }
 
-// 吐司進度條消失
-function ToastProgressDisappear(toastId) {
-  // 初始寬度
-  let initialWidth = 250
-  // 每次更新寬度 ~ 總共 2000 毫秒 變動 200 次
-  let widthChange = 250 / 200
-  // 計時器啟動 ~ 10 毫秒執行一次
-  var intervalId = setInterval(function () {
-    initialWidth -= widthChange
-    // 應用更新後的寬度
-    $(`#${toastId}_ToastProgress_rect`).attr('width', `${initialWidth}px`)
-    // 寬度小於0停止計時器
-    if (initialWidth <= 0) {
-      clearInterval(intervalId)
-      // 關閉吐司
-      $(`#${toastId}_Toast`).addClass(`animate__fadeOutRight`)
-      // 元素移除
-      setTimeout(function () {
-        $(`#${toastId}_Toast`).remove()
-      }, 1000)
-    }
-  }, 10)
-}
-
 onMounted(() => {
   // 取得硬體選單 by AJAX
   getHardwareSelect()
@@ -134,9 +111,9 @@ onMounted(() => {
       $(`#${productId}_div`).html(`${enterEle}&nbsp;&nbsp;&nbsp;${cancelEle}`)
       // 編輯模式 ~ 開啟 td 編輯功能
       $(`.${productId}_watt`).prop('disabled', false)
-      $(`.${productId}_watt`).removeClass('defaultcellType')
+      $(`.${productId}_watt`).removeClass('defaultCellType')
       $(`.${productId}_recommend`).prop('disabled', false)
-      $(`.${productId}_recommend`).removeClass('defaultcellType')
+      $(`.${productId}_recommend`).removeClass('defaultCellType')
     }
   })
 
@@ -200,9 +177,9 @@ onMounted(() => {
             ToastProgressDisappear(toastId)
             // 恢復預設模式 ~ 關閉 td 編輯功能
             $(`.${productId}_watt`).attr('disabled', true)
-            $(`.${productId}_watt`).addClass('defaultcellType')
+            $(`.${productId}_watt`).addClass('defaultCellType')
             $(`.${productId}_recommend`).attr('disabled', true)
-            $(`.${productId}_recommend`).addClass('defaultcellType')
+            $(`.${productId}_recommend`).addClass('defaultCellType')
             // 更換成編輯按鈕
             let editEle = `<button class="${productId}_edit btn Edit-btn d-flex justify-content-center align-items-center" style="width:30px;height:30px;" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-pen-to-square"></i></button>`
             $(`#${productId}_div`).html(editEle)
@@ -239,10 +216,10 @@ onMounted(() => {
       // 恢復預設模式 ~ 關閉 td 編輯功能
       $(`.${productId}_watt`).attr('disabled', true)
       $(`.${productId}_watt`).val(wattVal)
-      $(`.${productId}_watt`).addClass('defaultcellType')
+      $(`.${productId}_watt`).addClass('defaultCellType')
       $(`.${productId}_recommend`).attr('disabled', true)
       $(`.${productId}_recommend`).val(recVal)
-      $(`.${productId}_recommend`).addClass('defaultcellType')
+      $(`.${productId}_recommend`).addClass('defaultCellType')
       // 更換成編輯按鈕
       let editEle = `<button class="${productId}_edit btn Edit-btn d-flex justify-content-center align-items-center" style="width:30px;height:30px;" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-pen-to-square"></i></button>`
       $(`#${productId}_div`).html(editEle)
@@ -458,14 +435,14 @@ body {
 }
 
 /* 欄位預設樣式 */
-html[data-coreui-theme='dark'] #HardwareManageTable_wrapper .defaultcellType {
+html[data-coreui-theme='dark'] #HardwareManageTable_wrapper .defaultCellType {
   border: none; /* 取消邊框 */
   background-color: transparent; /* 背景透明 */
   appearance: none; /* 去除默認樣式 */
   color: #c2c2d9; /* 文字顏色 */
 }
 
-html[data-coreui-theme='light'] #HardwareManageTable_wrapper .defaultcellType {
+html[data-coreui-theme='light'] #HardwareManageTable_wrapper .defaultCellType {
   border: none; /* 取消邊框 */
   background-color: transparent; /* 背景透明 */
   appearance: none; /* 去除默認樣式 */

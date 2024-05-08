@@ -1,5 +1,5 @@
 /* 硬體產品管理 */
-
+import $ from 'jquery'
 import { ref } from 'vue'
 
 // 從環境變數取得 API BASE URL
@@ -41,6 +41,30 @@ export function ToastInitialization(id) {
   let ToastElement = `<div class="toast align-items-center mb-3 animate__animated animate__fadeInLeft defaultToast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false" id="${id}_Toast"><div class="d-flex align-items-center"><div class="toast-body d-flex align-items-center position-relative">${Toast_Status}${ToastIcon_success}${ToastIcon_fail}${ToastText}${ToastProgress}</div></div></div>`
   // 回傳 吐司元素
   return ToastElement
+}
+
+// 吐司進度條消失
+export function ToastProgressDisappear(toastId) {
+  // 初始寬度
+  let initialWidth = 250
+  // 每次更新寬度 ~ 總共 2000 毫秒 變動 200 次
+  let widthChange = 250 / 200
+  // 計時器啟動 ~ 10 毫秒執行一次
+  var intervalId = setInterval(function () {
+    initialWidth -= widthChange
+    // 應用更新後的寬度
+    $(`#${toastId}_ToastProgress_rect`).attr('width', `${initialWidth}px`)
+    // 寬度小於0停止計時器
+    if (initialWidth <= 0) {
+      clearInterval(intervalId)
+      // 關閉吐司
+      $(`#${toastId}_Toast`).addClass(`animate__fadeOutRight`)
+      // 元素移除
+      setTimeout(function () {
+        $(`#${toastId}_Toast`).remove()
+      }, 1000)
+    }
+  }, 10)
 }
 
 export { HardwareSelect }

@@ -1,9 +1,11 @@
 {
   "cSpell.words": [
+    "autohide",
     "coreui",
     "datatables",
     "fixedheader",
     "pinia",
-    "VITE"
+    "VITE",
+    "xmark"
   ]
 }

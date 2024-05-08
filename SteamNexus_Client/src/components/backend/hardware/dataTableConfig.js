@@ -24,7 +24,7 @@ export const dataTableConfig = {
         // 取得 productId
         let productId = row.productId
         // input 欄位 ~ 可編輯
-        let inputEle = `<input type="text" class="${productId}_watt defaultcellType" value="${data}" style="width: 50px; text-align: center;"  disabled>`
+        let inputEle = `<input type="text" class="${productId}_watt defaultCellType" value="${data}" style="width: 50px; text-align: center;"  disabled>`
         return inputEle
       },
       // 將此列的數據類型設置為數字 ~ 排序才會正常運作
@@ -52,7 +52,7 @@ export const dataTableConfig = {
         const ele3 = `<option value = "2" ${isRec3}>優良</option>`
         const ele4 = `<option value = "3" ${isRec4}>完美</option>`
         // select 欄位 ~ 可編輯
-        let selectEle = `<select class="${productId}_recommend defaultcellType" disabled>${ele1}${ele2}${ele3}${ele4}</select>`
+        let selectEle = `<select class="${productId}_recommend defaultCellType" disabled>${ele1}${ele2}${ele3}${ele4}</select>`
         return selectEle
       },
       // 將此列的數據類型設置為數字 ~ 排序才會正常運作
