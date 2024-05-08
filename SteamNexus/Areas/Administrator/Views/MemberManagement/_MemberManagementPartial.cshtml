@@ -677,8 +677,8 @@
                     }
                 });
 
+                // 重置表單
                 function resetAndPrepareForm() {
-                    // 重置表單
                     $('#email').val('');
                     $('#emailFeedback').text('').hide();
                     $('#email, #Password, #ConfirmPassword').removeClass('is-valid is-invalid');
@@ -731,8 +731,10 @@
         //     });
         // });
 
+        // 綁定點擊事件到關閉視窗按鈕
+
+
         $(document).ready(function () {
-            // 綁定點擊事件到關閉視窗按鈕
             $('button[data-bs-dismiss="cratemember"]').click(function () {
                 resetForm();
             });
@@ -744,8 +746,8 @@
                 }
             });
 
+            // 重置表單
             function resetForm() {
-                // 重置表單
                 $('#email').val('');
                 $('#emailFeedback').text('').hide();
                 $('#email, #Password, #ConfirmPassword').removeClass('is-valid is-invalid');
@@ -770,6 +772,7 @@
                 $('#createmember').modal('hide');
             }
         });
+
 
         //確認Email是否存在，如已存在會即時顯示通知
         $(document).ready(function () {
@@ -816,6 +819,7 @@
             }
         });
 
+
         // 驗證 Email 和密碼是否通過
         function validateForm() {
             var emailIsValid = $('#email').hasClass('is-valid');
@@ -824,6 +828,7 @@
             var inputsAreNotEmpty = $('#email').val() !== '' && $('#Password').val() !== '' && $('#ConfirmPassword').val() !== ''; 
             return emailIsValid && passwordIsValid && inputsAreNotEmpty;
         }
+
 
         // 綁定輸入框的變化事件來即時更新按鈕的狀態
         $('#email, #Password, #ConfirmPassword').on('input change', function () {
@@ -834,10 +839,12 @@
             }
         });
 
+
         // 初始化時也檢查一次
         $(document).ready(function () {
             $('#nextStep').prop('disabled', true); // 初始禁用下一步按鈕
         });
+
 
         //選擇圖片並預覽(新增)
         $(document).ready(function () {
