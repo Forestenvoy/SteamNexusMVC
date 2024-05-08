@@ -1,11 +1,10 @@
 <template>
   <div class="row">
     <div class="col-12 col-md-6 order-md-1 d-flex justify-content-center justify-content-md-start">
-      <h2 id="SystemName" style="margin-top: 8px">產品管理系統</h2>
+      <h2 style="margin-top: 8px">產品管理系統</h2>
     </div>
     <div
       class="col-12 col-md-6 order-md-2 d-flex justify-content-center justify-content-md-end align-items-center"
-      id="SystemMenu"
     >
       <select
         class="form-select mb-0"
@@ -164,8 +163,8 @@ onMounted(() => {
       // 確認按鈕
       let enterEle = `<button class="${productId}_enter btn Enter-btn d-flex justify-content-center align-items-center" style="width:30px;height:30px;"><i class="fa-solid fa-check"></i></button>`
       // 取消按鈕
-      let cancellEle = `<button class="${productId}_reset btn Cancell-btn d-flex justify-content-center align-items-center" style="width:30px;height:30px;" data-origin="${wattVal},${recVal}"><i class="fa-solid fa-xmark"></i></button>`
-      $(`#${productId}_div`).html(`${enterEle}&nbsp;&nbsp;&nbsp;${cancellEle}`)
+      let cancelEle = `<button class="${productId}_reset btn Cancel-btn d-flex justify-content-center align-items-center" style="width:30px;height:30px;" data-origin="${wattVal},${recVal}"><i class="fa-solid fa-xmark"></i></button>`
+      $(`#${productId}_div`).html(`${enterEle}&nbsp;&nbsp;&nbsp;${cancelEle}`)
       // 編輯模式 ~ 開啟 td 編輯功能
       $(`.${productId}_watt`).prop('disabled', false)
       $(`.${productId}_watt`).removeClass('defaultcellType')
@@ -260,8 +259,8 @@ onMounted(() => {
     }
   })
 
-  // 資料變更取消 ~ 當任何具有 Cancell-btn 類別元素被點擊時觸發
-  $(document).on('click', '.Cancell-btn', function () {
+  // 資料變更取消 ~ 當任何具有 Cancel-btn 類別元素被點擊時觸發
+  $(document).on('click', '.Cancel-btn', function () {
     // 被隱藏的按鈕不能觸發
     if ($(this).css('display') !== 'none') {
       // 取得 ID
@@ -292,7 +291,7 @@ onBeforeRouteLeave(() => {
   dataTable = null
   // 事件監聽器移除
   $(document).off('click', '.Enter-btn')
-  $(document).off('click', '.Cancell-btn')
+  $(document).off('click', '.Cancel-btn')
   $(document).off('click', '.Edit-btn')
 })
 </script>
@@ -312,105 +311,111 @@ onBeforeRouteLeave(() => {
 }
 
 #HardwareManageTable_wrapper .dt-middle {
-  text-align: end !important;
+  /* text-align: end !important; */
+  display: flex;
+  justify-content: flex-end;
+}
+
+#HardwareManageTable_wrapper .dt-button {
+  margin-bottom: 0;
 }
 
 /* 編輯按鈕 */
-html[data-bs-theme='dark'] #HardwareManageTable_wrapper .Edit-btn {
+html[data-coreui-theme='dark'] #HardwareManageTable_wrapper .Edit-btn {
   background-color: #007fff;
 }
 
-html[data-bs-theme='dark'] #HardwareManageTable_wrapper .Edit-btn svg {
+html[data-coreui-theme='dark'] #HardwareManageTable_wrapper .Edit-btn svg {
   color: white;
 }
 
-html[data-bs-theme='dark'] #HardwareManageTable_wrapper .Edit-btn:hover {
+html[data-coreui-theme='dark'] #HardwareManageTable_wrapper .Edit-btn:hover {
   background-color: white;
 }
 
-html[data-bs-theme='dark'] #HardwareManageTable_wrapper .Edit-btn:hover svg {
+html[data-coreui-theme='dark'] #HardwareManageTable_wrapper .Edit-btn:hover svg {
   color: #007fff;
 }
 
-html[data-bs-theme='light'] #HardwareManageTable_wrapper .Edit-btn {
+html[data-coreui-theme='light'] #HardwareManageTable_wrapper .Edit-btn {
   background-color: white;
 }
 
-html[data-bs-theme='light'] #HardwareManageTable_wrapper .Edit-btn svg {
+html[data-coreui-theme='light'] #HardwareManageTable_wrapper .Edit-btn svg {
   color: #007fff;
 }
 
-html[data-bs-theme='light'] #HardwareManageTable_wrapper .Edit-btn:hover {
+html[data-coreui-theme='light'] #HardwareManageTable_wrapper .Edit-btn:hover {
   background-color: #007fff;
 }
 
-html[data-bs-theme='light'] #HardwareManageTable_wrapper .Edit-btn:hover svg {
+html[data-coreui-theme='light'] #HardwareManageTable_wrapper .Edit-btn:hover svg {
   color: white;
 }
 
 /* 確認按鈕 */
-html[data-bs-theme='dark'] #HardwareManageTable_wrapper .Enter-btn {
+html[data-coreui-theme='dark'] #HardwareManageTable_wrapper .Enter-btn {
   background-color: #00ff00;
 }
 
-html[data-bs-theme='dark'] #HardwareManageTable_wrapper .Enter-btn svg {
+html[data-coreui-theme='dark'] #HardwareManageTable_wrapper .Enter-btn svg {
   color: white;
 }
 
-html[data-bs-theme='dark'] #HardwareManageTable_wrapper .Enter-btn:hover {
+html[data-coreui-theme='dark'] #HardwareManageTable_wrapper .Enter-btn:hover {
   background-color: white;
 }
 
-html[data-bs-theme='dark'] #HardwareManageTable_wrapper .Enter-btn:hover svg {
+html[data-coreui-theme='dark'] #HardwareManageTable_wrapper .Enter-btn:hover svg {
   color: #00ff00;
 }
 
-html[data-bs-theme='light'] #HardwareManageTable_wrapper .Enter-btn {
+html[data-coreui-theme='light'] #HardwareManageTable_wrapper .Enter-btn {
   background-color: white;
 }
 
-html[data-bs-theme='light'] #HardwareManageTable_wrapper .Enter-btn svg {
+html[data-coreui-theme='light'] #HardwareManageTable_wrapper .Enter-btn svg {
   color: #00ff00;
 }
 
-html[data-bs-theme='light'] #HardwareManageTable_wrapper .Enter-btn:hover {
+html[data-coreui-theme='light'] #HardwareManageTable_wrapper .Enter-btn:hover {
   background-color: #00ff00;
 }
 
-html[data-bs-theme='light'] #HardwareManageTable_wrapper .Enter-btn:hover svg {
+html[data-coreui-theme='light'] #HardwareManageTable_wrapper .Enter-btn:hover svg {
   color: white;
 }
 
 /* 還原按鈕 */
-html[data-bs-theme='dark'] #HardwareManageTable_wrapper .Cancell-btn {
+html[data-coreui-theme='dark'] #HardwareManageTable_wrapper .Cancel-btn {
   background-color: #ff0000;
 }
 
-html[data-bs-theme='dark'] #HardwareManageTable_wrapper .Cancell-btn svg {
+html[data-coreui-theme='dark'] #HardwareManageTable_wrapper .Cancel-btn svg {
   color: white;
 }
 
-html[data-bs-theme='dark'] #HardwareManageTable_wrapper .Cancell-btn:hover {
+html[data-coreui-theme='dark'] #HardwareManageTable_wrapper .Cancel-btn:hover {
   background-color: white;
 }
 
-html[data-bs-theme='dark'] #HardwareManageTable_wrapper .Cancell-btn:hover svg {
+html[data-coreui-theme='dark'] #HardwareManageTable_wrapper .Cancel-btn:hover svg {
   color: #ff0000;
 }
 
-html[data-bs-theme='light'] #HardwareManageTable_wrapper .Cancell-btn {
+html[data-coreui-theme='light'] #HardwareManageTable_wrapper .Cancel-btn {
   background-color: white;
 }
 
-html[data-bs-theme='light'] #HardwareManageTable_wrapper .Cancell-btn svg {
+html[data-coreui-theme='light'] #HardwareManageTable_wrapper .Cancel-btn svg {
   color: #ff0000;
 }
 
-html[data-bs-theme='light'] #HardwareManageTable_wrapper .Cancell-btn:hover {
+html[data-coreui-theme='light'] #HardwareManageTable_wrapper .Cancel-btn:hover {
   background-color: #ff0000;
 }
 
-html[data-bs-theme='light'] #HardwareManageTable_wrapper .Cancell-btn:hover svg {
+html[data-coreui-theme='light'] #HardwareManageTable_wrapper .Cancel-btn:hover svg {
   color: white;
 }
 
@@ -428,14 +433,14 @@ html[data-bs-theme='light'] #HardwareManageTable_wrapper .Cancell-btn:hover svg 
 }
 
 /* 吐司預設樣式 */
-html[data-bs-theme='dark'] .defaultToast {
+html[data-coreui-theme='dark'] .defaultToast {
   height: 47px;
   width: 250px;
   background-color: black !important;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
-html[data-bs-theme='light'] .defaultToast {
+html[data-coreui-theme='light'] .defaultToast {
   height: 47px;
   width: 250px;
   background-color: white !important;
@@ -449,13 +454,13 @@ html[data-bs-theme='light'] .defaultToast {
   border-radius: 50%;
 }
 
-html[data-bs-theme='dark'] .ToastIcon-success svg {
+html[data-coreui-theme='dark'] .ToastIcon-success svg {
   color: black;
   width: 1rem;
   height: 1rem;
 }
 
-html[data-bs-theme='light'] .ToastIcon-success svg {
+html[data-coreui-theme='light'] .ToastIcon-success svg {
   color: white;
   width: 1rem;
   height: 1rem;
@@ -468,13 +473,13 @@ html[data-bs-theme='light'] .ToastIcon-success svg {
   border-radius: 50%;
 }
 
-html[data-bs-theme='dark'] .ToastIcon-fail svg {
+html[data-coreui-theme='dark'] .ToastIcon-fail svg {
   color: black;
   width: 1rem;
   height: 1rem;
 }
 
-html[data-bs-theme='light'] .ToastIcon-fail svg {
+html[data-coreui-theme='light'] .ToastIcon-fail svg {
   color: white;
   width: 1rem;
   height: 1rem;
@@ -486,14 +491,14 @@ body {
 }
 
 /* 欄位預設樣式 */
-html[data-bs-theme='dark'] #HardwareManageTable_wrapper .defaultcellType {
+html[data-coreui-theme='dark'] #HardwareManageTable_wrapper .defaultcellType {
   border: none; /* 取消邊框 */
   background-color: transparent; /* 背景透明 */
   appearance: none; /* 去除默認樣式 */
   color: #c2c2d9; /* 文字顏色 */
 }
 
-html[data-bs-theme='light'] #HardwareManageTable_wrapper .defaultcellType {
+html[data-coreui-theme='light'] #HardwareManageTable_wrapper .defaultcellType {
   border: none; /* 取消邊框 */
   background-color: transparent; /* 背景透明 */
   appearance: none; /* 去除默認樣式 */
