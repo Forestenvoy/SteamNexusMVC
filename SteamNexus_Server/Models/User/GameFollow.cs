@@ -9,7 +9,6 @@ public partial class GameFollow
 {
     public int GameFollowId { get; set; }
 
-    public int MemberId { get; set; }
 
     public int GameId { get; set; }
 
@@ -17,5 +16,5 @@ public partial class GameFollow
 
     public virtual Game Game { get; set; }
 
-    public virtual Member Member { get; set; }
+
 }
