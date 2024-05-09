@@ -66,7 +66,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" id="crate">新增</button>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉視窗</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="crateroles">關閉視窗</button>
       </div>
     </div>
   </div>
@@ -175,7 +175,7 @@
                         }
                     });
                 } else {
-                    $('#rolesFeedback').hide();  // 當 Email 欄位為空時，不顯示任何反饋
+                    $('#rolesFeedback').hide();  // 當 RoleName 欄位為空時，不顯示任何反饋
                     $('#crate').prop('disabled', true);
                 }
             });
@@ -222,7 +222,6 @@
         });
 
 
-
         //刪除權限
         $(document).on('click', '.del-btn', function () {
             const roleId = $(this).data('roleid');
@@ -247,6 +246,32 @@
                     alert('發生錯誤: ' + error.responseText);
                 }
             });
+        });
+
+        //點擊關閉視窗重製資料
+        $(document).ready(function () {
+            $('button[data-bs-dismiss="crateroles"]').click(function () {
+                resetForm();
+            });
+
+            // 綁定 ESC 鍵到 document，按下時執行重置表單
+            $(document).keydown(function (e) {
+                if (e.keyCode == 27) {  // 27 是 ESC 鍵的鍵盤代碼
+                    resetForm();
+                }
+            });
+
+            // 重置表單
+            function resetForm() {
+                $('#Roles_name').val('');
+                $('#rolesFeedback').text('').hide();
+                $('#Roles_name').removeClass('is-valid is-invalid');
+
+                // 隱藏模態窗口
+                $('#createrole').modal('hide');
+            }
+
+
         });
 
     });
