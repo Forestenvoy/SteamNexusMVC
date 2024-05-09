@@ -150,7 +150,19 @@ namespace SteamNexus_Server.Controllers
             }
         }
 
-        public static string testMessage = "123";
+        // 零件更新操作行為
+        public static bool isHardwareUpdate = false;
+
+        // 檢測是否有使用者在做更新操作
+        [HttpGet("IsHardwareUpdate")]
+        public string IsHardwareUpdate()
+        {
+            if (isHardwareUpdate)
+            {
+                return "true";
+            }
+            return "false";
+        }
 
         // 單一零件更新
         public class HardwareType
@@ -167,6 +179,7 @@ namespace SteamNexus_Server.Controllers
             // 如果驗證合法
             if (ModelState.IsValid)
             {
+                isHardwareUpdate = true;
                 CoolPCWebScraping.eventMessage = "爬蟲啟動中";
                 _coolPCWebScraping.UpdateAllComponentClassifications();
                 switch (data.Type)
@@ -179,6 +192,7 @@ namespace SteamNexus_Server.Controllers
                         await Task.Delay(500);
                         CoolPCWebScraping.eventMessage = "更新成功";
                         await Task.Delay(500);
+                        isHardwareUpdate = false;
                         return Ok("CPU 更新成功");
                     case (int)ComputerPartCategory.Type.MB:
                         CoolPCWebScraping.eventMessage = "Motherboard 解析中";
@@ -188,6 +202,7 @@ namespace SteamNexus_Server.Controllers
                         await Task.Delay(500);
                         CoolPCWebScraping.eventMessage = "更新成功";
                         await Task.Delay(500);
+                        isHardwareUpdate = false;
                         return Ok("MB 更新成功");
                     case (int)ComputerPartCategory.Type.RAM:
                         CoolPCWebScraping.eventMessage = "RAM 解析中";
@@ -197,6 +212,7 @@ namespace SteamNexus_Server.Controllers
                         await Task.Delay(500);
                         CoolPCWebScraping.eventMessage = "更新成功";
                         await Task.Delay(500);
+                        isHardwareUpdate = false;
                         return Ok("RAM 更新成功");
                     case (int)ComputerPartCategory.Type.SSD:
                         CoolPCWebScraping.eventMessage = "SSD 解析中";
@@ -206,6 +222,7 @@ namespace SteamNexus_Server.Controllers
                         await Task.Delay(500);
                         CoolPCWebScraping.eventMessage = "更新成功";
                         await Task.Delay(500);
+                        isHardwareUpdate = false;
                         return Ok("SSD 更新成功");
                     case (int)ComputerPartCategory.Type.HDD:
                         CoolPCWebScraping.eventMessage = "HDD 解析中";
@@ -215,6 +232,7 @@ namespace SteamNexus_Server.Controllers
                         await Task.Delay(500);
                         CoolPCWebScraping.eventMessage = "更新成功";
                         await Task.Delay(500);
+                        isHardwareUpdate = false;
                         return Ok("HDD 更新成功");
                     case (int)ComputerPartCategory.Type.AirCooler:
                         CoolPCWebScraping.eventMessage = "AirCooler 解析中";
@@ -224,6 +242,7 @@ namespace SteamNexus_Server.Controllers
                         await Task.Delay(500);
                         CoolPCWebScraping.eventMessage = "更新成功";
                         await Task.Delay(500);
+                        isHardwareUpdate = false;
                         return Ok("AirCooler 更新成功");
                     case (int)ComputerPartCategory.Type.LiquidCooler:
                         CoolPCWebScraping.eventMessage = "LiquidCooler 解析中";
@@ -233,6 +252,7 @@ namespace SteamNexus_Server.Controllers
                         await Task.Delay(500);
                         CoolPCWebScraping.eventMessage = "更新成功";
                         await Task.Delay(500);
+                        isHardwareUpdate = false;
                         return Ok("LiquidCooler 更新成功");
                     case (int)ComputerPartCategory.Type.GPU:
                         CoolPCWebScraping.eventMessage = "GPU 解析中";
@@ -242,6 +262,7 @@ namespace SteamNexus_Server.Controllers
                         await Task.Delay(500);
                         CoolPCWebScraping.eventMessage = "更新成功";
                         await Task.Delay(500);
+                        isHardwareUpdate = false;
                         return Ok("GPU 更新成功");
                     case (int)ComputerPartCategory.Type.CASE:
                         CoolPCWebScraping.eventMessage = "CASE 解析中";
@@ -251,6 +272,7 @@ namespace SteamNexus_Server.Controllers
                         await Task.Delay(500);
                         CoolPCWebScraping.eventMessage = "更新成功";
                         await Task.Delay(500);
+                        isHardwareUpdate = false;
                         return Ok("CASE 更新成功");
                     case (int)ComputerPartCategory.Type.PSU:
                         CoolPCWebScraping.eventMessage = "PSU 解析中";
@@ -260,6 +282,7 @@ namespace SteamNexus_Server.Controllers
                         await Task.Delay(500);
                         CoolPCWebScraping.eventMessage = "更新成功";
                         await Task.Delay(500);
+                        isHardwareUpdate = false;
                         return Ok("PSU 更新成功");
                     case (int)ComputerPartCategory.Type.OS:
                         CoolPCWebScraping.eventMessage = "OS 解析中";
@@ -269,8 +292,10 @@ namespace SteamNexus_Server.Controllers
                         await Task.Delay(500);
                         CoolPCWebScraping.eventMessage = "更新成功";
                         await Task.Delay(500);
+                        isHardwareUpdate = false;
                         return Ok("OS 更新成功");
                     default:
+                        isHardwareUpdate = false;
                         return BadRequest("更新失敗");
                 }
             }
@@ -285,6 +310,7 @@ namespace SteamNexus_Server.Controllers
         [HttpPost("UpdateHardwareAll")]
         public async Task<IActionResult> UpdateHardwareAll()
         {
+            isHardwareUpdate = true;
             CoolPCWebScraping.eventMessage = "爬蟲啟動中";
             _coolPCWebScraping.UpdateAllComponentClassifications();
 
@@ -358,6 +384,7 @@ namespace SteamNexus_Server.Controllers
             CoolPCWebScraping.eventMessage = "更新成功";
             await Task.Delay(500);
 
+            isHardwareUpdate = false;
             return Ok("全零件更新成功");
         }
 

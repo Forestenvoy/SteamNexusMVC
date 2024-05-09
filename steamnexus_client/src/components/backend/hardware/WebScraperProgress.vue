@@ -51,6 +51,15 @@ onMounted(() => {
   source.onmessage = (event) => {
     sourceData = event.data
     p_text.value = sourceData
+
+    if (sourceData === '爬蟲啟動中') {
+      p_color.value = 'info'
+      p_value.value = 0
+      p_variant.value = 'striped'
+      p_animated.value = true
+      p_state.value = 0
+    }
+
     if (sourceData === '更新成功') {
       p_color.value = 'success'
       p_value.value = 100
