@@ -52,7 +52,7 @@ import 'datatables.net-rowgroup-dt'
 import 'datatables.net-buttons-dt'
 import 'datatables.net-responsive-dt'
 
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, defineEmits } from 'vue'
 import { onBeforeRouteLeave } from 'vue-router'
 
 import { dataTableConfig } from '@/components/backend/hardware/dataTableConfig.js'
@@ -68,6 +68,9 @@ const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
 // 宣告 硬體選擇 初始值
 const selectedItem = ref('0')
+
+// 宣告 Component Events
+const emit = defineEmits(['UpdateOneHardware', 'UpdateAllHardware'])
 
 // 初始化 DataTables
 let dataTable = null
@@ -191,41 +194,51 @@ function selectHardware() {
 
 // 單一零件更新
 function UpdateOneHardware() {
+  // 取得硬體 ID
   const hardwareId = selectedItem.value
-  // 發送非同步POST請求 ==> 資料庫資料變更
-  var data = {
-    Type: hardwareId
+  // 如果沒選擇硬體 => 中斷事件
+  if (hardwareId == '0') {
+    return
   }
-  fetch(`${apiUrl}/api/HardwareManage/UpdateHardwareOne`, {
-    method: 'POST',
-    body: JSON.stringify(data),
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  })
-    .then((response) => {
-      // 此時 result 是一個請求結果的物件
-      // 注意傳回值型態，字串用 text()，JSON 用 json()
-      //  如過 HTTP 響應的狀態馬碼在 200 到 299 的範圍內 ==> .ok 會回傳 true
-      if (!response.ok) {
-        return response.text().then((errorMessage) => {
-          throw new Error(errorMessage)
-        })
-      }
-      return response.text()
-    })
-    .then((data) => {
-      // 此時 data 為上一個 then 回傳的資料
-      alert(data)
-      getDataTableData()
-    })
-    .catch((error) => {
-      alert(error.message)
-    })
+  // 觸發 emit
+  emit('UpdateOneHardware', hardwareId)
+
+  // 發送非同步POST請求 ==> 資料庫資料變更
+  // var data = {
+  //   Type: hardwareId
+  // }
+  // fetch(`${apiUrl}/api/HardwareManage/UpdateHardwareOne`, {
+  //   method: 'POST',
+  //   body: JSON.stringify(data),
+  //   headers: {
+  //     'Content-Type': 'application/json'
+  //   }
+  // })
+  //   .then((response) => {
+  //     // 此時 result 是一個請求結果的物件
+  //     // 注意傳回值型態，字串用 text()，JSON 用 json()
+  //     //  如過 HTTP 響應的狀態馬碼在 200 到 299 的範圍內 ==> .ok 會回傳 true
+  //     if (!response.ok) {
+  //       return response.text().then((errorMessage) => {
+  //         throw new Error(errorMessage)
+  //       })
+  //     }
+  //     return response.text()
+  //   })
+  //   .then((data) => {
+  //     // 此時 data 為上一個 then 回傳的資料
+  //     alert(data)
+  //   })
+  //   .catch((error) => {
+  //     alert(error.message)
+  //   })
 }
 
 // 所有零件更新
 function UpdateAllHardware() {
+  // 觸發 emit
+  emit('UpdateAllHardware')
+
   // 發送非同步POST請求 ==> 資料庫資料變更
   fetch(`${apiUrl}/api/HardwareManage/UpdateHardwareAll`, {
     method: 'POST',
@@ -247,7 +260,6 @@ function UpdateAllHardware() {
     .then((data) => {
       // 此時 data 為上一個 then 回傳的資料
       alert(data)
-      getDataTableData()
     })
     .catch((error) => {
       alert(error)
