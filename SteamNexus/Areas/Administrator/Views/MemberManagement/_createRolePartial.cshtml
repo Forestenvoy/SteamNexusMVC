@@ -147,36 +147,84 @@
         });
 
         //確認權限是否存在，如以存在會即時顯示通知
+        // $(document).ready(function () {
+        //     $('#Roles_name').on('input', function () {
+        //         var rolename = $(this).val();
+        //         if (rolename) {
+        //             $.ajax({
+        //                 url: '@Url.Action("CheckRolesExists", "MemberManagement", new { area = "Administrator" })',  // 確保路徑正確
+        //                 data: { roleName: rolename },
+        //                 method: 'GET',
+        //                 success: function (isAvailable) {
+        //                     var feedbackElement = $('#rolesFeedback');
+        //                     if (isAvailable) {
+        //                         feedbackElement.text('此權限可以使用').removeClass('invalid-feedback').addClass('valid-feedback');
+        //                         $('#Roles_name').removeClass('is-invalid').addClass('is-valid');
+        //                         $('#crate').prop('disabled', false);
+        //                     } else {
+        //                         feedbackElement.text('該權限已被使用，請更換權限').removeClass('valid-feedback').addClass('invalid-feedback');
+        //                         $('#Roles_name').removeClass('is-valid').addClass('is-invalid');
+        //                         $('#crate').prop('disabled', true);
+        //                     }
+        //                     feedbackElement.show();  // 確保提示信息顯示
+        //                 },
+        //                 error: function () {
+        //                     $('#rolesFeedback').text('無法檢查權限').addClass('invalid-feedback');
+        //                     $('#rolesFeedback').show();
+        //                     $('#crate').prop('disabled', true);
+        //                 }
+        //             });
+        //         } else {
+        //             $('#rolesFeedback').hide();  // 當 RoleName 欄位為空時，不顯示任何反饋
+        //             $('#crate').prop('disabled', true);
+        //         }
+        //     });
+        // });
+
+
+        //檢查權限是否存在與使用者輸入是否為英文大小寫
         $(document).ready(function () {
             $('#Roles_name').on('input', function () {
                 var rolename = $(this).val();
-                if (rolename) {
+                var feedbackElement = $('#rolesFeedback');
+                // 使用正則表達式檢查是否僅包含英文大小寫字母
+                var isValidEnglish = /^[A-Za-z]+$/.test(rolename);
+
+                // 首先判斷是否為空，如果為空則隱藏所有提示並禁用按鈕
+                if (rolename === '') {
+                    feedbackElement.text('').hide();
+                    $('#Roles_name').removeClass('is-valid is-invalid');
+                    $('#create').prop('disabled', true);
+                } else if (!isValidEnglish) {
+                    // 如果不是空但輸入非英文，顯示錯誤信息
+                    feedbackElement.text('請輸入英文大小寫').removeClass('valid-feedback').addClass('invalid-feedback');
+                    $('#Roles_name').removeClass('is-valid').addClass('is-invalid');
+                    $('#create').prop('disabled', true);
+                    feedbackElement.show();
+                } else {
+                    // 如果輸入僅包含英文，則進行 AJAX 請求檢查角色名稱是否存在
                     $.ajax({
-                        url: '@Url.Action("CheckRolesExists", "MemberManagement", new { area = "Administrator" })',  // 確保路徑正確
+                        url: '@Url.Action("CheckRolesExists", "MemberManagement", new { area = "Administrator" })',
                         data: { roleName: rolename },
                         method: 'GET',
                         success: function (isAvailable) {
-                            var feedbackElement = $('#rolesFeedback');
                             if (isAvailable) {
-                                feedbackElement.text('此權限可以使用').removeClass('invalid-feedback').addClass('valid-feedback');
+                                feedbackElement.text('此角色可以使用').removeClass('invalid-feedback').addClass('valid-feedback');
                                 $('#Roles_name').removeClass('is-invalid').addClass('is-valid');
-                                $('#crate').prop('disabled', false);
+                                $('#create').prop('disabled', false);
                             } else {
-                                feedbackElement.text('該權限已被使用，請更換權限').removeClass('valid-feedback').addClass('invalid-feedback');
+                                feedbackElement.text('該角色已被使用，請更換角色名稱').removeClass('valid-feedback').addClass('invalid-feedback');
                                 $('#Roles_name').removeClass('is-valid').addClass('is-invalid');
-                                $('#crate').prop('disabled', true);
+                                $('#create').prop('disabled', true);
                             }
-                            feedbackElement.show();  // 確保提示信息顯示
+                            feedbackElement.show();
                         },
                         error: function () {
-                            $('#rolesFeedback').text('無法檢查權限').addClass('invalid-feedback');
-                            $('#rolesFeedback').show();
-                            $('#crate').prop('disabled', true);
+                            feedbackElement.text('無法檢查角色').addClass('invalid-feedback');
+                            feedbackElement.show();
+                            $('#create').prop('disabled', true);
                         }
                     });
-                } else {
-                    $('#rolesFeedback').hide();  // 當 RoleName 欄位為空時，不顯示任何反饋
-                    $('#crate').prop('disabled', true);
                 }
             });
         });
@@ -274,32 +322,6 @@
 
 
         });
-
-
-        // 驗證 Roles_name 是否空值
-        function validateForm() {
-            var rolesIsValid = $('#rolesFeedback').hasClass('is-valid');
-            //Email、Password、ConfirmPassword空值時，無法點擊下一步
-            var inputsAreNotEmpty = $('#Roles_name').val() !== "";
-            return rolesIsValid;
-        }
-
-
-        // 綁定輸入框的變化事件來即時更新按鈕的狀態
-        $('#Roles_name').on('input change', function () {
-            if (validateForm()) {
-                $('#crate').prop('disabled', false);
-            } else {
-                $('#crate').prop('disabled', true);
-            }
-        });
-
-
-        // 初始化時也檢查一次
-        $(document).ready(function () {
-            $('#crate').prop('disabled', true); // 初始禁用下一步按鈕
-        });
-
 
     });
 </script>
