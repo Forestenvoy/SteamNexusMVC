@@ -52,7 +52,7 @@ import 'datatables.net-rowgroup-dt'
 import 'datatables.net-buttons-dt'
 import 'datatables.net-responsive-dt'
 
-import { ref, onMounted, defineEmits } from 'vue'
+import { ref, onMounted } from 'vue'
 import { onBeforeRouteLeave } from 'vue-router'
 
 import { dataTableConfig } from '@/components/backend/hardware/dataTableConfig.js'
