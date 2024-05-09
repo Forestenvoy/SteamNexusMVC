@@ -67,7 +67,7 @@ function UpdateOneHardware(hardwareId) {
     })
     .then((data) => {
       // 此時 data 為上一個 then 回傳的資料
-      alert(data)
+      console.log(data)
       scraperState.value = false
     })
     .catch((error) => {
@@ -100,7 +100,7 @@ function UpdateAllHardware() {
     })
     .then((data) => {
       // 此時 data 為上一個 then 回傳的資料
-      alert(data)
+      console.log(data)
       scraperState.value = false
     })
     .catch((error) => {

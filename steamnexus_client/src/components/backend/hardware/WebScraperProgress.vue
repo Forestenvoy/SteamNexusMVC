@@ -4,7 +4,7 @@
       <div class="h3 col-12 col-md-3 text-center text-md-end">
         <CSpinner />
       </div>
-      <div class="h3 col-12 col-md-6 text-center">Web Scraper</div>
+      <div class="h3 col-12 col-md-6 text-center">{{ p_text }}{{ p_dot }}</div>
       <div class="h3 col-12 col-md-3 text-center text-md-start">{{ p_value }}%</div>
     </div>
     <div class="row mx-1">
@@ -27,27 +27,38 @@ import { CProgress, CSpinner } from '@coreui/vue'
 const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
 // 繫結進度條屬性
-const p_color = ref('info')
-const p_variant = ref('striped')
-const p_animated = ref(true)
-const p_value = ref(10)
+let p_text = ref('請求發送中')
+let p_color = ref('info')
+let p_variant = ref('striped')
+let p_animated = ref(true)
+let p_value = ref(10)
+let p_dot = ref('')
 
 // 宣告 EventSource 物件
 let source = null
 
+var intervalID = null
+
 onMounted(() => {
   // 建立連線
   source = new EventSource(`${apiUrl}/api/HardwareManage/UpdateMessage`)
-  // 連線成功 觸發 onopen 事件
   // onmessage 事件是預設用來接收 Server 端回傳的結果(data)
   source.onmessage = (event) => {
     console.log(event.data)
+    p_text.value = event.data
   }
+
+  // 建立計時器
+  intervalID = setInterval(function () {
+    p_dot.value = p_dot.value === ' . . .' ? '' : p_dot.value + ' .'
+  }, 200)
 })
 
 onUnmounted(() => {
+  // 關閉連線
   source.close()
-  console.log('我關閉了')
+  // 清除計時器
+  clearInterval(intervalID)
 })
 </script>
 <style scoped>

@@ -17,6 +17,9 @@ namespace SteamNexus_Server.Services
         List<List<string>>? optgroups;
         // 宣告 optgroup 群組名稱 List
         List<string>? optgroupNames;
+        // 宣告 事件進度訊息
+        public static string eventMessage = "爬蟲啟動中";
+
 
         // 建構式
         public CoolPCWebScraping(SteamNexusDbContext context)
@@ -1547,7 +1550,6 @@ namespace SteamNexus_Server.Services
         /// </summary>
         public virtual void UpdateCPU()
         {
-
             _GetHardWareData();
             // 中央處理器 List
             _GetComponentsList(3);

@@ -17,6 +17,9 @@ namespace SteamNexus.Services
         List<List<string>>? optgroups;
         // 宣告 optgroup 群組名稱 List
         List<string>? optgroupNames;
+        // 宣告 靜態變數 作為 事件進度訊息
+        public static string eventMessage = "";
+
 
         // 建構式
         public CoolPCWebScraping(SteamNexusDbContext context)
@@ -35,6 +38,8 @@ namespace SteamNexus.Services
                 Console.WriteLine("HardWare Data Exist!");
                 return;
             }
+
+            eventMessage = "爬取硬體品項資料中...";
 
             // 註冊特定編碼(包含big5)
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
@@ -69,11 +74,13 @@ namespace SteamNexus.Services
             if (hardWareNodes.Any())
             {
                 Console.WriteLine("HardWare Data Get!");
+                eventMessage = "硬體品項資料爬取完成!";
                 return;
             }
             else
             {
                 Console.WriteLine("HardWare Data not found!");
+                eventMessage = "無法爬取硬體品項資料!";
                 return;
             }
         }
