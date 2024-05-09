@@ -5,11 +5,21 @@
       <AppHeader />
       <div class="body flex-grow-1">
         <CContainer class="px-0">
-          <web-scraper-progress v-if="scraperState"></web-scraper-progress>
-          <router-view
-            @update-one-hardware="UpdateOneHardware"
-            @update-all-hardware="UpdateAllHardware"
-          ></router-view>
+          <transition-group name="systemContainer">
+            <!-- 進度條元件 -->
+            <transition name="p_slide">
+              <web-scraper-progress
+                class="p_element"
+                :class="{ expand: scraperState }"
+                v-if="scraperState"
+              ></web-scraper-progress>
+            </transition>
+            <!-- 後台子系統 -->
+            <router-view
+              @update-one-hardware="UpdateOneHardware"
+              @update-all-hardware="UpdateAllHardware"
+            ></router-view>
+          </transition-group>
         </CContainer>
       </div>
       <AppFooter />
@@ -29,7 +39,7 @@ import WebScraperProgress from '@/components/backend/hardware/WebScraperProgress
 const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
 // 宣告進度條顯示狀態
-const scraperState = ref(true)
+const scraperState = ref(false)
 
 // 單一零件更新
 function UpdateOneHardware(hardwareId) {
@@ -103,6 +113,20 @@ function UpdateAllHardware() {
 </script>
 
 <style scoped>
+.systemContainer-move {
+  transition: all 1s ease;
+}
+.p_slide-enter-active,
+.p_slide-leave-active {
+  transition: transform 1s ease;
+}
+.p_slide-enter-from {
+  transform: translateY(-150%);
+}
+.p_slide-leave-to {
+  transform: translateY(-150%);
+}
+
 @media (min-width: 1650px) {
   .container {
     max-width: 1400px;
