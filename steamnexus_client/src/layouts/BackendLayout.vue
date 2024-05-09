@@ -6,7 +6,10 @@
       <div class="body flex-grow-1">
         <CContainer class="px-0">
           <web-scraper-progress v-if="scraperState"></web-scraper-progress>
-          <router-view @update-one-hardware="UpdateOneHardware"></router-view>
+          <router-view
+            @update-one-hardware="UpdateOneHardware"
+            @update-all-hardware="UpdateAllHardware"
+          ></router-view>
         </CContainer>
       </div>
       <AppFooter />
@@ -26,10 +29,11 @@ import WebScraperProgress from '@/components/backend/hardware/WebScraperProgress
 const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
 // 宣告進度條顯示狀態
-const scraperState = ref(false)
+const scraperState = ref(true)
 
 // 單一零件更新
 function UpdateOneHardware(hardwareId) {
+  // 啟動進度條
   scraperState.value = true
   // 發送非同步POST請求 ==> 資料庫資料變更
   var data = {
@@ -65,33 +69,37 @@ function UpdateOneHardware(hardwareId) {
 }
 
 // 所有零件更新
-// function UpdateAllHardware() {
-//   // 發送非同步POST請求 ==> 資料庫資料變更
-//   fetch(`${apiUrl}/api/HardwareManage/UpdateHardwareAll`, {
-//     method: 'POST',
-//     headers: {
-//       'Content-Type': 'application/json'
-//     }
-//   })
-//     .then((response) => {
-//       // 此時 result 是一個請求結果的物件
-//       // 注意傳回值型態，字串用 text()，JSON 用 json()
-//       //  如過 HTTP 響應的狀態馬碼在 200 到 299 的範圍內 ==> .ok 會回傳 true
-//       if (!response.ok) {
-//         return response.text().then((errorMessage) => {
-//           throw new Error(errorMessage)
-//         })
-//       }
-//       return response.text()
-//     })
-//     .then((data) => {
-//       // 此時 data 為上一個 then 回傳的資料
-//       alert(data)
-//     })
-//     .catch((error) => {
-//       alert(error)
-//     })
-// }
+function UpdateAllHardware() {
+  // 啟動進度條
+  scraperState.value = true
+  // 發送非同步POST請求 ==> 資料庫資料變更
+  fetch(`${apiUrl}/api/HardwareManage/UpdateHardwareAll`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+    .then((response) => {
+      // 此時 result 是一個請求結果的物件
+      // 注意傳回值型態，字串用 text()，JSON 用 json()
+      //  如過 HTTP 響應的狀態馬碼在 200 到 299 的範圍內 ==> .ok 會回傳 true
+      if (!response.ok) {
+        return response.text().then((errorMessage) => {
+          throw new Error(errorMessage)
+        })
+      }
+      return response.text()
+    })
+    .then((data) => {
+      // 此時 data 為上一個 then 回傳的資料
+      alert(data)
+      scraperState.value = false
+    })
+    .catch((error) => {
+      alert(error)
+      scraperState.value = false
+    })
+}
 </script>
 
 <style scoped>
