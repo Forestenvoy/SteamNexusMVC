@@ -20,17 +20,35 @@
   </section>
 </template>
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { CProgress, CSpinner } from '@coreui/vue'
+
+// 從環境變數取得 API BASE URL
+const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
 // 繫結進度條屬性
 const p_color = ref('info')
 const p_variant = ref('striped')
 const p_animated = ref(true)
-const p_value = ref(80)
+const p_value = ref(10)
 
-// 在组件渲染后获取容器宽度
-onMounted(() => {})
+// 宣告 EventSource 物件
+let source = null
+
+onMounted(() => {
+  // 建立連線
+  source = new EventSource(`${apiUrl}/api/HardwareManage/UpdateMessage`)
+  // 連線成功 觸發 onopen 事件
+  // onmessage 事件是預設用來接收 Server 端回傳的結果(data)
+  source.onmessage = (event) => {
+    console.log(event.data)
+  }
+})
+
+onUnmounted(() => {
+  source.close()
+  console.log('我關閉了')
+})
 </script>
 <style scoped>
 section {

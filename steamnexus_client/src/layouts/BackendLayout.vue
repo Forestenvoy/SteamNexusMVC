@@ -5,21 +5,19 @@
       <AppHeader />
       <div class="body flex-grow-1">
         <CContainer class="px-0">
-          <transition-group name="systemContainer">
-            <!-- 進度條元件 -->
-            <transition name="p_slide">
-              <web-scraper-progress
-                class="p_element"
-                :class="{ expand: scraperState }"
-                v-if="scraperState"
-              ></web-scraper-progress>
-            </transition>
-            <!-- 後台子系統 -->
-            <router-view
-              @update-one-hardware="UpdateOneHardware"
-              @update-all-hardware="UpdateAllHardware"
-            ></router-view>
-          </transition-group>
+          <!-- 進度條元件 -->
+          <transition name="p_slide">
+            <web-scraper-progress
+              class="p_element"
+              :class="{ expand: scraperState }"
+              v-if="scraperState"
+            ></web-scraper-progress>
+          </transition>
+          <!-- 後台子系統 -->
+          <router-view
+            @update-one-hardware="UpdateOneHardware"
+            @update-all-hardware="UpdateAllHardware"
+          ></router-view>
         </CContainer>
       </div>
       <AppFooter />
@@ -113,9 +111,6 @@ function UpdateAllHardware() {
 </script>
 
 <style scoped>
-.systemContainer-move {
-  transition: all 1s ease;
-}
 .p_slide-enter-active,
 .p_slide-leave-active {
   transition: transform 1s ease;

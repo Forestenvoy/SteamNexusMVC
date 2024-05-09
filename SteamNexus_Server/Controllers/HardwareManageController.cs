@@ -8,6 +8,7 @@ using SteamNexus_Server.Data;
 using SteamNexus_Server.Models;
 using SteamNexus_Server.Services;
 using System.ComponentModel.DataAnnotations;
+using System.Text;
 
 
 namespace SteamNexus_Server.Controllers
@@ -148,6 +149,18 @@ namespace SteamNexus_Server.Controllers
                 return BadRequest("瓦數範圍介於 0 ~ 2000 之間");
             }
         }
+
+        // SSE 傳送事件進度
+        [HttpGet("UpdateMessage")]
+        public IActionResult UpdateMessage()
+        {
+            string message = "";
+            message += $"id:{Guid.NewGuid()}\n";
+            message += "retry:500\n";
+            message += $"data:{DateTime.Now.ToString("HH:mm:ss")}\n\n";
+            return Content($"{message}", "text/event-stream", Encoding.UTF8);
+        }
+
 
         // 單一零件更新
         public class HardwareType
