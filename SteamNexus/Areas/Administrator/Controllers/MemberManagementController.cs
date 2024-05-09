@@ -477,12 +477,14 @@ namespace SteamNexus.Areas.Administrator.Controllers
         #endregion
 
 
+        #region 確認權限是否存在
         [HttpGet]
         public async Task<IActionResult> CheckRolesExists(string rolename)
         {
             bool exists = await _application.Roles.AnyAsync(e => e.RoleName == rolename);
             return Json(!exists);  // 返回 false 表示 Role 已存在
         }
+        #endregion
 
 
         #region 密碼加密

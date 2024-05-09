@@ -248,6 +248,7 @@
             });
         });
 
+
         //點擊關閉視窗重製資料
         $(document).ready(function () {
             $('button[data-bs-dismiss="crateroles"]').click(function () {
@@ -273,6 +274,32 @@
 
 
         });
+
+
+        // 驗證 Roles_name 是否空值
+        function validateForm() {
+            var rolesIsValid = $('#rolesFeedback').hasClass('is-valid');
+            //Email、Password、ConfirmPassword空值時，無法點擊下一步
+            var inputsAreNotEmpty = $('#Roles_name').val() !== "";
+            return rolesIsValid;
+        }
+
+
+        // 綁定輸入框的變化事件來即時更新按鈕的狀態
+        $('#Roles_name').on('input change', function () {
+            if (validateForm()) {
+                $('#crate').prop('disabled', false);
+            } else {
+                $('#crate').prop('disabled', true);
+            }
+        });
+
+
+        // 初始化時也檢查一次
+        $(document).ready(function () {
+            $('#crate').prop('disabled', true); // 初始禁用下一步按鈕
+        });
+
 
     });
 </script>
