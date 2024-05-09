@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SteamNexus_Server.Data;
+using SteamNexus_Server.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +25,9 @@ builder.Services.AddCors(options =>
 var SteamNexusConnectionString = builder.Configuration.GetConnectionString("SteamNexus");
 // Add SteamNexusDbContext
 builder.Services.AddDbContext<SteamNexusDbContext>(options => options.UseSqlServer(SteamNexusConnectionString));
+
+// Add CoolPCWebScrabing Service
+builder.Services.AddTransient<CoolPCWebScraping>();
 
 var app = builder.Build();
 
