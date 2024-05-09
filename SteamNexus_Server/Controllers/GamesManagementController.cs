@@ -78,7 +78,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
         }
 
         [HttpPost("PostCreatPartialToDB")]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> PostCreatPartialToDB(CreateViewModel Create)
         {
             if (ModelState.IsValid)
@@ -146,7 +146,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
             return PartialView("_GameEditManagementPartial", ViewModel);
         }
         [HttpPost("PostEditPartialToDB")]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> PostEditPartialToDB(EditViewModel ViewModel)
         {
             if (ModelState.IsValid)
@@ -272,7 +272,6 @@ namespace SteamNexus.Areas.Administrator.Controllers
 
             return GetIndexPartialView();
         }
-
         private bool GameExists(int id)
         {
             return _context.Games.Any(e => e.GameId == id);
@@ -288,143 +287,156 @@ namespace SteamNexus.Areas.Administrator.Controllers
             int allNum = 0;
             int errNum = 0;
             int priceErrNum = 0;
-            try
+
+            for (int GameId = 10021; GameId <= num; GameId++)
             {
-                for (int GameId = 10021; GameId <= num; GameId++)
+                Console.WriteLine(GameId);
+                await Task.Delay(1400);
+
+                allNum++;
+                var game = await _context.Games.FindAsync(GameId);
+                
+                PriceHistory PriceHistory = new PriceHistory
                 {
-                    Console.WriteLine(GameId);
-                    await Task.Delay(1400);
+                    GameId = GameId
+                };
 
-                    allNum++;
-                    var game = await _context.Games.FindAsync(GameId);
-                    PriceHistory PriceHistory = new PriceHistory
+                if (game == null)
+                {
+                    continue;// 如果找不到遊戲，繼續下一個遊戲的處理
+                }
+                int? AppId = game.AppId;
+
+                HttpResponseMessage Response = await client.GetAsync($"https://store.steampowered.com/api/appdetails?appids={AppId}&l=zh-tw");
+                Response.EnsureSuccessStatusCode();
+
+                string data = await Response.Content.ReadAsStringAsync();
+                dynamic jsonData = JsonConvert.DeserializeObject(data);
+                try
+                {
+                    dynamic gameInfo = jsonData[$"{AppId}"]["data"];
+                    //string Id = gameInfo["steam_appid"];
+                    if (gameInfo["is_free"] == true)
                     {
-                        GameId = GameId
-                    };
-
-                    if (game == null)
-                    {
-                        continue;// 如果找不到遊戲，繼續下一個遊戲的處理
-                    }
-
-                    int? AppId = game.AppId;
-
-                    HttpResponseMessage Response = await client.GetAsync($"https://store.steampowered.com/api/appdetails?appids={AppId}&l=zh-tw");
-                    Response.EnsureSuccessStatusCode();
-
-                    string data = await Response.Content.ReadAsStringAsync();
-                    dynamic jsonData = JsonConvert.DeserializeObject(data);
-                    try
-                    {
-                        dynamic gameInfo = jsonData[$"{AppId}"]["data"];
-                        //string Id = gameInfo["steam_appid"];
-                        if (gameInfo["is_free"] == true)
+                        game.OriginalPrice = 0;
+                        game.CurrentPrice = 0;
+                        PriceHistory.Price = 0;
+                        try
                         {
-                            game.OriginalPrice = 0;
-                            game.CurrentPrice = 0;
-                            PriceHistory.Price = 0;
-                            try
+                            //_context.Entry(game).State = EntityState.Modified;
+                            _context.Update(game);
+                            _context.PriceHistories.Add(PriceHistory);
+                            await _context.SaveChangesAsync();
+                        }
+                        catch (DbUpdateConcurrencyException)
+                        {
+                            Console.WriteLine("錯誤");
+                            if (!GameExists(game.GameId))
                             {
-                                //_context.Entry(game).State = EntityState.Modified;
-                                _context.Update(game);
-                                _context.PriceHistories.Add(PriceHistory);
-                                await _context.SaveChangesAsync();
+                                return "錯誤";
                             }
-                            catch (DbUpdateConcurrencyException)
+                            else
                             {
-                                Console.WriteLine("錯誤");
-                                if (!GameExists(game.GameId))
-                                {
-                                    return "錯誤";
-                                }
-                                else
-                                {
-                                    continue;
-                                }
+                                continue;
+                            }
+                        }
+                    }
+                    else
+                    {
+
+                        dynamic price = gameInfo["price_overview"];
+                        string initial_formatted = price["initial_formatted"];
+                        string finalFormatted = price["final_formatted"];
+                        if (initial_formatted == "")
+                        {
+                            //將字串中的,拿掉以便match中沒有斷句
+                            finalFormatted = finalFormatted.Replace(",", "");
+                            //使用正規表達式去擷取數字
+                            Match match = Regex.Match(finalFormatted, @"\d+");
+
+                            if (match.Success)
+                            {
+                                string finalPrice = match.Value;
+                                int.TryParse(finalPrice, out int prices);
+                                game.OriginalPrice = prices;
+                                game.CurrentPrice = prices;
+                                PriceHistory.Price = prices;
+                            }
+                            else
+                            {
+                                priceErrNum++;
                             }
                         }
                         else
                         {
-                            
-                            dynamic price = gameInfo["price_overview"];
-                            string initial_formatted = price["initial_formatted"];
-                            string finalFormatted = price["final_formatted"];
-                            if (initial_formatted == "")
-                            {
-                                //將字串中的,拿掉以便match中沒有斷句
-                                finalFormatted = finalFormatted.Replace(",", "");
-                                //使用正規表達式去擷取數字
-                                Match match = Regex.Match(finalFormatted, @"\d+");
+                            //將字串中的,拿掉以便match中沒有斷句
+                            initial_formatted = initial_formatted.Replace(",", "");
+                            finalFormatted = finalFormatted.Replace(",", "");
+                            //使用正規表達式去擷取數字
+                            Match initialmatch = Regex.Match(initial_formatted, @"\d+");
+                            Match finalmatch = Regex.Match(finalFormatted, @"\d+");
 
-                                if (match.Success)
-                                {
-                                    string finalPrice = match.Value;
-                                    int.TryParse(finalPrice, out int prices);
-                                    game.OriginalPrice = prices;
-                                    game.CurrentPrice = prices;
-                                    PriceHistory.Price = prices;
-                                }
-                                else
-                                {
-                                    priceErrNum++;
-                                }
+                            if (initialmatch.Success && finalmatch.Success)
+                            {
+                                string initialPrice = initialmatch.Value;
+                                string finalPrice = finalmatch.Value;
+                                int.TryParse(initialPrice, out int initial);
+                                int.TryParse(finalPrice, out int final);
+                                game.OriginalPrice = initial;
+                                game.CurrentPrice = final;
+                                PriceHistory.Price = final;
                             }
                             else
                             {
-                                //將字串中的,拿掉以便match中沒有斷句
-                                initial_formatted = initial_formatted.Replace(",", "");
-                                finalFormatted = finalFormatted.Replace(",", "");
-                                //使用正規表達式去擷取數字
-                                Match initialmatch = Regex.Match(initial_formatted, @"\d+");
-                                Match finalmatch = Regex.Match(finalFormatted, @"\d+");
+                                priceErrNum++;
+                            }
 
-                                if (initialmatch.Success && finalmatch.Success)
-                                {
-                                    string initialPrice = initialmatch.Value;
-                                    string finalPrice = finalmatch.Value;
-                                    int.TryParse(initialPrice, out int initial);
-                                    int.TryParse(finalPrice, out int final);
-                                    game.OriginalPrice = initial;
-                                    game.CurrentPrice = final;
-                                    PriceHistory.Price = final;
-                                }
-                                else
-                                {
-                                    priceErrNum++;
-                                }
-                                
-                            }
-                            try
+                        }
+                        try
+                        {
+                            //_context.Entry(game).State = EntityState.Modified;
+                            _context.Update(game);
+                            _context.PriceHistories.Add(PriceHistory);
+                            await _context.SaveChangesAsync();
+                        }
+                        catch (DbUpdateConcurrencyException)
+                        {
+                            Console.WriteLine("錯誤");
+                            if (!GameExists(game.GameId))
                             {
-                                //_context.Entry(game).State = EntityState.Modified;
-                                _context.Update(game);
-                                _context.PriceHistories.Add(PriceHistory);
-                                await _context.SaveChangesAsync();
+                                return "錯誤";
                             }
-                            catch (DbUpdateConcurrencyException)
+                            else
                             {
-                                Console.WriteLine("錯誤");
-                                if (!GameExists(game.GameId))
-                                {
-                                    return "錯誤";
-                                }
-                                else
-                                {
-                                    continue;
-                                }
+                                continue;
                             }
                         }
                     }
-                    catch
-                    {
-                        errNum++;
-                        continue;
-                    }
                 }
-            }
-            catch
-            {
-                return "總次數:" + allNum;
+                catch
+                {
+                    try
+                    {
+                        PriceHistory.Price = (int)game.OriginalPrice;
+                        //_context.Entry(game).State = EntityState.Modified;
+                        _context.PriceHistories.Add(PriceHistory);
+                        await _context.SaveChangesAsync();
+                    }
+                    catch (DbUpdateConcurrencyException)
+                    {
+                        Console.WriteLine("錯誤");
+                        if (!GameExists(game.GameId))
+                        {
+                            return "錯誤";
+                        }
+                        else
+                        {
+                            continue;
+                        }
+                    }
+                    errNum++;
+                    continue;
+                }
             }
 
             return "總次數:" + allNum + "\nAPI找不到次數:" + errNum + "\n價錢錯誤次數:" + priceErrNum;
@@ -502,6 +514,22 @@ namespace SteamNexus.Areas.Administrator.Controllers
                 }
                 catch
                 {
+                    PlayersHistory playersHistory = new PlayersHistory
+                    {
+                        GameId = GameId,
+                        Players = 0
+                    };
+
+                    try
+                    {
+                        _context.PlayersHistories.Add(playersHistory);
+                        await _context.SaveChangesAsync();
+                    }
+                    catch
+                    {
+                        return "傳回資料庫錯誤";
+                    }
+
                     continue;
                 }
             }

@@ -286,7 +286,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
             int priceErrNum = 0;
             try
             {
-                for (int GameId = 10021; GameId <= num; GameId++)
+                for (int GameId = 10000; GameId <= num; GameId++)
                 {
                     Console.WriteLine(GameId);
                     await Task.Delay(1400);
@@ -413,6 +413,25 @@ namespace SteamNexus.Areas.Administrator.Controllers
                     }
                     catch
                     {
+                        try
+                        {
+                            PriceHistory.Price = (int)game.OriginalPrice;
+                            //_context.Entry(game).State = EntityState.Modified;
+                            _context.PriceHistories.Add(PriceHistory);
+                            await _context.SaveChangesAsync();
+                        }
+                        catch (DbUpdateConcurrencyException)
+                        {
+                            Console.WriteLine("錯誤");
+                            if (!GameExists(game.GameId))
+                            {
+                                return "錯誤";
+                            }
+                            else
+                            {
+                                continue;
+                            }
+                        }
                         errNum++;
                         continue;
                     }
