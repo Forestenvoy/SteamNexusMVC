@@ -54,7 +54,7 @@ onMounted(() => {
     if (sourceData === '更新成功') {
       p_color.value = 'success'
       p_value.value = 100
-      p_variant.value = ''
+      p_variant.value = undefined
       p_animated.value = false
       p_state.value = 1
       p_dot.value = ''
