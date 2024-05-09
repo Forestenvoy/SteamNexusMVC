@@ -289,6 +289,8 @@ namespace SteamNexus_Server.Controllers
             CoolPCWebScraping.eventMessage = "OS 資料更新完成";
             await Task.Delay(500);
 
+            CoolPCWebScraping.eventMessage = "更新成功";
+            await Task.Delay(500);
 
             return Ok("全零件更新成功");
         }

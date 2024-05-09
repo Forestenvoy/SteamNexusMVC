@@ -196,18 +196,20 @@ function selectHardware() {
 function UpdateOneHardware() {
   // 取得硬體 ID
   const hardwareId = selectedItem.value
+  const productType = 'One'
   // 如果沒選擇硬體 => 中斷事件
   if (hardwareId == '0') {
     return
   }
   // 觸發 emit
-  emit('UpdateOneHardware', hardwareId)
+  emit('UpdateOneHardware', hardwareId, productType)
 }
 
 // 所有零件更新
 function UpdateAllHardware() {
+  const productType = 'All'
   // 觸發 emit
-  emit('UpdateAllHardware')
+  emit('UpdateAllHardware', productType)
 }
 
 onMounted(() => {

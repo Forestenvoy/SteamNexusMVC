@@ -26,12 +26,15 @@ import { CProgress, CSpinner } from '@coreui/vue'
 // 從環境變數取得 API BASE URL
 const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
+// 建立 Props 判斷
+// const props = defineProps([{ hardwareType: String }])
+
 // 繫結進度條屬性
 let p_text = ref('請求發送中')
 let p_color = ref('info')
 let p_variant = ref('striped')
 let p_animated = ref(true)
-let p_value = ref(10)
+let p_value = ref(0)
 let p_dot = ref('')
 
 // 宣告 EventSource 物件
@@ -44,8 +47,10 @@ onMounted(() => {
   source = new EventSource(`${apiUrl}/api/HardwareManage/UpdateMessage`)
   // onmessage 事件是預設用來接收 Server 端回傳的結果(data)
   source.onmessage = (event) => {
-    console.log(event.data)
     p_text.value = event.data
+    // if (props.hardwareType === 'All') {
+    //   p_color.value = 'info'
+    // }
   }
 
   // 建立計時器

@@ -7,11 +7,7 @@
         <CContainer class="px-0">
           <!-- 進度條元件 -->
           <transition name="p_slide">
-            <web-scraper-progress
-              class="p_element"
-              :class="{ expand: scraperState }"
-              v-if="scraperState"
-            ></web-scraper-progress>
+            <web-scraper-progress class="p_element" v-if="scraperState"></web-scraper-progress>
           </transition>
           <!-- 後台子系統 -->
           <router-view
@@ -39,9 +35,14 @@ const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 // 宣告進度條顯示狀態
 const scraperState = ref(false)
 
+// 宣告零件更新類型
+const UpdateType = ref('')
+
 // 單一零件更新
-function UpdateOneHardware(hardwareId) {
+function UpdateOneHardware(hardwareId, productType) {
   // 啟動進度條
+  UpdateType.value = productType
+  console.log(typeof UpdateType.value)
   scraperState.value = true
   // 發送非同步POST請求 ==> 資料庫資料變更
   var data = {
@@ -77,8 +78,10 @@ function UpdateOneHardware(hardwareId) {
 }
 
 // 所有零件更新
-function UpdateAllHardware() {
+function UpdateAllHardware(productType) {
   // 啟動進度條
+  UpdateType.value = productType
+  console.log(typeof UpdateType.value)
   scraperState.value = true
   // 發送非同步POST請求 ==> 資料庫資料變更
   fetch(`${apiUrl}/api/HardwareManage/UpdateHardwareAll`, {
