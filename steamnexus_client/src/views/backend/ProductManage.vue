@@ -1,0 +1,529 @@
+<template>
+  <div class="row">
+    <div class="col-12 col-md-6 order-md-1 d-flex justify-content-center justify-content-md-start">
+      <h2 id="SystemName" style="margin-top: 8px">產品管理系統</h2>
+    </div>
+    <div
+      class="col-12 col-md-6 order-md-2 d-flex justify-content-center justify-content-md-end"
+      id="SystemMenu"
+    >
+      <select
+        class="form-select"
+        style="width: 250px; height: 40px; margin-bottom: 8px"
+        @change="selectHardware($event)"
+      >
+        <option value="0" disabled selected hidden>---- 請選擇硬體 ----</option>
+        <option v-for="item in HardwareSelect" :key="item.id" :value="item.id">
+          {{ item.name }}
+        </option>
+      </select>
+    </div>
+  </div>
+  <section class="section">
+    <table id="HardwareManageTable" class="display" style="width: 100%">
+      <thead id="HardwareThead">
+        <tr>
+          <th data-priority="1">ID</th>
+          <th>產品名稱</th>
+          <th>規格</th>
+          <th>種類</th>
+          <th>價格</th>
+          <th>瓦數</th>
+          <th>推薦</th>
+          <th data-priority="2"></th>
+        </tr>
+      </thead>
+    </table>
+  </section>
+  <!-- 吐司容器 -->
+  <div
+    class="position-fixed top-0 start-50 translate-middle-x p-3"
+    style="z-index: 9999"
+    id="ToastContainer"
+  ></div>
+</template>
+
+<script setup>
+import $ from 'jquery'
+// Datatables
+import DataTable from 'datatables.net-dt'
+import 'datatables.net-fixedheader-dt'
+import 'datatables.net-rowgroup-dt'
+import 'datatables.net-buttons-dt'
+import 'datatables.net-responsive-dt'
+
+import { ref, onMounted } from 'vue'
+import { onBeforeRouteLeave } from 'vue-router'
+
+import { dataTableConfig } from '@/components/backend/hardware/dataTableConfig.js'
+
+// 從環境變數取得 API BASE URL
+const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
+
+// 初始化 DataTables
+let dataTable = null
+
+// 宣告硬體選單陣列
+const HardwareSelect = ref([])
+// 取得硬體選單資料
+function getHardwareSelect() {
+  // 發送非同步 GET 請求
+  fetch(`${apiUrl}/api/HardwareManage/GetComputerParts`, { method: 'GET' })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok')
+      }
+      return response.json()
+    })
+    .then((data) => {
+      HardwareSelect.value = data
+    })
+    .catch((error) => {
+      console.error('There was a problem with the fetch operation:', error)
+    })
+}
+
+// dataTable 資料載入
+function selectHardware(event) {
+  const hardwareId = event.target.value
+  fetch(`${apiUrl}/api/HardwareManage/GetProductData?Type=${hardwareId}`, { method: 'GET' })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok')
+      }
+      return response.json()
+    })
+    .then((data) => {
+      // 清空表格
+      dataTable.clear().draw()
+      // 添加新的資料
+      dataTable.rows.add(data).draw()
+    })
+    .catch((error) => {
+      console.error('There was a problem with the fetch operation:', error)
+    })
+}
+
+// Toast 彈出式通知 元素初始化
+function ToastInitialization(id) {
+  // loading
+  let Toast_Status = `<div class="spinner-border spinner-border-sm animate__animated me-2" role="status" id="${id}_Toast_Status"></div>`
+  // 成功 svg
+  let ToastIcon_success = `<div class="ToastIcon-success d-flex justify-content-center align-items-center animate__animated me-2 d-none" id="${id}_ToastIcon_success"><i class="fa-solid fa-check"></i></div>`
+  // 失敗 svg
+  let ToastIcon_fail = `<div class="ToastIcon-fail d-flex justify-content-center align-items-center animate__animated me-2 d-none" id="${id}_ToastIcon_fail"><i class="fa-solid fa-xmark"></i></div>`
+  // 吐司文字
+  let ToastText = `<span style="margin-top: 2px" id="${id}_ToastText">請求傳送中</span>`
+  // 吐司進度條
+  let ToastProgress = `<svg width="250px" height="2px" class="position-absolute bottom-0 start-0" style="display: none" id="${id}_ToastProgress"><rect width="250px" height="2px" style="fill: #00FF00" id="${id}_ToastProgress_rect"></rect></svg>`
+  // 吐司容器
+  let ToastElement = `<div class="toast align-items-center mb-3 animate__animated animate__fadeInLeft defaultToast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false" id="${id}_Toast"><div class="d-flex align-items-center"><div class="toast-body d-flex align-items-center position-relative">${Toast_Status}${ToastIcon_success}${ToastIcon_fail}${ToastText}${ToastProgress}</div></div></div>`
+  // 回傳 吐司元素
+  return ToastElement
+}
+
+// 吐司進度條消失
+function ToastProgressDisappear(toastId) {
+  // 初始寬度
+  let initialWidth = 250
+  // 每次更新寬度 ~ 總共 2000 毫秒 變動 200 次
+  let widthChange = 250 / 200
+  // 計時器啟動 ~ 10 毫秒執行一次
+  var intervalId = setInterval(function () {
+    initialWidth -= widthChange
+    // 應用更新後的寬度
+    $(`#${toastId}_ToastProgress_rect`).attr('width', `${initialWidth}px`)
+    // 寬度小於0停止計時器
+    if (initialWidth <= 0) {
+      clearInterval(intervalId)
+      // 關閉吐司
+      $(`#${toastId}_Toast`).addClass(`animate__fadeOutRight`)
+      // 元素移除
+      setTimeout(function () {
+        $(`#${toastId}_Toast`).remove()
+      }, 1000)
+    }
+  }, 10)
+}
+
+onMounted(() => {
+  // 取得硬體選單 by AJAX
+  getHardwareSelect()
+  // 初始化 DataTables
+  dataTable = new DataTable('#HardwareManageTable', dataTableConfig)
+  // 事件監聽器
+  // 資料編輯 ~ 當任何具有 Edit-btn 類別元素被點擊時觸發
+  $(document).on('click', '.Edit-btn', function () {
+    // 被隱藏的按鈕不能觸發
+    if ($(this).css('display') !== 'none') {
+      // 檢測有隱藏的行數
+      // if (responsiveColumnsCount > 0) {
+      //     // 檢查使用者有沒有展開
+      //     if ($(this).attr('data-slefColumn-isShow') === 'false') {
+      //         // 取得吐司容器元素
+      //         let ToastContainer = document.querySelector('#ToastContainer');
+      //         // 流水號生成
+      //         let toastId = Math.floor(Math.random() * 1000);
+      //         // 吐司元素生成
+      //         let toast = ToastInitialization(toastId);
+      //         // 發送吐司
+      //         ToastContainer.insertAdjacentHTML(`afterbegin`, toast);
+      //         $(`#${toastId}_Toast`).show();
+      //         // 隱藏 載入狀態
+      //         $(`#${toastId}_Toast_Status`).hide();
+      //         // 顯示 吐司失敗狀態
+      //         $(`#${toastId}_ToastIcon_fail`).addClass('animate__zoomIn').removeClass('d-none');
+      //         $(`#${toastId}_ToastText`).text("請先展開該列");
+      //         // 進度條消失
+      //         $(`#${toastId}_ToastProgress`).show();
+      //         // 更改顏色
+      //         $(`#${toastId}_ToastProgress_rect`).css('fill', '#FF0000');
+      //         // 進度條消失
+      //         ToastProgressDisappear(toastId);
+      //         return;
+      //     }
+      // }
+      // 取得 ID
+      let productId = Number($(this).attr('class').slice(0, 5))
+      // 取資料 ~ 只取看的見的元素
+      let wattVal = Number($(`.${productId}_watt:visible`).val())
+      let recVal = Number($(`.${productId}_recommend:visible`).val())
+      // 確認按鈕
+      let enterEle = `<button class="${productId}_enter btn Enter-btn d-flex justify-content-center align-items-center" style="width:30px;height:30px;"><i class="fa-solid fa-check"></i></button>`
+      // 取消按鈕
+      let cancellEle = `<button class="${productId}_reset btn Cancell-btn d-flex justify-content-center align-items-center" style="width:30px;height:30px;" data-origin="${wattVal},${recVal}"><i class="fa-solid fa-xmark"></i></button>`
+      $(`#${productId}_div`).html(`${enterEle}&nbsp;&nbsp;&nbsp;${cancellEle}`)
+      // 編輯模式 ~ 開啟 td 編輯功能
+      $(`.${productId}_watt`).prop('disabled', false)
+      $(`.${productId}_watt`).removeClass('defaultcellType')
+      $(`.${productId}_recommend`).prop('disabled', false)
+      $(`.${productId}_recommend`).removeClass('defaultcellType')
+    }
+  })
+
+  // 資料變更確認 ~ 當任何具有 Enter-btn 類別元素被點擊時觸發
+  $(document).on('click', '.Enter-btn', function () {
+    // 被隱藏的按鈕不能觸發
+    if ($(this).css('display') !== 'none') {
+      // 取得 ID
+      let productId = Number($(this).attr('class').slice(0, 5))
+
+      // 取資料 ~ 只取看的見的元素
+      let wattVal = Number($(`.${productId}_watt:visible`).val())
+      let recVal = Number($(`.${productId}_recommend:visible`).val())
+
+      // 取得吐司容器元素
+      let ToastContainer = document.querySelector('#ToastContainer')
+      // 資料包裝
+      var data = {
+        ProductId: productId,
+        Wattage: wattVal,
+        Recommend: recVal
+      }
+      // 流水號生成
+      let toastId = Math.floor(Math.random() * 1000)
+      // 吐司元素生成
+      let toast = ToastInitialization(toastId)
+      // 發送吐司
+      ToastContainer.insertAdjacentHTML(`afterbegin`, toast)
+      // 狀態值
+      let PromiseStatus = false
+      $(`#${toastId}_Toast`).show()
+      // 發送非同步POST請求 ==> 資料庫資料變更
+      fetch(`${apiUrl}/api/HardwareManage/ProductDataUpdate`, {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+        .then((result) => {
+          // 隱藏吐司 loading
+          $(`#${toastId}_Toast_Status`).addClass('animate__zoomOut')
+          $(`#${toastId}_Toast_Status`).hide()
+          // 如過 HTTP 響應的狀態馬碼在 200 到 299 的範圍內 ==> .ok 會回傳 true
+          if (result.ok) {
+            // 此時 result 是一個請求結果的物件 => 注意傳回值型態，字串用 text()，JSON 用 json()
+            PromiseStatus = true
+            return result.text()
+          }
+          return result.text()
+        })
+        .then((data) => {
+          // 此時 data 為上一個 then 回傳的資料
+          if (PromiseStatus) {
+            // 顯示 吐司成功狀態
+            $(`#${toastId}_ToastIcon_success`).addClass('animate__zoomIn').removeClass('d-none')
+            $(`#${toastId}_ToastText`).text(data)
+            // 顯示進度條
+            $(`#${toastId}_ToastProgress`).show()
+            // 進度條消失
+            ToastProgressDisappear(toastId)
+            // 恢復預設模式 ~ 關閉 td 編輯功能
+            $(`.${productId}_watt`).attr('disabled', true)
+            $(`.${productId}_watt`).addClass('defaultcellType')
+            $(`.${productId}_recommend`).attr('disabled', true)
+            $(`.${productId}_recommend`).addClass('defaultcellType')
+            // 更換成編輯按鈕
+            let editEle = `<button class="${productId}_edit btn Edit-btn d-flex justify-content-center align-items-center" style="width:30px;height:30px;" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-pen-to-square"></i></button>`
+            $(`#${productId}_div`).html(editEle)
+          } else {
+            // 顯示 吐司失敗狀態
+            $(`#${toastId}_ToastIcon_fail`).addClass('animate__zoomIn').removeClass('d-none')
+            $(`#${toastId}_ToastText`).text(data)
+            // 進度條消失
+            $(`#${toastId}_ToastProgress`).show()
+            // 更改顏色
+            $(`#${toastId}_ToastProgress_rect`).css('fill', '#FF0000')
+            // 進度條消失
+            ToastProgressDisappear(toastId)
+          }
+        })
+        .catch((error) => {
+          // 顯示 吐司失敗狀態
+          $(`#${toastId}_ToastIcon_fail`).addClass('animate__zoomIn').removeClass('d-none')
+          $(`#${toastId}_ToastText`).text(error.message)
+        })
+    }
+  })
+
+  // 資料變更取消 ~ 當任何具有 Cancell-btn 類別元素被點擊時觸發
+  $(document).on('click', '.Cancell-btn', function () {
+    // 被隱藏的按鈕不能觸發
+    if ($(this).css('display') !== 'none') {
+      // 取得 ID
+      let productId = Number($(this).attr('class').slice(0, 5))
+      // 取得原始資料
+      let origin = $(this).attr('data-origin').split(',')
+      let wattVal = Number(origin[0])
+      let recVal = Number(origin[1])
+      // 恢復預設模式 ~ 關閉 td 編輯功能
+      $(`.${productId}_watt`).attr('disabled', true)
+      $(`.${productId}_watt`).val(wattVal)
+      $(`.${productId}_watt`).addClass('defaultcellType')
+      $(`.${productId}_recommend`).attr('disabled', true)
+      $(`.${productId}_recommend`).val(recVal)
+      $(`.${productId}_recommend`).addClass('defaultcellType')
+      // 更換成編輯按鈕
+      let editEle = `<button class="${productId}_edit btn Edit-btn d-flex justify-content-center align-items-center" style="width:30px;height:30px;" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-pen-to-square"></i></button>`
+      $(`#${productId}_div`).html(editEle)
+    }
+  })
+})
+
+// 路由離開時觸發
+onBeforeRouteLeave(() => {
+  // 銷毀 DataTable
+  dataTable.clear().draw()
+  dataTable.destroy()
+  dataTable = null
+  // 事件監聽器移除
+  $(document).off('click', '.Enter-btn')
+  $(document).off('click', '.Cancell-btn')
+  $(document).off('click', '.Edit-btn')
+})
+</script>
+<style>
+/* DataTables */
+@import 'datatables.net-dt/css/dataTables.datatables.min.css';
+@import 'datatables.net-fixedheader-dt/css/fixedHeader.dataTables.min.css';
+@import 'datatables.net-rowgroup-dt/css/rowGroup.dataTables.min.css';
+@import 'datatables.net-buttons-dt/css/buttons.dataTables.min.css';
+@import 'datatables.net-responsive-dt/css/responsive.dataTables.min.css';
+</style>
+
+<style>
+/* datatables 頂部布局調整 */
+#HardwareManageTable_wrapper .dt-end .dt-search {
+  text-align: center !important;
+}
+
+#HardwareManageTable_wrapper .dt-middle {
+  text-align: end !important;
+}
+
+/* 編輯按鈕 */
+html[data-bs-theme='dark'] #HardwareManageTable_wrapper .Edit-btn {
+  background-color: #007fff;
+}
+
+html[data-bs-theme='dark'] #HardwareManageTable_wrapper .Edit-btn svg {
+  color: white;
+}
+
+html[data-bs-theme='dark'] #HardwareManageTable_wrapper .Edit-btn:hover {
+  background-color: white;
+}
+
+html[data-bs-theme='dark'] #HardwareManageTable_wrapper .Edit-btn:hover svg {
+  color: #007fff;
+}
+
+html[data-bs-theme='light'] #HardwareManageTable_wrapper .Edit-btn {
+  background-color: white;
+}
+
+html[data-bs-theme='light'] #HardwareManageTable_wrapper .Edit-btn svg {
+  color: #007fff;
+}
+
+html[data-bs-theme='light'] #HardwareManageTable_wrapper .Edit-btn:hover {
+  background-color: #007fff;
+}
+
+html[data-bs-theme='light'] #HardwareManageTable_wrapper .Edit-btn:hover svg {
+  color: white;
+}
+
+/* 確認按鈕 */
+html[data-bs-theme='dark'] #HardwareManageTable_wrapper .Enter-btn {
+  background-color: #00ff00;
+}
+
+html[data-bs-theme='dark'] #HardwareManageTable_wrapper .Enter-btn svg {
+  color: white;
+}
+
+html[data-bs-theme='dark'] #HardwareManageTable_wrapper .Enter-btn:hover {
+  background-color: white;
+}
+
+html[data-bs-theme='dark'] #HardwareManageTable_wrapper .Enter-btn:hover svg {
+  color: #00ff00;
+}
+
+html[data-bs-theme='light'] #HardwareManageTable_wrapper .Enter-btn {
+  background-color: white;
+}
+
+html[data-bs-theme='light'] #HardwareManageTable_wrapper .Enter-btn svg {
+  color: #00ff00;
+}
+
+html[data-bs-theme='light'] #HardwareManageTable_wrapper .Enter-btn:hover {
+  background-color: #00ff00;
+}
+
+html[data-bs-theme='light'] #HardwareManageTable_wrapper .Enter-btn:hover svg {
+  color: white;
+}
+
+/* 還原按鈕 */
+html[data-bs-theme='dark'] #HardwareManageTable_wrapper .Cancell-btn {
+  background-color: #ff0000;
+}
+
+html[data-bs-theme='dark'] #HardwareManageTable_wrapper .Cancell-btn svg {
+  color: white;
+}
+
+html[data-bs-theme='dark'] #HardwareManageTable_wrapper .Cancell-btn:hover {
+  background-color: white;
+}
+
+html[data-bs-theme='dark'] #HardwareManageTable_wrapper .Cancell-btn:hover svg {
+  color: #ff0000;
+}
+
+html[data-bs-theme='light'] #HardwareManageTable_wrapper .Cancell-btn {
+  background-color: white;
+}
+
+html[data-bs-theme='light'] #HardwareManageTable_wrapper .Cancell-btn svg {
+  color: #ff0000;
+}
+
+html[data-bs-theme='light'] #HardwareManageTable_wrapper .Cancell-btn:hover {
+  background-color: #ff0000;
+}
+
+html[data-bs-theme='light'] #HardwareManageTable_wrapper .Cancell-btn:hover svg {
+  color: white;
+}
+
+/* 推薦設定 文字顏色 */
+#HardwareManageTable_wrapper .green-row {
+  color: green !important;
+}
+
+#HardwareManageTable_wrapper .blue-row {
+  color: blue !important;
+}
+
+#HardwareManageTable_wrapper .red-row {
+  color: red !important;
+}
+
+/* 吐司預設樣式 */
+html[data-bs-theme='dark'] .defaultToast {
+  height: 47px;
+  width: 250px;
+  background-color: black !important;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+html[data-bs-theme='light'] .defaultToast {
+  height: 47px;
+  width: 250px;
+  background-color: white !important;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.ToastIcon-success {
+  background-color: #00ff00;
+  height: 1.2rem;
+  width: 1.2rem;
+  border-radius: 50%;
+}
+
+html[data-bs-theme='dark'] .ToastIcon-success svg {
+  color: black;
+  width: 1rem;
+  height: 1rem;
+}
+
+html[data-bs-theme='light'] .ToastIcon-success svg {
+  color: white;
+  width: 1rem;
+  height: 1rem;
+}
+
+.ToastIcon-fail {
+  background-color: #ff0000;
+  height: 1.2rem;
+  width: 1.2rem;
+  border-radius: 50%;
+}
+
+html[data-bs-theme='dark'] .ToastIcon-fail svg {
+  color: black;
+  width: 1rem;
+  height: 1rem;
+}
+
+html[data-bs-theme='light'] .ToastIcon-fail svg {
+  color: white;
+  width: 1rem;
+  height: 1rem;
+}
+
+/* 表格的佈局採用固定佈局算法 */
+body {
+  table-layout: fixed;
+}
+
+/* 欄位預設樣式 */
+html[data-bs-theme='dark'] #HardwareManageTable_wrapper .defaultcellType {
+  border: none; /* 取消邊框 */
+  background-color: transparent; /* 背景透明 */
+  appearance: none; /* 去除默認樣式 */
+  color: #c2c2d9; /* 文字顏色 */
+}
+
+html[data-bs-theme='light'] #HardwareManageTable_wrapper .defaultcellType {
+  border: none; /* 取消邊框 */
+  background-color: transparent; /* 背景透明 */
+  appearance: none; /* 去除默認樣式 */
+  color: #607080; /* 文字顏色 */
+}
+</style>

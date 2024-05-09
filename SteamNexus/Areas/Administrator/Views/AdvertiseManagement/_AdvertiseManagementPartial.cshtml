@@ -1,4 +1,5 @@
-﻿@* PartialView 的 CSS *@
+﻿@model Advertisement;
+@* PartialView 的 CSS *@
 <style asp-add-nested-styles="true">
 
     /***** datatables 自訂樣式 *****/
@@ -23,7 +24,6 @@
         /* 將表格的列寬設置為固定值，以確保列寬不會根據內容而自動調整 */
     }
 </style>
-
 @* PartialView 的 HTML *@
 <div class="page-title position-relative">
     <div class="row">
@@ -53,40 +53,59 @@
         </thead>
     </table>
 </section>
+<!-- Bootstrap Modal -->
+<div class="modal fade" id="addAdvertisementModal" tabindex="-1" role="dialog" aria-labelledby="addAdvertisementModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addAdvertisementModalLabel">新增廣告</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- 在這裡放置新增廣告的表單元素 -->
+                <form id="addAdvertisementForm">
+                    <div class="form-group">
+                        <label asp-for="Title">標題</label>
+                        <input asp-for="Title" class="form-control">
+                        <span asp-validation-for="Title" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Url">Url</label>
+                        <input asp-for="Url" class="form-control">
+                        <span asp-validation-for="Url" class="text-danger"></span>
+                    </div>
+                    @* <div class="form-group">
+                        <label asp-for="ImagePath">圖片</label>
+                        <input asp-for="ImagePath" class="form-control">
+                        <span asp-validation-for="ImagePath" class="text-danger"></span>
+                    </div> *@
+                    <div class="form-group">
+                        <label asp-for="ImagePath">圖片</label><br/>
+                        <input type="file" class="form-control-file" id="imageInput" accept="image/*">
+                        <img src="#" id="imagePreview" alt="圖片預覽" style="display: none; max-width: 100%;">
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Discription">說明</label>
+                        <textarea asp-for="Discription" class="form-control" rows="3"></textarea>
+                        <span asp-validation-for="Discription" class="text-danger"></span>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
+                <button type="button" class="btn btn-primary" id="CreateSaveBtn">新增</button>
+            </div>
+        </div>
+    </div>
+</div>
+@{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
 @* PartialView 的 JavaScript *@
 <script>
     $(document).ready(function () {
         let baseAddress = "https://localhost:7097";
-        // var datatable = new DataTable('#AdvertiseManageTable', {
-        //     ajax: {
-        //         type: "GET",
-        //         url: `@Url.Action("AdvertiseManagementJson", "AdvertiseManagement", new { area = "Administrator" })`,
-        //         dataSrc: function (json) { return json; }
-        //     },
-        //     columns:[
-        //         { "data": "advertisementId", "width":"20%"},
-        //         { "data": "title", "width": "20%" },
-        //         { "data": "url", "width": "20%" },
-        //         { "data": "imagePath", "width": "20%" },
-        //         { "data": "discription", "width": "20%" }
-        //     ],
-        //     fixedHeader: {
-        //         // 固定 header
-        //         header: true,
-        //         // 使用導覽欄的高度作為偏移量
-        //         headerOffset: $('#pageNav').outerHeight(),
-        //     },
-        //     // 響應式設計
-        //     responsive: true,
-        //     // 語言設定
-        //     language: {
-        //         url: '//cdn.datatables.net/plug-ins/2.0.3/i18n/zh-HANT.json',
-        //     },
-        //     // 預設排序 ~ 根據第一個欄位 升冪排序
-        //     order: [[1, 'asc']],
-        //     // 自動寬度 關閉
-        //     autoWidth: true,
-        // })
         var datatable = new DataTable('#AdvertiseManageTable', {
             columns: [
                 { "data": "advertisementId", "width": "5%" },
@@ -102,19 +121,18 @@
                 { "data": "discription", "width": "10%" },
                 {
                     "data": "isShow",
-                    "width": "8%",
+                    "width": "15%",
                     "className": "text-center",
-                    // 推薦 ~ 下拉式選單
-                    render: function (data, type, row) {
+                    "render": function (data, type, row) {
                         // data: 欄位的資料值
                         // type: render 的呼叫類型，例如 'display', 'filter', 'sort', 'type'
                         // row: 包含整列資料的物件
                         let AdId = row.advertisementId;
                         const Show = data ? 'checked' : '';
                         const UnShow = data ? '' : 'checked';
-                        let showEle = `<input type="radio" name = "${AdId}" value = "true" data - AdId="${AdId}" id = "${AdId}Show" ${Show}> <label for= "${AdId}Show" >上架</label>`;
-                        let unShowEle = `<input type="radio" name="${AdId}" value="false" data-AdId="${AdId}" id="${AdId}UnShow" ${UnShow}><label for="${AdId}UnShow">下架</label>`;
-                        return `${showEle}<br/>${unShowEle}`;
+                        let showEle = `<input type="radio" class="radio-isShow" name = "${AdId}" value = "true" data-AdId="${AdId}" id = "${AdId}Show" ${Show}><label for= "${AdId}Show" style="margin-right: 10px">上架</label>`;
+                        let unShowEle = `<input type="radio" class="radio-isShow" name="${AdId}" value="false" data-AdId="${AdId}" id="${AdId}UnShow" ${UnShow}><label for="${AdId}UnShow">下架</label>`;
+                        return `${showEle}${unShowEle}`;
                     }
                 },
                 {
@@ -123,14 +141,14 @@
                     "width": "5%",
                     "className": "text-center",
                     // 按鈕 自定義
-                    render: function (data, type, row) {
+                    "render": function (data, type, row) {
                         // 取得 productId
                         let title = row.title;
                         let AdId = row.advertisementId;
                         // 編輯按鈕
-                        let editEle = '<button data-AdId="' + AdId + '"  data-title="' + title + '" id="edit_button" data-bs-toggle="popover" data-bs-content="nothing"><i class="bi bi-pencil-square"></i></button>';
+                        let editEle = '<button data-AdId="' + AdId + '"  data-title="' + title + '" id="edit_button" data-bs-toggle="modal" data-bs-target="editView"><i class="bi bi-pencil-square"></i></button>';
                         // 刪除按鈕
-                        let deletEle = '<button data-AdId="' + AdId + '"  data-title="' + title + '" id="delete_button" data-bs-toggle="popover" data-bs-content="nothing"><i class="bi bi-trash3"></i></button>';
+                        let deletEle = '<button data-AdId="' + AdId + '"  data-title="' + title + '" id="delete_button" data-bs-toggle="modal" data-bs-content="deletView"><i class="bi bi-trash3"></i></button>';
                         if (type === 'display') {
                             return `${editEle}${deletEle}`;
                         }
@@ -152,6 +170,20 @@
             order: [[0, 'asc']],
             // 自動寬度 開啟
             autoWidth: true,
+            layout:{
+                topMiddile: {
+                    //Create按鈕建立
+                    buttons:[
+                        {
+                            text:'新增廣告',
+                            action: function () {
+                                // 彈出 Bootstrap modal 表單
+                                $('#addAdvertisementModal').modal('show');
+                            }
+                        }
+                    ]
+                },
+            },
         });
 
         // 使用 Fetch API 取得資料並設定至 DataTable
@@ -163,12 +195,52 @@
                 return response.json();
             })
             .then(jsonData => {
-                datatable.clear().rows.add(jsonData).draw();
+                datatable.rows.add(jsonData).draw();
             })
             .catch(error => {
                 console.error('Fetch error:', error);
             });
 
+        // 監聽上下架按鈕的 change 事件
+        $(document).on('change','.radio-isShow', function () {
+            // alert("change");
+            const adId = $(this).data('adid');
+            const isShow = $(this).val() === 'true';
+            // // alert(`change ${adId} ${isShow}`);
+            fetch(`@Url.Action("UpdateIsShow", "AdvertiseManagement", new { area = "Administrator" })?adId=${adId}&isShow=${isShow}`, {
+                method: 'PUT',
+            }).then(response => {
+                if (response.ok) {
+                    return response.text();
+                }
+                else {
+                    return respone.text();
+                }
+            }).then(result => {
+                    alert(result); // 處理成功回應的操作
+            }).catch(error => {
+                    alert(error); // 處理錯誤
+            });
+        });
+
+        // 圖片預覽
+        $(document).on('change', '#imageInput', function () {
+            const file = event.target.files[0];
+            // 檢查是否選擇了圖片
+            if (file) {
+                // 顯示圖片預覽
+                $("#imagePreview").css('display', 'block');
+                $("#imagePreview").attr('src', URL.createObjectURL(file));
+            }
+        })
+
+        // 新增廣告上傳
+        $(document).on('click', 'CreateSaveBtn', function () {
+
+            fetch('@Url.Action("Create", "AdvertiseManagement", new { area = "Administrator" })', {
+                
+            }).then().then().catch();
+        });
     });
 </script>
 
