@@ -7,7 +7,11 @@
         <CContainer class="px-0">
           <!-- 進度條元件 -->
           <transition name="p_slide">
-            <web-scraper-progress class="p_element" v-if="scraperState"></web-scraper-progress>
+            <web-scraper-progress
+              class="p_element"
+              v-if="scraperState"
+              :update-type="UpdateType"
+            ></web-scraper-progress>
           </transition>
           <!-- 後台子系統 -->
           <router-view
@@ -42,7 +46,6 @@ const UpdateType = ref('')
 function UpdateOneHardware(hardwareId, productType) {
   // 啟動進度條
   UpdateType.value = productType
-  console.log(typeof UpdateType.value)
   scraperState.value = true
   // 發送非同步POST請求 ==> 資料庫資料變更
   var data = {
@@ -81,7 +84,6 @@ function UpdateOneHardware(hardwareId, productType) {
 function UpdateAllHardware(productType) {
   // 啟動進度條
   UpdateType.value = productType
-  console.log(typeof UpdateType.value)
   scraperState.value = true
   // 發送非同步POST請求 ==> 資料庫資料變更
   fetch(`${apiUrl}/api/HardwareManage/UpdateHardwareAll`, {

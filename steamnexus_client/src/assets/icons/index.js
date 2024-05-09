@@ -79,7 +79,8 @@ import {
   cilUserFemale,
   cilUserFollow,
   cilXCircle,
-  cilGamepad
+  cilGamepad,
+  cilCheckAlt
 } from '@coreui/icons'
 
 export const iconsSet = Object.assign(
@@ -138,7 +139,8 @@ export const iconsSet = Object.assign(
     cilUserFemale,
     cilUserFollow,
     cilXCircle,
-    cilGamepad
+    cilGamepad,
+    cilCheckAlt
   },
   {
     cifUs,

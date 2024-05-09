@@ -162,47 +162,113 @@ namespace SteamNexus_Server.Controllers
 
         // POST: api/HardwareManage/UpdateHardwareOne
         [HttpPost("UpdateHardwareOne")]
-        public IActionResult UpdateHardwareOne([FromBody] HardwareType data)
+        public async Task<IActionResult> UpdateHardwareOne([FromBody] HardwareType data)
         {
             // 如果驗證合法
             if (ModelState.IsValid)
             {
+                CoolPCWebScraping.eventMessage = "爬蟲啟動中";
                 _coolPCWebScraping.UpdateAllComponentClassifications();
                 switch (data.Type)
                 {
                     case (int)ComputerPartCategory.Type.CPU:
-                        CoolPCWebScraping.eventMessage = "CPU 更新中";
+                        CoolPCWebScraping.eventMessage = "CPU 解析中";
+                        await Task.Delay(500);
                         _coolPCWebScraping.UpdateCPU();
+                        CoolPCWebScraping.eventMessage = "CPU 資料更新中";
+                        await Task.Delay(500);
+                        CoolPCWebScraping.eventMessage = "更新成功";
+                        await Task.Delay(500);
                         return Ok("CPU 更新成功");
                     case (int)ComputerPartCategory.Type.MB:
+                        CoolPCWebScraping.eventMessage = "Motherboard 解析中";
+                        await Task.Delay(500);
                         _coolPCWebScraping.UpdateMB();
+                        CoolPCWebScraping.eventMessage = "Motherboard 資料更新中";
+                        await Task.Delay(500);
+                        CoolPCWebScraping.eventMessage = "更新成功";
+                        await Task.Delay(500);
                         return Ok("MB 更新成功");
                     case (int)ComputerPartCategory.Type.RAM:
+                        CoolPCWebScraping.eventMessage = "RAM 解析中";
+                        await Task.Delay(500);
                         _coolPCWebScraping.UpdateRAM();
+                        CoolPCWebScraping.eventMessage = "RAM 資料更新中";
+                        await Task.Delay(500);
+                        CoolPCWebScraping.eventMessage = "更新成功";
+                        await Task.Delay(500);
                         return Ok("RAM 更新成功");
                     case (int)ComputerPartCategory.Type.SSD:
+                        CoolPCWebScraping.eventMessage = "SSD 解析中";
+                        await Task.Delay(500);
                         _coolPCWebScraping.UpdateSSD();
+                        CoolPCWebScraping.eventMessage = "SSD 資料更新中";
+                        await Task.Delay(500);
+                        CoolPCWebScraping.eventMessage = "更新成功";
+                        await Task.Delay(500);
                         return Ok("SSD 更新成功");
                     case (int)ComputerPartCategory.Type.HDD:
+                        CoolPCWebScraping.eventMessage = "HDD 解析中";
+                        await Task.Delay(500);
                         _coolPCWebScraping.UpdateHDD();
+                        CoolPCWebScraping.eventMessage = "HDD 資料更新中";
+                        await Task.Delay(500);
+                        CoolPCWebScraping.eventMessage = "更新成功";
+                        await Task.Delay(500);
                         return Ok("HDD 更新成功");
                     case (int)ComputerPartCategory.Type.AirCooler:
+                        CoolPCWebScraping.eventMessage = "AirCooler 解析中";
+                        await Task.Delay(500);
                         _coolPCWebScraping.UpdateAirCooler();
+                        CoolPCWebScraping.eventMessage = "AirCooler 資料更新中";
+                        await Task.Delay(500);
+                        CoolPCWebScraping.eventMessage = "更新成功";
+                        await Task.Delay(500);
                         return Ok("AirCooler 更新成功");
                     case (int)ComputerPartCategory.Type.LiquidCooler:
+                        CoolPCWebScraping.eventMessage = "LiquidCooler 解析中";
+                        await Task.Delay(500);
                         _coolPCWebScraping.UpdateLiquidCooler();
+                        CoolPCWebScraping.eventMessage = "LiquidCooler 資料更新中";
+                        await Task.Delay(500);
+                        CoolPCWebScraping.eventMessage = "更新成功";
+                        await Task.Delay(500);
                         return Ok("LiquidCooler 更新成功");
                     case (int)ComputerPartCategory.Type.GPU:
+                        CoolPCWebScraping.eventMessage = "GPU 解析中";
+                        await Task.Delay(500);
                         _coolPCWebScraping.UpdateGPU();
+                        CoolPCWebScraping.eventMessage = "GPU 資料更新中";
+                        await Task.Delay(500);
+                        CoolPCWebScraping.eventMessage = "更新成功";
+                        await Task.Delay(500);
                         return Ok("GPU 更新成功");
                     case (int)ComputerPartCategory.Type.CASE:
+                        CoolPCWebScraping.eventMessage = "CASE 解析中";
+                        await Task.Delay(500);
                         _coolPCWebScraping.UpdateCASE();
+                        CoolPCWebScraping.eventMessage = "CASE 資料更新中";
+                        await Task.Delay(500);
+                        CoolPCWebScraping.eventMessage = "更新成功";
+                        await Task.Delay(500);
                         return Ok("CASE 更新成功");
                     case (int)ComputerPartCategory.Type.PSU:
+                        CoolPCWebScraping.eventMessage = "PSU 解析中";
+                        await Task.Delay(500);
                         _coolPCWebScraping.UpdatePSU();
+                        CoolPCWebScraping.eventMessage = "PSU 資料更新中";
+                        await Task.Delay(500);
+                        CoolPCWebScraping.eventMessage = "更新成功";
+                        await Task.Delay(500);
                         return Ok("PSU 更新成功");
                     case (int)ComputerPartCategory.Type.OS:
+                        CoolPCWebScraping.eventMessage = "OS 解析中";
+                        await Task.Delay(500);
                         _coolPCWebScraping.UpdateOS();
+                        CoolPCWebScraping.eventMessage = "OS 資料更新中";
+                        await Task.Delay(500);
+                        CoolPCWebScraping.eventMessage = "更新成功";
+                        await Task.Delay(500);
                         return Ok("OS 更新成功");
                     default:
                         return BadRequest("更新失敗");
