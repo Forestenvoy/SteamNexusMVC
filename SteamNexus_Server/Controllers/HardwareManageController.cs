@@ -157,7 +157,7 @@ namespace SteamNexus_Server.Controllers
             public int Type { get; set; }
         }
 
-        // POST: Admin/UpdateHardwareOne
+        // POST: api/HardwareManage/UpdateHardwareOne
         [HttpPost("UpdateHardwareOne")]
         public IActionResult UpdateHardwareOne([FromBody] HardwareType data)
         {
@@ -211,7 +211,7 @@ namespace SteamNexus_Server.Controllers
         }
 
         // 全零件更新
-        // POST: Admin/UpdateHardwareAll
+        // POST: api/HardwareManage/UpdateHardwareAll
         [HttpPost("UpdateHardwareAll")]
         public IActionResult UpdateHardwareAll()
         {
