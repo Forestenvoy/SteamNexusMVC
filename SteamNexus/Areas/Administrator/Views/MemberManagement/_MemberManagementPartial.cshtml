@@ -774,7 +774,7 @@
         });
 
 
-        //確認Email是否存在，如已存在會即時顯示通知
+        //確認Email是否存在，如以存在會即時顯示通知
         $(document).ready(function () {
             $('#email').on('input', function () {
                 var email = $(this).val();
@@ -786,10 +786,10 @@
                         success: function (isAvailable) {
                             var feedbackElement = $('#emailFeedback');
                             if (isAvailable) {
-                                feedbackElement.text('Email 可用').removeClass('invalid-feedback').addClass('valid-feedback');
+                                feedbackElement.text('此Email 可以使用').removeClass('invalid-feedback').addClass('valid-feedback');
                                 $('#email').removeClass('is-invalid').addClass('is-valid');
                             } else {
-                                feedbackElement.text('該 Email 已被使用').removeClass('valid-feedback').addClass('invalid-feedback');
+                                feedbackElement.text('該 Email 已被使用，請更換Email').removeClass('valid-feedback').addClass('invalid-feedback');
                                 $('#email').removeClass('is-valid').addClass('is-invalid');
                             }
                             feedbackElement.show();  // 確保提示信息顯示
