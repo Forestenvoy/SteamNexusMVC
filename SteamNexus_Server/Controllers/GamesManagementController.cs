@@ -288,7 +288,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
             int errNum = 0;
             int priceErrNum = 0;
 
-            for (int GameId = 10021; GameId <= num; GameId++)
+            for (int GameId = 10000; GameId <= num; GameId++)
             {
                 Console.WriteLine(GameId);
                 await Task.Delay(1400);
