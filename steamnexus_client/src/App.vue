@@ -32,13 +32,13 @@ onBeforeMount(() => {
 })
 
 onMounted(() => {
-  const loadingAnimation = document.getElementById('LoadingAnimation')
-  loadingAnimation.classList.add('animate__animated', 'animate__zoomOut')
+  const loadingAnimation = document.getElementById('AnimationContainer')
+  loadingAnimation.classList.add('animate__animated', 'animate__fadeOut')
   setTimeout(() => {
     loadingAnimation.remove()
     const animationCSS = document.querySelector('link[href="/css/webEnterAnimation.css"]')
     animationCSS.remove()
-  }, 100)
+  }, 1000)
 })
 </script>
 
