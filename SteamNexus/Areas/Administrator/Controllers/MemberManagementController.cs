@@ -299,7 +299,9 @@ namespace SteamNexus.Areas.Administrator.Controllers
                     }
 
                     // 儲存新的圖片
+                    //Guid.NewGuid().ToString():將圖片轉成字串(亂數)；Path.GetExtension(imagesFile.FileName):擷取圖片附檔名
                     string filename = Guid.NewGuid().ToString() + Path.GetExtension(data.Photo.FileName);
+                    //圖片儲存路徑
                     string uploadfolder = Path.Combine(_webHost.WebRootPath, "images/headshots");
                     string filepath = Path.Combine(uploadfolder, filename);
 
@@ -427,7 +429,9 @@ namespace SteamNexus.Areas.Administrator.Controllers
                 var photoFile = data.Photo;
                 if (photoFile != null && photoFile.Length > 0)
                 {
+                    //Guid.NewGuid().ToString():將圖片轉成字串(亂數)；Path.GetExtension(imagesFile.FileName):擷取圖片附檔名
                     string filename = Guid.NewGuid().ToString() + Path.GetExtension(photoFile.FileName);
+                    //圖片儲存路徑
                     string uploadfolder = Path.Combine(_webHost.WebRootPath, "images/headshots");
                     string filepath = Path.Combine(uploadfolder, filename);
 
@@ -450,11 +454,11 @@ namespace SteamNexus.Areas.Administrator.Controllers
                 {
                     Name = data.Name,
                     Email = data.Email,
-                    Password = HashPassword(data.Password), // 使用合适的密码哈希方法
+                    Password = HashPassword(data.Password), // 使用密碼哈希方法進行密碼加密
                     Birthday = data.Birthday,
                     Phone = data.Phone,
                     Gender = data.Gender,
-                    Photo = photoPath, // 假设您的數據模型中包含存儲照片路徑的属性
+                    Photo = photoPath, // 數據模型中包含存儲照片路徑的屬性
                     RoleId = 10000
                 });
                 await _application.SaveChangesAsync();
@@ -473,6 +477,16 @@ namespace SteamNexus.Areas.Administrator.Controllers
         #endregion
 
 
+        #region 確認權限是否存在
+        [HttpGet]
+        public async Task<IActionResult> CheckRolesExists(string rolename)
+        {
+            bool exists = await _application.Roles.AnyAsync(e => e.RoleName == rolename);
+            return Json(!exists);  // 返回 false 表示 Role 已存在
+        }
+        #endregion
+
+
         #region 密碼加密
         private string HashPassword(string password)
         {
@@ -484,5 +498,16 @@ namespace SteamNexus.Areas.Administrator.Controllers
             }
         }
         #endregion
+
+
+        #region 確認Email是否存在
+        [HttpGet]
+        public async Task<IActionResult> CheckEmailExists(string email)
+        {
+            bool exists = await _application.Users.AnyAsync(u => u.Email == email);
+            return Json(!exists);  // 返回 false 表示 Email 已存在
+        }
+        #endregion
+
     }
 }

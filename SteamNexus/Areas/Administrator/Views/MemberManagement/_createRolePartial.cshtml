@@ -1,5 +1,21 @@
 ﻿@* PartialView 的 CSS *@
 <link href="~/css/hardwareproductmanagesystem.css" rel="stylesheet" asp-append-version="true" />
+
+<style>
+    .valid-feedback {
+        color: green;
+        display: none;
+        /* 預設不顯示，除非添加此類 */
+    }
+
+    .invalid-feedback {
+        color: red;
+        display: none;
+        /* 預設不顯示，除非添加此類 */
+    }
+
+</style>
+
 @* PartialView 的 HTML *@
 <div class="page-title position-relative">
     <div class="row">
@@ -31,6 +47,7 @@
     </table>
 </section>
 
+@* 新增權限的浮動式窗 *@
 <div class="modal fade" id="createrole" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
@@ -42,13 +59,14 @@
         <form id="createRoles">
             <div class="input-group input-group-lg mb-3">
                 <span class="input-group-text" id="inputGroup-sizing-lg" style="color:white">權限名稱：</span>
-                        <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" id="Roles_name" pattern="[A-Za-z]+" title="只能輸入大小寫英文">
+                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" id="Roles_name" pattern="[A-Za-z]+" title="只能輸入大小寫英文">
+                <div id="rolesFeedback" class="invalid-feedback"></div>
             </div>
         </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" id="crate">新增</button>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉視窗</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="crateroles">關閉視窗</button>
       </div>
     </div>
   </div>
@@ -123,12 +141,96 @@
 
         });
 
+        // 顯示窗口
         $(document).on('click', '#createRoles', function () {
-
-            // 顯示窗口
             $('#createrole').modal('show');
         });
 
+        //確認權限是否存在，如以存在會即時顯示通知
+        // $(document).ready(function () {
+        //     $('#Roles_name').on('input', function () {
+        //         var rolename = $(this).val();
+        //         if (rolename) {
+        //             $.ajax({
+        //                 url: '@Url.Action("CheckRolesExists", "MemberManagement", new { area = "Administrator" })',  // 確保路徑正確
+        //                 data: { roleName: rolename },
+        //                 method: 'GET',
+        //                 success: function (isAvailable) {
+        //                     var feedbackElement = $('#rolesFeedback');
+        //                     if (isAvailable) {
+        //                         feedbackElement.text('此權限可以使用').removeClass('invalid-feedback').addClass('valid-feedback');
+        //                         $('#Roles_name').removeClass('is-invalid').addClass('is-valid');
+        //                         $('#crate').prop('disabled', false);
+        //                     } else {
+        //                         feedbackElement.text('該權限已被使用，請更換權限').removeClass('valid-feedback').addClass('invalid-feedback');
+        //                         $('#Roles_name').removeClass('is-valid').addClass('is-invalid');
+        //                         $('#crate').prop('disabled', true);
+        //                     }
+        //                     feedbackElement.show();  // 確保提示信息顯示
+        //                 },
+        //                 error: function () {
+        //                     $('#rolesFeedback').text('無法檢查權限').addClass('invalid-feedback');
+        //                     $('#rolesFeedback').show();
+        //                     $('#crate').prop('disabled', true);
+        //                 }
+        //             });
+        //         } else {
+        //             $('#rolesFeedback').hide();  // 當 RoleName 欄位為空時，不顯示任何反饋
+        //             $('#crate').prop('disabled', true);
+        //         }
+        //     });
+        // });
+
+
+        //檢查權限是否存在與使用者輸入是否為英文大小寫
+        $(document).ready(function () {
+            $('#Roles_name').on('input', function () {
+                var rolename = $(this).val();
+                var feedbackElement = $('#rolesFeedback');
+                // 使用正則表達式檢查是否僅包含英文大小寫字母
+                var isValidEnglish = /^[A-Za-z]+$/.test(rolename);
+
+                // 首先判斷是否為空，如果為空則隱藏所有提示並禁用按鈕
+                if (rolename === '') {
+                    feedbackElement.text('').hide();
+                    $('#Roles_name').removeClass('is-valid is-invalid');
+                    $('#create').prop('disabled', true);
+                } else if (!isValidEnglish) {
+                    // 如果不是空但輸入非英文，顯示錯誤信息
+                    feedbackElement.text('請輸入英文大小寫').removeClass('valid-feedback').addClass('invalid-feedback');
+                    $('#Roles_name').removeClass('is-valid').addClass('is-invalid');
+                    $('#create').prop('disabled', true);
+                    feedbackElement.show();
+                } else {
+                    // 如果輸入僅包含英文，則進行 AJAX 請求檢查角色名稱是否存在
+                    $.ajax({
+                        url: '@Url.Action("CheckRolesExists", "MemberManagement", new { area = "Administrator" })',
+                        data: { roleName: rolename },
+                        method: 'GET',
+                        success: function (isAvailable) {
+                            if (isAvailable) {
+                                feedbackElement.text('此角色可以使用').removeClass('invalid-feedback').addClass('valid-feedback');
+                                $('#Roles_name').removeClass('is-invalid').addClass('is-valid');
+                                $('#create').prop('disabled', false);
+                            } else {
+                                feedbackElement.text('該角色已被使用，請更換角色名稱').removeClass('valid-feedback').addClass('invalid-feedback');
+                                $('#Roles_name').removeClass('is-valid').addClass('is-invalid');
+                                $('#create').prop('disabled', true);
+                            }
+                            feedbackElement.show();
+                        },
+                        error: function () {
+                            feedbackElement.text('無法檢查角色').addClass('invalid-feedback');
+                            feedbackElement.show();
+                            $('#create').prop('disabled', true);
+                        }
+                    });
+                }
+            });
+        });
+
+
+        //新增權限
         $(document).on('click', '#crate', function () {
             // 收集表單數據
             var roleName = $('#Roles_name').val();
@@ -167,6 +269,7 @@
             });
         });
 
+
         //刪除權限
         $(document).on('click', '.del-btn', function () {
             const roleId = $(this).data('roleid');
@@ -191,6 +294,33 @@
                     alert('發生錯誤: ' + error.responseText);
                 }
             });
+        });
+
+
+        //點擊關閉視窗重製資料
+        $(document).ready(function () {
+            $('button[data-bs-dismiss="crateroles"]').click(function () {
+                resetForm();
+            });
+
+            // 綁定 ESC 鍵到 document，按下時執行重置表單
+            $(document).keydown(function (e) {
+                if (e.keyCode == 27) {  // 27 是 ESC 鍵的鍵盤代碼
+                    resetForm();
+                }
+            });
+
+            // 重置表單
+            function resetForm() {
+                $('#Roles_name').val('');
+                $('#rolesFeedback').text('').hide();
+                $('#Roles_name').removeClass('is-valid is-invalid');
+
+                // 隱藏模態窗口
+                $('#createrole').modal('hide');
+            }
+
+
         });
 
     });
