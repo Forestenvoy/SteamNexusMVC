@@ -42,20 +42,22 @@
         document.documentElement.dataset.coreuiTheme = 'dark'
       }
     </script>
-    <link rel="stylesheet" href="/css/webEnterAnimation.css" />
+    <link rel="stylesheet" href="/css/webAnimation.css" style="animation-delay: 2s" />
     <title>SteamNexus</title>
   </head>
   <body>
-    <div id="LoadingAnimation">
-      <div class="wave"></div>
-      <div class="wave"></div>
-      <div class="wave"></div>
+    <div id="AnimationContainer">
+      <div id="bg">
+        <canvas></canvas>
+        <canvas></canvas>
+        <canvas></canvas>
+      </div>
       <div class="pagePreLoading-Container">
         <div class="div-A">
           <div class="div-B">
             <div class="row row1">
               <div class="div-C">
-                <img src="/img/logo512x512.svg" class="pagePreLoading-Logo" />
+                <img src="../img/logo.png" class="pagePreLoading-Logo" />
               </div>
               <div class="div-D">
                 <div class="pagePreLoading-Text">STEAMNEXUS</div>
@@ -74,7 +76,6 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     ></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js"
       asp-append-version="true"
@@ -82,5 +83,7 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     ></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="/js/webAnimation.js" type="text/javascript"></script>
   </body>
 </html>
