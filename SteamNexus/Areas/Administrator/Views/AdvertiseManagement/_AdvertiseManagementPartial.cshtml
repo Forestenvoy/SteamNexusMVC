@@ -34,7 +34,7 @@
         @* 系統選單 *@
         <div class="col-12 col-md-6 order-md-2 d-flex justify-content-center justify-content-md-end" id="SystemMenu">
             @* <select asp-items="@ViewBag.ComputerParts" class="form-select " style="width:250px;height:40px;margin-bottom:8px" id="HardSelect">
-                <option value="" disabled selected hidden>---- 請選擇硬體 ----</option>
+            <option value="" disabled selected hidden>---- 請選擇硬體 ----</option>
             </select> *@
         </div>
     </div>
@@ -53,7 +53,7 @@
         </thead>
     </table>
 </section>
-<!-- Bootstrap Modal -->
+<!-- Create Bootstrap Modal -->
 <div class="modal fade" id="addAdvertisementModal" tabindex="-1" role="dialog" aria-labelledby="addAdvertisementModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -75,16 +75,15 @@
                         <span asp-validation-for="Url" class="text-danger"></span>
                     </div>
                     @* <div class="form-group">
-                        <label asp-for="ImagePath">圖片</label>
-                        <input asp-for="ImagePath" class="form-control">
-                        <span asp-validation-for="ImagePath" class="text-danger"></span>
+                    <label asp-for="ImagePath">圖片</label>
+                    <input asp-for="ImagePath" class="form-control">
+                    <span asp-validation-for="ImagePath" class="text-danger"></span>
                     </div> *@
                     <div class="form-group">
-                        <label asp-for="ImagePath">圖片</label><br/>
+                        <label>圖片</label><br />
                         <input type="file" class="form-control-file" id="imageInput" accept="image/*">
                         <img src="#" id="imagePreview" alt="圖片預覽" style="display: none; max-width: 100%;">
                     </div>
-
                     <div class="form-group">
                         <label asp-for="Discription">說明</label>
                         <textarea asp-for="Discription" class="form-control" rows="3"></textarea>
@@ -93,15 +92,73 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
                 <button type="button" class="btn btn-primary" id="CreateSaveBtn">新增</button>
             </div>
         </div>
     </div>
 </div>
-@{
-    await Html.RenderPartialAsync("_ValidationScriptsPartial");
-}
+
+<!-- Delete Bootstrap Modal -->
+<div class="modal fade" id="deleteAdvertisementModal" tabindex="-1" role="dialog" aria-labelledby="deleteAdvertisementModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteAdvertisementModalLabel">刪除廣告</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <span>ID:</span><p id="deleteId"></p>
+                <span>標題:</span><p id="deleteTitle"></p>
+                <span>Url:</span><p id="deleteUrl"></p>
+                <span>圖片:</span><img id="deleteImage" src="" style="width:80%"></img><br />
+                <span>說明:</span><p id="deleteDiscription"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                <button type="button" class="btn btn-danger" id="deleteBtn">確認刪除</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Edit Bootstrap Modal -->
+<div class="modal fade" id="editAdvertisementModal" tabindex="-1" role="dialog" aria-labelledby="editAdvertisementModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editAdvertisementModalLabel">編輯廣告</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editAdvertisementForm">
+                    <input id="editId" name="editId" hidden>
+                    <div class="form-group">
+                        <label for="editTitle">標題</label>
+                        <input id="editTitle" name="editTitle" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="editUrl">Url</label>
+                        <input id="editUrl" name="editUrl" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>圖片</label><br />
+                        <input type="file" class="form-control-file" id="editImageInput" accept="image/*">
+                        <img src="" id="editImagePreview" alt="圖片預覽" style="max-width: 100%;">
+                    </div>
+                    <div class="form-group">
+                        <label for="editDiscription">說明</label>
+                        <textarea id="editDiscription" name="editDiscription" class="form-control" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                <button type="button" class="btn btn-primary" id="editSaveBtn">儲存修改</button>
+            </div>
+        </div>
+    </div>
+</div>
+@Html.AntiForgeryToken();
 @* PartialView 的 JavaScript *@
 <script>
     $(document).ready(function () {
@@ -145,10 +202,13 @@
                         // 取得 productId
                         let title = row.title;
                         let AdId = row.advertisementId;
+                        let url = row.url;
+                        let disc = row.discription;
+                        let image = row.imagePath;
                         // 編輯按鈕
-                        let editEle = '<button data-AdId="' + AdId + '"  data-title="' + title + '" id="edit_button" data-bs-toggle="modal" data-bs-target="editView"><i class="bi bi-pencil-square"></i></button>';
+                        let editEle = '<button data-AdId="' + AdId + '"  data-title="' + title + '"  data-url="' + url + '"  data-disc="' + disc + '"  data-image="' + image + '" id="edit_button"><i class="bi bi-pencil-square"></i></button>';
                         // 刪除按鈕
-                        let deletEle = '<button data-AdId="' + AdId + '"  data-title="' + title + '" id="delete_button" data-bs-toggle="modal" data-bs-content="deletView"><i class="bi bi-trash3"></i></button>';
+                        let deletEle = '<button data-AdId="' + AdId + '"  data-title="' + title + '"  data-url="' + url + '"  data-disc="' + disc + '"  data-image="' + image + '" id="delete_button"><i class="bi bi-trash3"></i></button>';
                         if (type === 'display') {
                             return `${editEle}${deletEle}`;
                         }
@@ -170,12 +230,12 @@
             order: [[0, 'asc']],
             // 自動寬度 開啟
             autoWidth: true,
-            layout:{
+            layout: {
                 topMiddile: {
                     //Create按鈕建立
-                    buttons:[
+                    buttons: [
                         {
-                            text:'新增廣告',
+                            text: '新增廣告',
                             action: function () {
                                 // 彈出 Bootstrap modal 表單
                                 $('#addAdvertisementModal').modal('show');
@@ -187,22 +247,29 @@
         });
 
         // 使用 Fetch API 取得資料並設定至 DataTable
-        fetch('@Url.Action("AdvertiseManagementJson", "AdvertiseManagement", new { area = "Administrator" })')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(jsonData => {
-                datatable.rows.add(jsonData).draw();
-            })
-            .catch(error => {
-                console.error('Fetch error:', error);
-            });
+        function fetchDatatable() {
+            fetch('@Url.Action("AdvertiseManagementJson", "AdvertiseManagement", new { area = "Administrator" })')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(jsonData => {
+                    // 清空表格
+                    datatable.clear().draw();
+                    // 添加新的資料
+                    datatable.rows.add(jsonData).draw();
+                })
+                .catch(error => {
+                    console.error('Fetch error:', error);
+                });
+        };
+
+        fetchDatatable();
 
         // 監聽上下架按鈕的 change 事件
-        $(document).on('change','.radio-isShow', function () {
+        $(document).on('change', '.radio-isShow', function () {
             // alert("change");
             const adId = $(this).data('adid');
             const isShow = $(this).val() === 'true';
@@ -217,13 +284,13 @@
                     return respone.text();
                 }
             }).then(result => {
-                    alert(result); // 處理成功回應的操作
+                alert(result); // 處理成功回應的操作
             }).catch(error => {
-                    alert(error); // 處理錯誤
+                alert(error); // 處理錯誤
             });
         });
 
-        // 圖片預覽
+        // 新增廣告圖片預覽
         $(document).on('change', '#imageInput', function () {
             const file = event.target.files[0];
             // 檢查是否選擇了圖片
@@ -235,11 +302,151 @@
         })
 
         // 新增廣告上傳
-        $(document).on('click', 'CreateSaveBtn', function () {
+        $(document).on('click', '#CreateSaveBtn', function (event) {
+            event.preventDefault();
+            // alert("CreateSaveBtn");
+            // 建立 FormData 物件，用於上傳檔案
+            const formData = new FormData();
+            formData.append('Title', $("#Title").val());
+            formData.append('Url', $("#Url").val());
+            formData.append('Discription', $("#Discription").val());
+            formData.append('ImageFile', $("#imageInput")[0].files[0]);
 
-            fetch('@Url.Action("Create", "AdvertiseManagement", new { area = "Administrator" })', {
-                
-            }).then().then().catch();
+            fetch('@Url.Action("CreateAd", "AdvertiseManagement", new { area = "Administrator" })', {
+                method: 'POST',
+                body: formData,
+                // headers: {'Content-Type': 'multipart/form-data'}
+            }).then(response => {
+                if (!response.ok) {
+                    console.log("error")
+                    return response.text();
+                }
+                console.log("成功")
+                return response.text();
+            }).then(data => {
+                // 成功處理回應後的操作
+                console.log(data);
+                alert(data);
+                // 關閉 modal
+                $('#addAdvertisementModal').modal('hide');
+                // 重新載入資料
+                fetchDatatable();
+            }).catch(error => {
+                console.log(error);
+                // 處理錯誤情況
+            });
+        });
+
+        // 刪除按鈕
+        $(document).on('click', '#delete_button', function () {
+            const AdId = $(this).data('adid');
+            const title = $(this).data('title');
+            const url = $(this).data('url');
+            const disc = $(this).data('disc');
+            const image = $(this).data('image');
+            $('#deleteId').text(AdId);
+            $('#deleteTitle').text(title);
+            $('#deleteUrl').text(url);
+            $('#deleteDiscription').text(disc);
+            $('#deleteImage').attr('src', `/AdImages/${image}`);
+            $('#deleteAdvertisementModal').modal('show');
+        });
+
+        // 刪除確認按鈕
+        $(document).on('click', '#deleteBtn', function (event) {
+            event.preventDefault();
+            // alert("deleteBtn");
+            const data = $('#deleteId').text();
+            console.log(data);
+            fetch('@Url.Action("DeleteAd", "AdvertiseManagement", new { area = "Administrator" })', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ id: data })
+            }).then(response => {
+                if (response.ok) {
+                    return response.text();
+                }
+                else {
+                    return respone.text();
+                }
+            }).then(result => {
+                alert(result); // 處理成功回應的操作
+                $('#deleteAdvertisementModal').modal('hide');
+                // 重新載入資料
+                fetchDatatable();
+            }).catch(error => {
+                alert(error); // 處理錯誤
+            });
+        });
+
+        //編輯按鈕
+        $(document).on('click', '#edit_button', function () {
+            //alert("edit_button");
+            const AdId = $(this).data('adid');
+            const title = $(this).data('title');
+            const url = $(this).data('url');
+            const disc = $(this).data('disc');
+            const image = $(this).data('image');
+            $('#editId').val(AdId);
+            $('#editTitle').val(title);
+            $('#editUrl').val(url);
+            $('#editDiscription').val(disc);
+            $('#editImagePreview').attr('src', `/AdImages/${image}`);
+            $('#editAdvertisementModal').modal('show');
+        });
+
+        // 修改廣告圖片預覽
+        $(document).on('change', '#editImageInput', function () {
+            const file = event.target.files[0];
+            // 檢查是否選擇了圖片
+            if (file) {
+                // 顯示圖片預覽
+                $("#editImagePreview").css('display', 'block');
+                $("#editImagePreview").attr('src', URL.createObjectURL(file));
+            }
+        })
+
+        // 儲存修改按鈕
+        $(document).on('click', '#editSaveBtn', function (event) {
+            event.preventDefault();
+            // alert("editSaveBtn");
+            // 建立 FormData 物件，用於上傳檔案
+            const formData = new FormData();
+            formData.append('Id', $("#editId").val());
+            formData.append('Title', $("#editTitle").val());
+            formData.append('Url', $("#editUrl").val());
+            formData.append('Discription', $("#editDiscription").val());
+
+            // 將圖片檔案添加到 FormData 物件中
+            if ($("#editImageInput")[0].files.length > 0 && $("#editImageInput")[0].files[0] != null) {
+                formData.append('ImageFile', $("#editImageInput")[0].files[0]);
+            }
+
+            fetch('@Url.Action("EditAd", "AdvertiseManagement", new { area = "Administrator" })', {
+                method: 'POST',
+                body: formData,
+                // headers: {'Content-Type': 'multipart/form-data'}
+            }).then(response => {
+                if (!response.ok) {
+                    console.log("error")
+                    return response.text();
+                }
+                console.log("成功")
+                return response.text();
+            }).then(data => {
+                // 成功處理回應後的操作
+                console.log(data);
+                alert(data);
+                // 關閉 modal
+                $('#editAdvertisementModal').modal('hide');
+                // 重新載入資料
+                fetchDatatable();
+            }).catch(error => {
+                console.log(error);
+                // 處理錯誤情況
+            });
         });
     });
 </script>
