@@ -25,7 +25,7 @@ public partial class Advertisement
     public string ImagePath { get; set; }
 
     [Required]
-    public bool IsShow { get; set; }
+    public bool IsShow { get; set; } = true;
 
     #nullable enable
 
