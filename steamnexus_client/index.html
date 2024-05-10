@@ -41,10 +41,30 @@
         document.documentElement.dataset.coreuiTheme = 'dark'
       }
     </script>
+    <link rel="stylesheet" href="/css/webEnterAnimation.css" />
     <title>SteamNexus</title>
   </head>
   <body>
-    <!-- 加載動畫預定 -->
+    <div id="LoadingAnimation">
+      <div class="wave"></div>
+      <div class="wave"></div>
+      <div class="wave"></div>
+      <div class="pagePreLoading-Container">
+        <div class="div-A">
+          <div class="div-B">
+            <div class="row row1">
+              <div class="div-C">
+                <img src="/img/logo512x512.svg" class="pagePreLoading-Logo" />
+              </div>
+              <div class="div-D">
+                <div class="pagePreLoading-Text">STEAMNEXUS</div>
+              </div>
+            </div>
+            <div class="row row2 pagePreLoading-Title">Loading</div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div id="app"></div>
     <script type="module" src="/src/main.js"></script>
     <script
