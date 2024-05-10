@@ -12,6 +12,10 @@ namespace SteamNexus_Server.Data
         {
         }
 
+        public virtual DbSet<User> Users { get; set; }
+
+        public virtual DbSet<Role> Roles { get; set; }
+
         public virtual DbSet<Advertisement> Advertisements { get; set; }
 
         public virtual DbSet<CommonQuestion> CommonQuestions { get; set; }
@@ -51,9 +55,36 @@ namespace SteamNexus_Server.Data
 
         public virtual DbSet<ProductCPU> ProductCPUs { get; set; }
 
+        public virtual DbSet<ProductMenu> ProductMenus { get; set; }
+
         // Model 屬性設定
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<User>(entity =>
+            {
+                // 主鍵設定
+                // ValueGeneratedOnAdd 插入新的實體時，值自動生成
+                // UseIdentityColumn(10000, 1) 識別碼起始值和增量
+                entity.Property(e => e.UserId)
+                    .ValueGeneratedOnAdd()
+                    .UseIdentityColumn(10000, 1);
+
+                entity.HasOne(d => d.Role).WithMany(p => p.Users)
+                    .HasForeignKey(d => d.RoleId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Users_Roles");
+            });
+
+            modelBuilder.Entity<Role>(entity =>
+            {
+                // 主鍵設定
+                // ValueGeneratedOnAdd 插入新的實體時，值自動生成
+                // UseIdentityColumn(10000, 1) 識別碼起始值和增量
+                entity.Property(e => e.RoleId)
+                    .ValueGeneratedOnAdd()
+                    .UseIdentityColumn(10000, 1);
+            });
+
             modelBuilder.Entity<Advertisement>(entity =>
             {
                 // 主鍵設定
@@ -338,6 +369,22 @@ namespace SteamNexus_Server.Data
                     .HasForeignKey(d => d.ProductInformationId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ProductCPUs_ProductInformations");
+            });
+
+
+            modelBuilder.Entity<ProductMenu>(entity =>
+            {
+                // 主鍵設定
+                // ValueGeneratedOnAdd 插入新的實體時，值自動生成
+                // UseIdentityColumn(10000, 1) 識別碼起始值和增量
+                entity.Property(e => e.ProductMenuId)
+                    .ValueGeneratedOnAdd()
+                    .UseIdentityColumn(10000, 1);
+
+                entity.HasOne(d => d.ProductInformation).WithMany(p => p.ProductMenus)
+                    .HasForeignKey(d => d.ProductInformationId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ProductMenus_ProductInformations");
             });
         }
 

@@ -13,6 +13,8 @@ public partial class Game
     [Required]
     public int GameId { get; set; }
 
+    #nullable enable
+
     //[Required]
     public int? AppId { get; set; }
 
@@ -33,7 +35,7 @@ public partial class Game
     [MaxLength(100)]
     public string? AgeRating { get; set; }
 
-    #nullable enable
+
 
     [MaxLength(100)]
     public string? Comment { get; set; }

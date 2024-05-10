@@ -24,7 +24,7 @@ export const dataTableConfig = {
         // 取得 productId
         let productId = row.productId
         // input 欄位 ~ 可編輯
-        let inputEle = `<input type="text" class="${productId}_watt defaultcellType" value="${data}" style="width: 50px; text-align: center;"  disabled>`
+        let inputEle = `<input type="text" class="${productId}_watt defaultCellType" value="${data}" style="width: 50px; text-align: center;"  disabled>`
         return inputEle
       },
       // 將此列的數據類型設置為數字 ~ 排序才會正常運作
@@ -52,7 +52,7 @@ export const dataTableConfig = {
         const ele3 = `<option value = "2" ${isRec3}>優良</option>`
         const ele4 = `<option value = "3" ${isRec4}>完美</option>`
         // select 欄位 ~ 可編輯
-        let selectEle = `<select class="${productId}_recommend defaultcellType" disabled>${ele1}${ele2}${ele3}${ele4}</select>`
+        let selectEle = `<select class="${productId}_recommend defaultCellType" disabled>${ele1}${ele2}${ele3}${ele4}</select>`
         return selectEle
       },
       // 將此列的數據類型設置為數字 ~ 排序才會正常運作
@@ -67,7 +67,7 @@ export const dataTableConfig = {
         // 取得 productId
         let productId = row.productId
         // 編輯按鈕
-        let editEle = `<button class="${productId}_edit btn Edit-btn d-flex justify-content-center align-items-center" style="width:30px;height:30px;" data-slefColumn-isShow="false"><i class="fa-solid fa-pen-to-square"></i></button>`
+        let editEle = `<button class="${productId}_edit btn Edit-btn d-flex justify-content-center align-items-center" style="width:30px;height:30px;"><i class="fa-solid fa-pen-to-square"></i></button>`
         let div = `<div class="d-flex justify-content-between" id="${productId}_div">${editEle}</div>`
         if (type === 'display') {
           return `${div}`
@@ -78,12 +78,12 @@ export const dataTableConfig = {
     }
   ],
   // 標頭固定
-  fixedHeader: {
-    // 固定 header
-    header: true,
-    // 使用導覽欄的高度作為偏移量
-    headerOffset: $('#pageNav').outerHeight()
-  },
+  // fixedHeader: {
+  //   // 固定 header
+  //   header: true,
+  //   // 使用導覽欄的高度作為偏移量
+  //   headerOffset: 64
+  // },
   // 響應式設計
   responsive: true,
   // 語言設定
@@ -100,49 +100,42 @@ export const dataTableConfig = {
   autoWidth: true,
   // 資料行樣式
   createdRow: function (row, data) {
-    if (data.recommend === 1) {
-      row.classList.add('green-row')
-    } else if (data.recommend === 2) {
-      row.classList.add('blue-row')
-    } else if (data.recommend === 3) {
-      row.classList.add('red-row')
-    }
     // 加上 ID
     $(row).attr('id', data.productId + '_row')
     // 為特定行加入 class ==> 不會影響 th
     $(row).find('td:eq(6)').addClass('d-flex')
     $(row).find('td:eq(6)').addClass('justify-content-center')
-  },
-  // 按鈕建立
-  layout: {
-    topMiddle: {
-      buttons: [
-        {
-          text: '重新整理',
-          // 按鈕點擊事件
-          action: function () {
-            // isrefresh = true
-            // 重新整理
-            // getdatatableData()
-          }
-        },
-        {
-          text: '單一零件更新',
-          // 按鈕點擊事件
-          action: function () {
-            // 單一零件更新
-            // UpdateOneHardware()
-          }
-        },
-        {
-          text: '全零件更新',
-          // 按鈕點擊事件
-          action: function () {
-            // 全零件更新
-            // UpdateAllHardware()
-          }
-        }
-      ]
-    }
   }
+  // // 按鈕建立
+  // layout: {
+  //   topMiddle: {
+  //     buttons: [
+  //       {
+  //         text: '重新整理',
+  //         // 按鈕點擊事件
+  //         action: function () {
+  //           // isrefresh = true
+  //           // 重新整理
+  //           // getdatatableData()
+  //         }
+  //       },
+  //       {
+  //         text: '單一零件更新',
+  //         // 按鈕點擊事件
+  //         action: function () {
+  //           // 單一零件更新
+  //           // UpdateOneHardware()
+  //         }
+  //       },
+  //       {
+  //         text: '全零件更新',
+  //         // 按鈕點擊事件
+  //         action: function () {
+  //           // 全零件更新
+  //           // UpdateAllHardware()
+  //         }
+  //       }
+  //     ]
+  //   }
+  // }
 }

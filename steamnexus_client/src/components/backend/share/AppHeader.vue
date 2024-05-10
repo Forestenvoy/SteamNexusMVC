@@ -22,7 +22,7 @@ onMounted(() => {
 
 <template>
   <CHeader position="sticky" :class="headerClassNames">
-    <CContainer class="border-bottom px-4" fluid>
+    <CContainer class="border-bottom px-4" fluid id="app-header">
       <!-- 側邊欄展開按鈕 -->
       <CHeaderToggler @click="sidebar.toggleVisible()" style="margin-inline-start: -14px">
         <CIcon icon="cil-menu" size="lg" />

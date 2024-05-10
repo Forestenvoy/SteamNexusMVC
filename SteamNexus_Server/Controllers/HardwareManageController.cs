@@ -1,11 +1,14 @@
 ﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SteamNexus_Server.Data;
 using SteamNexus_Server.Models;
+using SteamNexus_Server.Services;
 using System.ComponentModel.DataAnnotations;
+using System.Text;
 
 
 namespace SteamNexus_Server.Controllers
@@ -19,11 +22,14 @@ namespace SteamNexus_Server.Controllers
     {
         // Dependency Injection
         private readonly SteamNexusDbContext _context;
+        private readonly CoolPCWebScraping _coolPCWebScraping;
+
 
         // Constructor
-        public HardwareManageController(SteamNexusDbContext context)
+        public HardwareManageController(SteamNexusDbContext context, CoolPCWebScraping coolPCWebScraping)
         {
             _context = context;
+            _coolPCWebScraping = coolPCWebScraping;
         }
 
         // 回傳硬體產品種類
@@ -143,5 +149,255 @@ namespace SteamNexus_Server.Controllers
                 return BadRequest("瓦數範圍介於 0 ~ 2000 之間");
             }
         }
+
+        // 零件更新操作行為
+        public static bool isHardwareUpdate = false;
+
+        // 檢測是否有使用者在做更新操作
+        [HttpGet("IsHardwareUpdate")]
+        public string IsHardwareUpdate()
+        {
+            if (isHardwareUpdate)
+            {
+                return "true";
+            }
+            return "false";
+        }
+
+        // 單一零件更新
+        public class HardwareType
+        {
+            [Required]
+            [Range(10000, 10010)]
+            public int Type { get; set; }
+        }
+
+        // POST: api/HardwareManage/UpdateHardwareOne
+        [HttpPost("UpdateHardwareOne")]
+        public async Task<IActionResult> UpdateHardwareOne([FromBody] HardwareType data)
+        {
+            // 如果驗證合法
+            if (ModelState.IsValid)
+            {
+                isHardwareUpdate = true;
+                CoolPCWebScraping.eventMessage = "爬蟲啟動中";
+                _coolPCWebScraping.UpdateAllComponentClassifications();
+                switch (data.Type)
+                {
+                    case (int)ComputerPartCategory.Type.CPU:
+                        CoolPCWebScraping.eventMessage = "CPU 解析中";
+                        await Task.Delay(500);
+                        _coolPCWebScraping.UpdateCPU();
+                        CoolPCWebScraping.eventMessage = "CPU 資料更新中";
+                        await Task.Delay(500);
+                        CoolPCWebScraping.eventMessage = "更新成功";
+                        await Task.Delay(500);
+                        isHardwareUpdate = false;
+                        return Ok("CPU 更新成功");
+                    case (int)ComputerPartCategory.Type.MB:
+                        CoolPCWebScraping.eventMessage = "Motherboard 解析中";
+                        await Task.Delay(500);
+                        _coolPCWebScraping.UpdateMB();
+                        CoolPCWebScraping.eventMessage = "Motherboard 資料更新中";
+                        await Task.Delay(500);
+                        CoolPCWebScraping.eventMessage = "更新成功";
+                        await Task.Delay(500);
+                        isHardwareUpdate = false;
+                        return Ok("MB 更新成功");
+                    case (int)ComputerPartCategory.Type.RAM:
+                        CoolPCWebScraping.eventMessage = "RAM 解析中";
+                        await Task.Delay(500);
+                        _coolPCWebScraping.UpdateRAM();
+                        CoolPCWebScraping.eventMessage = "RAM 資料更新中";
+                        await Task.Delay(500);
+                        CoolPCWebScraping.eventMessage = "更新成功";
+                        await Task.Delay(500);
+                        isHardwareUpdate = false;
+                        return Ok("RAM 更新成功");
+                    case (int)ComputerPartCategory.Type.SSD:
+                        CoolPCWebScraping.eventMessage = "SSD 解析中";
+                        await Task.Delay(500);
+                        _coolPCWebScraping.UpdateSSD();
+                        CoolPCWebScraping.eventMessage = "SSD 資料更新中";
+                        await Task.Delay(500);
+                        CoolPCWebScraping.eventMessage = "更新成功";
+                        await Task.Delay(500);
+                        isHardwareUpdate = false;
+                        return Ok("SSD 更新成功");
+                    case (int)ComputerPartCategory.Type.HDD:
+                        CoolPCWebScraping.eventMessage = "HDD 解析中";
+                        await Task.Delay(500);
+                        _coolPCWebScraping.UpdateHDD();
+                        CoolPCWebScraping.eventMessage = "HDD 資料更新中";
+                        await Task.Delay(500);
+                        CoolPCWebScraping.eventMessage = "更新成功";
+                        await Task.Delay(500);
+                        isHardwareUpdate = false;
+                        return Ok("HDD 更新成功");
+                    case (int)ComputerPartCategory.Type.AirCooler:
+                        CoolPCWebScraping.eventMessage = "AirCooler 解析中";
+                        await Task.Delay(500);
+                        _coolPCWebScraping.UpdateAirCooler();
+                        CoolPCWebScraping.eventMessage = "AirCooler 資料更新中";
+                        await Task.Delay(500);
+                        CoolPCWebScraping.eventMessage = "更新成功";
+                        await Task.Delay(500);
+                        isHardwareUpdate = false;
+                        return Ok("AirCooler 更新成功");
+                    case (int)ComputerPartCategory.Type.LiquidCooler:
+                        CoolPCWebScraping.eventMessage = "LiquidCooler 解析中";
+                        await Task.Delay(500);
+                        _coolPCWebScraping.UpdateLiquidCooler();
+                        CoolPCWebScraping.eventMessage = "LiquidCooler 資料更新中";
+                        await Task.Delay(500);
+                        CoolPCWebScraping.eventMessage = "更新成功";
+                        await Task.Delay(500);
+                        isHardwareUpdate = false;
+                        return Ok("LiquidCooler 更新成功");
+                    case (int)ComputerPartCategory.Type.GPU:
+                        CoolPCWebScraping.eventMessage = "GPU 解析中";
+                        await Task.Delay(500);
+                        _coolPCWebScraping.UpdateGPU();
+                        CoolPCWebScraping.eventMessage = "GPU 資料更新中";
+                        await Task.Delay(500);
+                        CoolPCWebScraping.eventMessage = "更新成功";
+                        await Task.Delay(500);
+                        isHardwareUpdate = false;
+                        return Ok("GPU 更新成功");
+                    case (int)ComputerPartCategory.Type.CASE:
+                        CoolPCWebScraping.eventMessage = "CASE 解析中";
+                        await Task.Delay(500);
+                        _coolPCWebScraping.UpdateCASE();
+                        CoolPCWebScraping.eventMessage = "CASE 資料更新中";
+                        await Task.Delay(500);
+                        CoolPCWebScraping.eventMessage = "更新成功";
+                        await Task.Delay(500);
+                        isHardwareUpdate = false;
+                        return Ok("CASE 更新成功");
+                    case (int)ComputerPartCategory.Type.PSU:
+                        CoolPCWebScraping.eventMessage = "PSU 解析中";
+                        await Task.Delay(500);
+                        _coolPCWebScraping.UpdatePSU();
+                        CoolPCWebScraping.eventMessage = "PSU 資料更新中";
+                        await Task.Delay(500);
+                        CoolPCWebScraping.eventMessage = "更新成功";
+                        await Task.Delay(500);
+                        isHardwareUpdate = false;
+                        return Ok("PSU 更新成功");
+                    case (int)ComputerPartCategory.Type.OS:
+                        CoolPCWebScraping.eventMessage = "OS 解析中";
+                        await Task.Delay(500);
+                        _coolPCWebScraping.UpdateOS();
+                        CoolPCWebScraping.eventMessage = "OS 資料更新中";
+                        await Task.Delay(500);
+                        CoolPCWebScraping.eventMessage = "更新成功";
+                        await Task.Delay(500);
+                        isHardwareUpdate = false;
+                        return Ok("OS 更新成功");
+                    default:
+                        isHardwareUpdate = false;
+                        return BadRequest("更新失敗");
+                }
+            }
+            else
+            {
+                return BadRequest("更新失敗");
+            }
+        }
+
+        // 全零件更新
+        // POST: api/HardwareManage/UpdateHardwareAll
+        [HttpPost("UpdateHardwareAll")]
+        public async Task<IActionResult> UpdateHardwareAll()
+        {
+            isHardwareUpdate = true;
+            CoolPCWebScraping.eventMessage = "爬蟲啟動中";
+            _coolPCWebScraping.UpdateAllComponentClassifications();
+
+            CoolPCWebScraping.eventMessage = "CPU 解析中";
+            await Task.Delay(500);
+            _coolPCWebScraping.UpdateCPU();
+            CoolPCWebScraping.eventMessage = "CPU 資料更新完成";
+            await Task.Delay(500);
+
+
+            CoolPCWebScraping.eventMessage = "GPU 解析中";
+            await Task.Delay(500);
+            _coolPCWebScraping.UpdateGPU();
+            CoolPCWebScraping.eventMessage = "GPU 資料更新完成";
+            await Task.Delay(500);
+
+            CoolPCWebScraping.eventMessage = "RAM 解析中";
+            await Task.Delay(500);
+            _coolPCWebScraping.UpdateRAM();
+            CoolPCWebScraping.eventMessage = "RAM 資料更新完成";
+            await Task.Delay(500);
+
+            CoolPCWebScraping.eventMessage = "Motherboard 解析中";
+            await Task.Delay(500);
+            _coolPCWebScraping.UpdateMB();
+            CoolPCWebScraping.eventMessage = "Motherboard 資料更新完成";
+            await Task.Delay(500);
+
+            CoolPCWebScraping.eventMessage = "SSD 解析中";
+            await Task.Delay(500);
+            _coolPCWebScraping.UpdateSSD();
+            CoolPCWebScraping.eventMessage = "SSD 資料更新完成";
+            await Task.Delay(500);
+
+            CoolPCWebScraping.eventMessage = "HDD 解析中";
+            await Task.Delay(500);
+            _coolPCWebScraping.UpdateHDD();
+            CoolPCWebScraping.eventMessage = "HDD 資料更新完成";
+            await Task.Delay(500);
+
+            CoolPCWebScraping.eventMessage = "Air Cooler 解析中";
+            await Task.Delay(500);
+            _coolPCWebScraping.UpdateAirCooler();
+            CoolPCWebScraping.eventMessage = "Air Cooler 資料更新完成";
+            await Task.Delay(500);
+
+            CoolPCWebScraping.eventMessage = "LiquidCooler 解析中";
+            await Task.Delay(500);
+            _coolPCWebScraping.UpdateLiquidCooler();
+            CoolPCWebScraping.eventMessage = "LiquidCooler 資料更新完成";
+            await Task.Delay(500);
+
+            CoolPCWebScraping.eventMessage = "CASE 解析中";
+            await Task.Delay(500);
+            _coolPCWebScraping.UpdateCASE();
+            CoolPCWebScraping.eventMessage = "CASE 資料更新完成";
+            await Task.Delay(500);
+
+            CoolPCWebScraping.eventMessage = "PSU 解析中";
+            await Task.Delay(500);
+            _coolPCWebScraping.UpdatePSU();
+            CoolPCWebScraping.eventMessage = "PSU 資料更新完成";
+            await Task.Delay(500);
+
+            CoolPCWebScraping.eventMessage = "OS 解析中";
+            await Task.Delay(500);
+            _coolPCWebScraping.UpdateOS();
+            CoolPCWebScraping.eventMessage = "OS 資料更新完成";
+            await Task.Delay(500);
+
+            CoolPCWebScraping.eventMessage = "更新成功";
+            await Task.Delay(500);
+
+            isHardwareUpdate = false;
+            return Ok("全零件更新成功");
+        }
+
+        // SSE 傳送事件進度
+        [HttpGet("UpdateMessage")]
+        public IActionResult UpdateMessage()
+        {
+            string message = "";
+            message += $"id:{Guid.NewGuid()}\n";
+            message += "retry:100\n";
+            message += $"data:{CoolPCWebScraping.eventMessage}\n\n";
+            return Content($"{message}", "text/event-stream", Encoding.UTF8);
+        }
+
     }
 }

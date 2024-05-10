@@ -1,3 +1,14 @@
 {
-  "cSpell.words": ["VITE"]
+  "cSpell.words": [
+    "autohide",
+    "coreui",
+    "datatables",
+    "fixedheader",
+    "pinia",
+    "VITE",
+    "xmark"
+  ],
+  "terminal.integrated.env.linux": {
+    "EDITOR": "code"
+  }
 }
