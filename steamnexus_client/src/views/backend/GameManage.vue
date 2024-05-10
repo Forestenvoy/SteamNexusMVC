@@ -28,11 +28,10 @@ import 'datatables.net-rowgroup-dt'
 import 'datatables.net-buttons-dt'
 import 'datatables.net-responsive-dt'
 
-import { ref, onMounted } from 'vue'
 import { onBeforeRouteLeave } from 'vue-router'
  
 import {dataTableConfig} from'@/components/backend/Game/dataTableConfig.js'
-import {GetGamePriceDataToDB} from'@/components/backend/Game/topBtnFetch.js'
+import {GetGamePriceDataToDB,GetOnlineUsersDataToDB,GetNumberOfCommentsDataToDB,GetMinDataToDB,GetRecDataToDB} from'@/components/backend/Game/topBtnFetch.js'
 import Swal from 'sweetalert2'
 
 // 從環境變數取得 API BASE URL
@@ -152,103 +151,87 @@ onMounted(() => {
                     text: '更新全部價格',
                     // 按鈕點擊事件
                     action: function () {
-                        fetch(`${apiUrl}/api/GamesManagement/GetGamePriceDataToDB`, {
-                            method: "GET"
-                        }).then(result => {
-                            // 此時 result 是一個請求結果的物件
-                            // 注意傳回值型態，字串用 text()，JSON 用 json()
-                            if (result.ok) {
-                                return result.text();
-                            }
-                        }).then(data => {
-                            console.log(data);
-                        }).catch(error => {
-                            console.log(error);
-                        });
+                      GetGamePriceDataToDB();
                     }
                 },
                 {
                     text: '更新目前在線人數',
                     // 按鈕點擊事件
-                    action: function (e, dt, node, config) {
-                        event.preventDefault();
-                        event.stopPropagation();
-                        fetch(`${apiUrl}/api/GamesManagement/GetOnlineUsersDataToDB`, {
-                            method: "GET"
-                        }).then(result => {
-                            // 此時 result 是一個請求結果的物件
-                            // 注意傳回值型態，字串用 text()，JSON 用 json()
-                            if (result.ok) {
-                                return result.text();
-                            }
-                        }).then(data => {
-                            console.log(data);
-                        }).catch(error => {
-                            console.log(error);
-                        });
+                    action: function () {
+                      GetOnlineUsersDataToDB();
+                        // fetch(`${apiUrl}/api/GamesManagement/GetOnlineUsersDataToDB`, {
+                        //     method: "GET"
+                        // }).then(result => {
+                        //     // 此時 result 是一個請求結果的物件
+                        //     // 注意傳回值型態，字串用 text()，JSON 用 json()
+                        //     if (result.ok) {
+                        //         return result.text();
+                        //     }
+                        // }).then(data => {
+                        //     console.log(data);
+                        // }).catch(error => {
+                        //     console.log(error);
+                        // });
                     }
                 },
                 {
                     text: '更新目前所有評論',
                     // 按鈕點擊事件
-                    action: function (e, dt, node, config) {
-                        event.preventDefault();
-                        event.stopPropagation();
-                        fetch(`${apiUrl}/api/GamesManagement/GetNumberOfCommentsDataToDB`, {
-                            method: "GET"
-                        }).then(result => {
-                            // 此時 result 是一個請求結果的物件
-                            // 注意傳回值型態，字串用 text()，JSON 用 json()
-                            if (result.ok) {
-                                return result.text();
-                            }
-                        }).then(data => {
-                            console.log(data);
-                        }).catch(error => {
-                            console.log(error);
-                        });
+                    action: function () {
+                      GetNumberOfCommentsDataToDB();
+                        // fetch(`${apiUrl}/api/GamesManagement/GetNumberOfCommentsDataToDB`, {
+                        //     method: "GET"
+                        // }).then(result => {
+                        //     // 此時 result 是一個請求結果的物件
+                        //     // 注意傳回值型態，字串用 text()，JSON 用 json()
+                        //     if (result.ok) {
+                        //         return result.text();
+                        //     }
+                        // }).then(data => {
+                        //     console.log(data);
+                        // }).catch(error => {
+                        //     console.log(error);
+                        // });
                     }
                 },
                 {
                     text: '抓取最低配備',
                     // 按鈕點擊事件
                     action: function (e, dt, node, config) {
-                        event.preventDefault();
-                        event.stopPropagation();
-                        fetch(`${apiUrl}/api/GamesManagement/GetDataToDB?isMinimumRequirement=true`, {
-                            method: "GET"
-                        }).then(result => {
-                            // 此時 result 是一個請求結果的物件
-                            // 注意傳回值型態，字串用 text()，JSON 用 json()
-                            if (result.ok) {
-                                return result.text();
-                            }
-                        }).then(data => {
-                            console.log(data);
-                        }).catch(error => {
-                            console.log(error);
-                        });
+                      GetMinDataToDB();
+                        // fetch(`${apiUrl}/api/GamesManagement/GetDataToDB?isMinimumRequirement=true`, {
+                        //     method: "GET"
+                        // }).then(result => {
+                        //     // 此時 result 是一個請求結果的物件
+                        //     // 注意傳回值型態，字串用 text()，JSON 用 json()
+                        //     if (result.ok) {
+                        //         return result.text();
+                        //     }
+                        // }).then(data => {
+                        //     console.log(data);
+                        // }).catch(error => {
+                        //     console.log(error);
+                        // });
                     }
                 },
                 {
                     text: '抓取最高配備',
                     // 按鈕點擊事件
-                    action: function (e, dt, node, config) {
-                        event.preventDefault();
-                        event.stopPropagation();
-                        fetch(`${apiUrl}/api/GamesManagement/GetDataToDB?isMinimumRequirement=false`, {
-                            method: "GET"
-                        }).then(result => {
-                            // 此時 result 是一個請求結果的物件
-                            // 注意傳回值型態，字串用 text()，JSON 用 json()
-                            if (result.ok) {
-                                return result.text();
-                            }
-                        }).then(data => {
-                            console.log(data);
-                        }).catch(error => {
-                            console.log(error);
-                        });
+                    action: function () {
+                        GetRecDataToDB();
+                        // fetch(`${apiUrl}/api/GamesManagement/GetDataToDB?isMinimumRequirement=false`, {
+                        //     method: "GET"
+                        // }).then(result => {
+                        //     // 此時 result 是一個請求結果的物件
+                        //     // 注意傳回值型態，字串用 text()，JSON 用 json()
+                        //     if (result.ok) {
+                        //         return result.text();
+                        //     }
+                        // }).then(data => {
+                        //     console.log(data);
+                        // }).catch(error => {
+                        //     console.log(error);
+                        // });
                     }
                 }
 
