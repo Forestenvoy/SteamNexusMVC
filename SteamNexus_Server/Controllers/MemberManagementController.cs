@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SteamNexus_Server.Data;
+using SteamNexus_Server.Models;
+using System.ComponentModel.DataAnnotations;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace SteamNexus_Server.Controllers
@@ -50,8 +52,35 @@ namespace SteamNexus_Server.Controllers
                 result.RoleName,
             });
             return (result);
-
         }
+
+        #region CreateRole ViewModels
+        public class createRoleViewModels
+        {
+            [Required]
+            [RegularExpression("^[a-zA-Z]+$", ErrorMessage = "只能夠輸入英文")]
+            public string RoleName { get; set; }
+        }
+        #endregion
+
+
+        #region CreateRole
+
+        [HttpPost("CreateRole")]
+        public async Task<IActionResult> CreateRole([FromBody] createRoleViewModels data)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var newRole = new Role { RoleName = data.RoleName };
+            _application.Roles.Add(newRole);
+            await _application.SaveChangesAsync();
+
+            return Ok(new { success = true, message = "角色新增成功" });
+        }
+        #endregion
 
 
 
