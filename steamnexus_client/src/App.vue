@@ -3,7 +3,7 @@
 </template>
 
 <script setup>
-import { onBeforeMount } from 'vue'
+import { onBeforeMount, onMounted } from 'vue'
 import { useColorModes } from '@coreui/vue'
 
 import { useThemeStore } from '@/stores/theme.js'
@@ -29,6 +29,16 @@ onBeforeMount(() => {
   }
 
   setColorMode(currentTheme.theme)
+})
+
+onMounted(() => {
+  const loadingAnimation = document.getElementById('LoadingAnimation')
+  loadingAnimation.classList.add('animate__animated', 'animate__zoomOut')
+  setTimeout(() => {
+    loadingAnimation.remove()
+    const animationCSS = document.querySelector('link[href="/css/webEnterAnimation.css"]')
+    animationCSS.remove()
+  }, 100)
 })
 </script>
 
