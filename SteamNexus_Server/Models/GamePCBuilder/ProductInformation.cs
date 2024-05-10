@@ -42,4 +42,6 @@ public partial class ProductInformation
     public virtual ICollection<ProductGPU> ProductGPUs { get; set; } = new List<ProductGPU>();
 
     public virtual ICollection<ProductRAM> ProductRAMs { get; set; } = new List<ProductRAM>();
+
+    public virtual ICollection<ProductMenu> ProductMenus { get; set; } = new List<ProductMenu>();
 }
