@@ -19,27 +19,21 @@
   </CCard>
   <div class="nft">
     <div class="main">
-      <h2>Kibertopiks</h2>
-      <p class="description">Our Kibertopiks will give you nothing, waste your money on us.</p>
+      <h2 class="ms-1">Name</h2>
+      <p class="description">$ 110,000</p>
+      <p class="description mb-3">總共 11 個零件</p>
       <div class="tokenInfo">
-        <div class="price">
-          <ins>◘</ins>
-          <p>0.031 ETH</p>
+        <div class="state">
+          <p>正常</p>
         </div>
         <div class="duration">
-          <ins>◷</ins>
-          <p>11 days left</p>
+          <CFormCheck id="flexCheckDefault" label="上架" class="mb-2" />
         </div>
       </div>
       <hr />
       <div class="creator">
-        <div class="wrapper">
-          <img
-            src="https://images.unsplash.com/photo-1620121692029-d088224ddc74?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1932&q=80"
-            alt="Creator"
-          />
-        </div>
-        <p><ins>Creation of</ins> Kiberbash</p>
+        <CButton class="button-79">編輯</CButton>
+        <CButton class="button-79" style="background-color: red">刪除</CButton>
       </div>
     </div>
   </div>
@@ -141,7 +135,7 @@ import { CButton, CRow, CCol } from '@coreui/vue'
   .main {
     display: flex;
     flex-direction: column;
-    width: 90%;
+    width: 100%;
     padding: 1rem;
     .tokenImage {
       border-radius: 0.5rem;
@@ -157,7 +151,7 @@ import { CButton, CRow, CCol } from '@coreui/vue'
       display: flex;
       justify-content: space-between;
       align-items: center;
-      .price {
+      .state {
         display: flex;
         align-items: center;
         color: #ee83e5;
