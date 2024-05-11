@@ -48,23 +48,23 @@ onMounted(() => {
 // Import Main styles for this application
 @import 'styles/style';
 
-[data-coreui-theme='dark'] body {
-  background-color: #393e46;
-}
+// [data-coreui-theme='dark'] body {
+//   background-color: #272829;
+// }
 
-[data-coreui-theme='dark'] .footer {
-  --cui-footer-bg: #272829;
-}
+// [data-coreui-theme='dark'] .footer {
+//   --cui-footer-bg: #272829;
+// }
 
-[data-coreui-theme='dark'] .header {
-  --cui-header-bg: #272829;
-}
+// [data-coreui-theme='dark'] .header {
+//   --cui-header-bg: #272829;
+// }
 
-[data-coreui-theme='dark'] .sidebar {
-  --cui-sidebar-bg: #272829;
-}
+// [data-coreui-theme='dark'] .sidebar {
+//   --cui-sidebar-bg: #272829;
+// }
 
-.navbar {
-  background-color: #272829;
-}
+// .navbar {
+//   background-color: #272829;
+// }
 </style>
