@@ -79,7 +79,7 @@ namespace SteamNexus_Server.Controllers
         #region CreateRole
 
         [HttpPost("CreateRole")]
-        public async Task<IActionResult> CreateRole([FromBody] createRoleViewModels data)
+        public async Task<IActionResult> CreateRole([FromForm] createRoleViewModels data)
         {
             if (!ModelState.IsValid)
             {
