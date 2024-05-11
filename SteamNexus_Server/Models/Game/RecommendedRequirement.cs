@@ -32,6 +32,15 @@ public partial class RecommendedRequirement
 
     #nullable enable
 
+    [MaxLength(300)]
+    public string? OriCpu { get; set; }
+
+    [MaxLength(1000)]
+    public string? OriGpu { get; set; }
+
+    [MaxLength(300)]
+    public string? OriRam { get; set; }
+
     [MaxLength(100)]
     public string? OS { get; set; }
 
