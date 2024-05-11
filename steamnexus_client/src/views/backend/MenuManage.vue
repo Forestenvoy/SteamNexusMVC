@@ -1,7 +1,7 @@
 <template>
   <CContainer class="mt-1 mt-lg-3 mx-3">
     <!-- 菜單管理 UI -->
-    <CRow class="mb-5">
+    <CRow>
       <CCol sm="12" md="6" lg="5">
         <h2>Menu Manage System</h2>
         <div>
@@ -30,7 +30,54 @@
     </CRow>
     <!-- 菜單列表 -->
     <CRow>
-      <CCol sm="12" md="6" lg="4">
+      <CCol
+        sm="12"
+        md="6"
+        lg="4"
+        xl="3"
+        style="height: 350px"
+        class="d-flex justify-content-center align-items-center"
+      >
+        <menu-card></menu-card>
+      </CCol>
+      <CCol
+        sm="12"
+        md="6"
+        lg="4"
+        xl="3"
+        style="height: 350px"
+        class="d-flex justify-content-center align-items-center"
+      >
+        <menu-card></menu-card>
+      </CCol>
+      <CCol
+        sm="12"
+        md="6"
+        lg="4"
+        xl="3"
+        style="height: 350px"
+        class="d-flex justify-content-center align-items-center"
+      >
+        <menu-card></menu-card>
+      </CCol>
+      <CCol
+        sm="12"
+        md="6"
+        lg="4"
+        xl="3"
+        style="height: 350px"
+        class="d-flex justify-content-center align-items-center"
+      >
+        <menu-card></menu-card>
+      </CCol>
+      <CCol
+        sm="12"
+        md="6"
+        lg="4"
+        xl="3"
+        style="height: 350px"
+        class="d-flex justify-content-center align-items-center"
+      >
         <menu-card></menu-card>
       </CCol>
     </CRow>

@@ -1,26 +1,8 @@
 <template>
-  <CCard style="width: 320px">
-    <CCardBody class="d-flex justify-content-between">
-      <CRow style="width: 200px; padding-left: 10px">
-        <CFormCheck id="flexCheckDefault" label="上架" class="ms-2 mb-2" />
-        <CCardTitle class="mb-3">Name</CCardTitle>
-        <CCardText class="h3 mb-3">$ 110,000</CCardText>
-        <CCardText class="mb-3">總共 11 個零件</CCardText>
-      </CRow>
-      <CRow style="width: 100px">
-        <CCol sm="12" class="d-flex justify-content-center align-items-center">
-          <CButton class="button-79">編輯</CButton>
-        </CCol>
-        <CCol sm="12" class="d-flex justify-content-center align-items-center">
-          <CButton class="button-79" style="background-color: red">刪除</CButton>
-        </CCol>
-      </CRow>
-    </CCardBody>
-  </CCard>
   <div class="nft">
     <div class="main">
       <h2 class="ms-1">Name</h2>
-      <p class="description">$ 110,000</p>
+      <p class="description h2">$ 110,000</p>
       <p class="description mb-3">總共 11 個零件</p>
       <div class="tokenInfo">
         <div class="state">
@@ -31,88 +13,78 @@
         </div>
       </div>
       <hr />
-      <div class="creator">
-        <CButton class="button-79">編輯</CButton>
-        <CButton class="button-79" style="background-color: red">刪除</CButton>
+      <div class="creator d-flex justify-content-evenly">
+        <button role="button" class="button-59">編輯</button>
+        <button role="button" class="button-59 button-59-del">刪除</button>
       </div>
     </div>
   </div>
 </template>
 <script setup>
-import { CCard, CCardTitle, CCardBody, CCardText } from '@coreui/vue'
-import { CButton, CRow, CCol } from '@coreui/vue'
+// import { CRow, CCol } from '@coreui/vue'
 </script>
 <style scoped>
-.card {
-  width: 300px;
-}
-
-.button-79 {
-  backface-visibility: hidden;
-  background: #332cf2;
-  border: 0;
-  border-radius: 0.375rem;
+.button-59 {
+  align-items: center;
+  background-color: #fff;
+  border: 2px solid #000;
   box-sizing: border-box;
-  color: #fff;
+  color: #000;
   cursor: pointer;
-  display: inline-block;
-  font-family: Circular, Helvetica, sans-serif;
-  font-size: 1.125rem;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  line-height: 1.3;
-  padding: 1rem 1.25rem;
-  position: relative;
-  text-align: left;
+  display: inline-flex;
+  fill: #000;
+  font-family: Inter, sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  height: 48px;
+  justify-content: center;
+  letter-spacing: -0.8px;
+  line-height: 24px;
+  min-width: 100px;
+  outline: 0;
+  padding: 0 17px;
+  text-align: center;
   text-decoration: none;
-  transform: translateZ(0) scale(1);
-  transition: transform 0.2s;
+  transition: all 0.3s;
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
 }
 
-.button-79:disabled {
-  color: #787878;
-  cursor: auto;
+.button-59:focus {
+  color: #171e29;
 }
 
-.button-79:not(:disabled):hover {
-  transform: scale(1.05);
+.button-59:hover {
+  border-color: #06f;
+  color: #06f;
+  fill: #06f;
 }
 
-.button-79:not(:disabled):hover:active {
-  transform: scale(1.05) translateY(0.125rem);
+.button-59-del:hover {
+  border-color: red;
+  color: red;
+  fill: red;
 }
 
-.button-79:focus {
-  outline: 0 solid transparent;
+.button-59:active {
+  border-color: #06f;
+  color: #06f;
+  fill: #06f;
 }
 
-.button-79:focus:before {
-  border-width: 0.125rem;
-  content: '';
-  left: calc(-1 * 0.375rem);
-  pointer-events: none;
-  position: absolute;
-  top: calc(-1 * 0.375rem);
-  transition: border-radius;
-  user-select: none;
-}
-
-.button-79:focus:not(:focus-visible) {
-  outline: 0 solid transparent;
-}
-
-.button-79:not(:disabled):active {
-  transform: translateY(0.125rem);
+.button-59-del:active {
+  border-color: red;
+  color: red;
+  fill: red;
 }
 </style>
 
 <style lang="scss" scoped>
 .nft {
   user-select: none;
-  max-width: 300px;
+  width: 300px;
+  height: 285px;
   margin: 5rem auto;
   border: 1px solid #ffffff22;
   background-color: #282c34;
@@ -145,7 +117,7 @@ import { CButton, CRow, CCol } from '@coreui/vue'
     }
     .description {
       margin: 0.5rem 0;
-      color: #a89ec9;
+      color: white;
     }
     .tokenInfo {
       display: flex;
@@ -154,7 +126,7 @@ import { CButton, CRow, CCol } from '@coreui/vue'
       .state {
         display: flex;
         align-items: center;
-        color: #ee83e5;
+        color: #4eed73;
         font-weight: 700;
         ins {
           margin-left: -0.3rem;
@@ -164,7 +136,7 @@ import { CButton, CRow, CCol } from '@coreui/vue'
       .duration {
         display: flex;
         align-items: center;
-        color: #a89ec9;
+        color: gray;
         margin-right: 0.2rem;
         ins {
           margin: 0.5rem;
