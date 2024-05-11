@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SteamNexus_Server.Data;
 using SteamNexus_Server.Models;
 using System.ComponentModel.DataAnnotations;
+using System.Net;
 using System.Text;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -89,6 +91,68 @@ namespace SteamNexus_Server.Controllers
             await _application.SaveChangesAsync();
 
             return Ok(new { success = true, message = "角色新增成功" });
+        }
+        #endregion
+
+
+        #region DeleteRole for id
+        [HttpPost("DeleteRole")]
+        public async Task<IActionResult> DeleteRole(int id)
+        {
+            try
+            {
+                var role = await _application.Roles.FindAsync(id);
+                if (role == null)
+                {
+                    // 加入調試信息，確認ID值和數據庫內是否匹配
+                    return Content(HttpStatusCode.NotFound, new { success = false, message = "角色未找到，ID: " + id });
+                }
+
+                _application.Roles.Remove(role);
+                await _application.SaveChangesAsync();
+                return Ok(new { success = true, message = "角色已刪除" });
+            }
+            catch (Exception ex)
+            {
+                //記錄錯誤
+                return Content(HttpStatusCode.InternalServerError, new { success = false, message = ex.Message });
+            }
+        }
+        #endregion
+
+
+        #region DeleteRole for Name
+        [HttpPost("DeleteRoleName")]
+        public async Task<IActionResult> DeleteRoleName(string roleName)
+        {
+            try
+            {
+                var role = await _application.Roles.FirstOrDefaultAsync(r => r.RoleName == roleName);
+                if (role == null)
+                {
+                    // 加入調試信息，確認角色名和數據庫內是否匹配
+                    return Content(HttpStatusCode.NotFound, new { success = false, message = "角色未找到，角色名稱: " + roleName });
+                }
+
+                _application.Roles.Remove(role);
+                await _application.SaveChangesAsync();
+                return Ok(new { success = true, message = "角色已刪除" });
+            }
+            catch (Exception ex)
+            {
+                //記錄錯誤
+                return Content(HttpStatusCode.InternalServerError, new { success = false, message = ex.Message });
+            }
+        }
+        #endregion
+
+
+        #region Is there a Role?
+        [HttpGet("CheckRolesExists")]
+        public async Task<IActionResult> CheckRolesExists(string rolename)
+        {
+            bool exists = await _application.Roles.AnyAsync(e => e.RoleName == rolename);
+            return Ok(!exists);  // 返回 false 表示角色已存在，true 表示不存在
         }
         #endregion
 
@@ -188,6 +252,13 @@ namespace SteamNexus_Server.Controllers
         }
         #endregion
 
+
+        #region DeleteRole in method
+        private IActionResult Content(HttpStatusCode notFound, object value)
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
 
 
     }
