@@ -55,7 +55,7 @@ namespace SteamNexus_Server.Data
 
         public virtual DbSet<ProductCPU> ProductCPUs { get; set; }
 
-        public virtual DbSet<ProductMenu> ProductMenus { get; set; }
+        public virtual DbSet<Menu> Menus { get; set; }
 
         public virtual DbSet<MenuDetail> MenuDetails { get; set; }
 
@@ -374,19 +374,14 @@ namespace SteamNexus_Server.Data
             });
 
 
-            modelBuilder.Entity<ProductMenu>(entity =>
+            modelBuilder.Entity<Menu>(entity =>
             {
                 // 主鍵設定
                 // ValueGeneratedOnAdd 插入新的實體時，值自動生成
                 // UseIdentityColumn(10000, 1) 識別碼起始值和增量
-                entity.Property(e => e.ProductMenuId)
+                entity.Property(e => e.MenuId)
                     .ValueGeneratedOnAdd()
                     .UseIdentityColumn(10000, 1);
-
-                entity.HasOne(d => d.ProductInformation).WithMany(p => p.ProductMenus)
-                    .HasForeignKey(d => d.ProductInformationId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ProductMenus_ProductInformations");
             });
 
             modelBuilder.Entity<MenuDetail>(entity =>
@@ -397,6 +392,17 @@ namespace SteamNexus_Server.Data
                 entity.Property(e => e.MenuDetailId)
                     .ValueGeneratedOnAdd()
                     .UseIdentityColumn(10000, 1);
+
+                entity.HasOne(d => d.ProductInformation).WithMany(p => p.MenuDetails)
+                    .HasForeignKey(d => d.ProductInformationId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_MenuDetails_ProductInformations");
+
+                entity.HasOne(d => d.Menu).WithMany(p => p.MenuDetails)
+                    .HasForeignKey(d => d.MenuId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_MenuDetails_Menus");
+
             });
         }
 

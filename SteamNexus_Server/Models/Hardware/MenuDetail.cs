@@ -11,6 +11,13 @@ public class MenuDetail
     public int MenuDetailId { get; set; }
 
     [Required]
-    public string MenuDetailName { get; set; }
+    public int MenuId { get; set; }
 
+    public virtual Menu Menu { get; set; }
+
+    #nullable enable
+
+    public int? ProductInformationId { get; set; }
+
+    public virtual ProductInformation? ProductInformation { get; set; }
 }

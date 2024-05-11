@@ -43,5 +43,5 @@ public partial class ProductInformation
 
     public virtual ICollection<ProductRAM> ProductRAMs { get; set; } = new List<ProductRAM>();
 
-    public virtual ICollection<ProductMenu> ProductMenus { get; set; } = new List<ProductMenu>();
+    public virtual ICollection<MenuDetail> MenuDetails { get; set; } = new List<MenuDetail>();
 }

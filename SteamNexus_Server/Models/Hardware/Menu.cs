@@ -6,19 +6,15 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace SteamNexus_Server.Models;
-public class ProductMenu
+public class Menu
 {
     [Key]
-    public int ProductMenuId { get; set; }
+    public int MenuId { get; set; }
 
     [Required]
     [MaxLength(50)]
-    public string MenuName { get; set; }
+    public string Name { get; set; }
 
-    #nullable enable
-
-    public int? ProductInformationId { get; set; }
-
-    public virtual ProductInformation? ProductInformation { get; set; }
+    public virtual ICollection<MenuDetail> MenuDetails { get; set; } = new List<MenuDetail>();
 }
 
