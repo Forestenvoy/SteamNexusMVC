@@ -1,5 +1,5 @@
 <template>
-  <CNavbar expand="lg" color-scheme="dark" class="bg-dark">
+  <CNavbar expand="lg" color-scheme="dark">
     <CContainer fluid>
       <CNavbarBrand href="#" class="pt-2">
         <img
