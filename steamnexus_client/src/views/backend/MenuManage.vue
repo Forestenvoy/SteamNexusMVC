@@ -58,7 +58,7 @@
     "
     aria-labelledby="MenuModal"
   >
-    <create-menu></create-menu>
+    <menu-modal-body-c @modal-close="isModalVisible = false"></menu-modal-body-c>
   </CModal>
   <!-- Modal End -->
 </template>
@@ -68,7 +68,7 @@ import { CRow, CCol } from '@coreui/vue'
 import { CButton, CFormInput } from '@coreui/vue'
 import { ref } from 'vue'
 
-import CreateMenu from '@/components/backend/hardware/CreateMenu.vue'
+import MenuModalBodyC from '@/components/backend/hardware/menu/create/MenuModalBodyC.vue'
 import MenuCard from '@/components/backend/hardware/MenuCard.vue'
 
 let isModalVisible = ref(false)
