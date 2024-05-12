@@ -20,9 +20,11 @@
     </div>
   </div>
 </template>
+
 <script setup>
 
 </script>
+
 <style scoped>
 .button-59 {
   align-items: center;

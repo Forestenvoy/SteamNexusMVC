@@ -40,58 +40,40 @@
       >
         <menu-card></menu-card>
       </CCol>
-      <CCol
-        sm="12"
-        md="6"
-        lg="4"
-        xl="3"
-        style="height: 350px"
-        class="d-flex justify-content-center align-items-center"
-      >
-        <menu-card></menu-card>
-      </CCol>
-      <CCol
-        sm="12"
-        md="6"
-        lg="4"
-        xl="3"
-        style="height: 350px"
-        class="d-flex justify-content-center align-items-center"
-      >
-        <menu-card></menu-card>
-      </CCol>
-      <CCol
-        sm="12"
-        md="6"
-        lg="4"
-        xl="3"
-        style="height: 350px"
-        class="d-flex justify-content-center align-items-center"
-      >
-        <menu-card></menu-card>
-      </CCol>
-      <CCol
-        sm="12"
-        md="6"
-        lg="4"
-        xl="3"
-        style="height: 350px"
-        class="d-flex justify-content-center align-items-center"
-      >
-        <menu-card></menu-card>
-      </CCol>
     </CRow>
   </CContainer>
+  <!-- Modal Start -->
+  <!-- 新增、編輯 -->
+  <!-- alignment="center" 置中 -->
+  <!-- backdrop="static" 靜態 -->
+  <CModal
+    alignment="center"
+    backdrop="static"
+    :visible="isModalVisible"
+    @close="
+      () => {
+        isModalVisible = false
+      }
+    "
+    aria-labelledby="MenuModal"
+  >
+    <menu-modal-content></menu-modal-content>
+  </CModal>
+  <!-- Modal End -->
 </template>
 <script setup>
 // CCol 可以考慮 手機 sm 平板 md 桌機 lg
 import { CContainer, CRow, CCol } from '@coreui/vue'
 import { CButton, CFormInput } from '@coreui/vue'
+import { ref } from 'vue'
 
+import MenuModalContent from '@/components/backend/hardware/MenuModalContent.vue'
 import MenuCard from '@/components/backend/hardware/MenuCard.vue'
 
+let isModalVisible = ref(false)
+
 function addMenu() {
-  console.log('addMenu')
+  isModalVisible.value = true
 }
 </script>
 <style></style>
