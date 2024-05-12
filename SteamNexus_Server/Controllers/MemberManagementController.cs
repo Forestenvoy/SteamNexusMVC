@@ -240,6 +240,43 @@ namespace SteamNexus_Server.Controllers
         #endregion
 
 
+        #region DeleteUser
+        //[HttpDelete("{id}")]
+        [HttpPost("DeleteUser")]
+        public async Task<IActionResult> DeleteUser(int id)
+        {
+            try
+            {
+                var user = await _application.Users.FindAsync(id);
+                if (user == null)
+                {
+                    // 加入調試信息，確認ID值和數據庫內是否匹配
+                    return NotFound(new { success = false, message = "用戶未找到，ID: " + id });
+                }
+
+                // 刪除用戶的圖片
+                if (!string.IsNullOrEmpty(user.Photo) && user.Photo != "default.jpg")
+                {
+                    var filePath = Path.Combine(_webHost.WebRootPath, "images/headshots", user.Photo);
+                    if (System.IO.File.Exists(filePath))
+                    {
+                        System.IO.File.Delete(filePath);
+                    }
+                }
+
+                _application.Users.Remove(user);
+                await _application.SaveChangesAsync();
+                return Ok(new { success = true, message = "用戶已刪除" });
+            }
+            catch (Exception ex)
+            {
+                //記錄錯誤
+                return BadRequest(new { success = false, message = ex.Message });
+            }
+        }
+        #endregion
+
+
         #region 密碼加密
         private string HashPassword(string password)
         {
