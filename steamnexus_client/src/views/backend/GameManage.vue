@@ -18,15 +18,40 @@
           </thead>
       </table>
   </div>
+  <CModal 
+    alignment="center"
+    scrollable
+    :visible="visibleVerticallyCenteredScrollableDemo"
+    @close="() => { visibleVerticallyCenteredScrollableDemo = false }"
+    aria-labelledby="VerticallyCenteredExample2"
+  >
+    <CModalHeader>
+      <CModalTitle id="VerticallyCenteredExample2">Modal title</CModalTitle>
+    </CModalHeader>
+    <CModalBody>
+      <component :if="isCreateView==true" :is="gameCreateView"  ref="gameCreateViewRef" />
+    </CModalBody>
+    <CModalFooter>
+      <CButton color="secondary" @click="() => { visibleVerticallyCenteredScrollableDemo = false }">
+        Close
+      </CButton>
+      <CButton color="primary">Save changes</CButton>
+    </CModalFooter>
+  </CModal>
 </template>
 
 <script setup >
+import { CAlert } from '@coreui/vue';
 import $ from 'jquery'
 import DataTable from 'datatables.net-dt'
 import 'datatables.net-fixedheader-dt'
 import 'datatables.net-rowgroup-dt'
 import 'datatables.net-buttons-dt'
 import 'datatables.net-responsive-dt'
+
+import gameCreateView from "../backend/Game/gameCreateView.vue"
+
+import { ref, onMounted } from 'vue'
 
 import { onBeforeRouteLeave } from 'vue-router'
  
@@ -39,7 +64,15 @@ const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
 // 初始化 DataTables
 let dataTable = null
-
+let create=false
+const gameCreateViewRef = ref(null);
+const visibleVerticallyCenteredScrollableDemo= ref(false)
+const isCreateView= ref(false)
+const handleClick = () => {
+    visibleVerticallyCenteredScrollableDemo.value = true;
+    isCreateView.value = true;
+        
+};
 //拿取datatable的資料
 function getdatatableData() {
     // 發送非同步GET請求
@@ -55,6 +88,7 @@ function getdatatableData() {
         // 添加新的資料
         if (data && data.length > 0) {
             dataTable.rows.add(data).draw();
+            console.log(data)
         }
         $("#GameIndexLoading").hide();
         
@@ -134,17 +168,22 @@ async function showSwal(val,urlValue) {
 }
 
 onMounted(() => {
+    alert(isCreateView.value)
   getdatatableData();
   dataTable = new DataTable('#GameManageTable', {
     ...dataTableConfig,
+    buttons: [
+        'copy', 'excel', 'pdf'
+    ],
     layout: {
         topMiddle: {
             buttons: [
                 {
                     text: '新增遊戲',
+
                     // 按鈕點擊事件
                     action: function () {
-                        showSwal('<h1>全部遊戲<img src="/public/img/loading-block-white.gif" style="margin:20px;width:30px;height:30px;display:none" id="GameIndexLoading" /></h1>',`${apiUrl}/api/GamesManagement/PostCreatPartialToDB`);
+                        handleClick();
                     }
                 },
                 {
@@ -254,6 +293,8 @@ onBeforeRouteLeave(() => {
 </script>
 
 <style>
+@import 'bootstrap/dist/css/bootstrap.min.css';
+@import '@coreui/coreui/dist/css/coreui.min.css';
 /* DataTables */
 @import 'datatables.net-dt/css/dataTables.datatables.min.css';
 @import 'datatables.net-fixedheader-dt/css/fixedHeader.dataTables.min.css';
