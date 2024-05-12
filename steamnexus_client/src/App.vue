@@ -45,26 +45,12 @@ onMounted(() => {
 </script>
 
 <style lang="scss">
+// 深色模式
+// sidebar、header、footer 背景色
+$body-bg-dark: #272829;
+// body 背景色
+$dark-bg-subtle-dark: #3d3b40;
+
 // Import Main styles for this application
 @import 'styles/style';
-
-// [data-coreui-theme='dark'] body {
-//   background-color: #272829;
-// }
-
-// [data-coreui-theme='dark'] .footer {
-//   --cui-footer-bg: #272829;
-// }
-
-// [data-coreui-theme='dark'] .header {
-//   --cui-header-bg: #272829;
-// }
-
-// [data-coreui-theme='dark'] .sidebar {
-//   --cui-sidebar-bg: #272829;
-// }
-
-// .navbar {
-//   background-color: #272829;
-// }
 </style>

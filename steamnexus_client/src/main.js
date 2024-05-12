@@ -4,7 +4,6 @@ import App from './App.vue'
 import router from './router/index.js'
 
 import CoreuiVue from '@coreui/vue'
-import '@coreui/coreui/dist/css/coreui.min.css'
 import CIcon from '@coreui/icons-vue'
 import { iconsSet as icons } from '@/assets/icons'
 
