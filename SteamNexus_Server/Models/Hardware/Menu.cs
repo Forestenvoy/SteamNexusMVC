@@ -15,6 +15,16 @@ public class Menu
     [MaxLength(50)]
     public string Name { get; set; }
 
+    [Required]
+    public int TotalPrice { get; set; } = 0;
+
+    [Required]
+    public bool Status { get; set; } = true;
+
+    [Required]
+    public bool Active { get; set; } = false;
+
+
     public virtual ICollection<MenuDetail> MenuDetails { get; set; } = new List<MenuDetail>();
 }
 

@@ -5,7 +5,7 @@
       <p class="description h2">$ 110,000</p>
       <p class="description mb-3">總共 11 個零件</p>
       <div class="tokenInfo">
-        <div class="state">
+        <div class="status">
           <p>正常</p>
         </div>
         <div class="duration">
@@ -21,7 +21,7 @@
   </div>
 </template>
 <script setup>
-// import { CRow, CCol } from '@coreui/vue'
+
 </script>
 <style scoped>
 .button-59 {
@@ -123,7 +123,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      .state {
+      .status {
         display: flex;
         align-items: center;
         color: #4eed73;
