@@ -8,7 +8,7 @@
       <label :for="props.typeName" class="m-0 h5">{{ props.typeName }}</label>
     </CCol>
     <CCol xs="12" md="10">
-      <select :name="props.typeName" class="form-select">
+      <select :name="props.typeName" class="form-select" @change="onSelectChange">
         <option value="-1" disabled hidden>null</option>
         <option value="0" disabled selected hidden>---- 請選擇硬體 ----</option>
         <optgroup :label="groupName" v-for="(group, groupName) in typeGroups" :key="groupName">
@@ -37,6 +37,8 @@ const props = defineProps({
   typeName: String,
   type: Number
 })
+
+const emit = defineEmits(['productSelected'])
 
 // 宣告 產品分類集合
 let typeGroups = ref({})
@@ -67,6 +69,13 @@ function productClassify(data) {
     // 將產品資料加入到對應的分類中
     typeGroups.value[Classification].push(item)
   })
+}
+
+// 產品選擇事件
+function onSelectChange(event) {
+  const price = event.target.options[event.target.options.selectedIndex].dataset.price
+  const wattage = event.target.options[event.target.options.selectedIndex].dataset.wattage
+  emit('productSelected', event.target.value, price, wattage)
 }
 
 onMounted(() => {

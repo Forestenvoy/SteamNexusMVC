@@ -6,14 +6,18 @@
     <select-list
       v-for="product in Products"
       :key="product.id"
+      ref="selectLists"
       :type="product.id"
       :type-name="product.name"
+      @product-selected="onProductSelected"
     ></select-list>
   </CModalBody>
   <CModalFooter>
     <CRow class="w-100">
       <CCol xs="6" class="d-flex align-items-center">
-        <label class="h3 m-0">$ 100000</label>
+        <label class="h3 m-0"
+          >$ {{ totalPrice.toLocaleString('zh-TW', { style: 'currency', currency: 'TWD' }) }}</label
+        >
       </CCol>
       <CCol xs="6" class="text-end">
         <CButton color="primary" class="me-4"> 建立 </CButton>
@@ -26,8 +30,12 @@
 <script setup>
 import { CModalHeader, CModalTitle, CModalBody, CModalFooter } from '@coreui/vue'
 import { CRow, CCol, CButton } from '@coreui/vue'
+import { ref } from 'vue'
 
 import SelectList from '@/components/backend/hardware/menu/create/SelectList.vue'
+
+const selectLists = ref([])
+let totalPrice = ref(0)
 
 let Products = [
   {
