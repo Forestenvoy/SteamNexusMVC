@@ -1,5 +1,5 @@
 <template>
-  <CContainer class="mt-1 mt-lg-3 mx-3">
+  <section class="mt-1 mt-lg-3 mx-3">
     <!-- 菜單管理 UI -->
     <CRow>
       <CCol sm="12" md="6" lg="5">
@@ -23,7 +23,7 @@
         </CButton>
       </CCol>
       <CCol sm="12" md="6" lg="3" class="d-flex justify-content-end align-items-end">
-        <CButton color="light" shape="rounded-0" class="border border-black" @click="addMenu()"
+        <CButton color="light" shape="rounded-0" class="border border-black" @click="Menu_Create()"
           >新增菜單</CButton
         >
       </CCol>
@@ -41,12 +41,13 @@
         <menu-card></menu-card>
       </CCol>
     </CRow>
-  </CContainer>
+  </section>
   <!-- Modal Start -->
   <!-- 新增、編輯 -->
   <!-- alignment="center" 置中 -->
   <!-- backdrop="static" 靜態 -->
   <CModal
+    size="xl"
     alignment="center"
     backdrop="static"
     :visible="isModalVisible"
@@ -57,22 +58,23 @@
     "
     aria-labelledby="MenuModal"
   >
-    <menu-modal-content></menu-modal-content>
+    <create-menu></create-menu>
   </CModal>
   <!-- Modal End -->
 </template>
 <script setup>
 // CCol 可以考慮 手機 sm 平板 md 桌機 lg
-import { CContainer, CRow, CCol } from '@coreui/vue'
+import { CRow, CCol } from '@coreui/vue'
 import { CButton, CFormInput } from '@coreui/vue'
 import { ref } from 'vue'
 
-import MenuModalContent from '@/components/backend/hardware/MenuModalContent.vue'
+import CreateMenu from '@/components/backend/hardware/CreateMenu.vue'
 import MenuCard from '@/components/backend/hardware/MenuCard.vue'
 
 let isModalVisible = ref(false)
 
-function addMenu() {
+// 新增菜單 Modal 開啟
+function Menu_Create() {
   isModalVisible.value = true
 }
 </script>
