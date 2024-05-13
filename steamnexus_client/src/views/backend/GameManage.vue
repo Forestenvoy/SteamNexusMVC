@@ -37,7 +37,7 @@
       <CButton color="secondary" @click="() => { visibleVerticallyCenteredScrollableDemo = false }">
         關閉
       </CButton>
-      <CButton color="primary" @click="submitDataToDb">儲存</CButton>
+      <CButton color="primary"  @click="submitDataToDb">儲存</CButton>
     </CModalFooter>
   </CModal>
 </template>
@@ -169,16 +169,7 @@ async function showSwal(val,urlValue) {
     // }
 }
 
-// 
 function submitDataToDb(){
-    const createViewContent = gameCreateViewRef.value
-    console.log(createViewContent.ReleaseDate);
-    const createViewDate = new Date(createViewContent.ReleaseDate);
-    console.log(typeof createViewDate);
-    
-    
-    const label = createViewContent.$el.querySelectorAll('input')
-    // console.log(label);
 $.ajax({
     type: "POST",
     contentType: "application/json",
@@ -202,6 +193,7 @@ $.ajax({
         $("#systemLoading").hide();
         $("#System").html(data);
     });
+    
 }
 
 onMounted(() => {

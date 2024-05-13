@@ -38,15 +38,16 @@
       <div class="formBox">
       <label class="text-center" for="ImagePath">遊戲圖片</label>
       <img v-bind:src="imagesrc" id="imgPreview" title="上無內容" style="width:250px;" /><br>
-      <Field name="ImagePath" class="form-control text-center" type="text" rules="required" @change="ImageChange" v-model="ImagePath"/>
+      <Field name="ImagePath" class="form-control text-center" type="text" rules="" @change="ImageChange" v-model="ImagePath"/>
       <ErrorMessage class="text-danger" name="ImagePath" />
     </div>
     <div class="formBox">
       <label class="text-center" for="VideoPath">遊戲影片</label>
       <video v-bind:src="videosrc" id="videoPreview" width="250" controls autoplay muted></video><br>
-      <Field name="VideoPath" class="form-control text-center" type="text" rules="required" @change="VideoChange" v-model="VideoPath"/>
+      <Field name="VideoPath" class="form-control text-center" type="text" rules="" @change="VideoChange" v-model="VideoPath"/>
       <ErrorMessage class="text-danger" name="VideoPath" />
     </div>
+    <button>Submit</button>
   </Form>
 </template>
 
@@ -55,16 +56,26 @@ import { defineRule, Form, Field, ErrorMessage, configure } from 'vee-validate';
 import { required, between, confirmed, numeric} from '@vee-validate/rules';
 import { localize } from '@vee-validate/i18n';
 import zh_TW from'@/components/backend/Game/zh_TW.json'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted,defineEmits } from 'vue'
 
 // define global rules
 defineRule('required', required);
 defineRule('between', between);
 defineRule('confirmed', confirmed);
 defineRule('numeric', numeric);
-
+const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 var imagesrc = ref('http://localhost:5173/public/img/noImage.png')
 var videosrc = ref('#')
+
+var AppId=ref("")
+var Name=ref("")
+var OriginalPrice=ref("")
+var AgeRating=ref("")
+var ReleaseDate=ref("")
+var Publisher=ref("")
+var Description=ref("")
+var ImagePath=ref("")
+var VideoPath=ref("")
 
 function ImageChange(event) {
     if (event.target.value != "") {
@@ -90,15 +101,63 @@ function VideoChange(event) {
     } 
 }
 
-var AppId=ref("")
-var Name=ref("")
-var OriginalPrice=ref("")
-var AgeRating=ref("")
-var ReleaseDate=ref("")
-var Publisher=ref("")
-var Description=ref("")
-var ImagePath=ref("")
-var VideoPath=ref("")
+function onSubmit(event) {
+  
+  $.ajax({
+    type: "POST",
+    contentType: "application/json",
+    data: JSON.stringify({
+        appId: AppId.value,
+        name: Name.value,
+        originalPrice:OriginalPrice.value,
+        ageRating: AgeRating.value,
+        releaseDate: ReleaseDate.value===""?null:ReleaseDate.value  ,
+        publisher: Publisher.value,
+        description: Description.value,
+        imagePath: ImagePath.value,
+        videoPath: VideoPath.value
+    }),
+    url: `${apiUrl}/api/GamesManagement/PostCreatPartialToDB`
+}).done(data => {
+        $("#systemLoading").hide();
+        $("#System").html(data);
+    })
+    .fail(data => {
+        $("#systemLoading").hide();
+        $("#System").html(data);
+    });
+    
+}
+
+// function submitDataToDb(){
+// $.ajax({
+//     type: "POST",
+//     contentType: "application/json",
+//     data: JSON.stringify({
+//         appId: AppId,
+//         name: Name,
+//         originalPrice:OriginalPrice,
+//         ageRating: AgeRating,
+//         releaseDate: ReleaseDate,
+//         publisher: Publisher,
+//         description: Description,
+//         imagePath: ImagePath,
+//         videoPath: VideoPath
+//     }),
+//     url: `${apiUrl}/api/GamesManagement/PostCreatPartialToDB`
+// }).done(data => {
+//         $("#systemLoading").hide();
+//         $("#System").html(data);
+//     })
+//     .fail(data => {
+//         $("#systemLoading").hide();
+//         $("#System").html(data);
+//     });
+    
+// }
+
+
+
 
 defineExpose({AppId,Name,OriginalPrice,AgeRating,ReleaseDate,Publisher,Description,ImagePath,VideoPath})
 
@@ -117,6 +176,7 @@ configure({
     messages: zh_TW.messages
   })
 });
+
 </script>
 
 <style scoped>
