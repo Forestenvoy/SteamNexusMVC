@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SteamNexus.ViewModels.Game
+namespace SteamNexus_Server.ViewModels.Game
 {
     public class EditViewModel
     {

@@ -14,7 +14,7 @@ export default {
     ext: "{field} 須為有效的檔案",
     image: "{field} 須為圖片",
     one_of: "{field} 的選項無效",
-    integer: "{field} 須為整數",
+    integer: "{field} 須為數字",
     length: "{field} 的長度須為 0:{length}",
     max: "{field} 不能大於 0:{length} 個字元",
     max_value: "{field} 不得大於 0:{max}",

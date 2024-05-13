@@ -1,5 +1,4 @@
-﻿using SteamNexus_Server.Models;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace SteamNexus_Server.ViewModels.Game
 {
@@ -24,7 +23,7 @@ namespace SteamNexus_Server.ViewModels.Game
         public string? AgeRating { get; set; }
 
         [Display(Name = "上市日期")]
-        [MaxLength(100)]
+        //[MaxLength(100)]
         public DateTime? ReleaseDate { get; set; }
 
         [Display(Name = "發行商")]

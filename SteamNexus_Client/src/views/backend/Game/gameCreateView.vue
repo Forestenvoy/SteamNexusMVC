@@ -1,100 +1,149 @@
 <template>
-  <div id="app">
-    <h2>套用一個現成的流程</h2>
-    <p>參考文件：<a href="https://hackmd.io/FFv0a5cBToOATP7uI5COMQ">https://hackmd.io/FFv0a5cBToOATP7uI5COMQ</a></p>
-
-    <h3>範例：載入 VeeValidate 驗證套件</h3>
-    <v-form @submit="onSubmit" v-slot="{ errors }">
-      <div class="mb-3">
-        <v-field
-          id="email"
-          name="email"
-          type="email"
-          class="form-control"
-          :class="{ 'is-invalid': errors['email'] }"
-          placeholder="請輸入 Email"
-          rules="required|email"
-          v-model="user.email"
-        ></v-field>
-        <error-message name="email" class="invalid-feedback"></error-message>
-      </div>
-
-      <div class="mb-3">
-        <label for="name" class="form-label">姓名</label>
-        <v-field id="name" name="姓名" type="text" class="form-control" placeholder="請輸入姓名"></v-field>
-        <span class="invalid-feedback"></span>
-      </div>
-
-      <div class="mb-3">
-        <label for="phone" class="form-label">電話</label>
-        <v-field id="phone" name="電話" type="text" class="form-control" placeholder="請輸入電話"></v-field>
-        <span class="invalid-feedback"></span>
-      </div>
-
-      <div class="mb-3">
-        <label for="region" class="form-label">地區</label>
-        <select id="region" name="地區" class="form-control">
-          <option value="">請選擇地區</option>
-          <option value="台北市">台北市</option>
-          <option value="高雄市">高雄市</option>
-        </select>
-        <span class="invalid-feedback"></span>
-      </div>
-
-      <div class="mb-3">
-        <label for="address" class="form-label">地址</label>
-        <input id="address" name="地址" type="text" class="form-control" placeholder="請輸入地址">
-        <span class="invalid-feedback"></span>
-      </div>
-
-      <button class="btn btn-primary" type="submit">Submit</button>
-    </v-form>
-  </div>
+  <Form @submit="onSubmit">
+    <div class="formBox">
+      <label class="text-center" for="AppId">AppId</label>
+      <Field  id="AppId" name="AppId" class="form-control text-center" type="number" rules="required|numeric" v-model="AppId" />
+      <ErrorMessage class="text-danger " name="AppId" />
+    </div>
+    <div class="formBox">
+      <label class="text-center" for="Name">遊戲名稱</label>
+      <Field name="Name" class="form-control text-center" type="text"  rules="required" v-model="Name"/>
+      <ErrorMessage class="text-danger" name="Name" />
+    </div>
+    <div class="formBox">
+      <label class="text-center" for="OriginalPrice">原始價格</label>
+      <Field name="OriginalPrice" class="form-control text-center" type="number" rules="required" v-model="OriginalPrice"/>
+      <ErrorMessage class="text-danger" name="OriginalPrice" />
+    </div>
+    <div class="formBox">
+      <label class="text-center" for="AgeRating">遊戲分級</label>
+      <Field name="AgeRating" class="form-control text-center" type="text" rules="required" v-model="AgeRating" aria-placeholder="18+"/>
+      <ErrorMessage class="text-danger" name="AgeRating" />
+    </div>
+    <div class="formBox">
+      <label class="text-center" for="ReleaseDate">上市日期</label>
+      <Field name="ReleaseDate" class="form-control text-center" type="date" rules="" v-model="ReleaseDate"/>
+      <ErrorMessage class="text-danger" name="ReleaseDate" />
+    </div>
+    <div class="formBox">
+      <label class="text-center" for="Publisher">開發商</label>
+      <Field name="Publisher" class="form-control text-center" type="text" rules="" v-model="Publisher"/>
+      <ErrorMessage class="text-danger" name="Publisher" />
+    </div>
+    <div class="formBox">
+      <label class="text-center" for="Description">遊戲介紹</label>
+      <Field name="Description" class="form-control text-center" type="text" rules="" v-model="Description"  />
+      <ErrorMessage class="text-danger" name="Description" />
+    </div>
+      <div class="formBox">
+      <label class="text-center" for="ImagePath">遊戲圖片</label>
+      <img v-bind:src="imagesrc" id="imgPreview" title="上無內容" style="width:250px;" /><br>
+      <Field name="ImagePath" class="form-control text-center" type="text" rules="required" @change="ImageChange" v-model="ImagePath"/>
+      <ErrorMessage class="text-danger" name="ImagePath" />
+    </div>
+    <div class="formBox">
+      <label class="text-center" for="VideoPath">遊戲影片</label>
+      <video v-bind:src="videosrc" id="videoPreview" width="250" controls autoplay muted></video><br>
+      <Field name="VideoPath" class="form-control text-center" type="text" rules="required" @change="VideoChange" v-model="VideoPath"/>
+      <ErrorMessage class="text-danger" name="VideoPath" />
+    </div>
+  </Form>
 </template>
 
-<script>
-import { defineRule, configure, Form, Field, ErrorMessage } from 'vee-validate';
-import { required, email } from '@vee-validate/rules';
-import { loadLocaleFromURL, localize } from '@vee-validate/i18n';
+<script setup>
+import { defineRule, Form, Field, ErrorMessage, configure } from 'vee-validate';
+import { required, between, confirmed, numeric} from '@vee-validate/rules';
+import { localize } from '@vee-validate/i18n';
+import zh_TW from'@/components/backend/Game/zh_TW.json'
+import { ref, onMounted } from 'vue'
 
-export default {
-  name: 'App',
-  components: {
-    VForm: Form,
-    VField: Field,
-    ErrorMessage: ErrorMessage
-  },
-  data() {
-    return {
-      user: {
-        email: '',
-        name: '',
-        address: '',
-        phone: ''
-      }
-    };
-  },
-  methods: {
-    onSubmit() {
-      console.log(this.user);
-    },
-    isPhone(value) {
-      const phoneNumber = /^(09)[0-9]{8}$/;
-      return phoneNumber.test(value) ? true : '需要正確的電話號碼';
+// define global rules
+defineRule('required', required);
+defineRule('between', between);
+defineRule('confirmed', confirmed);
+defineRule('numeric', numeric);
+
+var imagesrc = ref('http://localhost:5173/public/img/noImage.png')
+var videosrc = ref('#')
+
+function ImageChange(event) {
+    if (event.target.value != "") {
+        var img = new Image();
+        img.onload = function () {
+            imagesrc=event.target.value
+        };
+        img.onerror = function () {
+            // 如果網址有效但沒有圖片，顯示預設圖片
+            $("#imgPreview").attr("src", "/img/noImage.png");
+        };
+        img.src = event.target.value; // 設置圖片網址來檢查它是否有效
     }
-  },
-  created() {
-    defineRule('email', email);
-    defineRule('required', required);
-    loadLocaleFromURL('./zh_TW.json');
-    configure({
-      generateMessage: localize('zh_TW'),
-      validateOnInput: true
-    });
-  }
-};
+    else {
+        $("#imgPreview").attr("src", "/img/noImage.png");
+    }
+    
+}
+
+function VideoChange(event) {
+    if (event.target.value != "") {
+        videosrc=event.target.value
+    } 
+}
+
+var AppId=ref("")
+var Name=ref("")
+var OriginalPrice=ref("")
+var AgeRating=ref("")
+var ReleaseDate=ref("")
+var Publisher=ref("")
+var Description=ref("")
+var ImagePath=ref("")
+var VideoPath=ref("")
+
+defineExpose({AppId,Name,OriginalPrice,AgeRating,ReleaseDate,Publisher,Description,ImagePath,VideoPath})
+
+configure({
+  generateMessage: localize('zh_TW', {
+    names: {
+      Name: '遊戲名稱',
+      OriginalPrice:'原始價格',
+      AgeRating:'遊戲分級',
+      ReleaseDate:'上市日期',
+      Publisher:'開發商',
+      Description:'遊戲介紹',
+      ImagePath:'遊戲圖片',
+      VideoPath:'遊戲影片'
+    },
+    messages: zh_TW.messages
+  })
+});
 </script>
 
 <style scoped>
-/* 在這裡添加相關的 CSS 樣式 */
+@import 'bootstrap/dist/css/bootstrap.min.css';
+span,
+button {
+  display: block;
+  margin: 10px 0;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.formBox{
+  margin-bottom: 20px;
+}
 </style>
+
+<!-- var AppId=ref("")
+var Name=ref("")
+var OriginalPrice=ref("")
+var AgeRating=ref("")
+var ReleaseDate=ref("")
+var Publisher=ref("")
+var Description=ref("")
+var ImagePath=ref("")
+var VideoPath=ref("") 
+AppId,Name,OriginalPrice,AgeRating,ReleaseDate,Publisher,Description,ImagePath,VideoPath-->

@@ -25,23 +25,24 @@
     @close="() => { visibleVerticallyCenteredScrollableDemo = false }"
     aria-labelledby="VerticallyCenteredExample2"
   >
-    <CModalHeader>
-      <CModalTitle id="VerticallyCenteredExample2">Modal title</CModalTitle>
-    </CModalHeader>
+  <CModalTitle id="VerticallyCenteredExample2" class="mt-4 text-center fs-2 fw-bold">新增遊戲</CModalTitle>
+  <hr>
+    <!-- <CModalHeader>
+      
+    </CModalHeader> -->
     <CModalBody>
-      <component :if="isCreateView==true" :is="gameCreateView"  ref="gameCreateViewRef" />
+        <gameCreateView  :is="gameCreateView"  ref="gameCreateViewRef" @create-json="getDataFromComponent"/>
     </CModalBody>
     <CModalFooter>
       <CButton color="secondary" @click="() => { visibleVerticallyCenteredScrollableDemo = false }">
-        Close
+        關閉
       </CButton>
-      <CButton color="primary">Save changes</CButton>
+      <CButton color="primary" @click="submitDataToDb">儲存</CButton>
     </CModalFooter>
   </CModal>
 </template>
 
 <script setup >
-import { CAlert } from '@coreui/vue';
 import $ from 'jquery'
 import DataTable from 'datatables.net-dt'
 import 'datatables.net-fixedheader-dt'
@@ -56,6 +57,7 @@ import { ref, onMounted } from 'vue'
 import { onBeforeRouteLeave } from 'vue-router'
  
 import {dataTableConfig} from'@/components/backend/Game/dataTableConfig.js'
+
 import {GetGamePriceDataToDB,GetOnlineUsersDataToDB,GetNumberOfCommentsDataToDB,GetMinDataToDB,GetRecDataToDB} from'@/components/backend/Game/topBtnFetch.js'
 import Swal from 'sweetalert2'
 
@@ -71,7 +73,7 @@ const isCreateView= ref(false)
 const handleClick = () => {
     visibleVerticallyCenteredScrollableDemo.value = true;
     isCreateView.value = true;
-        
+
 };
 //拿取datatable的資料
 function getdatatableData() {
@@ -167,8 +169,42 @@ async function showSwal(val,urlValue) {
     // }
 }
 
+// 
+function submitDataToDb(){
+    const createViewContent = gameCreateViewRef.value
+    console.log(createViewContent.ReleaseDate);
+    const createViewDate = new Date(createViewContent.ReleaseDate);
+    console.log(typeof createViewDate);
+    
+    
+    const label = createViewContent.$el.querySelectorAll('input')
+    // console.log(label);
+$.ajax({
+    type: "POST",
+    contentType: "application/json",
+    data: JSON.stringify({
+        appId: createViewContent.AppId,
+        name: createViewContent.Name,
+        originalPrice:createViewContent.OriginalPrice,
+        ageRating: createViewContent.AgeRating,
+        releaseDate: createViewContent.ReleaseDate,
+        publisher: createViewContent.Publisher,
+        description: createViewContent.Description,
+        imagePath: createViewContent.ImagePath,
+        videoPath: createViewContent.VideoPath
+    }),
+    url: `${apiUrl}/api/GamesManagement/PostCreatPartialToDB`
+}).done(data => {
+        $("#systemLoading").hide();
+        $("#System").html(data);
+    })
+    .fail(data => {
+        $("#systemLoading").hide();
+        $("#System").html(data);
+    });
+}
+
 onMounted(() => {
-    alert(isCreateView.value)
   getdatatableData();
   dataTable = new DataTable('#GameManageTable', {
     ...dataTableConfig,
@@ -180,7 +216,6 @@ onMounted(() => {
             buttons: [
                 {
                     text: '新增遊戲',
-
                     // 按鈕點擊事件
                     action: function () {
                         handleClick();
