@@ -191,7 +191,7 @@ function createMenuDetails(id) {
         console.log(data)
         // 最後一筆資料建立完成後關閉視窗
         if (i === selectLists.value.length - 1) {
-          emit('create-result', `${menuName.value} 建立成功`)
+          emit('create-result', `${menuName.value} 建立成功`, true, menuId)
           emit('modal-close')
         }
       })

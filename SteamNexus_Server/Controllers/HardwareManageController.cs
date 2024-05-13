@@ -491,7 +491,7 @@ namespace SteamNexus_Server.Controllers
         public IEnumerable<object> GetMenuList()
         {
             // 下拉式選單 => 硬體
-            var ComputerParts = _context.Menus.Select(c => new
+            var MenuLists = _context.Menus.Select(c => new
             {
                 Id = c.MenuId,
                 c.Name,
@@ -500,7 +500,27 @@ namespace SteamNexus_Server.Controllers
                 c.Active,
                 Count = c.MenuDetails.Count()
             });
-            return ComputerParts;
+            return MenuLists;
+        }
+
+        // 回傳 菜單資料
+        // GET: 
+        [HttpGet("GetMenu")]
+        public IEnumerable<object> GetMenu(int MenuId)
+        {
+            // 下拉式選單 => 硬體
+            var MenuDate = _context.Menus
+                .Where(c => c.MenuId == MenuId)
+                .Select(c => new
+                {
+                    Id = c.MenuId,
+                    c.Name,
+                    c.TotalPrice,
+                    c.Status,
+                    c.Active,
+                    Count = c.MenuDetails.Count()
+                });
+            return MenuDate;
         }
 
     }

@@ -29,16 +29,18 @@
       </CCol>
     </CRow>
     <CRow>
-      <menu-card
-        v-for="menu in menuLists"
-        :key="menu.id"
-        :menuId="menu.id"
-        :menuName="menu.name"
-        :menuPrice="menu.totalPrice"
-        :menuCount="menu.count"
-        :menuStatus="menu.status"
-        :menuActive="menu.active"
-      ></menu-card>
+      <transition-group name="menu-list">
+        <menu-card
+          v-for="menu in menuLists"
+          :key="menu.id"
+          :menuId="menu.id"
+          :menuName="menu.name"
+          :menuPrice="menu.totalPrice"
+          :menuCount="menu.count"
+          :menuStatus="menu.status"
+          :menuActive="menu.active"
+        ></menu-card>
+      </transition-group>
     </CRow>
   </section>
   <!-- Modal Start -->
@@ -87,7 +89,11 @@ function Menu_Create() {
 }
 
 // 訊息結果
-function presentResult(result) {
+function presentResult(result, isSuccess, menuId) {
+  if (isSuccess) {
+    insertMenu(menuId)
+  }
+
   toast.success(result, {
     theme: 'dark',
     autoClose: 2000,
@@ -95,6 +101,13 @@ function presentResult(result) {
     position: toast.POSITION.TOP_CENTER
   })
 }
+
+// 成功的話 插入列表
+function insertMenu(menuId) {
+  console.log(`${menuId}插入成功`)
+}
+
+// 獲取單一菜單資料
 
 // 獲取菜單列表
 function getMenuList() {
@@ -118,4 +131,16 @@ onMounted(() => {
   getMenuList()
 })
 </script>
-<style></style>
+<style scoped>
+.menu-list-leave-active {
+  position: absolute;
+}
+
+.menu-list-enter-from {
+  transform: translateY(-30px);
+}
+
+.menu-list-leave-to {
+  transform: translateY(30px);
+}
+</style>
