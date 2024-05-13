@@ -17,13 +17,19 @@
             <p>{{ props.menuStatus ? '正常' : '異常' }}</p>
           </div>
           <div class="duration">
-            <CFormCheck id="ActiveCheck" label="上架" class="mb-2" :checked="props.menuActive" />
+            <CFormCheck
+              id="ActiveCheck"
+              label="上架"
+              class="mb-2"
+              v-model="menuActive"
+              @change="onMenuActive"
+            />
           </div>
         </div>
         <hr />
         <div class="creator d-flex justify-content-evenly">
           <button role="button" class="button-59">編輯</button>
-          <button role="button" class="button-59 button-59-del">刪除</button>
+          <button role="button" class="button-59 button-59-del" @click="onMenuDelete">刪除</button>
         </div>
       </div>
     </div>
@@ -32,6 +38,7 @@
 
 <script setup>
 import { CCol } from '@coreui/vue'
+import { ref } from 'vue'
 
 const props = defineProps({
   menuId: Number,
@@ -41,6 +48,13 @@ const props = defineProps({
   menuStatus: Boolean,
   menuActive: Boolean
 })
+
+let menuActive = ref(props.menuActive)
+
+// 上下架切換
+const onMenuActive = () => {
+  console.log(menuActive.value)
+}
 </script>
 
 <style scoped>
@@ -77,25 +91,29 @@ const props = defineProps({
 
 .button-59:hover {
   border-color: #06f;
-  color: #06f;
+  background-color: #06f;
+  color: #fff;
   fill: #06f;
 }
 
 .button-59-del:hover {
   border-color: red;
-  color: red;
+  background-color: red;
+  color: #fff;
   fill: red;
 }
 
 .button-59:active {
   border-color: #06f;
-  color: #06f;
+  background-color: #06f;
+  color: #fff;
   fill: #06f;
 }
 
 .button-59-del:active {
   border-color: red;
-  color: red;
+  background-color: red;
+  color: #fff;
   fill: red;
 }
 </style>
