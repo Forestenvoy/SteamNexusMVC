@@ -104,11 +104,25 @@ function presentResult(result, isSuccess, menuId) {
 
 // 成功的話 插入列表
 function insertMenu(menuId) {
-  console.log(`${menuId}插入成功`)
+  getMenu(menuId)
 }
 
 // 獲取單一菜單資料
-
+function getMenu(id) {
+  fetch(`${apiUrl}/api/HardwareManage/GetMenu?MenuId=${id}`, { method: 'GET' })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('NetworkError')
+      }
+      return response.json()
+    })
+    .then((data) => {
+      menuLists.value.push(data)
+    })
+    .catch((error) => {
+      console.error(error.message)
+    })
+}
 // 獲取菜單列表
 function getMenuList() {
   fetch(`${apiUrl}/api/HardwareManage/GetMenuList`, { method: 'GET' })

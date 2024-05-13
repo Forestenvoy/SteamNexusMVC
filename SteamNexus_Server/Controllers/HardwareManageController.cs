@@ -506,10 +506,10 @@ namespace SteamNexus_Server.Controllers
         // 回傳 菜單資料
         // GET: 
         [HttpGet("GetMenu")]
-        public IEnumerable<object> GetMenu(int MenuId)
+        public async Task<object> GetMenu(int MenuId)
         {
             // 下拉式選單 => 硬體
-            var MenuDate = _context.Menus
+            var MenuDate = await _context.Menus
                 .Where(c => c.MenuId == MenuId)
                 .Select(c => new
                 {
@@ -519,7 +519,8 @@ namespace SteamNexus_Server.Controllers
                     c.Status,
                     c.Active,
                     Count = c.MenuDetails.Count()
-                });
+                }).FirstOrDefaultAsync();
+
             return MenuDate;
         }
 
