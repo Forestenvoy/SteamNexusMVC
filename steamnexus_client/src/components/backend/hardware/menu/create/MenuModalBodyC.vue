@@ -58,11 +58,17 @@ import { ref } from 'vue'
 
 import SelectList from '@/components/backend/hardware/menu/create/SelectList.vue'
 
+// 從環境變數取得 API BASE URL
+const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
+
 const selectLists = ref([])
 let menuName = ref('')
 let totalPrice = ref(0)
 let totalWattage = ref(0)
 let errorMessage = ref('')
+
+// 宣告產品清單
+let MenuDetails = []
 
 const emit = defineEmits(['modal-close'])
 
@@ -127,6 +133,36 @@ function onProductSelected(value, price, wattage) {
   totalWattage.value = totalWattage.value + wattage
 }
 
+// 建立菜單至資料庫
+function createMenuData() {
+  fetch(`${apiUrl}/api/HardwareManage/CreateMenu`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      Name: menuName.value,
+      TotalPrice: totalPrice.value
+    })
+  })
+    .then((response) => {
+      if (!response.ok) {
+        return response.text().then((errorMessage) => {
+          throw new Error(errorMessage)
+        })
+      }
+      return response.text()
+    })
+    .then((data) => {
+      console.log(data)
+    })
+    .catch((error) => {
+      console.error('Error:', error)
+    })
+}
+
+// MenuDetails 建立至資料庫
+
 // 菜單建立事件
 function onMenuCreate() {
   errorMessage.value = ''
@@ -162,6 +198,8 @@ function onMenuCreate() {
     }
 
     errorMessage.value = ''
+
+    // 將數據保存
   }
 
   if (SSDValue === 0 && HDDValue === 0 && isLoopFinish) {
@@ -174,8 +212,8 @@ function onMenuCreate() {
     return
   }
 
-
-  
+  // 建立菜單
+  createMenuData()
 }
 </script>
 

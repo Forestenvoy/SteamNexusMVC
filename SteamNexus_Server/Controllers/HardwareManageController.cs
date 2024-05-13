@@ -399,5 +399,40 @@ namespace SteamNexus_Server.Controllers
             return Content($"{message}", "text/event-stream", Encoding.UTF8);
         }
 
+        // 菜單 DTO 
+        public class MenuDto
+        {
+            [Required]
+            [MaxLength(50)]
+            public string? Name { get; set; }
+
+            [Required]
+            public int TotalPrice { get; set; } = 0;
+        }
+
+
+
+        // Menu 建立
+        // POST
+        [HttpPost("CreateMenu")]
+        public IActionResult CreateMenu([FromBody] MenuDto data) {
+
+            // 如果驗證合法
+            if (ModelState.IsValid)
+            {
+                Menu menu = new Menu();
+                menu.Name = data.Name;
+                menu.TotalPrice = data.TotalPrice;
+
+                _context.Menus.Add(menu);
+                _context.SaveChanges();
+
+                return Ok(menu.MenuId);
+            }
+            else
+            {
+                return BadRequest("Menu 資料錯誤");       
+            }
+        }
     }
 }
