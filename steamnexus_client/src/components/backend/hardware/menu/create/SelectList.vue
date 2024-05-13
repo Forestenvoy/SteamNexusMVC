@@ -75,7 +75,7 @@ function productClassify(data) {
 function onSelectChange(event) {
   const price = event.target.options[event.target.options.selectedIndex].dataset.price
   const wattage = event.target.options[event.target.options.selectedIndex].dataset.wattage
-  emit('productSelected', event.target.value, price, wattage)
+  emit('productSelected', event.target.value, Number(price), Number(wattage))
 }
 
 onMounted(() => {

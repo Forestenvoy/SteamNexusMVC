@@ -1,8 +1,28 @@
 <template>
   <CModalHeader>
-    <CModalTitle id="MenuModal">Create Menu</CModalTitle>
+    <CModalTitle id="MenuModal" class="me-5">Create Menu</CModalTitle>
+    <CModalTitle class="error-message">{{ errorMessage }}</CModalTitle>
   </CModalHeader>
   <CModalBody>
+    <CRow class="mb-3">
+      <CCol
+        xs="12"
+        md="2"
+        class="d-flex align-items-center justify-content-center justify-content-md-start mb-3 mb-md-0"
+      >
+        <label class="m-0 h5">Menu Name</label>
+      </CCol>
+      <CCol xs="12" md="10">
+        <input
+          type="text"
+          class="form-control"
+          id="menuName"
+          v-model="menuName"
+          placeholder="請輸入菜單名稱"
+          pattern="^[A-Za-z0-9\u4e00-\u9fa5]+$"
+        />
+      </CCol>
+    </CRow>
     <select-list
       v-for="product in Products"
       :key="product.id"
@@ -15,13 +35,17 @@
   <CModalFooter>
     <CRow class="w-100">
       <CCol xs="6" class="d-flex align-items-center">
-        <label class="h3 m-0"
-          >$ {{ totalPrice.toLocaleString('zh-TW', { style: 'currency', currency: 'TWD' }) }}</label
-        >
+        <label class="h3 m-0 me-5"
+          >$
+          {{
+            Math.floor(totalPrice).toLocaleString('zh-TW', { style: 'currency', currency: 'TWD' })
+          }}
+        </label>
+        <label class="h3 m-0">{{ totalWattage }} 瓦 </label>
       </CCol>
       <CCol xs="6" class="text-end">
-        <CButton color="primary" class="me-4"> 建立 </CButton>
-        <CButton color="secondary" @click="$emit('modal-close')"> 關閉 </CButton>
+        <CButton color="primary" class="me-4" @click="onMenuCreate"> 建立 </CButton>
+        <CButton color="secondary" @click="modalClose"> 關閉 </CButton>
       </CCol>
     </CRow>
   </CModalFooter>
@@ -35,8 +59,14 @@ import { ref } from 'vue'
 import SelectList from '@/components/backend/hardware/menu/create/SelectList.vue'
 
 const selectLists = ref([])
+let menuName = ref('')
 let totalPrice = ref(0)
+let totalWattage = ref(0)
+let errorMessage = ref('')
 
+const emit = defineEmits(['modal-close'])
+
+// 宣告產品分類清單
 let Products = [
   {
     id: 10000,
@@ -83,6 +113,74 @@ let Products = [
     name: 'OS'
   }
 ]
+
+// 互動視窗 關閉事件
+function modalClose() {
+  emit('modal-close')
+}
+
+// 產品選擇事件
+function onProductSelected(value, price, wattage) {
+  // 價格加總
+  totalPrice.value = totalPrice.value + price
+  // 瓦數加總
+  totalWattage.value = totalWattage.value + wattage
+}
+
+// 菜單建立事件
+function onMenuCreate() {
+  errorMessage.value = ''
+  // 驗證
+  if (menuName.value === '') {
+    errorMessage.value = '請輸入菜單名稱'
+    return
+  }
+
+  let SSDValue = 0
+  let HDDValue = 0
+  let isLoopFinish = true
+
+  for (let i = 0; i < selectLists.value.length; i++) {
+    // 獲取 select-list 元素
+    const selectList = selectLists.value[i]
+    // 獲取元件裡的 select 元素
+    const selectElement = selectList.$el.querySelector('select') // 获取 select-list 组件内部的 select 元素
+    const selectedValue = selectElement.value // 获取 select 元素的值
+    const selectName = selectElement.getAttribute('name')
+
+    if (selectName !== 'SSD' && selectName !== 'HDD' && selectedValue === '0') {
+      errorMessage.value = `請選擇 ${selectName}`
+      isLoopFinish = false
+      break
+    }
+
+    if (selectName === 'SSD') {
+      SSDValue = Number(selectedValue)
+    }
+    if (selectName === 'HDD') {
+      HDDValue = Number(selectedValue)
+    }
+
+    errorMessage.value = ''
+  }
+
+  if (SSDValue === 0 && HDDValue === 0 && isLoopFinish) {
+    errorMessage.value = 'SSD 和 HDD 請至少選擇一項'
+    return
+  }
+
+  // 驗證錯誤 中斷事件
+  if (errorMessage.value !== '') {
+    return
+  }
+
+
+  
+}
 </script>
 
-<style></style>
+<style scoped>
+.error-message {
+  color: red;
+}
+</style>
