@@ -28,18 +28,17 @@
         >
       </CCol>
     </CRow>
-    <!-- 菜單列表 -->
     <CRow>
-      <CCol
-        sm="12"
-        md="6"
-        lg="4"
-        xl="3"
-        style="height: 350px"
-        class="d-flex justify-content-center align-items-center"
-      >
-        <menu-card></menu-card>
-      </CCol>
+      <menu-card
+        v-for="menu in menuLists"
+        :key="menu.id"
+        :menuId="menu.id"
+        :menuName="menu.name"
+        :menuPrice="menu.totalPrice"
+        :menuCount="menu.count"
+        :menuStatus="menu.status"
+        :menuActive="menu.active"
+      ></menu-card>
     </CRow>
   </section>
   <!-- Modal Start -->
@@ -69,13 +68,18 @@
 // CCol 可以考慮 手機 sm 平板 md 桌機 lg
 import { CRow, CCol } from '@coreui/vue'
 import { CButton, CFormInput } from '@coreui/vue'
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { toast } from 'vue3-toastify'
 import 'vue3-toastify/dist/index.css'
 import MenuModalBodyC from '@/components/backend/hardware/menu/create/MenuModalBodyC.vue'
 import MenuCard from '@/components/backend/hardware/MenuCard.vue'
 
+// 從環境變數取得 API BASE URL
+const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
+
 let isModalVisible = ref(false)
+
+let menuLists = ref([])
 
 // 新增菜單 Modal 開啟
 function Menu_Create() {
@@ -85,9 +89,33 @@ function Menu_Create() {
 // 訊息結果
 function presentResult(result) {
   toast.success(result, {
+    theme: 'dark',
+    autoClose: 2000,
     transition: toast.TRANSITIONS.ZOOM,
     position: toast.POSITION.TOP_CENTER
   })
 }
+
+// 獲取菜單列表
+function getMenuList() {
+  fetch(`${apiUrl}/api/HardwareManage/GetMenuList`, { method: 'GET' })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('NetworkError')
+      }
+      return response.json()
+    })
+    .then((data) => {
+      menuLists.value = data
+    })
+    .catch((error) => {
+      console.error(error.message)
+    })
+}
+
+onMounted(() => {
+  // 獲取菜單列表
+  getMenuList()
+})
 </script>
 <style></style>

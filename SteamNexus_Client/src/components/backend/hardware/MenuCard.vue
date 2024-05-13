@@ -1,28 +1,46 @@
 <template>
-  <div class="nft">
-    <div class="main">
-      <h2 class="ms-1">Name</h2>
-      <p class="description h2">$ 110,000</p>
-      <p class="description mb-3">總共 11 個零件</p>
-      <div class="tokenInfo">
-        <div class="status">
-          <p>正常</p>
+  <CCol
+    sm="12"
+    md="6"
+    lg="4"
+    xl="3"
+    style="height: 350px"
+    class="d-flex justify-content-center align-items-center"
+  >
+    <div class="nft">
+      <div class="main">
+        <h2 class="ms-1">{{ props.menuName }}</h2>
+        <p class="description h2">$ {{ props.menuPrice }}</p>
+        <p class="description mb-3">總共 {{ props.menuCount }} 個零件</p>
+        <div class="tokenInfo">
+          <div class="status">
+            <p>{{ props.menuStatus ? '正常' : '異常' }}</p>
+          </div>
+          <div class="duration">
+            <CFormCheck id="ActiveCheck" label="上架" class="mb-2" :checked="props.menuActive" />
+          </div>
         </div>
-        <div class="duration">
-          <CFormCheck id="flexCheckDefault" label="上架" class="mb-2" />
+        <hr />
+        <div class="creator d-flex justify-content-evenly">
+          <button role="button" class="button-59">編輯</button>
+          <button role="button" class="button-59 button-59-del">刪除</button>
         </div>
-      </div>
-      <hr />
-      <div class="creator d-flex justify-content-evenly">
-        <button role="button" class="button-59">編輯</button>
-        <button role="button" class="button-59 button-59-del">刪除</button>
       </div>
     </div>
-  </div>
+  </CCol>
 </template>
 
 <script setup>
+import { CCol } from '@coreui/vue'
 
+const props = defineProps({
+  menuId: Number,
+  menuName: String,
+  menuPrice: Number,
+  menuCount: Number,
+  menuStatus: Boolean,
+  menuActive: Boolean
+})
 </script>
 
 <style scoped>

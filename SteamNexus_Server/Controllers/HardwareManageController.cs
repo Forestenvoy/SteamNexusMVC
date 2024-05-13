@@ -485,5 +485,23 @@ namespace SteamNexus_Server.Controllers
             }
         }
 
+        // 回傳 菜單資料
+        // GET: 
+        [HttpGet("GetMenuList")]
+        public IEnumerable<object> GetMenuList()
+        {
+            // 下拉式選單 => 硬體
+            var ComputerParts = _context.Menus.Select(c => new
+            {
+                Id = c.MenuId,
+                c.Name,
+                c.TotalPrice,
+                c.Status,
+                c.Active,
+                Count = c.MenuDetails.Count()
+            });
+            return ComputerParts;
+        }
+
     }
 }
