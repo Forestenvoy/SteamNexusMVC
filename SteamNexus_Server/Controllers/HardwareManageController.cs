@@ -410,10 +410,8 @@ namespace SteamNexus_Server.Controllers
             public int TotalPrice { get; set; } = 0;
         }
 
-
-
         // Menu 建立
-        // POST
+        // POST: api/HardwareManage/CreateMenu
         [HttpPost("CreateMenu")]
         public IActionResult CreateMenu([FromBody] MenuDto data) {
 
@@ -433,6 +431,41 @@ namespace SteamNexus_Server.Controllers
             {
                 return BadRequest("Menu 資料錯誤");       
             }
+        
         }
+
+        // 菜單細節 DTO 
+        public class MenuDetailDto
+        {
+            [Required]
+            public int MenuId { get; set; }
+
+            [Required]
+            public int ProductInformationId { get; set; }
+        }
+
+        // MenuDetail 建立
+        // POST: api/HardwareManage/CreateMenuDetail
+        [HttpPost("CreateMenuDetail")]
+        public IActionResult CreateMenuDetail([FromBody] MenuDetailDto data)
+        {
+            // 如果驗證合法
+            if (ModelState.IsValid)
+            {
+                MenuDetail menuDetail = new MenuDetail();
+                menuDetail.MenuId = data.MenuId;
+                menuDetail.ProductInformationId = data.ProductInformationId;
+
+                _context.MenuDetails.Add(menuDetail);
+                _context.SaveChanges();
+
+                return Ok($"{menuDetail.MenuDetailId} 新增成功");
+            }
+            else
+            {
+                return BadRequest("MenuDetail 資料錯誤");
+            }
+        }
+
     }
 }

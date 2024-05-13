@@ -37,9 +37,7 @@
       <CCol xs="6" class="d-flex align-items-center">
         <label class="h3 m-0 me-5"
           >$
-          {{
-            Math.floor(totalPrice).toLocaleString('zh-TW', { style: 'currency', currency: 'TWD' })
-          }}
+          {{ totalPrice.toLocaleString('zh-TW', { style: 'currency', currency: 'TWD' }) }}
         </label>
         <label class="h3 m-0">{{ totalWattage }} 瓦 </label>
       </CCol>
@@ -66,9 +64,6 @@ let menuName = ref('')
 let totalPrice = ref(0)
 let totalWattage = ref(0)
 let errorMessage = ref('')
-
-// 宣告產品清單
-let MenuDetails = []
 
 const emit = defineEmits(['modal-close'])
 
@@ -154,7 +149,7 @@ function createMenuData() {
       return response.text()
     })
     .then((data) => {
-      console.log(data)
+      createMenuDetails(Number(data))
     })
     .catch((error) => {
       console.error('Error:', error)
@@ -162,6 +157,44 @@ function createMenuData() {
 }
 
 // MenuDetails 建立至資料庫
+function createMenuDetails(id) {
+  // 迭代選擇清單
+  for (let i = 0; i < selectLists.value.length; i++) {
+    const selectList = selectLists.value[i]
+    const productInformationId = Number(selectList.$el.querySelector('select').value)
+    // 如果沒有選擇產品則跳過
+    if (productInformationId === 0) {
+      continue
+    }
+    const menuId = id
+    fetch(`${apiUrl}/api/HardwareManage/CreateMenuDetail`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        MenuId: menuId,
+        ProductInformationId: productInformationId
+      })
+    })
+      .then((response) => {
+        if (!response.ok) {
+          return response.text().then((errorMessage) => {
+            throw new Error(errorMessage)
+          })
+        }
+        return response.text()
+      })
+      .then((data) => {
+        console.log(data)
+      })
+      .catch((error) => {
+        console.error('Error:', error)
+      })
+  }
+
+  modalClose()
+}
 
 // 菜單建立事件
 function onMenuCreate() {
@@ -198,8 +231,6 @@ function onMenuCreate() {
     }
 
     errorMessage.value = ''
-
-    // 將數據保存
   }
 
   if (SSDValue === 0 && HDDValue === 0 && isLoopFinish) {
