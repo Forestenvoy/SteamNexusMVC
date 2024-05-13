@@ -38,8 +38,9 @@ namespace SteamNexus_Server.Controllers
         public IEnumerable<object> GetComputerParts()
         {
             // 下拉式選單 => 硬體
-            var ComputerParts = _context.ComputerPartCategories.Select(c => new{ 
-                Id =  c.ComputerPartCategoryId,
+            var ComputerParts = _context.ComputerPartCategories.Select(c => new
+            {
+                Id = c.ComputerPartCategoryId,
                 c.Name
             });
             return ComputerParts;
@@ -413,25 +414,34 @@ namespace SteamNexus_Server.Controllers
         // Menu 建立
         // POST: api/HardwareManage/CreateMenu
         [HttpPost("CreateMenu")]
-        public IActionResult CreateMenu([FromBody] MenuDto data) {
+        public IActionResult CreateMenu([FromBody] MenuDto data)
+        {
 
             // 如果驗證合法
             if (ModelState.IsValid)
             {
-                Menu menu = new Menu();
-                menu.Name = data.Name;
-                menu.TotalPrice = data.TotalPrice;
+                try
+                {
+                    Menu menu = new Menu();
+                    menu.Name = data.Name;
+                    menu.TotalPrice = data.TotalPrice;
 
-                _context.Menus.Add(menu);
-                _context.SaveChanges();
+                    _context.Menus.Add(menu);
+                    _context.SaveChanges();
 
-                return Ok(menu.MenuId);
+                    return Ok(menu.MenuId);
+                }
+                catch (Exception ex)
+                {
+                    // 返回 500 狀態碼 ~ 伺服器內部錯誤
+                    return StatusCode(500, "伺服器內部錯誤：" + ex.Message);
+                }
             }
             else
             {
-                return BadRequest("Menu 資料錯誤");       
+                return BadRequest("Menu 資料錯誤");
             }
-        
+
         }
 
         // 菜單細節 DTO 
@@ -452,14 +462,22 @@ namespace SteamNexus_Server.Controllers
             // 如果驗證合法
             if (ModelState.IsValid)
             {
-                MenuDetail menuDetail = new MenuDetail();
-                menuDetail.MenuId = data.MenuId;
-                menuDetail.ProductInformationId = data.ProductInformationId;
+                try
+                {
+                    MenuDetail menuDetail = new MenuDetail();
+                    menuDetail.MenuId = data.MenuId;
+                    menuDetail.ProductInformationId = data.ProductInformationId;
 
-                _context.MenuDetails.Add(menuDetail);
-                _context.SaveChanges();
+                    _context.MenuDetails.Add(menuDetail);
+                    _context.SaveChanges();
 
-                return Ok($"{menuDetail.MenuDetailId} 新增成功");
+                    return Ok($"{menuDetail.MenuDetailId} 新增成功");
+                }
+                catch (Exception ex)
+                {
+                    // 返回 500 狀態碼 ~ 伺服器內部錯誤
+                    return StatusCode(500, "伺服器內部錯誤：" + ex.Message);
+                }
             }
             else
             {

@@ -58,7 +58,10 @@
     "
     aria-labelledby="MenuModal"
   >
-    <menu-modal-body-c @modal-close="isModalVisible = false"></menu-modal-body-c>
+    <menu-modal-body-c
+      @create-result="presentResult"
+      @modal-close="isModalVisible = false"
+    ></menu-modal-body-c>
   </CModal>
   <!-- Modal End -->
 </template>
@@ -76,6 +79,11 @@ let isModalVisible = ref(false)
 // 新增菜單 Modal 開啟
 function Menu_Create() {
   isModalVisible.value = true
+}
+
+// 訊息結果
+function presentResult(result) {
+  console.log(result)
 }
 </script>
 <style></style>

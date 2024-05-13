@@ -65,7 +65,7 @@ let totalPrice = ref(0)
 let totalWattage = ref(0)
 let errorMessage = ref('')
 
-const emit = defineEmits(['modal-close'])
+const emit = defineEmits(['modal-close', 'create-result'])
 
 // 宣告產品分類清單
 let Products = [
@@ -149,10 +149,10 @@ function createMenuData() {
       return response.text()
     })
     .then((data) => {
-      createMenuDetails(Number(data))
+      createMenuDetails(data)
     })
     .catch((error) => {
-      console.error('Error:', error)
+      console.error('Error:', error.message)
     })
 }
 
@@ -166,7 +166,9 @@ function createMenuDetails(id) {
     if (productInformationId === 0) {
       continue
     }
-    const menuId = id
+    const menuId = Number(id)
+    console.log(productInformationId, menuId)
+    console.log(typeof productInformationId, typeof menuId)
     fetch(`${apiUrl}/api/HardwareManage/CreateMenuDetail`, {
       method: 'POST',
       headers: {
@@ -187,13 +189,16 @@ function createMenuDetails(id) {
       })
       .then((data) => {
         console.log(data)
+        // 最後一筆資料建立完成後關閉視窗
+        if (i === selectLists.value.length - 1) {
+          emit('create-result', `${menuName.value} 建立成功`)
+          emit('modal-close')
+        }
       })
       .catch((error) => {
-        console.error('Error:', error)
+        console.error('Error:', error.message)
       })
   }
-
-  modalClose()
 }
 
 // 菜單建立事件
