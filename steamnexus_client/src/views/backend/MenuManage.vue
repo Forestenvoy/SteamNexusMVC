@@ -70,7 +70,8 @@
 import { CRow, CCol } from '@coreui/vue'
 import { CButton, CFormInput } from '@coreui/vue'
 import { ref } from 'vue'
-
+import { toast } from 'vue3-toastify'
+import 'vue3-toastify/dist/index.css'
 import MenuModalBodyC from '@/components/backend/hardware/menu/create/MenuModalBodyC.vue'
 import MenuCard from '@/components/backend/hardware/MenuCard.vue'
 
@@ -83,7 +84,10 @@ function Menu_Create() {
 
 // 訊息結果
 function presentResult(result) {
-  console.log(result)
+  toast.success(result, {
+    transition: toast.TRANSITIONS.ZOOM,
+    position: toast.POSITION.TOP_CENTER
+  })
 }
 </script>
 <style></style>
