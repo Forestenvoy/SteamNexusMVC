@@ -98,7 +98,6 @@ onMounted(() => {
   const storedTypeGroups = sessionStorage.getItem(`${props.type}Groups`)
   if (storedTypeGroups) {
     typeGroups.value = JSON.parse(storedTypeGroups)
-    console.log(selectElement.value.options[5])
   } else {
     // 如果 SessionStorage 中沒有數據，則請求數據
     getProducts(props.type)

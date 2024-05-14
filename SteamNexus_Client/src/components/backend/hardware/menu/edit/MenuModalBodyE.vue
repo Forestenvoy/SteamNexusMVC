@@ -49,7 +49,7 @@
     <CRow class="w-100">
       <CCol xs="6" class="d-flex align-items-center">
         <label class="h3 m-0 me-5"
-          >$
+          >
           {{ totalPrice.toLocaleString('zh-TW', { style: 'currency', currency: 'TWD' }) }}
         </label>
         <label class="h3 m-0">{{ totalWattage }} 瓦 </label>
@@ -74,15 +74,20 @@ import SelectList from '@/components/backend/hardware/menu/edit/SelectList.vue'
 
 const selectLists = ref([])
 
-let totalPrice = ref(0)
-let totalWattage = ref(0)
 let errorMessage = ref('')
 
 let props = defineProps({
   menuId: Number,
   menuName: String,
+  menuPrice: Number,
+  menuWattage: Number,
   products: Array
 })
+
+console.log(props.menuPrice)
+
+let totalPrice = ref(props.menuPrice)
+let totalWattage = ref(props.menuWattage)
 
 let menuName = ref(props.menuName)
 

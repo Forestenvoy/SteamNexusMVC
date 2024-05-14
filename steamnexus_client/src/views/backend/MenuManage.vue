@@ -71,6 +71,8 @@
       v-if="Mode === 'edit'"
       :menuId="editId"
       :menuName="editName"
+      :menuPrice="editPrice"
+      :menuWattage="editWattage"
       :products="Products"
       @modal-close="isModalVisible = false"
     ></menu-modal-body-e>
@@ -98,6 +100,8 @@ let menuLists = ref([])
 let Mode = ref('')
 let editId = ref(0)
 let editName = ref('')
+let editPrice = ref(0)
+let editWattage = ref(0)
 
 // 宣告產品分類清單
 let Products = ref([])
@@ -109,9 +113,11 @@ function Menu_Create() {
 }
 
 // 編輯菜單 Modal 開啟
-function Menu_Edit(menuId, menuName) {
+function Menu_Edit(menuId, menuName, menuPrice, menuWattage) {
   editId.value = menuId
   editName.value = menuName
+  editPrice.value = menuPrice
+  editWattage.value = menuWattage
   Products.value = [
     {
       id: 10000,
@@ -183,7 +189,6 @@ function GetAllMenuDetails(menuId) {
     })
     .then((data) => {
       if (data !== null) {
-        console.log(data.length)
         for (let item of data) {
           const product = Products.value.find((product) => product.id === item.typeId)
           product.selectedId = item.productId

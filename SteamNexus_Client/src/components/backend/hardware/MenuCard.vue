@@ -61,7 +61,7 @@ let menuActive = ref(props.menuActive)
 
 // 編輯資料
 const onMenuEdit = () => {
-  emits('menuEdit', props.menuId, props.menuName)
+  emits('menuEdit', props.menuId, props.menuName, props.menuPrice, props.menuWattage)
 }
 
 // 上下架切換
