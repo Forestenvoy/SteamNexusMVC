@@ -104,7 +104,7 @@ import { ref, onMounted } from 'vue'
 import { onBeforeRouteLeave } from 'vue-router'
  import {dataTableConfig} from'@/components/backend/Game/dataTableConfig.js'
 import {GetGamePriceDataToDB,GetOnlineUsersDataToDB,GetNumberOfCommentsDataToDB,GetMinDataToDB,GetRecDataToDB} from'@/components/backend/Game/topBtnFetch.js'
-
+import Swal from 'sweetalert2'
 // 從環境變數取得 API BASE URL
 const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
@@ -237,6 +237,7 @@ function getdatatableData() {
     });
 };
 
+//編輯按鈕
 $(document).on('click', 'button[id$="edit_button"]', function (event) {
     gameGameId=$(this).attr('data-GameId');
     event.preventDefault();
@@ -270,6 +271,57 @@ $(document).on('click', 'button[id$="edit_button"]', function (event) {
                 $(this).prop('disabled', false);
             });
 })
+
+$(document).on('click', 'button[id$="delete_button"]', function (event) {
+    //抓取delete_button自訂屬性的值
+    const deleteName = $(this).attr('data-name');
+    const deleteGameId = $(this).attr('data-GameId');
+    console.log(deleteGameId);
+    event.stopPropagation();
+    //sweetalert設定
+    const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+            confirmButton: "btn btn-success",
+            cancelButton: "btn btn-danger"
+        },
+        buttonsStyling: false
+    });
+    swalWithBootstrapButtons.fire({
+        title: `你確定要刪除${deleteName}?`,
+        text: "您將無法恢復此狀態！",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "是的，我要刪除！",
+        cancelButtonText: "不，我再考慮一下",
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                type: "GET",
+                url: `${apiUrl}/api/GamesManagement/PostDeletePartialToDB?id=${deleteGameId}`
+            }).done(data => {
+                console.log(data);
+                swalWithBootstrapButtons.fire({
+                title: `已刪除${deleteName}`,
+                text: "此操作無法復原",
+                icon: "success"
+            });
+            }).fail(data => {
+                $("#systemLoading").hide();
+                $("#System").html(data);
+            });
+        } else if (
+            /* Read more about handling dismissals below */
+            result.dismiss === Swal.DismissReason.cancel
+        ) {
+            swalWithBootstrapButtons.fire({
+                title: `未刪除${deleteName}`,
+                // text: "遊戲未刪除 :)",
+                icon: "error"
+            });
+        }
+    });
+});
 
 onMounted(() => {
   getdatatableData();

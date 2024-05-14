@@ -268,8 +268,8 @@ namespace SteamNexus.Areas.Administrator.Controllers
             return PartialView("_GameDeleteManagementPartial", ViewModel);
         }
 
-        [HttpPost("PostDeletePartialToDB")]
-        public async Task<IActionResult> PostDeletePartialToDB(int id)
+        [HttpGet("PostDeletePartialToDB")]
+        public async Task<string> PostDeletePartialToDB(int id)
         {
             var game = _context.Games.FindAsync(id).Result;
             if (game != null)
@@ -279,7 +279,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
 
             await _context.SaveChangesAsync();
 
-            return GetIndexPartialView();
+            return "已刪除";
         }
         private bool GameExists(int id)
         {
