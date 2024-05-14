@@ -95,8 +95,39 @@ const onMenuActive = () => {
 
 // 刪除資料
 const onMenuDelete = () => {
-  
-
+  fetch(`${apiUrl}/api/HardwareManage/DeleteMenu`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      MenuId: props.menuId
+    })
+  })
+    .then((response) => {
+      if (!response.ok) {
+        return response.text().then((errorMessage) => {
+          throw new Error(errorMessage)
+        })
+      }
+      return response.text()
+    })
+    .then((data) => {
+      toast.success(data, {
+        theme: 'dark',
+        autoClose: 1000,
+        transition: toast.TRANSITIONS.ZOOM,
+        position: toast.POSITION.TOP_CENTER
+      })
+    })
+    .catch((error) => {
+      toast.error(error.message, {
+        theme: 'dark',
+        autoClose: 1000,
+        transition: toast.TRANSITIONS.ZOOM,
+        position: toast.POSITION.TOP_CENTER
+      })
+    })
 }
 </script>
 
