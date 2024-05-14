@@ -43,7 +43,8 @@
     "vue": "^3.4.27",
     "vue-datatables": "^0.1.4",
     "vue-router": "^4.3.0",
-    "vue3-toastify": "^0.2.1"
+    "vue3-toastify": "^0.2.1",
+    "yup": "1.4.0"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.8.0",
