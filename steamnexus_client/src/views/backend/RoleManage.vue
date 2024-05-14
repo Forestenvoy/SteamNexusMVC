@@ -32,11 +32,30 @@ import 'datatables.net-fixedheader-dt'
 import 'datatables.net-buttons-dt'
 import 'datatables.net-responsive-dt'
 import { onMounted } from 'vue'
+import axios from 'axios'
 
 // 從環境變數取得 API BASE URL
 const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
 var datatable = null
+
+// 刪除角色
+const deleteRole = (roleId) => {
+  axios
+    .post(`${apiUrl}/api/MemberManagement/DeleteRole?id=${roleId}`, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then((response) => {
+      alert(response.data.message)
+      // 重新加載表格數據
+      datatable.ajax.reload()
+    })
+    .catch((err) => {
+      alert('資料已有關聯紀錄，刪除失敗')
+    })
+}
 
 onMounted(() => {
   // 初始化 Datatables
@@ -89,6 +108,14 @@ onMounted(() => {
     order: [[1, 'asc']],
     // 自動寬度 關閉
     autoWidth: true
+  })
+
+  // 綁定刪除按鈕的點擊事件
+  $('#RolesManageTable').on('click', '.del-btn', function () {
+    const roleId = $(this).data('roleid')
+    if (confirm('確定要刪除此角色嗎？')) {
+      deleteRole(roleId)
+    }
   })
 })
 </script>
