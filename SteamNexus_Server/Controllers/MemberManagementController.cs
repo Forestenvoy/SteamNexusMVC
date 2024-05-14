@@ -241,6 +241,8 @@ namespace SteamNexus_Server.Controllers
 
 
         #region DeleteUser
+
+
         //[HttpDelete("{id}")]
         [HttpPost("DeleteUser")]
         public async Task<IActionResult> DeleteUser(int id)
@@ -251,7 +253,7 @@ namespace SteamNexus_Server.Controllers
                 if (user == null)
                 {
                     // 加入調試信息，確認ID值和數據庫內是否匹配
-                    return NotFound(new { success = false, message = "用戶未找到，ID: " + id });
+                    return NotFound(new { success = false, message = "使用者未找到，ID: " + id });
                 }
 
                 // 刪除用戶的圖片
@@ -266,7 +268,7 @@ namespace SteamNexus_Server.Controllers
 
                 _application.Users.Remove(user);
                 await _application.SaveChangesAsync();
-                return Ok(new { success = true, message = "用戶已刪除" });
+                return Ok(new { success = true, message = "使用者已刪除" });
             }
             catch (Exception ex)
             {
