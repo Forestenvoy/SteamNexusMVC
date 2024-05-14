@@ -7,6 +7,16 @@
       class="col-12 col-md-6 order-md-2 d-flex justify-content-center justify-content-md-end"
       id="SystemMenu"
     ></div>
+    <!-- 顯示 CAlert -->
+    <CAlert v-if="showAlert" :color="alertColor" class="d-flex align-items-center">
+      <CIcon
+        :icon="alertColor === 'success' ? 'cil-check-circle' : 'cil-warning'"
+        class="flex-shrink-0 me-2"
+        width="24"
+        height="24"
+      />
+      <div>{{ alertMessage }}</div>
+    </CAlert>
   </div>
   <section class="section">
     <table id="MemberManageTable" class="display" style="width: 100%">
@@ -92,6 +102,11 @@ var datatable = null
 
 let createUserModal = ref(false)
 
+// 新增狀態管理來控制 CAlert 的顯示
+let showAlert = ref(false)
+let alertMessage = ref('')
+let alertColor = ref('')
+
 const deleteUser = (userId) => {
   axios
     .post(`${apiUrl}/api/MemberManagement/DeleteUser?id=${userId}`, {
@@ -100,12 +115,24 @@ const deleteUser = (userId) => {
       }
     })
     .then((response) => {
-      alert(response.data.message)
+      alertMessage.value = response.data.message
+      alertColor.value = 'success'
+      showAlert.value = true
+      //Alertp時間自動消失
+      setTimeout(() => {
+        showAlert.value = false
+      }, 2000)
       // 重新加載表格數據
       datatable.ajax.reload()
     })
     .catch((err) => {
-      alert('資料已有關聯紀錄，刪除失敗')
+      alertMessage.value = '使用者刪除失敗，請重試'
+      alertColor.value = 'danger'
+      showAlert.value = true
+      //Alertp時間自動消失
+      setTimeout(() => {
+        showAlert.value = false
+      }, 2000)
     })
 }
 
