@@ -112,13 +112,13 @@ const createRole = () => {
         //
         toast.success(response.data.message, {
           theme: 'dark',
-          autoClose: 2000,
+          autoClose: 1000,
           transition: toast.TRANSITIONS.ZOOM,
           position: toast.POSITION.TOP_CENTER
         })
         //
         newRoleName.value = ''
-        createRoleModal = false
+        createRoleModal.value = false
         datatable.ajax.reload()
       } else {
         alert('新增角色失敗，請重試')
@@ -127,14 +127,19 @@ const createRole = () => {
     .catch((err) => {
       console.error('新增角色失敗，錯誤詳情：', err)
       if (err.response) {
-        console.error('API 回應錯誤:', err.response.data)
-        alert(`新增角色失敗: ${err.response.data.message || '未知錯誤'}`)
-      } else if (err.request) {
-        console.error('未收到伺服器回應:', err.request)
-        alert('新增角色失敗，伺服器無回應')
+        toast.error('請確認是否輸入英文大小寫', {
+          theme: 'dark',
+          autoClose: 1000,
+          transition: toast.TRANSITIONS.ZOOM,
+          position: toast.POSITION.TOP_CENTER
+        })
       } else {
-        console.error('設置錯誤:', err.message)
-        alert('新增角色失敗，請檢查設置')
+        toast.error('新增腳色失敗，請重新測試', {
+          theme: 'dark',
+          autoClose: 1000,
+          transition: toast.TRANSITIONS.ZOOM,
+          position: toast.POSITION.TOP_CENTER
+        })
       }
     })
 }
