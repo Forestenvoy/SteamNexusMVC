@@ -98,11 +98,11 @@ function modalClose() {
 }
 
 // 產品選擇事件
-function onProductSelected(value, price, wattage) {
+function onProductSelected(value, price, wattage, oriPrice, oriWattage) {
   // 價格加總
-  totalPrice.value = totalPrice.value + price
+  totalPrice.value = totalPrice.value - oriPrice + price
   // 瓦數加總
-  totalWattage.value = totalWattage.value + wattage
+  totalWattage.value = totalWattage.value - oriWattage + wattage
 }
 
 onBeforeMount(() => {})

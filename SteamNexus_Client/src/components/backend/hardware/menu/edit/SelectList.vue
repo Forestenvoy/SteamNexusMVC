@@ -53,6 +53,8 @@ let selectedId = ref(props.selectedId)
 const emit = defineEmits(['productSelected'])
 
 let selectElement = ref(null)
+let oriPrice = ref(props.oriPrice)
+let oriWattage = ref(props.oriWattage)
 
 // 宣告 產品分類集合
 let typeGroups = ref({})
@@ -91,7 +93,16 @@ function productClassify(data) {
 function onSelectChange(event) {
   const price = event.target.options[event.target.options.selectedIndex].dataset.price
   const wattage = event.target.options[event.target.options.selectedIndex].dataset.wattage
-  emit('productSelected', event.target.value, Number(price), Number(wattage))
+  emit(
+    'productSelected',
+    event.target.value,
+    Number(price),
+    Number(wattage),
+    oriPrice.value,
+    oriWattage.value
+  )
+  oriPrice.value = Number(price)
+  oriWattage.value = Number(wattage)
 }
 
 // 找到 被選擇的產品選項
