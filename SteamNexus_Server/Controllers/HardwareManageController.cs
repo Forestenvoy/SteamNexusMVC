@@ -651,10 +651,13 @@ namespace SteamNexus_Server.Controllers
                     var componentClassification = menuDetail.ProductInformation.ComponentClassification;
                     if (componentClassification != null)
                     {
-                        var computerPartCategoryId = componentClassification.ComputerPartCategoryId;
-                        var productInformationId = menuDetail.ProductInformationId;
- 
-                        resultList.Add(new { TypeId = computerPartCategoryId, ProductId = productInformationId });
+                        int computerPartCategoryId = componentClassification.ComputerPartCategoryId;
+                        int? productInformationId = menuDetail.ProductInformationId;
+                        int price = menuDetail.ProductInformation.Price;
+                        int wattage = menuDetail.ProductInformation.Wattage;
+
+
+                        resultList.Add(new { TypeId = computerPartCategoryId, ProductId = productInformationId ,Price = price , Wattage = wattage});
                     }
                 }
             }

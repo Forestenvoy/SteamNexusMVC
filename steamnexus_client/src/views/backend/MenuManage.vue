@@ -122,57 +122,79 @@ function Menu_Edit(menuId, menuName, menuPrice, menuWattage) {
     {
       id: 10000,
       name: 'CPU',
-      selectedId: 0
+      selectedId: 0,
+      price: 0,
+      wattage: 0
     },
     {
       id: 10001,
       name: 'GPU',
-      selectedId: 0
+      selectedId: 0,
+      price: 0,
+      wattage: 0
     },
     {
       id: 10002,
       name: 'RAM',
-      selectedId: 0
+      selectedId: 0,
+      price: 0,
+      wattage: 0
     },
     {
       id: 10003,
       name: 'MotherBoard',
-      selectedId: 0
+      selectedId: 0,
+      price: 0,
+      wattage: 0
     },
     {
       id: 10004,
       name: 'SSD',
-      selectedId: 0
+      selectedId: 0,
+      price: 0,
+      wattage: 0
     },
     {
       id: 10005,
       name: 'HDD',
-      selectedId: 0
+      selectedId: 0,
+      price: 0,
+      wattage: 0
     },
     {
       id: 10006,
       name: 'AirCooler',
-      selectedId: 0
+      selectedId: 0,
+      price: 0,
+      wattage: 0
     },
     {
       id: 10007,
       name: 'LiquidCooler',
-      selectedId: 0
+      selectedId: 0,
+      price: 0,
+      wattage: 0
     },
     {
       id: 10008,
       name: 'CASE',
-      selectedId: 0
+      selectedId: 0,
+      price: 0,
+      wattage: 0
     },
     {
       id: 10009,
       name: 'PSU',
-      selectedId: 0
+      selectedId: 0,
+      price: 0,
+      wattage: 0
     },
     {
       id: 10010,
       name: 'OS',
-      selectedId: 0
+      selectedId: 0,
+      price: 0,
+      wattage: 0
     }
   ]
   GetAllMenuDetails(menuId)
@@ -192,6 +214,8 @@ function GetAllMenuDetails(menuId) {
         for (let item of data) {
           const product = Products.value.find((product) => product.id === item.typeId)
           product.selectedId = item.productId
+          product.price = item.price
+          product.wattage = item.wattage
         }
         Mode.value = 'edit'
         isModalVisible.value = true

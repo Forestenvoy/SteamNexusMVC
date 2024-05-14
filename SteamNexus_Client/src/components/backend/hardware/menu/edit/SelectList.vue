@@ -25,6 +25,7 @@
             :data-price="item.price"
             :data-wattage="item.wattage"
             :data-recommend="item.recommend"
+            :id="item.productId"
           >
             {{ item.productName }} {{ item.specification }} ,${{ item.price }}
           </option>
@@ -42,7 +43,9 @@ const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 const props = defineProps({
   typeName: String,
   type: Number,
-  selectedId: Number
+  selectedId: Number,
+  oriPrice: Number,
+  oriWattage: Number
 })
 
 let selectedId = ref(props.selectedId)
@@ -91,7 +94,7 @@ function onSelectChange(event) {
   emit('productSelected', event.target.value, Number(price), Number(wattage))
 }
 
-// 讀取此分類的選擇產品
+// 找到 被選擇的產品選項
 
 onMounted(() => {
   // 從 sessionStorage 取得產品分類

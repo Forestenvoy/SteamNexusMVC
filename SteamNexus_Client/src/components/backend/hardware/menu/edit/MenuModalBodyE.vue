@@ -42,14 +42,15 @@
       :type="product.id"
       :type-name="product.name"
       :selected-id="product.selectedId"
+      :ori-price="product.price"
+      :ori-wattage="product.wattage"
       @product-selected="onProductSelected"
     ></select-list>
   </CModalBody>
   <CModalFooter>
     <CRow class="w-100">
       <CCol xs="6" class="d-flex align-items-center">
-        <label class="h3 m-0 me-5"
-          >
+        <label class="h3 m-0 me-5">
           {{ totalPrice.toLocaleString('zh-TW', { style: 'currency', currency: 'TWD' }) }}
         </label>
         <label class="h3 m-0">{{ totalWattage }} 瓦 </label>
@@ -83,8 +84,6 @@ let props = defineProps({
   menuWattage: Number,
   products: Array
 })
-
-console.log(props.menuPrice)
 
 let totalPrice = ref(props.menuPrice)
 let totalWattage = ref(props.menuWattage)
