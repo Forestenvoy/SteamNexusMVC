@@ -36,17 +36,6 @@
     新增使用者
   </button>
 
-  <!-- 顯示 CAlert -->
-  <CAlert v-if="showAlert" :color="alertColor" class="d-flex align-items-center">
-    <CIcon
-      :icon="alertColor === 'success' ? 'cil-check-circle' : 'cil-warning'"
-      class="flex-shrink-0 me-2"
-      width="24"
-      height="24"
-    />
-    <div>{{ alertMessage }}</div>
-  </CAlert>
-
   <!-- 新增使用者浮動視窗 -->
   <CModal
     alignment="center"
@@ -96,17 +85,16 @@ import { ref, onMounted } from 'vue'
 import { CModal, CModalHeader, CModalTitle, CModalBody, CModalFooter, CButton } from '@coreui/vue'
 import axios from 'axios'
 
+// 特殊吐司
+import { toast } from 'vue3-toastify'
+import 'vue3-toastify/dist/index.css'
+
 // 從環境變數取得 API BASE URL
 const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
 var datatable = null
 
 let createUserModal = ref(false)
-
-// 新增狀態管理來控制 CAlert 的顯示
-let showAlert = ref(false)
-let alertMessage = ref('')
-let alertColor = ref('')
 
 const deleteUser = (userId) => {
   axios
@@ -116,24 +104,23 @@ const deleteUser = (userId) => {
       }
     })
     .then((response) => {
-      alertMessage.value = response.data.message
-      alertColor.value = 'success'
-      showAlert.value = true
-      //Alertp時間自動消失
-      setTimeout(() => {
-        showAlert.value = false
-      }, 2000)
-      // 重新加載表格數據
+      //alert('使用者刪除成功')
+      toast.success(response.data.message, {
+        theme: 'dark',
+        autoClose: 1000,
+        transition: toast.TRANSITIONS.ZOOM,
+        position: toast.POSITION.TOP_CENTER
+      })
       datatable.ajax.reload()
     })
     .catch((err) => {
-      alertMessage.value = '使用者刪除失敗，請重試'
-      alertColor.value = 'danger'
-      showAlert.value = true
-      //Alertp時間自動消失
-      setTimeout(() => {
-        showAlert.value = false
-      }, 2000)
+      //alert('使用者刪除失敗')
+      toast.error('使用者刪除失敗', {
+        theme: 'dark',
+        autoClose: 1000,
+        transition: toast.TRANSITIONS.ZOOM,
+        position: toast.POSITION.TOP_CENTER
+      })
     })
 }
 
@@ -227,7 +214,7 @@ onMounted(() => {
   // 綁定刪除按鈕的點擊事件
   $('#MemberManageTable').on('click', '#delete_btn', function () {
     const userId = $(this).data('userid')
-    if (confirm('確定要刪除此使用者嗎嗎？')) {
+    if (confirm('確定要刪除此使用者嗎？')) {
       deleteUser(userId)
     }
   })
