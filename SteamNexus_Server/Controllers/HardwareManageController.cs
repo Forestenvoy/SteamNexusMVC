@@ -522,6 +522,7 @@ namespace SteamNexus_Server.Controllers
                     Id = c.MenuId,
                     c.Name,
                     c.TotalPrice,
+                    c.TotalWattage,
                     c.Status,
                     c.Active,
                     Count = c.MenuDetails.Count()
@@ -657,7 +658,7 @@ namespace SteamNexus_Server.Controllers
                         int wattage = menuDetail.ProductInformation.Wattage;
 
 
-                        resultList.Add(new { TypeId = computerPartCategoryId, ProductId = productInformationId ,Price = price , Wattage = wattage});
+                        resultList.Add(new { TypeId = computerPartCategoryId, ProductId = productInformationId, Price = price, Wattage = wattage });
                     }
                 }
             }
