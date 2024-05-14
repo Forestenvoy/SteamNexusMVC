@@ -6,9 +6,7 @@
     <div
       class="col-12 col-md-6 order-md-2 d-flex justify-content-center justify-content-md-end"
       id="SystemMenu"
-    >
-      <button class="btn btn-danger" id="createMember">新增會員</button>
-    </div>
+    ></div>
   </div>
   <section class="section">
     <table id="MemberManageTable" class="display" style="width: 100%">
@@ -26,6 +24,7 @@
       </thead>
     </table>
   </section>
+  <button class="btn btn-danger mb-3" id="createMember">新增會員</button>
 </template>
 
 <script setup>
@@ -100,7 +99,6 @@ onMounted(() => {
           // 編輯按鈕
           let enterEle = `<button class="btn btn-danger" data-userid="${UserId}" data-name="${Name}" data-email="${Email}"  data-gender="${Gender}" data-phone="${Phone}" data-birthday="${Birthday}" data-photo="${Photo}" data-rolename="${RoleName}" id="edit_btn" data-bs-toggle="popover" data-bs-content="nothing"><i class="bi bi-pencil-square"></i></button>`
           // 刪除按鈕
-          // let resetEle = '<button class="btn btn-danger" data-userId="' + UserId + '"  data-name="' + Name + '" data-email="' + Email + '" id="delete_btn" data-bs-toggle="popover" data-bs-content="nothing"><i class="bi bi-trash3-fill"></i></button>';
           let resetEle = `<button class="btn btn-danger" data-userid="${UserId}" data-name="${Name}" data-email="${Email}"  data-gender="${Gender}" data-phone="${Phone}" data-birthday="${Birthday}" data-photo="${Photo}" data-rolename="${RoleName}" " id="delete_btn" data-bs-toggle="popover" data-bs-content="nothing"><i class="bi bi-trash3-fill"></i></button>`
 
           if (type === 'display') {

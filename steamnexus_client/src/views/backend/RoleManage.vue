@@ -34,6 +34,7 @@
 
   <!-- 新增權限的浮動式窗 -->
   <CModal
+    alignment="center"
     :visible="createRoleModal"
     @close="
       () => {
