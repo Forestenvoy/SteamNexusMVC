@@ -92,6 +92,12 @@ const onMenuActive = () => {
       })
     })
 }
+
+// 刪除資料
+const onMenuDelete = () => {
+  
+
+}
 </script>
 
 <style scoped>

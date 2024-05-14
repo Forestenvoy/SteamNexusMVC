@@ -531,17 +531,17 @@ namespace SteamNexus_Server.Controllers
             return MenuDate;
         }
 
-        // Menu
-        public class MenuActiveDto
+        // MenuIdDto
+        public class MenuIdDto
         {
             [Required]
             public int MenuId { get; set; }
         }
 
         // 修改菜單上下架
-        // POST: 
+        // POST: api/HardwareManage/MenuActive
         [HttpPost("MenuActive")]
-        public IActionResult MenuActive([FromBody] MenuActiveDto data)
+        public IActionResult MenuActive([FromBody] MenuIdDto data)
         {
             // 如果驗證合法
             if (ModelState.IsValid)
@@ -561,7 +561,7 @@ namespace SteamNexus_Server.Controllers
                     _context.SaveChanges();
 
 
-                    if(target.Active)
+                    if (target.Active)
                     {
                         return Ok($"{target.Name}上架成功");
                     }
@@ -569,6 +569,47 @@ namespace SteamNexus_Server.Controllers
                     {
                         return Ok($"{target.Name}下架成功");
                     }
+                }
+                catch (Exception ex)
+                {
+                    // 返回 500 狀態碼 ~ 伺服器內部錯誤
+                    return StatusCode(500, "伺服器內部錯誤：" + ex.Message);
+                }
+            }
+            else
+            {
+                return BadRequest("Menu 資料錯誤");
+            }
+        }
+
+        // 刪除菜單
+        // POST: api/HardwareManage/MenuActive
+        [HttpPost("DeleteMenu")]
+        public async Task<IActionResult> DeleteMenu([FromBody] MenuIdDto data)
+        {
+            // 如果驗證合法
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var menu = await _context.Menus.Include(m => m.MenuDetails).FirstOrDefaultAsync(m => m.MenuId == data.MenuId);
+
+                    if (menu == null)
+                    {
+                        // 找不到回傳 404 
+                        return NotFound("找不到 Menu");
+                    }
+
+                    // 刪除關聯的 MenuDetails
+                    _context.MenuDetails.RemoveRange(menu.MenuDetails);
+
+                    // 刪除 Menu
+                    _context.Menus.Remove(menu);
+
+                    _context.SaveChanges();
+
+                    return Ok($"{menu.Name}刪除成功");
+
                 }
                 catch (Exception ex)
                 {
