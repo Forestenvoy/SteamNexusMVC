@@ -13,6 +13,7 @@
         class="form-select"
         @change="onSelectChange"
         v-model="selectedId"
+        ref="selectElement"
       >
         <option value="-1" disabled hidden>null</option>
         <option value="0" disabled hidden>---- 請選擇硬體 ----</option>
@@ -47,6 +48,8 @@ const props = defineProps({
 let selectedId = ref(props.selectedId)
 
 const emit = defineEmits(['productSelected'])
+
+let selectElement = ref(null)
 
 // 宣告 產品分類集合
 let typeGroups = ref({})
@@ -95,6 +98,7 @@ onMounted(() => {
   const storedTypeGroups = sessionStorage.getItem(`${props.type}Groups`)
   if (storedTypeGroups) {
     typeGroups.value = JSON.parse(storedTypeGroups)
+    console.log(selectElement.value.options[5])
   } else {
     // 如果 SessionStorage 中沒有數據，則請求數據
     getProducts(props.type)

@@ -410,6 +410,9 @@ namespace SteamNexus_Server.Controllers
 
             [Required]
             public int TotalPrice { get; set; } = 0;
+
+            [Required]
+            public int TotalWattage { get; set; } = 0;
         }
 
         // Menu 建立
@@ -426,6 +429,7 @@ namespace SteamNexus_Server.Controllers
                     Menu menu = new Menu();
                     menu.Name = data.Name;
                     menu.TotalPrice = data.TotalPrice;
+                    menu.TotalWattage = data.TotalWattage;
 
                     _context.Menus.Add(menu);
                     _context.SaveChanges();
@@ -497,6 +501,7 @@ namespace SteamNexus_Server.Controllers
                 Id = c.MenuId,
                 c.Name,
                 c.TotalPrice,
+                c.TotalWattage,
                 c.Status,
                 c.Active,
                 Count = c.MenuDetails.Count()

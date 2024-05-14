@@ -49,6 +49,7 @@ const props = defineProps({
   menuId: Number,
   menuName: String,
   menuPrice: Number,
+  menuWattage: Number,
   menuCount: Number,
   menuStatus: Boolean,
   menuActive: Boolean

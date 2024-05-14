@@ -36,6 +36,7 @@
           :menuId="menu.id"
           :menuName="menu.name"
           :menuPrice="menu.totalPrice"
+          :menuWattage="menu.totalWattage"
           :menuCount="menu.count"
           :menuStatus="menu.status"
           :menuActive="menu.active"

@@ -137,7 +137,8 @@ function createMenuData() {
     },
     body: JSON.stringify({
       Name: menuName.value,
-      TotalPrice: totalPrice.value
+      TotalPrice: totalPrice.value,
+      TotalWattage: totalWattage.value
     })
   })
     .then((response) => {
