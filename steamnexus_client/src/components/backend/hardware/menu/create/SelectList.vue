@@ -42,6 +42,8 @@ const emit = defineEmits(['productSelected'])
 
 // 宣告 產品分類集合
 let typeGroups = ref({})
+let oriPrice = ref(0)
+let oriWattage = ref(0)
 
 // 取得全部產品資料
 function getProducts(type) {
@@ -77,7 +79,15 @@ function productClassify(data) {
 function onSelectChange(event) {
   const price = event.target.options[event.target.options.selectedIndex].dataset.price
   const wattage = event.target.options[event.target.options.selectedIndex].dataset.wattage
-  emit('productSelected', event.target.value, Number(price), Number(wattage))
+  emit(
+    'productSelected',
+    Number(price),
+    Number(wattage),
+    oriPrice.value,
+    oriWattage.value
+  )
+  oriPrice.value = Number(price)
+  oriWattage.value = Number(wattage)
 }
 
 onMounted(() => {
