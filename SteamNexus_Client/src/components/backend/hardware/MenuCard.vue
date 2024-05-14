@@ -28,7 +28,7 @@
         </div>
         <hr />
         <div class="creator d-flex justify-content-evenly">
-          <button role="button" class="button-59">編輯</button>
+          <button role="button" class="button-59" @click="onMenuEdit">編輯</button>
           <button role="button" class="button-59 button-59-del" @click="onMenuDelete">刪除</button>
         </div>
       </div>
@@ -54,9 +54,14 @@ const props = defineProps({
   menuActive: Boolean
 })
 
-const emits = defineEmits(['menuDelete'])
+const emits = defineEmits(['menuDelete', 'menuEdit'])
 
 let menuActive = ref(props.menuActive)
+
+// 編輯資料
+const onMenuEdit = () => {
+  emits('menuEdit', props.menuId)
+}
 
 // 上下架切換
 const onMenuActive = () => {

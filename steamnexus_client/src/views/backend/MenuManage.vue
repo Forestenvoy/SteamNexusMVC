@@ -39,6 +39,7 @@
           :menuCount="menu.count"
           :menuStatus="menu.status"
           :menuActive="menu.active"
+          @menu-edit="Menu_Edit"
           @menu-delete="deleteCard"
         ></menu-card>
       </transition-group>
@@ -65,6 +66,11 @@
       @create-result="presentResult"
       @modal-close="isModalVisible = false"
     ></menu-modal-body-c>
+    <menu-modal-body-d
+      v-if="Mode === 'edit'"
+      :menuId="editId"
+      @modal-close="isModalVisible = false"
+    ></menu-modal-body-d>
   </CModal>
   <!-- Modal End -->
 </template>
@@ -76,6 +82,7 @@ import { ref, onMounted } from 'vue'
 import { toast } from 'vue3-toastify'
 import 'vue3-toastify/dist/index.css'
 import MenuModalBodyC from '@/components/backend/hardware/menu/create/MenuModalBodyC.vue'
+import MenuModalBodyD from '@/components/backend/hardware/menu/edit/MenuModalBodyD.vue'
 import MenuCard from '@/components/backend/hardware/MenuCard.vue'
 
 // 從環境變數取得 API BASE URL
@@ -86,10 +93,18 @@ let isModalVisible = ref(false)
 let menuLists = ref([])
 
 let Mode = ref('')
+let editId = ref(0)
 
 // 新增菜單 Modal 開啟
 function Menu_Create() {
   Mode.value = 'create'
+  isModalVisible.value = true
+}
+
+// 編輯菜單 Modal 開啟
+function Menu_Edit(menuId) {
+  editId.value = menuId
+  Mode.value = 'edit'
   isModalVisible.value = true
 }
 
