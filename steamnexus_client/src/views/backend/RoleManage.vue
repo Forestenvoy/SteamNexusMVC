@@ -6,9 +6,7 @@
     <div
       class="col-12 col-md-6 order-md-2 d-flex justify-content-center justify-content-md-end"
       id="SystemMenu"
-    >
-      <button class="btn btn-danger" id="createRoles">新增權限</button>
-    </div>
+    ></div>
   </div>
 
   <section class="section">
@@ -22,22 +20,124 @@
       </thead>
     </table>
   </section>
+  <button
+    type="button"
+    class="btn btn-danger mb-3"
+    @click="
+      () => {
+        createRoleModal = true
+      }
+    "
+  >
+    新增權限
+  </button>
+
+  <!-- 新增權限的浮動式窗 -->
+  <CModal
+    :visible="createRoleModal"
+    @close="
+      () => {
+        createRoleModal = false
+      }
+    "
+    aria-labelledby="CreateRoleModal"
+  >
+    <CModalHeader>
+      <CModalTitle id="CreateRoleModal">新增權限</CModalTitle>
+    </CModalHeader>
+    <CModalBody>
+      <div class="form-group">
+        <label class="form-label">權限名稱：</label>
+        <input class="form-control" v-model="newRoleName" />
+      </div>
+    </CModalBody>
+    <CModalFooter>
+      <CButton
+        color="secondary"
+        @click="
+          () => {
+            createRoleModal = false
+          }
+        "
+      >
+        取消
+      </CButton>
+      <CButton color="primary" @click="createRole">新增</CButton>
+    </CModalFooter>
+  </CModal>
 </template>
 
 <script setup>
 // 核心模組 import
 import $ from 'jquery'
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap/dist/js/bootstrap.bundle.js'
 import DataTable from 'datatables.net-dt'
 import 'datatables.net-fixedheader-dt'
 import 'datatables.net-buttons-dt'
 import 'datatables.net-responsive-dt'
-import { onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
+import { CModal, CModalHeader, CModalTitle, CModalBody, CModalFooter, CButton } from '@coreui/vue'
 import axios from 'axios'
+
+// 特殊吐司
+import { toast } from 'vue3-toastify'
+import 'vue3-toastify/dist/index.css'
 
 // 從環境變數取得 API BASE URL
 const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
 var datatable = null
+
+// 角色名稱
+const newRoleName = ref('')
+
+let createRoleModal = ref(false)
+
+// 新增角色
+const createRole = () => {
+  if (newRoleName.value.trim() === '') {
+    alert('請輸入權限名稱')
+    return
+  }
+
+  // 創建 FormData 對象
+  const formData = new FormData()
+  formData.append('RoleName', newRoleName.value)
+
+  axios
+    .post(`${apiUrl}/api/MemberManagement/CreateRole`, formData)
+    .then((response) => {
+      if (response.data && response.data.message) {
+        //
+        toast.success(response.data.message, {
+          theme: 'dark',
+          autoClose: 2000,
+          transition: toast.TRANSITIONS.ZOOM,
+          position: toast.POSITION.TOP_CENTER
+        })
+        //
+        newRoleName.value = ''
+        createRoleModal = false
+        datatable.ajax.reload()
+      } else {
+        alert('新增角色失敗，請重試')
+      }
+    })
+    .catch((err) => {
+      console.error('新增角色失敗，錯誤詳情：', err)
+      if (err.response) {
+        console.error('API 回應錯誤:', err.response.data)
+        alert(`新增角色失敗: ${err.response.data.message || '未知錯誤'}`)
+      } else if (err.request) {
+        console.error('未收到伺服器回應:', err.request)
+        alert('新增角色失敗，伺服器無回應')
+      } else {
+        console.error('設置錯誤:', err.message)
+        alert('新增角色失敗，請檢查設置')
+      }
+    })
+}
 
 // 刪除角色
 const deleteRole = (roleId) => {
@@ -119,6 +219,7 @@ onMounted(() => {
   })
 })
 </script>
+
 <style>
 /* DataTables */
 @import 'datatables.net-dt/css/dataTables.datatables.min.css';
