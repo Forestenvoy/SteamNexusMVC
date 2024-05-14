@@ -8,7 +8,6 @@ const sidebar = useSidebarStore()
 <template>
   <CSidebar
     class="border-end"
-    colorScheme="dark"
     position="fixed"
     :unfoldable="sidebar.unfoldable"
     :visible="sidebar.visible"

@@ -38,8 +38,9 @@ namespace SteamNexus_Server.Controllers
         public IEnumerable<object> GetComputerParts()
         {
             // 下拉式選單 => 硬體
-            var ComputerParts = _context.ComputerPartCategories.Select(c => new{ 
-                Id =  c.ComputerPartCategoryId,
+            var ComputerParts = _context.ComputerPartCategories.Select(c => new
+            {
+                Id = c.ComputerPartCategoryId,
                 c.Name
             });
             return ComputerParts;
@@ -397,6 +398,130 @@ namespace SteamNexus_Server.Controllers
             message += "retry:100\n";
             message += $"data:{CoolPCWebScraping.eventMessage}\n\n";
             return Content($"{message}", "text/event-stream", Encoding.UTF8);
+        }
+
+        // 菜單 DTO 
+        public class MenuDto
+        {
+            [Required]
+            [MaxLength(50)]
+            public string? Name { get; set; }
+
+            [Required]
+            public int TotalPrice { get; set; } = 0;
+        }
+
+        // Menu 建立
+        // POST: api/HardwareManage/CreateMenu
+        [HttpPost("CreateMenu")]
+        public IActionResult CreateMenu([FromBody] MenuDto data)
+        {
+
+            // 如果驗證合法
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    Menu menu = new Menu();
+                    menu.Name = data.Name;
+                    menu.TotalPrice = data.TotalPrice;
+
+                    _context.Menus.Add(menu);
+                    _context.SaveChanges();
+
+                    return Ok(menu.MenuId);
+                }
+                catch (Exception ex)
+                {
+                    // 返回 500 狀態碼 ~ 伺服器內部錯誤
+                    return StatusCode(500, "伺服器內部錯誤：" + ex.Message);
+                }
+            }
+            else
+            {
+                return BadRequest("Menu 資料錯誤");
+            }
+
+        }
+
+        // 菜單細節 DTO 
+        public class MenuDetailDto
+        {
+            [Required]
+            public int MenuId { get; set; }
+
+            [Required]
+            public int ProductInformationId { get; set; }
+        }
+
+        // MenuDetail 建立
+        // POST: api/HardwareManage/CreateMenuDetail
+        [HttpPost("CreateMenuDetail")]
+        public IActionResult CreateMenuDetail([FromBody] MenuDetailDto data)
+        {
+            // 如果驗證合法
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    MenuDetail menuDetail = new MenuDetail();
+                    menuDetail.MenuId = data.MenuId;
+                    menuDetail.ProductInformationId = data.ProductInformationId;
+
+                    _context.MenuDetails.Add(menuDetail);
+                    _context.SaveChanges();
+
+                    return Ok($"{menuDetail.MenuDetailId} 新增成功");
+                }
+                catch (Exception ex)
+                {
+                    // 返回 500 狀態碼 ~ 伺服器內部錯誤
+                    return StatusCode(500, "伺服器內部錯誤：" + ex.Message);
+                }
+            }
+            else
+            {
+                return BadRequest("MenuDetail 資料錯誤");
+            }
+        }
+
+        // 回傳 菜單資料
+        // GET: 
+        [HttpGet("GetMenuList")]
+        public IEnumerable<object> GetMenuList()
+        {
+            // 下拉式選單 => 硬體
+            var MenuLists = _context.Menus.Select(c => new
+            {
+                Id = c.MenuId,
+                c.Name,
+                c.TotalPrice,
+                c.Status,
+                c.Active,
+                Count = c.MenuDetails.Count()
+            });
+            return MenuLists;
+        }
+
+        // 回傳 菜單資料
+        // GET: 
+        [HttpGet("GetMenu")]
+        public async Task<object> GetMenu(int MenuId)
+        {
+            // 下拉式選單 => 硬體
+            var MenuDate = await _context.Menus
+                .Where(c => c.MenuId == MenuId)
+                .Select(c => new
+                {
+                    Id = c.MenuId,
+                    c.Name,
+                    c.TotalPrice,
+                    c.Status,
+                    c.Active,
+                    Count = c.MenuDetails.Count()
+                }).FirstOrDefaultAsync();
+
+            return MenuDate;
         }
 
     }
