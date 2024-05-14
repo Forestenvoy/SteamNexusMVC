@@ -521,6 +521,12 @@ namespace SteamNexus_Server.Controllers
                     Count = c.MenuDetails.Count()
                 }).FirstOrDefaultAsync();
 
+            if (MenuDate == null)
+            {
+                // 找不到回傳 404 
+                return NotFound();
+            }
+
             return MenuDate;
         }
 
