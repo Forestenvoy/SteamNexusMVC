@@ -44,7 +44,7 @@
       :selected-id="product.selectedId"
       :ori-price="product.price"
       :ori-wattage="product.wattage"
-      @product-selected="onProductSelected"
+      @update-info="onUpdateInfo"
     ></select-list>
   </CModalBody>
   <CModalFooter>
@@ -66,7 +66,7 @@
 <script setup>
 import { CModalHeader, CModalTitle, CModalBody, CModalFooter } from '@coreui/vue'
 import { CRow, CCol, CButton } from '@coreui/vue'
-import { ref, onBeforeMount } from 'vue'
+import { ref } from 'vue'
 
 import SelectList from '@/components/backend/hardware/menu/edit/SelectList.vue'
 
@@ -76,6 +76,8 @@ import SelectList from '@/components/backend/hardware/menu/edit/SelectList.vue'
 const selectLists = ref([])
 
 let errorMessage = ref('')
+
+// 宣告有變更得陣列
 
 let props = defineProps({
   menuId: Number,
@@ -98,14 +100,12 @@ function modalClose() {
 }
 
 // 產品選擇事件
-function onProductSelected(value, price, wattage, oriPrice, oriWattage) {
+function onUpdateInfo(price, wattage, oriPrice, oriWattage) {
   // 價格加總
   totalPrice.value = totalPrice.value - oriPrice + price
   // 瓦數加總
   totalWattage.value = totalWattage.value - oriWattage + wattage
 }
-
-onBeforeMount(() => {})
 </script>
 
 <style scoped>

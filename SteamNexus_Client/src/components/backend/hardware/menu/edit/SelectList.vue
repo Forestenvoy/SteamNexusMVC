@@ -50,7 +50,7 @@ const props = defineProps({
 
 let selectedId = ref(props.selectedId)
 
-const emit = defineEmits(['productSelected'])
+const emit = defineEmits(['updateInfo'])
 
 let selectElement = ref(null)
 let oriPrice = ref(props.oriPrice)
@@ -93,14 +93,7 @@ function productClassify(data) {
 function onSelectChange(event) {
   const price = event.target.options[event.target.options.selectedIndex].dataset.price
   const wattage = event.target.options[event.target.options.selectedIndex].dataset.wattage
-  emit(
-    'productSelected',
-    event.target.value,
-    Number(price),
-    Number(wattage),
-    oriPrice.value,
-    oriWattage.value
-  )
+  emit('updateInfo', Number(price), Number(wattage), oriPrice.value, oriWattage.value)
   oriPrice.value = Number(price)
   oriWattage.value = Number(wattage)
 }
