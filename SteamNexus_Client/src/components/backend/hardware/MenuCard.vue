@@ -60,7 +60,7 @@ let menuActive = ref(props.menuActive)
 
 // 編輯資料
 const onMenuEdit = () => {
-  emits('menuEdit', props.menuId)
+  emits('menuEdit', props.menuId, props.menuName)
 }
 
 // 上下架切換

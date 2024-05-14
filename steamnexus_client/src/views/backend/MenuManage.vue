@@ -66,11 +66,13 @@
       @create-result="presentResult"
       @modal-close="isModalVisible = false"
     ></menu-modal-body-c>
-    <menu-modal-body-d
+    <menu-modal-body-e
       v-if="Mode === 'edit'"
       :menuId="editId"
+      :menuName="editName"
+      :products="Products"
       @modal-close="isModalVisible = false"
-    ></menu-modal-body-d>
+    ></menu-modal-body-e>
   </CModal>
   <!-- Modal End -->
 </template>
@@ -82,7 +84,7 @@ import { ref, onMounted } from 'vue'
 import { toast } from 'vue3-toastify'
 import 'vue3-toastify/dist/index.css'
 import MenuModalBodyC from '@/components/backend/hardware/menu/create/MenuModalBodyC.vue'
-import MenuModalBodyD from '@/components/backend/hardware/menu/edit/MenuModalBodyD.vue'
+import MenuModalBodyE from '@/components/backend/hardware/menu/edit/MenuModalBodyE.vue'
 import MenuCard from '@/components/backend/hardware/MenuCard.vue'
 
 // 從環境變數取得 API BASE URL
@@ -94,6 +96,10 @@ let menuLists = ref([])
 
 let Mode = ref('')
 let editId = ref(0)
+let editName = ref('')
+
+// 宣告產品分類清單
+let Products = ref([])
 
 // 新增菜單 Modal 開啟
 function Menu_Create() {
@@ -102,10 +108,94 @@ function Menu_Create() {
 }
 
 // 編輯菜單 Modal 開啟
-function Menu_Edit(menuId) {
+function Menu_Edit(menuId, menuName) {
   editId.value = menuId
-  Mode.value = 'edit'
-  isModalVisible.value = true
+  editName.value = menuName
+  Products.value = [
+    {
+      id: 10000,
+      name: 'CPU',
+      selectedId: 0
+    },
+    {
+      id: 10001,
+      name: 'GPU',
+      selectedId: 0
+    },
+    {
+      id: 10002,
+      name: 'RAM',
+      selectedId: 0
+    },
+    {
+      id: 10003,
+      name: 'MotherBoard',
+      selectedId: 0
+    },
+    {
+      id: 10004,
+      name: 'SSD',
+      selectedId: 0
+    },
+    {
+      id: 10005,
+      name: 'HDD',
+      selectedId: 0
+    },
+    {
+      id: 10006,
+      name: 'AirCooler',
+      selectedId: 0
+    },
+    {
+      id: 10007,
+      name: 'LiquidCooler',
+      selectedId: 0
+    },
+    {
+      id: 10008,
+      name: 'CASE',
+      selectedId: 0
+    },
+    {
+      id: 10009,
+      name: 'PSU',
+      selectedId: 0
+    },
+    {
+      id: 10010,
+      name: 'OS',
+      selectedId: 0
+    }
+  ]
+  GetAllMenuDetails(menuId)
+}
+
+// Get MenuDetails
+function GetAllMenuDetails(menuId) {
+  fetch(`${apiUrl}/api/HardwareManage/GetMenuDetail?MenuId=${menuId}`, { method: 'GET' })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok')
+      }
+      return response.json()
+    })
+    .then((data) => {
+      if (data !== null) {
+        console.log(data.length)
+        for (let item of data) {
+          const product = Products.value.find((product) => product.id === item.typeId)
+          product.selectedId = item.productId
+        }
+        Mode.value = 'edit'
+        isModalVisible.value = true
+      } else {
+        console.log('沒有資料')
+      }
+    })
+    .catch((error) => {
+      console.error('There was a problem with the fetch operation:', error)
+    })
 }
 
 // 訊息結果

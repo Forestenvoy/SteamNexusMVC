@@ -8,9 +8,14 @@
       <label :for="props.typeName" class="m-0 h5">{{ props.typeName }}</label>
     </CCol>
     <CCol xs="12" md="10">
-      <select :name="props.typeName" class="form-select" @change="onSelectChange">
+      <select
+        :name="props.typeName"
+        class="form-select"
+        @change="onSelectChange"
+        v-model="selectedId"
+      >
         <option value="-1" disabled hidden>null</option>
-        <option value="0" disabled selected hidden>---- 請選擇硬體 ----</option>
+        <option value="0" disabled hidden>---- 請選擇硬體 ----</option>
         <optgroup :label="groupName" v-for="(group, groupName) in typeGroups" :key="groupName">
           <option
             v-for="item in group"
@@ -35,8 +40,11 @@ const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
 const props = defineProps({
   typeName: String,
-  type: Number
+  type: Number,
+  selectedId: Number
 })
+
+let selectedId = ref(props.selectedId)
 
 const emit = defineEmits(['productSelected'])
 
@@ -80,9 +88,10 @@ function onSelectChange(event) {
   emit('productSelected', event.target.value, Number(price), Number(wattage))
 }
 
+// 讀取此分類的選擇產品
+
 onMounted(() => {
   // 從 sessionStorage 取得產品分類
-  // 首先尝试从 SessionStorage 中获取数据
   const storedTypeGroups = sessionStorage.getItem(`${props.type}Groups`)
   if (storedTypeGroups) {
     typeGroups.value = JSON.parse(storedTypeGroups)

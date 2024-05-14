@@ -623,9 +623,39 @@ namespace SteamNexus_Server.Controllers
             }
         }
 
-        // 編輯菜單
-        // POST: 
+        // 回傳菜單詳情產品的 ProductId、TypeId
+        // GET: 
+        [HttpGet("GetMenuDetail")]
+        public IEnumerable<object>? GetMenuDetail(int MenuId)
+        {
+            // 利用導覽屬性 獲取 產品的 TypeId
+            var MenuDetailSet = _context.MenuDetails.Where(m => m.MenuId == MenuId).Include(md => md.ProductInformation).ThenInclude(pi => pi.ComponentClassification);
 
+            if (MenuDetailSet == null)
+            {
+                // 找不到回傳 404 
+                return null;
+            }
+
+            var resultList = new List<object>();
+
+            foreach (var menuDetail in MenuDetailSet)
+            {
+                if (menuDetail != null && menuDetail.ProductInformation != null)
+                {
+                    var componentClassification = menuDetail.ProductInformation.ComponentClassification;
+                    if (componentClassification != null)
+                    {
+                        var computerPartCategoryId = componentClassification.ComputerPartCategoryId;
+                        var productInformationId = menuDetail.ProductInformationId;
+ 
+                        resultList.Add(new { TypeId = computerPartCategoryId, ProductId = productInformationId });
+                    }
+                }
+            }
+
+            return resultList;
+        }
 
 
     }
