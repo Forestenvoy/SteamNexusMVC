@@ -9,6 +9,7 @@ using SteamNexus_Server.Models;
 using SteamNexus_Server.Services;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
+using static SteamNexus_Server.Controllers.HardwareManageController;
 
 
 namespace SteamNexus_Server.Controllers
@@ -486,7 +487,7 @@ namespace SteamNexus_Server.Controllers
         }
 
         // 回傳 菜單資料
-        // GET: 
+        // GET: api/HardwareManage/GetMenuList
         [HttpGet("GetMenuList")]
         public IEnumerable<object> GetMenuList()
         {
@@ -504,7 +505,7 @@ namespace SteamNexus_Server.Controllers
         }
 
         // 回傳 菜單資料
-        // GET: 
+        // GET: api/HardwareManage/GetMenu
         [HttpGet("GetMenu")]
         public async Task<object> GetMenu(int MenuId)
         {
@@ -529,6 +530,58 @@ namespace SteamNexus_Server.Controllers
 
             return MenuDate;
         }
+
+        // Menu
+        public class MenuActiveDto
+        {
+            [Required]
+            public int MenuId { get; set; }
+        }
+
+        // 修改菜單上下架
+        // POST: 
+        [HttpPost("MenuActive")]
+        public IActionResult MenuActive([FromBody] MenuActiveDto data)
+        {
+            // 如果驗證合法
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var target = _context.Menus.Where(c => c.MenuId == data.MenuId).FirstOrDefault();
+
+                    if (target == null)
+                    {
+                        // 找不到回傳 404 
+                        return NotFound("找不到 Menu");
+                    }
+
+                    target.Active = !target.Active;
+
+                    _context.SaveChanges();
+
+
+                    if(target.Active)
+                    {
+                        return Ok($"{target.Name}上架成功");
+                    }
+                    else
+                    {
+                        return Ok($"{target.Name}下架成功");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // 返回 500 狀態碼 ~ 伺服器內部錯誤
+                    return StatusCode(500, "伺服器內部錯誤：" + ex.Message);
+                }
+            }
+            else
+            {
+                return BadRequest("Menu 資料錯誤");
+            }
+        }
+
 
     }
 }
