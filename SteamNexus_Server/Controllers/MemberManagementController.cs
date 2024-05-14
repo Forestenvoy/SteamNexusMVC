@@ -212,7 +212,8 @@ namespace SteamNexus_Server.Controllers
                         await photoFile.CopyToAsync(fileStream);
                     }
 
-                    photoPath = Path.Combine("images/headshots", filename);
+                    //photoPath = Path.Combine("images/headshots", filename);
+                    photoPath = filename;
                 }
 
                 _application.Users.Add(new User

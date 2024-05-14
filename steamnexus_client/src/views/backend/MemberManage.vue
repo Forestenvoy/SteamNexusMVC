@@ -7,16 +7,6 @@
       class="col-12 col-md-6 order-md-2 d-flex justify-content-center justify-content-md-end"
       id="SystemMenu"
     ></div>
-    <!-- 顯示 CAlert -->
-    <CAlert v-if="showAlert" :color="alertColor" class="d-flex align-items-center">
-      <CIcon
-        :icon="alertColor === 'success' ? 'cil-check-circle' : 'cil-warning'"
-        class="flex-shrink-0 me-2"
-        width="24"
-        height="24"
-      />
-      <div>{{ alertMessage }}</div>
-    </CAlert>
   </div>
   <section class="section">
     <table id="MemberManageTable" class="display" style="width: 100%">
@@ -45,6 +35,17 @@
   >
     新增使用者
   </button>
+
+  <!-- 顯示 CAlert -->
+  <CAlert v-if="showAlert" :color="alertColor" class="d-flex align-items-center">
+    <CIcon
+      :icon="alertColor === 'success' ? 'cil-check-circle' : 'cil-warning'"
+      class="flex-shrink-0 me-2"
+      width="24"
+      height="24"
+    />
+    <div>{{ alertMessage }}</div>
+  </CAlert>
 
   <!-- 新增使用者浮動視窗 -->
   <CModal
