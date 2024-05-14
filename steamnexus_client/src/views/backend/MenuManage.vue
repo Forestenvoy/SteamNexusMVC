@@ -29,7 +29,7 @@
       </CCol>
     </CRow>
     <CRow>
-      <transition-group name="menu-list">
+      <transition-group name="list">
         <menu-card
           v-for="menu in menuLists"
           :key="menu.id"
@@ -39,6 +39,7 @@
           :menuCount="menu.count"
           :menuStatus="menu.status"
           :menuActive="menu.active"
+          @menu-delete="deleteCard"
         ></menu-card>
       </transition-group>
     </CRow>
@@ -140,21 +141,32 @@ function getMenuList() {
     })
 }
 
+// 刪除菜單(畫面)
+function deleteCard(id) {
+  menuLists.value = menuLists.value.filter((item) => item.id !== id)
+}
+
 onMounted(() => {
   // 獲取菜單列表
   getMenuList()
 })
 </script>
 <style scoped>
-.menu-list-leave-active {
+.list-move, /* 对移动中的元素应用的过渡 */
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.5s cubic-bezier(0.55, 0, 0.1, 1);
+}
+
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: scaleY(0.01) translate(30px, 0);
+}
+
+/* 确保将离开的元素从布局流中删除
+  以便能够正确地计算移动的动画。 */
+.list-leave-active {
   position: absolute;
-}
-
-.menu-list-enter-from {
-  transform: translateY(-30px);
-}
-
-.menu-list-leave-to {
-  transform: translateY(30px);
 }
 </style>

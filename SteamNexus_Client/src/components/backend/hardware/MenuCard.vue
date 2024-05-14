@@ -54,6 +54,8 @@ const props = defineProps({
   menuActive: Boolean
 })
 
+const emits = defineEmits(['menuDelete'])
+
 let menuActive = ref(props.menuActive)
 
 // 上下架切換
@@ -113,6 +115,7 @@ const onMenuDelete = () => {
       return response.text()
     })
     .then((data) => {
+      emits('menuDelete', props.menuId)
       toast.success(data, {
         theme: 'dark',
         autoClose: 1000,
