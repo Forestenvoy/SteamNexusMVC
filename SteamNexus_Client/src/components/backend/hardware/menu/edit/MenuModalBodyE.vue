@@ -45,6 +45,7 @@
       :ori-price="product.price"
       :ori-wattage="product.wattage"
       @update-info="onUpdateInfo"
+      @product-selected="onProductSelected"
     ></select-list>
   </CModalBody>
   <CModalFooter>
@@ -56,7 +57,7 @@
         <label class="h3 m-0">{{ totalWattage }} 瓦 </label>
       </CCol>
       <CCol xs="6" class="text-end">
-        <CButton color="primary" class="me-4"> 更新 </CButton>
+        <CButton color="primary" class="me-4" @click="onMenuUpdate"> 更新 </CButton>
         <CButton color="secondary" @click="modalClose"> 關閉 </CButton>
       </CCol>
     </CRow>
@@ -77,7 +78,8 @@ const selectLists = ref([])
 
 let errorMessage = ref('')
 
-// 宣告有變更得陣列
+// 宣告變更的產品陣列
+let changedProducts = ref([])
 
 let props = defineProps({
   menuId: Number,
@@ -86,6 +88,8 @@ let props = defineProps({
   menuWattage: Number,
   products: Array
 })
+
+let oriProducts = ref(props.products)
 
 let totalPrice = ref(props.menuPrice)
 let totalWattage = ref(props.menuWattage)
@@ -99,12 +103,32 @@ function modalClose() {
   emit('modal-close')
 }
 
-// 產品選擇事件
+// 更新總價錢、瓦數
 function onUpdateInfo(price, wattage, oriPrice, oriWattage) {
   // 價格加總
   totalPrice.value = totalPrice.value - oriPrice + price
   // 瓦數加總
   totalWattage.value = totalWattage.value - oriWattage + wattage
+}
+
+// 產品選擇事件
+function onProductSelected(typeId, selectedId) {
+  // 將修改的產品資訊緩存至陣列
+  // 先檢查有沒有重複的 type
+  let index = changedProducts.value.findIndex((item) => item.typeId === typeId)
+  if (index !== -1) {
+    // 有重複的 type
+    changedProducts.value[index].selectedId = selectedId
+  } else {
+    changedProducts.value.push({
+      typeId: typeId,
+      selectedId: selectedId
+    })
+  }
+}
+
+function onMenuUpdate() {
+  alert('更新中...')
 }
 </script>
 

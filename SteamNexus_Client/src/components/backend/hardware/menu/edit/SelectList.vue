@@ -50,7 +50,7 @@ const props = defineProps({
 
 let selectedId = ref(props.selectedId)
 
-const emit = defineEmits(['updateInfo'])
+const emit = defineEmits(['updateInfo', 'productSelected'])
 
 let selectElement = ref(null)
 let oriPrice = ref(props.oriPrice)
@@ -91,11 +91,14 @@ function productClassify(data) {
 
 // 產品選擇事件
 function onSelectChange(event) {
+  // 更新價格、瓦數
   const price = event.target.options[event.target.options.selectedIndex].dataset.price
   const wattage = event.target.options[event.target.options.selectedIndex].dataset.wattage
   emit('updateInfo', Number(price), Number(wattage), oriPrice.value, oriWattage.value)
   oriPrice.value = Number(price)
   oriWattage.value = Number(wattage)
+  // 產品變更
+  emit('productSelected', props.type, selectedId.value)
 }
 
 // 找到 被選擇的產品選項
