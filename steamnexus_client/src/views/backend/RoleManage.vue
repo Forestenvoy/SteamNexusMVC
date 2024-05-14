@@ -154,12 +154,24 @@ const deleteRole = (roleId) => {
       }
     })
     .then((response) => {
-      alert(response.data.message)
+      // alert(response.data.message)
+      toast.success(response.data.message, {
+        theme: 'dark',
+        autoClose: 1000,
+        transition: toast.TRANSITIONS.ZOOM,
+        position: toast.POSITION.TOP_CENTER
+      })
       // 重新加載表格數據
       datatable.ajax.reload()
     })
     .catch((err) => {
-      alert('資料已有關聯紀錄，刪除失敗')
+      //alert('資料已有關聯紀錄，刪除失敗')
+      toast.error('資料已有關聯紀錄，刪除失敗', {
+        theme: 'dark',
+        autoClose: 1000,
+        transition: toast.TRANSITIONS.ZOOM,
+        position: toast.POSITION.TOP_CENTER
+      })
     })
 }
 
