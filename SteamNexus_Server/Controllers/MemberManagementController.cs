@@ -277,6 +277,100 @@ namespace SteamNexus_Server.Controllers
         #endregion
 
 
+        #region UpdateUserViewModel
+
+        public class EditUserViewModel
+        {
+
+            public int UserId { get; set; }
+
+
+            public string RoleName { get; set; }
+
+
+            [MaxLength(100)]
+            [EmailAddress]
+            public string Email { get; set; }
+
+
+            [MaxLength(50)]
+            public string Name { get; set; }
+
+            public bool Gender { get; set; } = true;
+
+            #nullable enable
+            [MaxLength(10)]
+            [RegularExpression(@"^09\d{8}$", ErrorMessage = "手機號碼必須以09開頭並且是10位數字")]
+            public string? Phone { get; set; }
+
+            [Display(Name = "生日")]
+            [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+            public DateTime? Birthday { get; set; }
+
+            public IFormFile? Photo { get; set; }
+        }
+        #endregion
+
+
+        #region UpdateUser
+        [HttpPost("EditUser")]
+        public async Task<ActionResult> EditUser([FromForm] EditUserViewModel data)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _application.Users
+                    .Include(u => u.Role)
+                    .FirstOrDefaultAsync(u => u.UserId == data.UserId);
+
+                if (user == null)
+                {
+                    return NotFound($"無法找到ID為 {data.UserId} 的用戶。");
+                }
+
+                user.UserId = data.UserId;
+                user.Name = data.Name;
+                user.Email = data.Email;
+                user.Phone = data.Phone;
+                user.Gender = data.Gender;
+                user.Birthday = data.Birthday;
+
+                var newRole = await _application.Roles.FirstOrDefaultAsync(r => r.RoleName == data.RoleName);
+                if (newRole != null && newRole.RoleId != user.RoleId)
+                {
+                    user.RoleId = newRole.RoleId;
+                }
+
+                if (data.Photo != null && data.Photo.Length > 0)
+                {
+                    if (!string.IsNullOrEmpty(user.Photo) && user.Photo != "default.jpg")
+                    {
+                        var oldFilePath = Path.Combine(_webHost.WebRootPath, "images/headshots", user.Photo);
+                        if (System.IO.File.Exists(oldFilePath))
+                        {
+                            System.IO.File.Delete(oldFilePath);
+                        }
+                    }
+
+                    string filename = Guid.NewGuid().ToString() + Path.GetExtension(data.Photo.FileName);
+                    string uploadfolder = Path.Combine(_webHost.WebRootPath, "images/headshots");
+                    string filepath = Path.Combine(uploadfolder, filename);
+
+                    using (var fileStream = new FileStream(filepath, FileMode.Create))
+                    {
+                        await data.Photo.CopyToAsync(fileStream);
+                    }
+
+                    user.Photo = filename;
+                }
+                await _application.SaveChangesAsync();
+                return Ok(new { message = "用戶更新成功" });
+            }
+            return BadRequest(ModelState);
+        }
+
+        #endregion
+
+
         #region 密碼加密
         private string HashPassword(string password)
         {
