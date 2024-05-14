@@ -69,6 +69,8 @@ function productClassify(data) {
     // 將產品資料加入到對應的分類中
     typeGroups.value[Classification].push(item)
   })
+  // 將數據存入 sessionStorage
+  sessionStorage.setItem(`${props.type}Groups`, JSON.stringify(typeGroups.value))
 }
 
 // 產品選擇事件
@@ -79,7 +81,15 @@ function onSelectChange(event) {
 }
 
 onMounted(() => {
-  getProducts(props.type)
+  // 從 sessionStorage 取得產品分類
+  // 首先尝试从 SessionStorage 中获取数据
+  const storedTypeGroups = sessionStorage.getItem(`${props.type}Groups`)
+  if (storedTypeGroups) {
+    typeGroups.value = JSON.parse(storedTypeGroups)
+  } else {
+    // 如果 SessionStorage 中沒有數據，則請求數據
+    getProducts(props.type)
+  }
 })
 </script>
 <style></style>

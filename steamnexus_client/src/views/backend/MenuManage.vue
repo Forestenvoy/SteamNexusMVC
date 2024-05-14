@@ -61,6 +61,7 @@
     aria-labelledby="MenuModal"
   >
     <menu-modal-body-c
+      v-if="Mode === 'create'"
       @create-result="presentResult"
       @modal-close="isModalVisible = false"
     ></menu-modal-body-c>
@@ -84,8 +85,11 @@ let isModalVisible = ref(false)
 
 let menuLists = ref([])
 
+let Mode = ref('')
+
 // 新增菜單 Modal 開啟
 function Menu_Create() {
+  Mode.value = 'create'
   isModalVisible.value = true
 }
 
