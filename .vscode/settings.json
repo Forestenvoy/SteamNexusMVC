@@ -5,6 +5,7 @@
     "datatables",
     "fixedheader",
     "pinia",
+    "toastify",
     "VITE",
     "xmark"
   ],

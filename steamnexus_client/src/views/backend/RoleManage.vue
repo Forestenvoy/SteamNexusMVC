@@ -6,9 +6,7 @@
     <div
       class="col-12 col-md-6 order-md-2 d-flex justify-content-center justify-content-md-end"
       id="SystemMenu"
-    >
-      <button class="btn btn-danger" id="createRoles">新增權限</button>
-    </div>
+    ></div>
   </div>
 
   <section class="section">
@@ -22,21 +20,160 @@
       </thead>
     </table>
   </section>
+  <button
+    type="button"
+    class="btn btn-danger mb-3"
+    @click="
+      () => {
+        createRoleModal = true
+      }
+    "
+  >
+    新增權限
+  </button>
+
+  <!-- 新增權限的浮動式窗 -->
+  <CModal
+    alignment="center"
+    :visible="createRoleModal"
+    @close="
+      () => {
+        createRoleModal = false
+      }
+    "
+    aria-labelledby="CreateRoleModal"
+  >
+    <CModalHeader>
+      <CModalTitle id="CreateRoleModal">新增權限</CModalTitle>
+    </CModalHeader>
+    <CModalBody>
+      <div class="form-group">
+        <label class="form-label">權限名稱：</label>
+        <input class="form-control" v-model="newRoleName" />
+      </div>
+    </CModalBody>
+    <CModalFooter>
+      <CButton
+        color="secondary"
+        @click="
+          () => {
+            createRoleModal = false
+          }
+        "
+      >
+        取消
+      </CButton>
+      <CButton color="primary" @click="createRole">新增</CButton>
+    </CModalFooter>
+  </CModal>
 </template>
 
 <script setup>
 // 核心模組 import
 import $ from 'jquery'
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap/dist/js/bootstrap.bundle.js'
 import DataTable from 'datatables.net-dt'
 import 'datatables.net-fixedheader-dt'
 import 'datatables.net-buttons-dt'
 import 'datatables.net-responsive-dt'
-import { onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
+import { CModal, CModalHeader, CModalTitle, CModalBody, CModalFooter, CButton } from '@coreui/vue'
+import axios from 'axios'
+
+// 特殊吐司
+import { toast } from 'vue3-toastify'
+import 'vue3-toastify/dist/index.css'
 
 // 從環境變數取得 API BASE URL
 const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
 var datatable = null
+
+// 角色名稱
+const newRoleName = ref('')
+
+let createRoleModal = ref(false)
+
+// 新增角色
+const createRole = () => {
+  if (newRoleName.value.trim() === '') {
+    alert('請輸入權限名稱')
+    return
+  }
+
+  // 創建 FormData 對象
+  const formData = new FormData()
+  formData.append('RoleName', newRoleName.value)
+
+  axios
+    .post(`${apiUrl}/api/MemberManagement/CreateRole`, formData)
+    .then((response) => {
+      if (response.data && response.data.message) {
+        //
+        toast.success(response.data.message, {
+          theme: 'dark',
+          autoClose: 1000,
+          transition: toast.TRANSITIONS.ZOOM,
+          position: toast.POSITION.TOP_CENTER
+        })
+        //
+        newRoleName.value = ''
+        createRoleModal.value = false
+        datatable.ajax.reload()
+      } else {
+        alert('新增角色失敗，請重試')
+      }
+    })
+    .catch((err) => {
+      console.error('新增角色失敗，錯誤詳情：', err)
+      if (err.response) {
+        toast.error('請確認是否輸入英文大小寫', {
+          theme: 'dark',
+          autoClose: 1000,
+          transition: toast.TRANSITIONS.ZOOM,
+          position: toast.POSITION.TOP_CENTER
+        })
+      } else {
+        toast.error('新增腳色失敗，請重新測試', {
+          theme: 'dark',
+          autoClose: 1000,
+          transition: toast.TRANSITIONS.ZOOM,
+          position: toast.POSITION.TOP_CENTER
+        })
+      }
+    })
+}
+
+// 刪除角色
+const deleteRole = (roleId) => {
+  axios
+    .post(`${apiUrl}/api/MemberManagement/DeleteRole?id=${roleId}`, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then((response) => {
+      // alert(response.data.message)
+      toast.success(response.data.message, {
+        theme: 'dark',
+        autoClose: 1000,
+        transition: toast.TRANSITIONS.ZOOM,
+        position: toast.POSITION.TOP_CENTER
+      })
+      // 重新加載表格數據
+      datatable.ajax.reload()
+    })
+    .catch((err) => {
+      //alert('資料已有關聯紀錄，刪除失敗')
+      toast.error('資料已有關聯紀錄，刪除失敗', {
+        theme: 'dark',
+        autoClose: 1000,
+        transition: toast.TRANSITIONS.ZOOM,
+        position: toast.POSITION.TOP_CENTER
+      })
+    })
+}
 
 onMounted(() => {
   // 初始化 Datatables
@@ -90,8 +227,17 @@ onMounted(() => {
     // 自動寬度 關閉
     autoWidth: true
   })
+
+  // 綁定刪除按鈕的點擊事件
+  $('#RolesManageTable').on('click', '.del-btn', function () {
+    const roleId = $(this).data('roleid')
+    if (confirm('確定要刪除此角色嗎？')) {
+      deleteRole(roleId)
+    }
+  })
 })
 </script>
+
 <style>
 /* DataTables */
 @import 'datatables.net-dt/css/dataTables.datatables.min.css';

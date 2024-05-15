@@ -6,9 +6,7 @@
     <div
       class="col-12 col-md-6 order-md-2 d-flex justify-content-center justify-content-md-end"
       id="SystemMenu"
-    >
-      <button class="btn btn-danger" id="createMember">新增會員</button>
-    </div>
+    ></div>
   </div>
   <section class="section">
     <table id="MemberManageTable" class="display" style="width: 100%">
@@ -26,6 +24,54 @@
       </thead>
     </table>
   </section>
+  <button
+    type="button"
+    class="btn btn-danger mb-3"
+    @click="
+      () => {
+        createUserModal = true
+      }
+    "
+  >
+    新增使用者
+  </button>
+
+  <!-- 新增使用者浮動視窗 -->
+  <CModal
+    alignment="center"
+    :visible="createUserModal"
+    @close="
+      () => {
+        createUserModal = false
+      }
+    "
+    aria-labelledby="createUserModal"
+  >
+    <CModalHeader>
+      <CModalTitle id="createUserModal">Modal title</CModalTitle>
+    </CModalHeader>
+    <CModalBody>
+      <CRow class="mb-3">
+        <CFormLabel for="staticEmail" class="col-sm-2 col-form-label">Email</CFormLabel>
+        <div class="col-sm-10">
+          <CFormInput type="text" id="staticEmail" value="email@example.com" readonly plain-text />
+        </div>
+      </CRow>
+    </CModalBody>
+    <CModalFooter>
+      <CButton
+        color="secondary"
+        @click="
+          () => {
+            createUserModal = false
+          }
+        "
+      >
+        Close
+      </CButton>
+      <CButton color="primary">Save changes</CButton>
+    </CModalFooter>
+  </CModal>
 </template>
 
 <script setup>
@@ -35,12 +81,48 @@ import DataTable from 'datatables.net-dt'
 import 'datatables.net-fixedheader-dt'
 import 'datatables.net-buttons-dt'
 import 'datatables.net-responsive-dt'
-import { onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
+import { CModal, CModalHeader, CModalTitle, CModalBody, CModalFooter, CButton } from '@coreui/vue'
+import axios from 'axios'
+
+// 特殊吐司
+import { toast } from 'vue3-toastify'
+import 'vue3-toastify/dist/index.css'
 
 // 從環境變數取得 API BASE URL
 const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
 var datatable = null
+
+let createUserModal = ref(false)
+
+const deleteUser = (userId) => {
+  axios
+    .post(`${apiUrl}/api/MemberManagement/DeleteUser?id=${userId}`, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then((response) => {
+      //alert('使用者刪除成功')
+      toast.success(response.data.message, {
+        theme: 'dark',
+        autoClose: 1000,
+        transition: toast.TRANSITIONS.ZOOM,
+        position: toast.POSITION.TOP_CENTER
+      })
+      datatable.ajax.reload()
+    })
+    .catch((err) => {
+      //alert('使用者刪除失敗')
+      toast.error('使用者刪除失敗', {
+        theme: 'dark',
+        autoClose: 1000,
+        transition: toast.TRANSITIONS.ZOOM,
+        position: toast.POSITION.TOP_CENTER
+      })
+    })
+}
 
 onMounted(() => {
   // 初始化 Datatables
@@ -100,8 +182,7 @@ onMounted(() => {
           // 編輯按鈕
           let enterEle = `<button class="btn btn-danger" data-userid="${UserId}" data-name="${Name}" data-email="${Email}"  data-gender="${Gender}" data-phone="${Phone}" data-birthday="${Birthday}" data-photo="${Photo}" data-rolename="${RoleName}" id="edit_btn" data-bs-toggle="popover" data-bs-content="nothing"><i class="bi bi-pencil-square"></i></button>`
           // 刪除按鈕
-          // let resetEle = '<button class="btn btn-danger" data-userId="' + UserId + '"  data-name="' + Name + '" data-email="' + Email + '" id="delete_btn" data-bs-toggle="popover" data-bs-content="nothing"><i class="bi bi-trash3-fill"></i></button>';
-          let resetEle = `<button class="btn btn-danger" data-userid="${UserId}" data-name="${Name}" data-email="${Email}"  data-gender="${Gender}" data-phone="${Phone}" data-birthday="${Birthday}" data-photo="${Photo}" data-rolename="${RoleName}" " id="delete_btn" data-bs-toggle="popover" data-bs-content="nothing"><i class="bi bi-trash3-fill"></i></button>`
+          let resetEle = `<button class="btn btn-danger" data-userid="${UserId}" data-name="${Name}" data-email="${Email}"  data-gender="${Gender}" data-phone="${Phone}" data-birthday="${Birthday}" data-photo="${Photo}" data-rolename="${RoleName}" id="delete_btn" data-bs-toggle="popover" data-bs-content="nothing"><i class="bi bi-trash3-fill"></i></button>`
 
           if (type === 'display') {
             return `${enterEle}&nbsp;${resetEle}`
@@ -128,6 +209,14 @@ onMounted(() => {
     order: [[1, 'asc']],
     // 自動寬度 關閉
     autoWidth: true
+  })
+
+  // 綁定刪除按鈕的點擊事件
+  $('#MemberManageTable').on('click', '#delete_btn', function () {
+    const userId = $(this).data('userid')
+    if (confirm('確定要刪除此使用者嗎？')) {
+      deleteUser(userId)
+    }
   })
 })
 </script>

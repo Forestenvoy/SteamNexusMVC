@@ -125,15 +125,15 @@ var progressNum=0;
 
 // 初始化 DataTables
 let dataTable = null
-const visibleVerticallyCenteredScrollableDemo= ref(false)
+const visibleVerticallyCenteredScrollableDemo = ref(false)
 
 //吐司初始化
 var toasts=ref([])
 
 //BootStrap呼喚alert畫面
 const handleClick = () => {
-    visibleVerticallyCenteredScrollableDemo.value = true;
-};
+  visibleVerticallyCenteredScrollableDemo.value = true
+}
 
 //Form驗證製作
 import { defineRule, Form, Field, ErrorMessage, configure } from 'vee-validate';
@@ -142,49 +142,47 @@ import { localize } from '@vee-validate/i18n';
 import zh_TW from'@/components/backend/Game/zh_TW.json'
 import { CAlert } from '@coreui/vue';
 
-defineRule('required', required);
-defineRule('between', between);
-defineRule('confirmed', confirmed);
-defineRule('numeric', numeric);
+defineRule('required', required)
+defineRule('between', between)
+defineRule('confirmed', confirmed)
+defineRule('numeric', numeric)
 
 var Title=ref("")
 var imagesrc = ref('http://localhost:5173/public/img/noImage.png')
 var videosrc = ref('#')
-var gameGameId=ref("")
-var AppId=ref("")
-var Name=ref("")
-var OriginalPrice=ref("")
-var AgeRating=ref("")
-var ReleaseDate=ref("")
-var Publisher=ref("")
-var Description=ref("")
-var ImagePath=ref("")
-var VideoPath=ref("")
+var gameGameId = ref('')
+var AppId = ref('')
+var Name = ref('')
+var OriginalPrice = ref('')
+var AgeRating = ref('')
+var ReleaseDate = ref('')
+var Publisher = ref('')
+var Description = ref('')
+var ImagePath = ref('')
+var VideoPath = ref('')
 
 //照片更新事件
 function ImageChange(event) {
-    if (event.target.value != "") {
-        var img = new Image();
-        img.onload = function () {
-            imagesrc=event.target.value
-        };
-        img.onerror = function () {
-            // 如果網址有效但沒有圖片，顯示預設圖片
-            $("#imgPreview").attr("src", "/img/noImage.png");
-        };
-        img.src = event.target.value; // 設置圖片網址來檢查它是否有效
+  if (event.target.value != '') {
+    var img = new Image()
+    img.onload = function () {
+      imagesrc = event.target.value
     }
-    else {
-        $("#imgPreview").attr("src", "/img/noImage.png");
+    img.onerror = function () {
+      // 如果網址有效但沒有圖片，顯示預設圖片
+      $('#imgPreview').attr('src', '/img/noImage.png')
     }
-    
+    img.src = event.target.value // 設置圖片網址來檢查它是否有效
+  } else {
+    $('#imgPreview').attr('src', '/img/noImage.png')
+  }
 }
 
 //影片更新事件
 function VideoChange(event) {
-    if (event.target.value != "") {
-        videosrc=event.target.value
-    } 
+  if (event.target.value != '') {
+    videosrc = event.target.value
+  }
 }
 
 //設定驗證功能之{field}名稱(紅色的字的名稱預設為英文)
@@ -192,51 +190,55 @@ configure({
   generateMessage: localize('zh_TW', {
     names: {
       Name: '遊戲名稱',
-      OriginalPrice:'原始價格',
-      AgeRating:'遊戲分級',
-      ReleaseDate:'上市日期',
-      Publisher:'開發商',
-      Description:'遊戲介紹',
-      ImagePath:'遊戲圖片',
-      VideoPath:'遊戲影片'
+      OriginalPrice: '原始價格',
+      AgeRating: '遊戲分級',
+      ReleaseDate: '上市日期',
+      Publisher: '開發商',
+      Description: '遊戲介紹',
+      ImagePath: '遊戲圖片',
+      VideoPath: '遊戲影片'
     },
     messages: zh_TW.messages
   })
-});
+})
 
 //編輯事件
 $(document).on('click', 'button[id$="edit_button"]', function (event) {
-    gameGameId=$(this).attr('data-GameId');
-    event.preventDefault();
-    event.stopPropagation();
-    Title="編輯遊戲"
-    //優先載入js 在執行fetch
-    fetch(`${apiUrl}/api/GamesManagement/GetEditJSON?id=${gameGameId}`, {
-                method: "GET"
-            }).then(response => {
-                // 確保請求是否成功
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                // 解析 html
-                return response.json();
-            }).then(val => {
-                AppId=val.appId
-                Name=val.name
-                OriginalPrice=val.originalPrice
-                AgeRating=val.ageRating
-                ReleaseDate=val.releaseDate
-                Publisher=val.publisher
-                Description=val.description
-                ImagePath=val.imagePath
-                VideoPath=val.videoPath
-                handleClick();  
-            }).catch(error => {
-                alert(error);
-            }).finally(() => {
-                // 异步操作完成后启用按钮
-                $(this).prop('disabled', false);
-            });
+  gameGameId = $(this).attr('data-GameId')
+  event.preventDefault()
+  event.stopPropagation()
+  Title = '編輯遊戲'
+  //優先載入js 在執行fetch
+  fetch(`${apiUrl}/api/GamesManagement/GetEditJSON?id=${gameGameId}`, {
+    method: 'GET'
+  })
+    .then((response) => {
+      // 確保請求是否成功
+      if (!response.ok) {
+        throw new Error('Network response was not ok')
+      }
+      // 解析 html
+      return response.json()
+    })
+    .then((val) => {
+      AppId = val.appId
+      Name = val.name
+      OriginalPrice = val.originalPrice
+      AgeRating = val.ageRating
+      ReleaseDate = val.releaseDate
+      Publisher = val.publisher
+      Description = val.description
+      ImagePath = val.imagePath
+      VideoPath = val.videoPath
+      handleClick()
+    })
+    .catch((error) => {
+      alert(error)
+    })
+    .finally(() => {
+      // 异步操作完成后启用按钮
+      $(this).prop('disabled', false)
+    })
 })
 
 //刪除事件
@@ -353,59 +355,69 @@ function getdatatableData() {
 };
 
 onMounted(() => {
-  getdatatableData();
+  getdatatableData()
   dataTable = new DataTable('#GameManageTable', {
     // ...dataTableConfig,
     columns: [
-        {
-            "data": "imagePath",
-            "width": "5%",
-            "className": "text-center",
-            "render": function (data, type, row) {
-                return '<img src="' + data + '" alt="圖片" style="width:150px">';
-            }, responsivePriority: 1
+      {
+        data: 'imagePath',
+        width: '5%',
+        className: 'text-center',
+        render: function (data, type, row) {
+          return '<img src="' + data + '" alt="圖片" style="width:150px">'
         },
-        { "data": "appId", "width": "5%"},
-        { "data": "name", responsivePriority: 1, "width": "5%" },
-        { "data": "originalPrice", "width": "2%" },
-        { "data": "currentPrice", responsivePriority: 2, "width": "2%" },
-        { "data": "ageRating", "width": "5%" },
-        { "data": "comment", "width": "5%" },
-        { "data": "commentNum", "width": "5%" },
-        { "data": "publisher", "width": "5%" },
-        {
-            "data": null,
-            "orderable": false,
-            "width": "5%",
-            "className": "text-center",
-            // 按鈕 自定義
-            render: function (data, type, row, meta) {
-                // 取得 productId
-                let name = row.name;
-                let GameId = row.gameId;
-                // 編輯按鈕
-                let editEle = '<button data-GameId="' + GameId + '"  data-name="' + name + '" @click="edit_button" id="edit_button" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-pen-to-square"></i></button>';
-                // 刪除按鈕
-                let deleteEle = '<button data-GameId="' + GameId + '"  data-name="' + name + '" id="delete_button" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-trash"></i></button>';
-                if (type === 'display') {
-                    return `${editEle}${deleteEle}`;
-                }
-                return data;
-            }, responsivePriority: 1
-        }
+        responsivePriority: 1
+      },
+      { data: 'appId', width: '5%' },
+      { data: 'name', responsivePriority: 1, width: '5%' },
+      { data: 'originalPrice', width: '2%' },
+      { data: 'currentPrice', responsivePriority: 2, width: '2%' },
+      { data: 'ageRating', width: '5%' },
+      { data: 'comment', width: '5%' },
+      { data: 'commentNum', width: '5%' },
+      { data: 'publisher', width: '5%' },
+      {
+        data: null,
+        orderable: false,
+        width: '5%',
+        className: 'text-center',
+        // 按鈕 自定義
+        render: function (data, type, row, meta) {
+          // 取得 productId
+          let name = row.name
+          let GameId = row.gameId
+          // 編輯按鈕
+          let editEle =
+            '<button data-GameId="' +
+            GameId +
+            '"  data-name="' +
+            name +
+            '" @click="edit_button" id="edit_button" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-pen-to-square"></i></button>'
+          // 刪除按鈕
+          let deleteEle =
+            '<button data-GameId="' +
+            GameId +
+            '"  data-name="' +
+            name +
+            '" id="delete_button" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-trash"></i></button>'
+          if (type === 'display') {
+            return `${editEle}${deleteEle}`
+          }
+          return data
+        },
+        responsivePriority: 1
+      }
     ],
     // 標頭固定
     fixedHeader: true,
     // 響應式設計
     responsive: true,
-    language: {url: '//cdn.datatables.net/plug-ins/2.0.3/i18n/zh-HANT.json'},
+    language: { url: '//cdn.datatables.net/plug-ins/2.0.3/i18n/zh-HANT.json' },
     // 自動寬度 關閉
     autoWidth: true,
     // 資料載入中 gif
     processing: true,
-    buttons: [
-        'copy', 'excel', 'pdf'
-    ],
+    buttons: ['copy', 'excel', 'pdf'],
     layout: {
         topMiddle: {
             buttons: [
@@ -526,11 +538,11 @@ label {
   margin-bottom: 5px;
 }
 
-.formBox{
+.formBox {
   margin-bottom: 20px;
 }
 </style>
-                    <!-- AppId=""
+<!-- AppId=""
 Name=""
 OriginalPrice=""
 AgeRating=""

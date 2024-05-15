@@ -28,7 +28,7 @@
         </div>
         <hr />
         <div class="creator d-flex justify-content-evenly">
-          <button role="button" class="button-59">編輯</button>
+          <button role="button" class="button-59" @click="onMenuEdit">編輯</button>
           <button role="button" class="button-59 button-59-del" @click="onMenuDelete">刪除</button>
         </div>
       </div>
@@ -39,21 +39,104 @@
 <script setup>
 import { CCol } from '@coreui/vue'
 import { ref } from 'vue'
+import { toast } from 'vue3-toastify'
+import 'vue3-toastify/dist/index.css'
+
+// 從環境變數取得 API BASE URL
+const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
 const props = defineProps({
   menuId: Number,
   menuName: String,
   menuPrice: Number,
+  menuWattage: Number,
   menuCount: Number,
   menuStatus: Boolean,
   menuActive: Boolean
 })
 
+const emits = defineEmits(['menuDelete', 'menuEdit'])
+
 let menuActive = ref(props.menuActive)
+
+// 編輯資料
+const onMenuEdit = () => {
+  emits('menuEdit', props.menuId, props.menuName, props.menuPrice, props.menuWattage)
+}
 
 // 上下架切換
 const onMenuActive = () => {
-  console.log(menuActive.value)
+  fetch(`${apiUrl}/api/HardwareManage/MenuActive`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      MenuId: props.menuId
+    })
+  })
+    .then((response) => {
+      if (!response.ok) {
+        return response.text().then((errorMessage) => {
+          throw new Error(errorMessage)
+        })
+      }
+      return response.text()
+    })
+    .then((data) => {
+      toast.success(data, {
+        theme: 'dark',
+        autoClose: 1000,
+        transition: toast.TRANSITIONS.ZOOM,
+        position: toast.POSITION.TOP_CENTER
+      })
+    })
+    .catch((error) => {
+      toast.error(error.message, {
+        theme: 'dark',
+        autoClose: 1000,
+        transition: toast.TRANSITIONS.ZOOM,
+        position: toast.POSITION.TOP_CENTER
+      })
+    })
+}
+
+// 刪除資料
+const onMenuDelete = () => {
+  fetch(`${apiUrl}/api/HardwareManage/DeleteMenu`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      MenuId: props.menuId
+    })
+  })
+    .then((response) => {
+      if (!response.ok) {
+        return response.text().then((errorMessage) => {
+          throw new Error(errorMessage)
+        })
+      }
+      return response.text()
+    })
+    .then((data) => {
+      emits('menuDelete', props.menuId)
+      toast.success(data, {
+        theme: 'dark',
+        autoClose: 1000,
+        transition: toast.TRANSITIONS.ZOOM,
+        position: toast.POSITION.TOP_CENTER
+      })
+    })
+    .catch((error) => {
+      toast.error(error.message, {
+        theme: 'dark',
+        autoClose: 1000,
+        transition: toast.TRANSITIONS.ZOOM,
+        position: toast.POSITION.TOP_CENTER
+      })
+    })
 }
 </script>
 

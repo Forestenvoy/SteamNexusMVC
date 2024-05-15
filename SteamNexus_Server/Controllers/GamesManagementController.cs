@@ -69,7 +69,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
 
         //GameDataTable設定
         [HttpGet("IndexJson")]
-        public async Task<JsonResult> IndexJson()
+        public JsonResult IndexJson()
         {
             return Json(_context.Games);
         }

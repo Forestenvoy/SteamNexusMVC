@@ -23,6 +23,7 @@
     "@sweetalert2/themes": "^5.0.16",
     "@vee-validate/i18n": "^4.12.8",
     "@vee-validate/rules": "^4.12.8",
+    "axios": "^1.6.8",
     "bootstrap": "^5.3.3",
     "chart.js": "^4.4.2",
     "datatables.net-bs5": "^2.0.7",
