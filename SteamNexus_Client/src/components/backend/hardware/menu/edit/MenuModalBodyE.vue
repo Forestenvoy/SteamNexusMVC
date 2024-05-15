@@ -127,8 +127,34 @@ function onProductSelected(typeId, selectedId) {
   }
 }
 
+// 菜單資料更新
 function onMenuUpdate() {
-  alert('更新中...')
+  // 宣告 最終須更新的陣列
+  let finalList = []
+
+  for (let i = 0; i < changedProducts.value.length; i++) {
+    let index = oriProducts.value.findIndex((item) => item.id === changedProducts.value[i].typeId)
+    if (index !== -1) {
+      // 有重複的 type
+      // 比對原始數據、變更後的數據
+      if (oriProducts.value[index].selectedId !== changedProducts.value[i].selectedId) {
+        finalList.push({
+          menuId: props.menuId,
+          oriProductId: oriProducts.value[index].selectedId,
+          newProductId: changedProducts.value[i].selectedId
+        })
+      }
+    } else {
+      // 沒有重複的 type
+      finalList.push({
+        menuId: props.menuId,
+        oriProductId: 0,
+        newProductId: changedProducts.value[i].selectedId
+      })
+    }
+  }
+
+  console.log(finalList)
 }
 </script>
 
