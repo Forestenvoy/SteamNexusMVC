@@ -19,6 +19,9 @@ public class Menu
     public int TotalPrice { get; set; } = 0;
 
     [Required]
+    public int TotalWattage { get; set; } = 0;
+
+    [Required]
     public bool Status { get; set; } = true;
 
     [Required]

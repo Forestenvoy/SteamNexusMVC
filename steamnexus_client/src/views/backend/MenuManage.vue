@@ -29,16 +29,19 @@
       </CCol>
     </CRow>
     <CRow>
-      <transition-group name="menu-list">
+      <transition-group name="list">
         <menu-card
           v-for="menu in menuLists"
           :key="menu.id"
           :menuId="menu.id"
           :menuName="menu.name"
           :menuPrice="menu.totalPrice"
+          :menuWattage="menu.totalWattage"
           :menuCount="menu.count"
           :menuStatus="menu.status"
           :menuActive="menu.active"
+          @menu-edit="Menu_Edit"
+          @menu-delete="deleteCard"
         ></menu-card>
       </transition-group>
     </CRow>
@@ -60,9 +63,20 @@
     aria-labelledby="MenuModal"
   >
     <menu-modal-body-c
+      v-if="Mode === 'create'"
       @create-result="presentResult"
       @modal-close="isModalVisible = false"
     ></menu-modal-body-c>
+    <menu-modal-body-e
+      v-if="Mode === 'edit'"
+      :menuId="editId"
+      :menuName="editName"
+      :menuPrice="editPrice"
+      :menuWattage="editWattage"
+      :products="Products"
+      @modal-close="isModalVisible = false"
+      @menu-update="cardInfoUpdate"
+    ></menu-modal-body-e>
   </CModal>
   <!-- Modal End -->
 </template>
@@ -74,6 +88,7 @@ import { ref, onMounted } from 'vue'
 import { toast } from 'vue3-toastify'
 import 'vue3-toastify/dist/index.css'
 import MenuModalBodyC from '@/components/backend/hardware/menu/create/MenuModalBodyC.vue'
+import MenuModalBodyE from '@/components/backend/hardware/menu/edit/MenuModalBodyE.vue'
 import MenuCard from '@/components/backend/hardware/MenuCard.vue'
 
 // 從環境變數取得 API BASE URL
@@ -83,9 +98,135 @@ let isModalVisible = ref(false)
 
 let menuLists = ref([])
 
+let Mode = ref('')
+let editId = ref(0)
+let editName = ref('')
+let editPrice = ref(0)
+let editWattage = ref(0)
+
+// 宣告產品分類清單
+let Products = ref([])
+
 // 新增菜單 Modal 開啟
 function Menu_Create() {
+  Mode.value = 'create'
   isModalVisible.value = true
+}
+
+// 編輯菜單 Modal 開啟
+function Menu_Edit(menuId, menuName, menuPrice, menuWattage) {
+  editId.value = menuId
+  editName.value = menuName
+  editPrice.value = menuPrice
+  editWattage.value = menuWattage
+  Products.value = [
+    {
+      id: 10000,
+      name: 'CPU',
+      selectedId: 0,
+      price: 0,
+      wattage: 0
+    },
+    {
+      id: 10001,
+      name: 'GPU',
+      selectedId: 0,
+      price: 0,
+      wattage: 0
+    },
+    {
+      id: 10002,
+      name: 'RAM',
+      selectedId: 0,
+      price: 0,
+      wattage: 0
+    },
+    {
+      id: 10003,
+      name: 'MotherBoard',
+      selectedId: 0,
+      price: 0,
+      wattage: 0
+    },
+    {
+      id: 10004,
+      name: 'SSD',
+      selectedId: 0,
+      price: 0,
+      wattage: 0
+    },
+    {
+      id: 10005,
+      name: 'HDD',
+      selectedId: 0,
+      price: 0,
+      wattage: 0
+    },
+    {
+      id: 10006,
+      name: 'AirCooler',
+      selectedId: 0,
+      price: 0,
+      wattage: 0
+    },
+    {
+      id: 10007,
+      name: 'LiquidCooler',
+      selectedId: 0,
+      price: 0,
+      wattage: 0
+    },
+    {
+      id: 10008,
+      name: 'CASE',
+      selectedId: 0,
+      price: 0,
+      wattage: 0
+    },
+    {
+      id: 10009,
+      name: 'PSU',
+      selectedId: 0,
+      price: 0,
+      wattage: 0
+    },
+    {
+      id: 10010,
+      name: 'OS',
+      selectedId: 0,
+      price: 0,
+      wattage: 0
+    }
+  ]
+  GetAllMenuDetails(menuId)
+}
+
+// Get MenuDetails
+function GetAllMenuDetails(menuId) {
+  fetch(`${apiUrl}/api/HardwareManage/GetMenuDetail?MenuId=${menuId}`, { method: 'GET' })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok')
+      }
+      return response.json()
+    })
+    .then((data) => {
+      if (data !== null) {
+        for (let item of data) {
+          const product = Products.value.find((product) => product.id === item.typeId)
+          product.selectedId = item.productId
+          product.price = item.price
+          product.wattage = item.wattage
+        }
+        Mode.value = 'edit'
+        isModalVisible.value = true
+      } else {
+        console.log('沒有資料')
+      }
+    })
+    .catch((error) => {
+      console.error('There was a problem with the fetch operation:', error)
+    })
 }
 
 // 訊息結果
@@ -140,21 +281,51 @@ function getMenuList() {
     })
 }
 
+// 刪除菜單(畫面)
+function deleteCard(id) {
+  menuLists.value = menuLists.value.filter((item) => item.id !== id)
+}
+
+// 更新卡片菜單資訊
+function cardInfoUpdate(menuId) {
+  fetch(`${apiUrl}/api/HardwareManage/GetMenu?MenuId=${menuId}`, { method: 'GET' })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('NetworkError')
+      }
+      return response.json()
+    })
+    .then((data) => {
+      // 抓出菜單資訊
+      let index = menuLists.value.findIndex((item) => item.id === data.id)
+      menuLists.value[index] = data
+    })
+    .catch((error) => {
+      console.error(error.message)
+    })
+}
+
 onMounted(() => {
   // 獲取菜單列表
   getMenuList()
 })
 </script>
 <style scoped>
-.menu-list-leave-active {
+.list-move, /* 对移动中的元素应用的过渡 */
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.5s cubic-bezier(0.55, 0, 0.1, 1);
+}
+
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: scaleY(0.01) translate(30px, 0);
+}
+
+/* 确保将离开的元素从布局流中删除
+  以便能够正确地计算移动的动画。 */
+.list-leave-active {
   position: absolute;
-}
-
-.menu-list-enter-from {
-  transform: translateY(-30px);
-}
-
-.menu-list-leave-to {
-  transform: translateY(30px);
 }
 </style>

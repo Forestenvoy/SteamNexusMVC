@@ -35,8 +35,7 @@
   <CModalFooter>
     <CRow class="w-100">
       <CCol xs="6" class="d-flex align-items-center">
-        <label class="h3 m-0 me-5"
-          >$
+        <label class="h3 m-0 me-5">
           {{ totalPrice.toLocaleString('zh-TW', { style: 'currency', currency: 'TWD' }) }}
         </label>
         <label class="h3 m-0">{{ totalWattage }} 瓦 </label>
@@ -121,11 +120,11 @@ function modalClose() {
 }
 
 // 產品選擇事件
-function onProductSelected(value, price, wattage) {
+function onProductSelected(price, wattage, oriPrice, oriWattage) {
   // 價格加總
-  totalPrice.value = totalPrice.value + price
+  totalPrice.value = totalPrice.value - oriPrice + price
   // 瓦數加總
-  totalWattage.value = totalWattage.value + wattage
+  totalWattage.value = totalWattage.value - oriWattage + wattage
 }
 
 // 建立菜單至資料庫
@@ -137,7 +136,8 @@ function createMenuData() {
     },
     body: JSON.stringify({
       Name: menuName.value,
-      TotalPrice: totalPrice.value
+      TotalPrice: totalPrice.value,
+      TotalWattage: totalWattage.value
     })
   })
     .then((response) => {

@@ -8,9 +8,15 @@
       <label :for="props.typeName" class="m-0 h5">{{ props.typeName }}</label>
     </CCol>
     <CCol xs="12" md="10">
-      <select :name="props.typeName" class="form-select" @change="onSelectChange">
+      <select
+        :name="props.typeName"
+        class="form-select"
+        @change="onSelectChange"
+        v-model="selectedId"
+        ref="selectElement"
+      >
         <option value="-1" disabled hidden>null</option>
-        <option value="0" disabled selected hidden>---- 請選擇硬體 ----</option>
+        <option value="0" disabled hidden>---- 請選擇硬體 ----</option>
         <optgroup :label="groupName" v-for="(group, groupName) in typeGroups" :key="groupName">
           <option
             v-for="item in group"
@@ -19,6 +25,7 @@
             :data-price="item.price"
             :data-wattage="item.wattage"
             :data-recommend="item.recommend"
+            :id="item.productId"
           >
             {{ item.productName }} {{ item.specification }} ,${{ item.price }}
           </option>
@@ -35,15 +42,22 @@ const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
 const props = defineProps({
   typeName: String,
-  type: Number
+  type: Number,
+  selectedId: Number,
+  oriPrice: Number,
+  oriWattage: Number
 })
 
-const emit = defineEmits(['productSelected'])
+let selectedId = ref(props.selectedId)
+
+const emit = defineEmits(['updateInfo', 'productSelected'])
+
+let selectElement = ref(null)
+let oriPrice = ref(props.oriPrice)
+let oriWattage = ref(props.oriWattage)
 
 // 宣告 產品分類集合
 let typeGroups = ref({})
-let oriPrice = ref(0)
-let oriWattage = ref(0)
 
 // 取得全部產品資料
 function getProducts(type) {
@@ -77,22 +91,20 @@ function productClassify(data) {
 
 // 產品選擇事件
 function onSelectChange(event) {
+  // 更新價格、瓦數
   const price = event.target.options[event.target.options.selectedIndex].dataset.price
   const wattage = event.target.options[event.target.options.selectedIndex].dataset.wattage
-  emit(
-    'productSelected',
-    Number(price),
-    Number(wattage),
-    oriPrice.value,
-    oriWattage.value
-  )
+  emit('updateInfo', Number(price), Number(wattage), oriPrice.value, oriWattage.value)
   oriPrice.value = Number(price)
   oriWattage.value = Number(wattage)
+  // 產品變更
+  emit('productSelected', props.type, selectedId.value)
 }
+
+// 找到 被選擇的產品選項
 
 onMounted(() => {
   // 從 sessionStorage 取得產品分類
-  // 首先尝试从 SessionStorage 中获取数据
   const storedTypeGroups = sessionStorage.getItem(`${props.type}Groups`)
   if (storedTypeGroups) {
     typeGroups.value = JSON.parse(storedTypeGroups)
