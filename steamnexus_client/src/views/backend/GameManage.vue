@@ -1,7 +1,6 @@
 <template>
   <div style="margin-left: 20px;">
       <h1>全部遊戲<img src="/public/img/loading-block-white.gif" style="margin:20px;width:30px;height:30px;display:none" id="GameIndexLoading" /></h1>
-      
       <table id="GameManageTable" class="display" style="width:100%">
           <thead>
               <tr>
@@ -20,67 +19,65 @@
   </div>
 <!--Form Start-->
    <Form @submit="onSubmit">
-  <CModal 
-    alignment="center"
-    scrollable
-    :visible="visibleVerticallyCenteredScrollableDemo"
-    @close="() => { visibleVerticallyCenteredScrollableDemo = false }"
-    aria-labelledby="VerticallyCenteredExample2"
-  >
-  <CModalTitle id="VerticallyCenteredExample2" class="mt-4 text-center fs-2 fw-bold">{{Title}}</CModalTitle>
-  <hr>
+          <CModal 
+        alignment="center"
+        scrollable
+        :visible="visibleVerticallyCenteredScrollableDemo"
+        @close="() => { visibleVerticallyCenteredScrollableDemo = false }"
+        aria-labelledby="VerticallyCenteredExample2"
+      >
+      <CModalTitle id="VerticallyCenteredExample2" class="mt-4 text-center fs-2 fw-bold">{{Title}}</CModalTitle>
+      <hr>
 
-    <CModalBody>
-    <div class="formBox">
-      <label class="text-center" for="AppId">AppId</label>
-      <Field  id="AppId" name="AppId" class="form-control text-center" type="number" rules="required|numeric" v-model="AppId" />
-      <ErrorMessage class="text-danger " name="AppId" />
-    </div>
-    <div class="formBox">
-      <label class="text-center" for="Name">遊戲名稱</label>
-      <Field name="Name" class="form-control text-center" type="text"  rules="required" v-model="Name"/>
-      <ErrorMessage class="text-danger" name="Name" />
-    </div>
-    <div class="formBox">
-      <label class="text-center" for="OriginalPrice">原始價格</label>
-      <Field name="OriginalPrice" class="form-control text-center" type="number" rules="required" v-model="OriginalPrice"/>
-      <ErrorMessage class="text-danger" name="OriginalPrice" />
-    </div>
-    <div class="formBox">
-      <label class="text-center" for="AgeRating">遊戲分級</label>
-      <Field name="AgeRating" class="form-control text-center" type="text" rules="required" v-model="AgeRating" aria-placeholder="18+"/>
-      <ErrorMessage class="text-danger" name="AgeRating" />
-    </div>
-    <div class="formBox">
-      <label class="text-center" for="ReleaseDate">上市日期</label>
-      <Field name="ReleaseDate" class="form-control text-center" type="date" rules="" v-model="ReleaseDate"/>
-      <ErrorMessage class="text-danger" name="ReleaseDate" />
-    </div>
-    <div class="formBox">
-      <label class="text-center" for="Publisher">開發商</label>
-      <Field name="Publisher" class="form-control text-center" type="text" rules="" v-model="Publisher"/>
-      <ErrorMessage class="text-danger" name="Publisher" />
-    </div>
-    <div class="formBox">
-      <label class="text-center" for="Description">遊戲介紹</label>
-      <Field name="Description" class="form-control text-center" type="text" rules="" v-model="Description"  />
-      <ErrorMessage class="text-danger" name="Description" />
-    </div>
-      <div class="formBox">
-      <label class="text-center" for="ImagePath">遊戲圖片</label>
-      <img v-bind:src="imagesrc" id="imgPreview" title="上無內容" style="width:250px;" /><br>
-      <Field name="ImagePath" class="form-control text-center" type="text" rules="" @change="ImageChange" v-model="ImagePath"/>
-      <ErrorMessage class="text-danger" name="ImagePath" />
-    </div>
-    <div class="formBox">
-      <label class="text-center" for="VideoPath">遊戲影片</label>
-      <video v-bind:src="videosrc" id="videoPreview" width="250" controls autoplay muted></video><br>
-      <Field name="VideoPath" class="form-control text-center" type="text" rules="" @change="VideoChange" v-model="VideoPath"/>
-      <ErrorMessage class="text-danger" name="VideoPath" />
-    </div>
-    
-  
-    </CModalBody>
+        <CModalBody>
+        <div class="formBox">
+          <label class="text-center" for="AppId">AppId</label>
+          <Field  id="AppId" name="AppId" class="form-control text-center" type="number" rules="required|numeric" v-model="AppId" />
+          <ErrorMessage class="text-danger " name="AppId" />
+        </div>
+        <div class="formBox">
+          <label class="text-center" for="Name">遊戲名稱</label>
+          <Field name="Name" class="form-control text-center" type="text"  rules="required" v-model="Name"/>
+          <ErrorMessage class="text-danger" name="Name" />
+        </div>
+        <div class="formBox">
+          <label class="text-center" for="OriginalPrice">原始價格</label>
+          <Field name="OriginalPrice" class="form-control text-center" type="number" rules="required" v-model="OriginalPrice"/>
+          <ErrorMessage class="text-danger" name="OriginalPrice" />
+        </div>
+        <div class="formBox">
+          <label class="text-center" for="AgeRating">遊戲分級</label>
+          <Field name="AgeRating" class="form-control text-center" type="text" rules="required" v-model="AgeRating" aria-placeholder="18+"/>
+          <ErrorMessage class="text-danger" name="AgeRating" />
+        </div>
+        <div class="formBox">
+          <label class="text-center" for="ReleaseDate">上市日期</label>
+          <Field name="ReleaseDate" class="form-control text-center" type="date" rules="" v-model="ReleaseDate"/>
+          <ErrorMessage class="text-danger" name="ReleaseDate" />
+        </div>
+        <div class="formBox">
+          <label class="text-center" for="Publisher">開發商</label>
+          <Field name="Publisher" class="form-control text-center" type="text" rules="" v-model="Publisher"/>
+          <ErrorMessage class="text-danger" name="Publisher" />
+        </div>
+        <div class="formBox">
+          <label class="text-center" for="Description">遊戲介紹</label>
+          <Field name="Description" class="form-control text-center" type="text" rules="" v-model="Description"  />
+          <ErrorMessage class="text-danger" name="Description" />
+        </div>
+          <div class="formBox">
+          <label class="text-center" for="ImagePath">遊戲圖片</label>
+          <img v-bind:src="imagesrc" id="imgPreview" title="上無內容" style="width:250px;" /><br>
+          <Field name="ImagePath" class="form-control text-center" type="text" rules="" @change="ImageChange" v-model="ImagePath"/>
+          <ErrorMessage class="text-danger" name="ImagePath" />
+        </div>
+        <div class="formBox">
+          <label class="text-center" for="VideoPath">遊戲影片</label>
+          <video v-bind:src="videosrc" id="videoPreview" width="250" controls autoplay muted></video><br>
+          <Field name="VideoPath" class="form-control text-center" type="text" rules="" @change="VideoChange" v-model="VideoPath"/>
+          <ErrorMessage class="text-danger" name="VideoPath" />
+        </div>
+       </CModalBody>
     <CModalFooter>
       <CButton color="secondary" @click="() => { visibleVerticallyCenteredScrollableDemo = false }">
         關閉
@@ -91,26 +88,47 @@
   </CModal>
   </Form>
 <!--Form End-->
+<CToaster class="p-3" placement="top-end" >
+    <CToast v-for="(toast, index) in toasts" visible :key="index" class="text-white align-items-center custom-toast">
+      <CToastHeader closeButton>
+      <span class="me-auto fw-bold">{{toast.title}}</span>
+      <!-- <small>7 min ago</small> -->
+      </CToastHeader>
+      <CToastBody>
+        <CProgress  color="info" variant="striped" animated :value="toast.Progress"></CProgress>
+      </CToastBody>  
+    </CToast>
+  </CToaster>
 </template>
 
 <script setup >
+import { CToaster, CToast } from '@coreui/vue';
 import $ from 'jquery'
 import DataTable from 'datatables.net-dt'
 import 'datatables.net-fixedheader-dt'
 import 'datatables.net-rowgroup-dt'
 import 'datatables.net-buttons-dt'
 import 'datatables.net-responsive-dt'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUpdated } from 'vue'
 import { onBeforeRouteLeave } from 'vue-router'
- import {dataTableConfig} from'@/components/backend/Game/dataTableConfig.js'
+import { toast } from 'vue3-toastify'
+import 'vue3-toastify/dist/index.css'
+
 import {GetGamePriceDataToDB,GetOnlineUsersDataToDB,GetNumberOfCommentsDataToDB,GetMinDataToDB,GetRecDataToDB} from'@/components/backend/Game/topBtnFetch.js'
 import Swal from 'sweetalert2'
 // 從環境變數取得 API BASE URL
 const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
+//後端執行次數
+var priceProgress=false;
+var progressNum=0;
+
 // 初始化 DataTables
 let dataTable = null
 const visibleVerticallyCenteredScrollableDemo= ref(false)
+
+//吐司初始化
+var toasts=ref([])
 
 //BootStrap呼喚alert畫面
 const handleClick = () => {
@@ -122,6 +140,7 @@ import { defineRule, Form, Field, ErrorMessage, configure } from 'vee-validate';
 import { required, between, confirmed, numeric} from '@vee-validate/rules';
 import { localize } from '@vee-validate/i18n';
 import zh_TW from'@/components/backend/Game/zh_TW.json'
+import { CAlert } from '@coreui/vue';
 
 defineRule('required', required);
 defineRule('between', between);
@@ -129,7 +148,6 @@ defineRule('confirmed', confirmed);
 defineRule('numeric', numeric);
 
 var Title=ref("")
-
 var imagesrc = ref('http://localhost:5173/public/img/noImage.png')
 var videosrc = ref('#')
 var gameGameId=ref("")
@@ -143,6 +161,7 @@ var Description=ref("")
 var ImagePath=ref("")
 var VideoPath=ref("")
 
+//照片更新事件
 function ImageChange(event) {
     if (event.target.value != "") {
         var img = new Image();
@@ -161,41 +180,14 @@ function ImageChange(event) {
     
 }
 
+//影片更新事件
 function VideoChange(event) {
     if (event.target.value != "") {
         videosrc=event.target.value
     } 
 }
 
-function onSubmit(event) {
-    var action=Title=="新增遊戲"?"PostCreatPartialToDB":"PostEditPartialToDB"
-    
-  $.ajax({
-    type: "POST",
-    contentType: "application/json",
-    data: JSON.stringify({
-        gameId:gameGameId,
-        appId: AppId,
-        name: Name,
-        originalPrice:OriginalPrice,
-        ageRating: AgeRating,
-        releaseDate: ReleaseDate==""?null:ReleaseDate,
-        publisher: Publisher,
-        description: Description,
-        imagePath: ImagePath,
-        videoPath: VideoPath
-    }),
-    url: `${apiUrl}/api/GamesManagement/${action}`
-}).done(data => {
-    console.log(data);
-        visibleVerticallyCenteredScrollableDemo.value =false;
-    })
-    .fail(data => {
-        $("#systemLoading").hide();
-        $("#System").html(data);
-    });
-}
-
+//設定驗證功能之{field}名稱(紅色的字的名稱預設為英文)
 configure({
   generateMessage: localize('zh_TW', {
     names: {
@@ -212,32 +204,7 @@ configure({
   })
 });
 
-//DataTable開始
-//拿取datatable的資料
-function getdatatableData() {
-    // 發送非同步GET請求
-    fetch(`${apiUrl}/api/GamesManagement/IndexJson`, {
-        method: "GET"
-    }).then(result => {
-        // 此時 result 是一個請求結果的物件
-        // 注意傳回值型態，字串用 text()，JSON 用 json()
-        if (result.ok) {
-            return result.json();
-        }
-    }).then(data => {
-        // 添加新的資料
-        if (data && data.length > 0) {
-            dataTable.rows.add(data).draw();
-            console.log(data)
-        }
-        $("#GameIndexLoading").hide();
-        
-    }).catch(error => {
-        console.log(error);
-    });
-};
-
-//編輯按鈕
+//編輯事件
 $(document).on('click', 'button[id$="edit_button"]', function (event) {
     gameGameId=$(this).attr('data-GameId');
     event.preventDefault();
@@ -272,6 +239,7 @@ $(document).on('click', 'button[id$="edit_button"]', function (event) {
             });
 })
 
+//刪除事件
 $(document).on('click', 'button[id$="delete_button"]', function (event) {
     //抓取delete_button自訂屬性的值
     const deleteName = $(this).attr('data-name');
@@ -322,6 +290,67 @@ $(document).on('click', 'button[id$="delete_button"]', function (event) {
         }
     });
 });
+
+//資料發送事件
+function onSubmit(event) {
+    var action=Title=="新增遊戲"?"PostCreatPartialToDB":"PostEditPartialToDB"
+    
+  $.ajax({
+    type: "POST",
+    contentType: "application/json",
+    data: JSON.stringify({
+        gameId:gameGameId,
+        appId: AppId,
+        name: Name,
+        originalPrice:OriginalPrice,
+        ageRating: AgeRating,
+        releaseDate: ReleaseDate==""?null:ReleaseDate,
+        publisher: Publisher,
+        description: Description,
+        imagePath: ImagePath,
+        videoPath: VideoPath
+    }),
+    url: `${apiUrl}/api/GamesManagement/${action}`
+}).done(data => {
+    console.log(data);
+    visibleVerticallyCenteredScrollableDemo.value =false;
+    toast.success(Title=="新增遊戲"?`已新增 ${Name}`:`已編輯 ${Name}`, {
+        theme: 'dark',
+        autoClose: 2000,
+        transition: toast.TRANSITIONS.ZOOM,
+        position: toast.POSITION.TOP_CENTER
+    })
+    getdatatableData();
+    })
+    .fail(data => {
+        $("#systemLoading").hide();
+        $("#System").html(data);
+    });
+}
+
+//DataTable開始
+//拿取datatable的資料
+function getdatatableData() {
+    // 發送非同步GET請求
+    fetch(`${apiUrl}/api/GamesManagement/IndexJson`, {
+        method: "GET"
+    }).then(result => {
+        // 此時 result 是一個請求結果的物件
+        // 注意傳回值型態，字串用 text()，JSON 用 json()
+        if (result.ok) {
+            return result.json();
+        }
+    }).then(data => {
+        // 添加新的資料
+        dataTable.clear().draw();
+        dataTable.rows.add(data).draw();
+        
+        $("#GameIndexLoading").hide();
+        
+    }).catch(error => {
+        console.log(error);
+    });
+};
 
 onMounted(() => {
   getdatatableData();
@@ -384,6 +413,7 @@ onMounted(() => {
                     text: '新增遊戲',
                     // 按鈕點擊事件
                     action: function () {
+                        
                         Title="新增遊戲";
                         AppId=""
                         Name=""
@@ -401,7 +431,25 @@ onMounted(() => {
                     text: '更新全部價格',
                     // 按鈕點擊事件
                     action: function () {
-                      GetGamePriceDataToDB();
+                        
+
+                        toasts.value.push({
+                          title: `更新全部價格進度:${progressNum}%`,
+                          content: 'Toast Content',
+                          visible: true,
+                          Progress:progressNum
+                        })
+                        
+                        if(priceProgress==false){
+                            priceProgress=true;
+                            const source = new EventSource(`${apiUrl}/api/GamesManagement/GamePriceProgress`);
+                            source.onmessage = event => {
+                                console.log('Received event with id:', event.lastEventId);
+                                progressNum=event.data;
+                            };
+                            GetGamePriceDataToDB();
+                        }
+                      
                     }
                 },
                 {
@@ -459,6 +507,13 @@ onBeforeRouteLeave(() => {
 @import 'datatables.net-rowgroup-dt/css/rowGroup.dataTables.min.css';
 @import 'datatables.net-buttons-dt/css/buttons.dataTables.min.css';
 @import 'datatables.net-responsive-dt/css/responsive.dataTables.min.css';
+
+.custom-toast {
+  /* 自定义 Toast 的样式 */
+  width: 600px; /* 设置宽度 */ /* 设置高度 */
+  margin-left:auto ;
+  margin-right:auto ;
+}
 
 span,
 button {
