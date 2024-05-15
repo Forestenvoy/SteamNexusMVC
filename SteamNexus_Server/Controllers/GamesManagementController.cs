@@ -79,7 +79,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
 
         [HttpPost("PostCreatPartialToDB")]
         //[ValidateAntiForgeryToken]
-        public async Task<IActionResult> PostCreatPartialToDB(CreateViewModel Create)
+        public async Task<string> PostCreatPartialToDB(CreateViewModel Create)
         {
             if (ModelState.IsValid)
             {
@@ -106,18 +106,18 @@ namespace SteamNexus.Areas.Administrator.Controllers
                     Console.WriteLine("錯誤");
                     if (!GameExists(game.GameId))
                     {
-                        return NotFound();
+                        return "傳送資料庫失敗";
                     }
                     else
                     {
                         throw;
                     }
                 }
-                return GetIndexPartialView();
+                return "成功";
             }
 
 
-            return PartialView("_GameCreateManagementPartial", Create);
+            return "傳送資料庫失敗";
         }
 
         [HttpGet("GetEditPartialView")]
@@ -145,9 +145,18 @@ namespace SteamNexus.Areas.Administrator.Controllers
             }
             return PartialView("_GameEditManagementPartial", ViewModel);
         }
+
+        [HttpGet("GetEditJSON")]
+        public async Task<JsonResult> GetEditJSON(int id)
+        {
+            var game = _context.Games.FindAsync(id).Result;
+
+            return Json(game);
+        }
+
         [HttpPost("PostEditPartialToDB")]
         //[ValidateAntiForgeryToken]
-        public async Task<IActionResult> PostEditPartialToDB(EditViewModel ViewModel)
+        public async Task<string> PostEditPartialToDB(EditViewModel ViewModel)
         {
             if (ModelState.IsValid)
             {
@@ -174,18 +183,18 @@ namespace SteamNexus.Areas.Administrator.Controllers
                     Console.WriteLine("錯誤");
                     if (!GameExists(game.GameId))
                     {
-                        return NotFound();
+                        return "傳送資料庫失敗";
                     }
                     else
                     {
                         throw;
                     }
                 }
-                return GetIndexPartialView();
+                return "成功";
             }
             //ViewData["MinReqId"] = new SelectList(_context.MinimumRequirements, "MinReqId", "MinReqId", game.MinReqId);
             //ViewData["RecReqId"] = new SelectList(_context.RecommendedRequirements, "RecReqId", "RecReqId", game.RecReqId);
-            return PartialView("_GameEditManagementPartial", ViewModel);
+            return "失敗";
         }
 
         [HttpGet]
@@ -259,8 +268,8 @@ namespace SteamNexus.Areas.Administrator.Controllers
             return PartialView("_GameDeleteManagementPartial", ViewModel);
         }
 
-        [HttpPost("PostDeletePartialToDB")]
-        public async Task<IActionResult> PostDeletePartialToDB(int id)
+        [HttpGet("PostDeletePartialToDB")]
+        public async Task<string> PostDeletePartialToDB(int id)
         {
             var game = _context.Games.FindAsync(id).Result;
             if (game != null)
@@ -270,7 +279,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
 
             await _context.SaveChangesAsync();
 
-            return GetIndexPartialView();
+            return "已刪除";
         }
         private bool GameExists(int id)
         {

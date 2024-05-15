@@ -102,7 +102,6 @@ function VideoChange(event) {
 }
 
 function onSubmit(event) {
-  
   $.ajax({
     type: "POST",
     contentType: "application/json",
@@ -126,7 +125,7 @@ function onSubmit(event) {
         $("#systemLoading").hide();
         $("#System").html(data);
     });
-    
+    emit('submit-form');
 }
 
 // function submitDataToDb(){
