@@ -127,11 +127,9 @@ function onProductSelected(typeId, selectedId) {
   }
 }
 
-// 菜單資料更新
-function onMenuUpdate() {
-  // 宣告 最終須更新的陣列
+// 取出實際變更的產品陣列
+function getChangedProducts() {
   let finalList = []
-
   for (let i = 0; i < changedProducts.value.length; i++) {
     let index = oriProducts.value.findIndex((item) => item.id === changedProducts.value[i].typeId)
     if (index !== -1) {
@@ -153,6 +151,12 @@ function onMenuUpdate() {
       })
     }
   }
+  return finalList
+}
+
+// 菜單資料更新
+function onMenuUpdate() {
+  let finalList = getChangedProducts()
 
   console.log(finalList)
 }
