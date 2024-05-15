@@ -61,7 +61,7 @@ onMounted(() => {
     columns: [
       { "data": "advertisementId", "width": "5%" },
       { "data": "title", "width": "10%" },
-      { "data": "url", "width": "15%" },
+      { "data": "url", "width": "25%" },
       {
         "data": "imagePath", "width": "15%",
         "className": "text-center",
@@ -72,7 +72,7 @@ onMounted(() => {
       { "data": "discription", "width": "10%" },
       {
         "data": "isShow",
-        "width": "15%",
+        "width": "20%",
         "className": "text-center",
         "render": function (data, type, row) {
           // data: 欄位的資料值
@@ -89,7 +89,7 @@ onMounted(() => {
       {
         "data": null,
         "orderable": false,
-        "width": "5%",
+        "width": "15%",
         "className": "text-center",
         // 按鈕 自定義
         "render": function (data, type, row) {
@@ -100,9 +100,9 @@ onMounted(() => {
           let disc = row.discription;
           let image = row.imagePath;
           // 編輯按鈕
-          let editEle = '<button data-AdId="' + AdId + '"  data-title="' + title + '"  data-url="' + url + '"  data-disc="' + disc + '"  data-image="' + image + '" id="edit_button"><i class="bi bi-pencil-square"></i></button>';
+          let editEle = '<button class="btn btn-primary" data-AdId="' + AdId + '"  data-title="' + title + '"  data-url="' + url + '"  data-disc="' + disc + '"  data-image="' + image + '" id="edit_button"><i class="bi bi-pencil-square"></i></button>';
           // 刪除按鈕
-          let deletEle = '<button data-AdId="' + AdId + '"  data-title="' + title + '"  data-url="' + url + '"  data-disc="' + disc + '"  data-image="' + image + '" id="delete_button"><i class="bi bi-trash3"></i></button>';
+          let deletEle = '<button class="btn btn-danger" data-AdId="' + AdId + '"  data-title="' + title + '"  data-url="' + url + '"  data-disc="' + disc + '"  data-image="' + image + '" id="delete_button"><i class="bi bi-trash3"></i></button>';
           if (type === 'display') {
             return `${editEle}${deletEle}`;
           }
@@ -142,6 +142,28 @@ onMounted(() => {
 
   fetchDatatable();
 
+  // 監聽上下架按鈕的 change 事件
+  $(document).on('change', '.radio-isShow', function () {
+    // alert("change");
+    const adId = $(this).data('adid');
+    const isShow = $(this).val() === 'true';
+    // // alert(`change ${adId} ${isShow}`);
+    fetch(`${apiUrl}/api/Advertisement/UpdateIsShow?adId=${adId}&isShow=${isShow}`, {
+      method: 'PUT',
+    }).then(response => {
+      if (response.ok) {
+        return response.text();
+      }
+      else {
+        return response.text();
+      }
+    }).then(result => {
+      alert(result); // 處理成功回應的操作
+    }).catch(error => {
+      alert(error); // 處理錯誤
+    });
+  });
+
 })
 
 // 路由離開時觸發
@@ -166,12 +188,6 @@ onBeforeRouteLeave(() => {
 </style>
 <style>
 /***** datatables 自訂樣式 *****/
-
-/* 標題列設定 */
-thead {
-  background-color: black;
-  color: white;
-}
 
 .dt-end .dt-search {
   text-align: center !important;
