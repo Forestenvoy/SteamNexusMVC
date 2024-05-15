@@ -30,7 +30,7 @@ public partial class Advertisement
     #nullable enable
 
     [MaxLength(200)]
-    public string? Discription { get; set; }
+    public string? Description { get; set; }
 
 
 }

@@ -57,6 +57,54 @@
       <CButton color="primary" @click="DeleteAdBtn">刪除</CButton>
     </CModalFooter>
   </CModal>
+
+  <!-- 新增廣告的浮動式窗 -->
+  <CModal alignment="center" :visible="CreateAdModal" @close="() => {
+    CreateAdModal = false
+  }
+    " aria-labelledby="CreateAdModal">
+    <CModalHeader>
+      <CModalTitle id="CreateAdModal">新增廣告</CModalTitle>
+    </CModalHeader>
+    <CModalBody>
+      <form @submit.prevent="onSubmit">
+        <div class="form-group">
+          <label for="title">標題</label>
+          <input id="title" v-model="createTitle" class="form-control" required maxlength="50">
+          <span class="text-danger">{{ titleError }}</span>
+        </div>
+        <div class="form-group">
+          <label for="adUrl">網址</label>
+          <input id="adUrl" v-model="createAdUrl" class="form-control" type="url" required>
+          <span class="text-danger">{{ adUrlError }}</span>
+        </div>
+        <div class="form-group">
+          <label for="imageUrl">圖片網址</label>
+          <input id="imageUrl" v-model="createImageUrl" class="form-control" type="url" required>
+          <img v-if="createImageUrl" :src="createImageUrl" alt="圖片預覽" style="max-width: 100%; height: auto;">
+          <span class="text-danger">{{ imageUrlError }}</span>
+        </div>
+        <div class="form-group">
+          <label for="description">說明</label>
+          <textarea id="description" v-model="createDescription" class="form-control" maxlength="100"></textarea>
+          <span class="text-danger">{{ descriptionError }}</span>
+        </div>
+        <!-- <div class="text-center">
+          <CButton color="secondary" @click="closeModal">取消</CButton>
+          <CButton type="submit" color="primary">新增</CButton>
+        </div> -->
+      </form>
+    </CModalBody>
+    <CModalFooter>
+      <CButton color="secondary" @click="() => {
+        CreateAdModal = false
+      }
+        ">
+        取消
+      </CButton>
+      <CButton color="primary" @click="onSubmit">新增</CButton>
+    </CModalFooter>
+  </CModal>
 </template>
 <script setup>
 // 核心模組 import
@@ -74,6 +122,8 @@ import 'vue3-toastify/dist/index.css'
 
 import { ref, onMounted } from 'vue'
 import { CModal, CModalHeader, CModalTitle, CModalBody, CModalFooter, CButton } from '@coreui/vue'
+// import { useForm, useField } from 'vee-validate';
+// import { required, max, url } from '@vee-validate/rules';
 import { onBeforeRouteLeave } from 'vue-router'
 var dataTable = null
 let DeleteAdModal = ref(false)
@@ -82,10 +132,53 @@ let deleteTitle = ref('')
 let deleteUrl = ref('')
 let deleteImage = ref('')
 let deleteDescription = ref('')
+let CreateAdModal = ref(false)
+let createTitle = ref('')
+let createAdUrl = ref('')
+let createImageUrl = ref('')
+let createDescription = ref('')
+
+// 定義表單數據
+// const formData = {
+//   title: ref(''),
+//   adUrl: ref(''),
+//   imageUrl: ref(''),
+//   description: ref(''),
+// };
+
+// 使用 useForm 創建表單
+// const { handleSubmit } = useForm();
+
+// 定義表單規則
+// const rules = {
+//   title: [required, max(50)],
+//   adUrl: [required, url],
+//   imageUrl: [required, url],
+//   description: [max(100)],
+// };
+
+// 使用 useField 創建表單字段
+// const { value: title, errorMessage: titleError } = useField('title', rules.title);
+// const { value: adUrl, errorMessage: adUrlError } = useField('url', rules.adUrl);
+// const { value: imageUrl, errorMessage: imageUrlError } = useField('imageUrl', rules.imageUrl);
+// const { value: description, errorMessage: descriptionError } = useField('description', rules.description);
+
+// 提交表單處理函數
+// const onSubmit = handleSubmit(async () => {
+//   try {
+//     // 在這裡處理表單提交的邏輯
+//     console.log('Form submitted:', formData);
+//     // 如果需要執行新增廣告的函數，請在這裡調用 CreateAdBtn 函數
+//     // CreateAdBtn();
+//   } catch (error) {
+//     console.error('Error submitting form:', error);
+//   }
+// });
 
 // 從環境變數取得 API BASE URL
 const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
+// 產生表格
 function fetchDatatable() {
   fetch(`${apiUrl}/api/Advertisement/AdvertiseData`, {
     method: 'GET',
@@ -107,6 +200,7 @@ function fetchDatatable() {
     });
 };
 
+// 刪除廣告
 function DeleteAdBtn() {
   // console.log(deleteId.value)
   fetch(`${apiUrl}/api/Advertisement/DeleteAd`, {
@@ -147,6 +241,55 @@ function DeleteAdBtn() {
       });
     });
 }
+
+// 新增廣告
+function onSubmit() {
+  fetch(`${apiUrl}/api/Advertisement/CreateAd`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      title: createTitle.value,
+      url: createAdUrl.value,
+      imagePath: createImageUrl.value,
+      description: createDescription.value
+    })
+  })
+    .then(response => {
+      if (!response.ok) {
+        return response.text().then(errorMessage => {
+          throw new Error(errorMessage);
+        });
+      }
+      return response.text();
+    })
+    .then(result => {
+      // 成功處理回應
+      toast.success(result, {
+        theme: 'dark',
+        autoClose: 1000,
+        transition: toast.TRANSITIONS.ZOOM,
+        position: toast.POSITION.TOP_CENTER
+      })
+      CreateAdModal.value = false;
+      createTitle.value = '';
+      createAdUrl.value = '';
+      createImageUrl.value = '';
+      createDescription.value = '';
+      fetchDatatable();
+    })
+    .catch(error => {
+      // 處理錯誤
+      toast.error(error.message, {
+        theme: 'dark',
+        autoClose: 1000,
+        transition: toast.TRANSITIONS.ZOOM,
+        position: toast.POSITION.TOP_CENTER
+      });
+    });
+}
+
 onMounted(() => {
   dataTable = new DataTable('#AdvertiseManageTable', {
     columns: [
@@ -160,7 +303,7 @@ onMounted(() => {
           return `<img src="${data}" alt="Image" style="width:80%" />`;
         }, responsivePriority: 1
       },
-      { "data": "discription", "width": "10%" },
+      { "data": "description", "width": "10%" },
       {
         "data": "isShow",
         "width": "20%",
@@ -215,9 +358,9 @@ onMounted(() => {
         buttons: [
           {
             text: '新增廣告',
+            className: 'btn btn-primary',
             action: function () {
-              // 彈出 Bootstrap modal 表單
-              $('#addAdvertisementModal').modal('show');
+              CreateAdModal.value = true;
             }
           }
         ]
@@ -261,6 +404,7 @@ onMounted(() => {
     });
   });
 
+  //主畫面刪除按鈕
   $(document).on('click', '.del-btn', function () {
     // alert("del-btn");
     const adId = $(this).data('adid');
@@ -278,7 +422,7 @@ onMounted(() => {
       deleteTitle.value = result.title;
       deleteUrl.value = result.url;
       deleteImage.value = result.image;
-      deleteDescription.value = result.discription;
+      deleteDescription.value = result.description;
 
       DeleteAdModal.value = true;
     }).catch(error => {
@@ -290,8 +434,6 @@ onMounted(() => {
       })
     });
   })
-
-
 
 
 })
