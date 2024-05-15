@@ -24,6 +24,19 @@ namespace SteamNexus_Server.Controllers
             return _context.Advertisements;
         }
 
+        [HttpPut("UpdateIsShow")]
+        public IActionResult UpdateIsShow(int adId, bool isShow)
+        {
+            var advertisement = _context.Advertisements.Find(adId);
+            if (advertisement == null)
+            {
+                return NotFound("Advertisement not found.");
+            }
 
+            advertisement.IsShow = isShow;
+            _context.SaveChanges();
+
+            return Ok("狀態更新成功!");
+        }
     }
 }
