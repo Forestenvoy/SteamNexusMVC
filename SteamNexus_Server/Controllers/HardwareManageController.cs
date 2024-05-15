@@ -679,6 +679,8 @@ public class HardwareManageController : ControllerBase
         public int NewProductId { get; set; }
     }
 
+
+    // POST: api/HardwareManage/UpdateMenuDetail
     [HttpPost("UpdateMenuDetail")]
     public async Task<IActionResult> UpdateMenuDetail([FromBody] MenuDetailUDto data)
     {
@@ -727,4 +729,60 @@ public class HardwareManageController : ControllerBase
             return BadRequest("資料錯誤");
         }
     }
+
+    // 菜單數據更新
+    public class MenuUDto
+    {
+        [Required]
+        public int MenuId { get; set; }
+
+        [Required]
+        [MaxLength(50)]
+        public string? Name { get; set; }
+
+        [Required]
+        public int TotalPrice { get; set; } = 0;
+
+        [Required]
+        public int TotalWattage { get; set; } = 0;
+    }
+
+    [HttpPost("UpdateMenu")]
+    public async Task<IActionResult> UpdateMenu([FromBody] MenuUDto data)
+    {
+
+        // 如果驗證合法
+        if (ModelState.IsValid)
+        {
+            try
+            {
+                var menu = await _context.Menus.Where(m=>m.MenuId == data.MenuId).FirstOrDefaultAsync();
+                
+                if(menu != null)
+                {
+                    menu.Name = data.Name;
+                    menu.TotalPrice = data.TotalPrice;
+                    menu.TotalWattage = data.TotalWattage;
+                    await _context.SaveChangesAsync();    
+
+                    return Ok($"{menu.Name}更新成功");
+                }
+                else
+                {
+                    // 找不到回傳 404 
+                    return NotFound("找不到資料");
+                }
+            }
+            catch (Exception ex)
+            {
+                // 返回 500 狀態碼 ~ 伺服器內部錯誤
+                return StatusCode(500, "伺服器內部錯誤：" + ex.Message);
+            }
+        }
+        else
+        {
+            return BadRequest("資料錯誤");
+        }
+    }
+
 }
