@@ -164,5 +164,73 @@ namespace SteamNexus_Server.Controllers
             }
             return BadRequest("廣告新增失敗!");
         }
+
+        public class EditAdViewModel
+        {
+            [Required]
+            public int Id { get; set; }
+            [Required]
+            [MaxLength(100)]
+            public string Title { get; set; }
+            [MaxLength(200)]
+            public string? Description { get; set; }
+            [Required]
+            public string Url { get; set; }
+            [Required]
+            public string ImagePath { get; set; }
+        }
+
+        [HttpPost("EditAd")]
+        public async Task<IActionResult> EditAd([FromBody] EditAdViewModel data)
+        {
+            if (ModelState.IsValid)
+            {
+                var editAd = await _context.Advertisements.FindAsync(data.Id);
+                if (editAd == null)
+                {
+                    return BadRequest("修改失敗");
+                }
+                editAd.AdvertisementId = data.Id;
+                editAd.Title = data.Title;
+                editAd.Url = data.Url;
+                editAd.ImagePath = data.ImagePath;
+                editAd.Description = data.Description;
+
+                //if (data.ImageFile != null && data.ImageFile.Length > 0)
+                //{
+                //    //刪除舊照片
+                //    var oldFilePath = Path.Combine(_environment.WebRootPath, "AdImages", editAd.ImagePath);
+                //    if (System.IO.File.Exists(oldFilePath))
+                //    {
+                //        System.IO.File.Delete(oldFilePath);
+                //    }
+
+                //    //建立新照片
+                //    string fileName = data.Id + Path.GetExtension(data.ImageFile.FileName);
+                //    // 構建文件路徑
+                //    var filePath = Path.Combine(_environment.WebRootPath, "AdImages", fileName);
+
+                //    // 寫入圖片檔到指定路徑
+                //    using (var stream = new FileStream(filePath, FileMode.Create))
+                //    {
+                //        await data.ImageFile.CopyToAsync(stream);
+                //    }
+
+                //    // 更新廣告的圖片路徑
+                //    editAd.ImagePath = $"{fileName}";
+                //}
+
+                try
+                {
+                    await _context.SaveChangesAsync();
+                    return Ok("廣告修改成功!");
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    return BadRequest("廣告修改失敗!");
+                }
+            }
+            return BadRequest("廣告修改失敗!");
+        }
     }
 }

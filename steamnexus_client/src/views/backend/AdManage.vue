@@ -67,26 +67,26 @@
       <CModalTitle id="CreateAdModal">新增廣告</CModalTitle>
     </CModalHeader>
     <CModalBody>
-      <form @submit.prevent="onSubmit">
+      <form @submit.prevent="CreateAdBtn">
         <div class="form-group">
-          <label for="title">標題</label>
-          <input id="title" v-model="createTitle" class="form-control" required maxlength="50">
+          <label for="createTitle">標題</label>
+          <input id="createTitle" v-model="createTitle" class="form-control" required maxlength="50">
           <span class="text-danger">{{ titleError }}</span>
         </div>
         <div class="form-group">
-          <label for="adUrl">網址</label>
-          <input id="adUrl" v-model="createAdUrl" class="form-control" type="url" required>
+          <label for="createAdUrl">網址</label>
+          <input id="createAdUrl" v-model="createAdUrl" class="form-control" type="url" required>
           <span class="text-danger">{{ adUrlError }}</span>
         </div>
         <div class="form-group">
-          <label for="imageUrl">圖片網址</label>
-          <input id="imageUrl" v-model="createImageUrl" class="form-control" type="url" required>
+          <label for="createImageUrl">圖片網址</label>
+          <input id="createImageUrl" v-model="createImageUrl" class="form-control" type="url" required>
           <img v-if="createImageUrl" :src="createImageUrl" alt="圖片預覽" style="max-width: 100%; height: auto;">
           <span class="text-danger">{{ imageUrlError }}</span>
         </div>
         <div class="form-group">
-          <label for="description">說明</label>
-          <textarea id="description" v-model="createDescription" class="form-control" maxlength="100"></textarea>
+          <label for="createDescription">說明</label>
+          <textarea id="createDescription" v-model="createDescription" class="form-control" maxlength="100"></textarea>
           <span class="text-danger">{{ descriptionError }}</span>
         </div>
         <!-- <div class="text-center">
@@ -102,7 +102,55 @@
         ">
         取消
       </CButton>
-      <CButton color="primary" @click="onSubmit">新增</CButton>
+      <CButton color="primary" @click="CreateAdBtn">新增</CButton>
+    </CModalFooter>
+  </CModal>
+
+  <!-- 修改廣告的浮動式窗 -->
+  <CModal alignment="center" :visible="EditAdModal" @close="() => {
+    EditAdModal = false
+  }
+    " aria-labelledby="EditAdModal">
+    <CModalHeader>
+      <CModalTitle id="EditAdModal">廣告編輯</CModalTitle>
+    </CModalHeader>
+    <CModalBody>
+      <form @submit.prevent="EditAdSaveBtn">
+        <div class="form-group">
+          <label for="editTitle">標題</label>
+          <input id="editTitle" v-model="editTitle" class="form-control" required maxlength="50">
+          <span class="text-danger">{{ titleError }}</span>
+        </div>
+        <div class="form-group">
+          <label for="editAdUrl">網址</label>
+          <input id="editAdUrl" v-model="editAdUrl" class="form-control" type="url" required>
+          <span class="text-danger">{{ adUrlError }}</span>
+        </div>
+        <div class="form-group">
+          <label for="editImageUrl">圖片網址</label>
+          <input id="editImageUrl" v-model="editImageUrl" class="form-control" type="url" required>
+          <img v-if="editImageUrl" :src="editImageUrl" alt="圖片預覽" style="max-width: 100%; height: auto;">
+          <span class="text-danger">{{ imageUrlError }}</span>
+        </div>
+        <div class="form-group">
+          <label for="editDescription">說明</label>
+          <textarea id="editDescription" v-model="editDescription" class="form-control" maxlength="100"></textarea>
+          <span class="text-danger">{{ descriptionError }}</span>
+        </div>
+        <!-- <div class="text-center">
+          <CButton color="secondary" @click="closeModal">取消</CButton>
+          <CButton type="submit" color="primary">新增</CButton>
+        </div> -->
+      </form>
+    </CModalBody>
+    <CModalFooter>
+      <CButton color="secondary" @click="() => {
+        EditAdModal = false
+      }
+        ">
+        取消
+      </CButton>
+      <CButton color="primary" @click="EditAdSaveBtn">儲存</CButton>
     </CModalFooter>
   </CModal>
 </template>
@@ -137,6 +185,12 @@ let createTitle = ref('')
 let createAdUrl = ref('')
 let createImageUrl = ref('')
 let createDescription = ref('')
+let EditAdModal = ref(false)
+let editId = ref(0)
+let editTitle = ref('')
+let editAdUrl = ref('')
+let editImageUrl = ref('')
+let editDescription = ref('')
 
 // 定義表單數據
 // const formData = {
@@ -243,7 +297,7 @@ function DeleteAdBtn() {
 }
 
 // 新增廣告
-function onSubmit() {
+function CreateAdBtn() {
   fetch(`${apiUrl}/api/Advertisement/CreateAd`, {
     method: 'POST',
     headers: {
@@ -277,6 +331,51 @@ function onSubmit() {
       createAdUrl.value = '';
       createImageUrl.value = '';
       createDescription.value = '';
+      fetchDatatable();
+    })
+    .catch(error => {
+      // 處理錯誤
+      toast.error(error.message, {
+        theme: 'dark',
+        autoClose: 1000,
+        transition: toast.TRANSITIONS.ZOOM,
+        position: toast.POSITION.TOP_CENTER
+      });
+    });
+}
+
+// 編輯廣告儲存
+function EditAdSaveBtn() {
+  fetch(`${apiUrl}/api/Advertisement/EditAd`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      id: editId.value,
+      title: editTitle.value,
+      url: editAdUrl.value,
+      imagePath: editImageUrl.value,
+      description: editDescription.value
+    })
+  })
+    .then(response => {
+      if (!response.ok) {
+        return response.text().then(errorMessage => {
+          throw new Error(errorMessage);
+        });
+      }
+      return response.text();
+    })
+    .then(result => {
+      // 成功處理回應
+      toast.success(result, {
+        theme: 'dark',
+        autoClose: 1000,
+        transition: toast.TRANSITIONS.ZOOM,
+        position: toast.POSITION.TOP_CENTER
+      })
+      EditAdModal.value = false;
       fetchDatatable();
     })
     .catch(error => {
@@ -435,6 +534,36 @@ onMounted(() => {
     });
   })
 
+  // 主畫面編輯按鈕
+  $(document).on('click', '.edit-btn', function () {
+    // alert("edit-btn");
+    const adId = $(this).data('adid');
+    fetch(`${apiUrl}/api/Advertisement/GetOneAdData?AdId=${adId}`, {
+      method: 'GET',
+    }).then(response => {
+      if (!response.ok) {
+        return response.text().then((errorMessage) => {
+          throw new Error(errorMessage)
+        })
+      }
+      return response.json()
+    }).then(result => {
+      editId.value = result.id;
+      editTitle.value = result.title;
+      editAdUrl.value = result.url;
+      editImageUrl.value = result.image;
+      editDescription.value = result.description;
+
+      EditAdModal.value = true;
+    }).catch(error => {
+      toast.error(error.message, {
+        theme: 'dark',
+        autoClose: 1000,
+        transition: toast.TRANSITIONS.ZOOM,
+        position: toast.POSITION.TOP_CENTER
+      })
+    });
+  })
 
 })
 
@@ -447,6 +576,7 @@ onBeforeRouteLeave(() => {
   // 事件監聽器移除
   $(document).off('change', '.radio-isShow')
   $(document).off('click', '.del-btn')
+  $(document).off('click', '.edit-btn')
   // $(document).off('click', '.Enter-btn')
   // $(document).off('click', '.Cancel-btn')
   // $(document).off('click', '.Edit-btn')
