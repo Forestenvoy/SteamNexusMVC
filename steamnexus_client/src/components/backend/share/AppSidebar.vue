@@ -15,7 +15,7 @@ const sidebar = useSidebarStore()
   >
     <CSidebarHeader class="border-bottom">
       <!-- Logo -->
-      <router-link to="/">
+      <router-link to="/" style="text-decoration: none">
         <!--  v-slot="{ href, navigate }" -->
         <!-- v-bind="$attrs" as="a" :href="href" @click="navigate" -->
         <CSidebarBrand>

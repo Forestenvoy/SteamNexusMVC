@@ -28,10 +28,8 @@
           </CNavItem>
           <CDropdown variant="nav-item" :popper="false">
             <CDropdownToggle color="secondary">會員中心</CDropdownToggle>
-            <CDropdownMenu>
+            <CDropdownMenu class="text-center">
               <CDropdownItem href="#">會員資料變更</CDropdownItem>
-              <CDropdownItem href="#">客服中心</CDropdownItem>
-              <CDropdownDivider />
               <CDropdownItem href="#">我的追蹤遊戲</CDropdownItem>
             </CDropdownMenu>
           </CDropdown>
