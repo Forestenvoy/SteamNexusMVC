@@ -8,6 +8,19 @@
       id="SystemMenu"
     ></div>
   </div>
+
+  <button
+    type="button"
+    class="btn btn-danger mb-3"
+    @click="
+      () => {
+        createUserModal = true
+      }
+    "
+  >
+    新增使用者
+  </button>
+
   <section class="section">
     <table id="MemberManageTable" class="display" style="width: 100%">
       <thead id="HardwareThead">
@@ -24,17 +37,6 @@
       </thead>
     </table>
   </section>
-  <button
-    type="button"
-    class="btn btn-danger mb-3"
-    @click="
-      () => {
-        createUserModal = true
-      }
-    "
-  >
-    新增使用者
-  </button>
 
   <!-- 新增使用者浮動視窗 -->
   <CModal
@@ -48,14 +50,156 @@
     aria-labelledby="createUserModal"
   >
     <CModalHeader>
-      <CModalTitle id="createUserModal">Modal title</CModalTitle>
+      <CModalTitle id="createUserModal">新增使用者</CModalTitle>
     </CModalHeader>
     <CModalBody>
       <CRow class="mb-3">
-        <CFormLabel for="staticEmail" class="col-sm-2 col-form-label">Email</CFormLabel>
-        <div class="col-sm-10">
-          <CFormInput type="text" id="staticEmail" value="email@example.com" readonly plain-text />
-        </div>
+        <form @submit.prevent="submitForm">
+          <div class="input-group input-group-lg mb-3">
+            <span class="input-group-text" id="inputGroup-sizing-lg" style="color: white"
+              >Email：</span
+            >
+            <input
+              type="email"
+              class="form-control"
+              aria-label="Sizing example input"
+              aria-describedby="inputGroup-sizing-lg"
+              id="email"
+              placeholder="請輸入您的電子信箱"
+              required
+              maxlength="100"
+              v-model="email"
+            />
+            <div id="emailFeedback" class="invalid-feedback"></div>
+          </div>
+          <div class="input-group input-group-lg mb-3">
+            <span class="input-group-text" id="inputGroup-sizing-lg" style="color: white"
+              >密碼：</span
+            >
+            <input
+              type="password"
+              class="form-control"
+              aria-label="Sizing example input"
+              aria-describedby="inputGroup-sizing-lg"
+              id="Password"
+              placeholder="請輸入您的密碼"
+              required
+              maxlength="20"
+              v-model="password"
+            />
+          </div>
+          <div class="input-group input-group-lg mb-3">
+            <span class="input-group-text" id="inputGroup-sizing-lg" style="color: white"
+              >確認密碼：</span
+            >
+            <input
+              type="password"
+              class="form-control"
+              aria-label="Sizing example input"
+              aria-describedby="inputGroup-sizing-lg"
+              id="ConfirmPassword"
+              placeholder="請再次輸入您的密碼"
+              required
+              maxlength="20"
+              v-model="confirmPassword"
+            />
+            <div id="passwordMismatchFeedback" class="invalid-feedback">密碼與確認密碼不一致</div>
+          </div>
+          <div class="input-group input-group-lg mb-3">
+            <span class="input-group-text" id="inputGroup-sizing-lg" style="color: white"
+              >姓名：</span
+            >
+            <input
+              type="text"
+              class="form-control"
+              aria-label="Sizing example input"
+              aria-describedby="inputGroup-sizing-lg"
+              id="name"
+              placeholder="請輸入您的姓名"
+              required
+              maxlength="50"
+              v-model="name"
+            />
+          </div>
+          <div class="input-group input-group-lg mb-3">
+            <span class="input-group-text" id="inputGroup-sizing-lg" style="color: white"
+              >生日：</span
+            >
+            <input
+              type="date"
+              class="form-control"
+              aria-label="Sizing example input"
+              aria-describedby="inputGroup-sizing-lg"
+              id="birthday"
+              v-model="birthday"
+            />
+          </div>
+          <div class="input-group input-group-lg mb-3">
+            <span class="input-group-text" id="inputGroup-sizing-lg" style="color: white"
+              >電話：</span
+            >
+            <input
+              type="text"
+              class="form-control"
+              aria-label="Sizing example input"
+              aria-describedby="inputGroup-sizing-lg"
+              id="phone"
+              pattern="^09\d{8}$"
+              maxlength="10"
+              placeholder="手機號碼必須以09開頭且是10位數字"
+              v-model="phone"
+            />
+          </div>
+          <div class="input-group input-group-lg mb-3">
+            <span class="input-group-text" id="inputGroup-sizing-lg" style="color: white"
+              >性別：</span
+            >
+            <div class="form-check form-check-inline">
+              <input
+                class="form-check-input text-center"
+                type="radio"
+                name="gender2"
+                id="male2"
+                value="true"
+                checked
+                v-model="gender"
+              />
+              <label class="form-check-label" for="male">男</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input
+                class="form-check-input text-center"
+                type="radio"
+                name="gender2"
+                id="female2"
+                value="false"
+                v-model="gender"
+              />
+              <label class="form-check-label" for="female">女</label>
+            </div>
+          </div>
+          <div class="input-group input-group-lg">
+            <span class="input-group-text" id="inputGroup-sizing-lg" style="color: white"
+              >大頭照：</span
+            >
+            <input
+              type="file"
+              class="form-control"
+              aria-label="Sizing example input"
+              aria-describedby="inputGroup-sizing-lg"
+              id="photo"
+              v-on:change="uploadPhoto"
+            />
+            <img
+              :src="photoPreview"
+              class="img-thumbnail"
+              aria-label="Sizing example input"
+              aria-describedby="inputGroup-sizing-lg"
+              id="display_photo"
+              alt="預覽圖片"
+            />
+          </div>
+        </form>
       </CRow>
     </CModalBody>
     <CModalFooter>
@@ -67,9 +211,9 @@
           }
         "
       >
-        Close
+        關閉
       </CButton>
-      <CButton color="primary">Save changes</CButton>
+      <CButton color="primary" v-on:click="submitForm">新增</CButton>
     </CModalFooter>
   </CModal>
 </template>
@@ -84,6 +228,8 @@ import 'datatables.net-responsive-dt'
 import { ref, onMounted } from 'vue'
 import { CModal, CModalHeader, CModalTitle, CModalBody, CModalFooter, CButton } from '@coreui/vue'
 import axios from 'axios'
+import dataTableLanguage from '@/components/backend/hardware/dataTableLanguage.js' //i18n
+import { onBeforeRouteLeave } from 'vue-router' //datatables off
 
 // 特殊吐司
 import { toast } from 'vue3-toastify'
@@ -96,6 +242,109 @@ var datatable = null
 
 let createUserModal = ref(false)
 
+// 使用者名稱
+const email = ref('')
+const password = ref('')
+const confirmPassword = ref('')
+const name = ref('')
+const birthday = ref('')
+const phone = ref('')
+const gender = ref(true) // 默認為男性
+const photo = ref(null) // 存儲上傳的照片
+const photoPreview = ref(null) // 存儲照片預覽
+
+// 上傳照片
+const uploadPhoto = (event) => {
+  const file = event.target.files[0]
+  if (file) {
+    photo.value = file
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      photoPreview.value = e.target.result
+    }
+    reader.readAsDataURL(file)
+  } else {
+    photo.value = null
+    photoPreview.value = null
+  }
+}
+
+// 新增使用者
+const submitForm = () => {
+  // 確認密碼是否一致
+  if (password.value !== confirmPassword.value) {
+    //alert('密碼和確認密碼不匹配')
+    toast.error('密碼和確認密碼不匹配', {
+      theme: 'dark',
+      autoClose: 1000,
+      transition: toast.TRANSITIONS.ZOOM,
+      position: toast.POSITION.TOP_CENTER
+    })
+    return
+  }
+
+  const formData = new FormData()
+  formData.append('Name', name.value)
+  formData.append('Password', password.value)
+  formData.append('ConfirmPassword', confirmPassword.value)
+  formData.append('Email', email.value)
+  formData.append('Birthday', birthday.value)
+  formData.append('Phone', phone.value)
+  formData.append('Gender', gender.value)
+  if (photo.value) {
+    formData.append('Photo', photo.value)
+  }
+
+  axios
+    .post(`${apiUrl}/api/MemberManagement/CreateMember`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+    .then((response) => {
+      if (response.data.success) {
+        toast.success(response.data.message, {
+          theme: 'dark',
+          autoClose: 1000,
+          transition: toast.TRANSITIONS.ZOOM,
+          position: toast.POSITION.TOP_CENTER
+        })
+        datatable.ajax.reload()
+        createUserModal.value = false
+        resetForm()
+      } else {
+        toast.error(response.data.message, {
+          theme: 'dark',
+          autoClose: 1000,
+          transition: toast.TRANSITIONS.ZOOM,
+          position: toast.POSITION.TOP_CENTER
+        })
+      }
+    })
+    .catch((error) => {
+      toast.error('新增使用者失敗', {
+        theme: 'dark',
+        autoClose: 1000,
+        transition: toast.TRANSITIONS.ZOOM,
+        position: toast.POSITION.TOP_CENTER
+      })
+    })
+}
+
+// 重置表單
+const resetForm = () => {
+  email.value = ''
+  password.value = ''
+  confirmPassword.value = ''
+  name.value = ''
+  birthday.value = ''
+  phone.value = ''
+  gender.value = true
+  photo.value = null
+  photoPreview.value = null
+}
+
+// 刪除使用者
 const deleteUser = (userId) => {
   axios
     .post(`${apiUrl}/api/MemberManagement/DeleteUser?id=${userId}`, {
@@ -159,7 +408,7 @@ onMounted(() => {
         className: 'text-center',
         render: function (data, type, row) {
           return data
-            ? `<img src="/images/headshots/${data}" alt="Image" style="width: 100px; height: 100px;" />`
+            ? `<img src="${apiUrl}/images/headshots/${data}" alt="Image" style="width: 100px; height: 100px;" />`
             : 'No Image'
         }
       },
@@ -202,9 +451,8 @@ onMounted(() => {
     // 響應式設計
     responsive: true,
     // 語言設定
-    language: {
-      url: '//cdn.datatables.net/plug-ins/2.0.3/i18n/zh-HANT.json'
-    },
+    language: dataTableLanguage,
+
     // 預設排序 ~ 根據第一個欄位 升冪排序
     order: [[1, 'asc']],
     // 自動寬度 關閉
@@ -218,6 +466,18 @@ onMounted(() => {
       deleteUser(userId)
     }
   })
+})
+
+// 路由離開時觸發
+onBeforeRouteLeave(() => {
+  // 銷毀 DataTable
+  datatable.clear().draw()
+  datatable.destroy()
+  datatable = null
+  // 事件監聽器移除
+  $('#RolesManageTable').off('click', '.del-btn')
+  // $(document).off('click', '.Cancel-btn')
+  // $(document).off('click', '.Edit-btn')
 })
 </script>
 

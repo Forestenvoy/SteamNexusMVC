@@ -9,17 +9,6 @@
     ></div>
   </div>
 
-  <section class="section">
-    <table id="RolesManageTable" class="display" style="width: 100%">
-      <thead id="HardwareThead">
-        <tr>
-          <th data-priority="1">編號</th>
-          <th>名稱</th>
-          <th>刪除</th>
-        </tr>
-      </thead>
-    </table>
-  </section>
   <button
     type="button"
     class="btn btn-danger mb-3"
@@ -31,6 +20,18 @@
   >
     新增權限
   </button>
+
+  <section class="section">
+    <table id="RolesManageTable" class="display" style="width: 100%">
+      <thead id="HardwareThead">
+        <tr>
+          <th data-priority="1">編號</th>
+          <th>名稱</th>
+          <th>刪除</th>
+        </tr>
+      </thead>
+    </table>
+  </section>
 
   <!-- 新增權限的浮動式窗 -->
   <CModal
@@ -80,6 +81,8 @@ import 'datatables.net-responsive-dt'
 import { ref, onMounted } from 'vue'
 import { CModal, CModalHeader, CModalTitle, CModalBody, CModalFooter, CButton } from '@coreui/vue'
 import axios from 'axios'
+import dataTableLanguage from '@/components/backend/hardware/dataTableLanguage.js' //i18n
+import { onBeforeRouteLeave } from 'vue-router' //datatables off
 
 // 特殊吐司
 import { toast } from 'vue3-toastify'
@@ -99,7 +102,7 @@ let createRoleModal = ref(false)
 const createRole = () => {
   if (newRoleName.value.trim() === '') {
     alert('請輸入權限名稱')
-    return
+    // return
   }
 
   // 創建 FormData 對象
@@ -235,6 +238,18 @@ onMounted(() => {
       deleteRole(roleId)
     }
   })
+})
+
+// 路由離開時觸發
+onBeforeRouteLeave(() => {
+  // 銷毀 DataTable
+  datatable.clear().draw()
+  datatable.destroy()
+  datatable = null
+  // 事件監聽器移除
+  $('#RolesManageTable').off('click', '.del-btn')
+  // $(document).off('click', '.Cancel-btn')
+  // $(document).off('click', '.Edit-btn')
 })
 </script>
 
