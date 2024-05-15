@@ -69,10 +69,13 @@ import { CModalHeader, CModalTitle, CModalBody, CModalFooter } from '@coreui/vue
 import { CRow, CCol, CButton } from '@coreui/vue'
 import { ref } from 'vue'
 
+import { toast } from 'vue3-toastify'
+import 'vue3-toastify/dist/index.css'
+
 import SelectList from '@/components/backend/hardware/menu/edit/SelectList.vue'
 
 // 從環境變數取得 API BASE URL
-// const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
+const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
 const selectLists = ref([])
 
@@ -96,7 +99,7 @@ let totalWattage = ref(props.menuWattage)
 
 let menuName = ref(props.menuName)
 
-const emit = defineEmits(['modal-close'])
+const emit = defineEmits(['modal-close', 'menu-update'])
 
 // 互動視窗 關閉事件
 function modalClose() {
@@ -154,11 +157,96 @@ function getChangedProducts() {
   return finalList
 }
 
-// 菜單資料更新
-function onMenuUpdate() {
+// 更新 MenuDetails
+async function updateMenuDetails() {
+  // 取出實際變更的產品陣列
   let finalList = getChangedProducts()
 
-  console.log(finalList)
+  for (let i = 0; i < finalList.length; i++) {
+    let fetchState = true
+    await fetch(`${apiUrl}/api/HardwareManage/UpdateMenuDetail`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        MenuId: finalList[i].menuId,
+        OriProductId: finalList[i].oriProductId,
+        NewProductId: finalList[i].newProductId
+      })
+    })
+      .then((response) => {
+        if (!response.ok) {
+          return response.text().then((errorMessage) => {
+            throw new Error(errorMessage)
+          })
+        }
+        return response.text()
+      })
+      .then((data) => {
+        console.log(data)
+        if (i === finalList.length - 1) {
+          updateMenuData()
+        }
+      })
+      .catch((error) => {
+        fetchState = false
+        console.error('Error:', error.message)
+      })
+
+    if (!fetchState) {
+      break
+    }
+  }
+}
+
+// 更新 MenuData
+function updateMenuData() {
+  fetch(`${apiUrl}/api/HardwareManage/UpdateMenu`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      MenuId: props.menuId,
+      Name: menuName.value,
+      TotalPrice: totalPrice.value,
+      TotalWattage: totalWattage.value
+    })
+  })
+    .then((response) => {
+      if (!response.ok) {
+        return response.text().then((errorMessage) => {
+          throw new Error(errorMessage)
+        })
+      }
+      return response.text()
+    })
+    .then((data) => {
+      toast.success(data, {
+        theme: 'dark',
+        autoClose: 1000,
+        transition: toast.TRANSITIONS.ZOOM,
+        position: toast.POSITION.TOP_CENTER
+      })
+      emit('menu-update', props.menuId)
+      emit('modal-close')
+    })
+    .catch((error) => {
+      toast.error(error.message, {
+        theme: 'dark',
+        autoClose: 1000,
+        transition: toast.TRANSITIONS.ZOOM,
+        position: toast.POSITION.TOP_CENTER
+      })
+    })
+}
+
+// 提供前台變更資訊
+
+// 菜單資料更新
+function onMenuUpdate() {
+  updateMenuDetails()
 }
 </script>
 

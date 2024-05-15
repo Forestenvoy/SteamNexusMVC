@@ -75,6 +75,7 @@
       :menuWattage="editWattage"
       :products="Products"
       @modal-close="isModalVisible = false"
+      @menu-update="cardInfoUpdate"
     ></menu-modal-body-e>
   </CModal>
   <!-- Modal End -->
@@ -283,6 +284,25 @@ function getMenuList() {
 // 刪除菜單(畫面)
 function deleteCard(id) {
   menuLists.value = menuLists.value.filter((item) => item.id !== id)
+}
+
+// 更新卡片菜單資訊
+function cardInfoUpdate(menuId) {
+  fetch(`${apiUrl}/api/HardwareManage/GetMenu?MenuId=${menuId}`, { method: 'GET' })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('NetworkError')
+      }
+      return response.json()
+    })
+    .then((data) => {
+      // 抓出菜單資訊
+      let index = menuLists.value.findIndex((item) => item.id === data.id)
+      menuLists.value[index] = data
+    })
+    .catch((error) => {
+      console.error(error.message)
+    })
 }
 
 onMounted(() => {
