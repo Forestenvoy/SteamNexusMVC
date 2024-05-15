@@ -21,6 +21,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
     {
         private readonly SteamNexusDbContext _context;
         public static int progressNum = 0;
+        public static bool isPriceDataUsing = false;
 
         public GamesManagementController(SteamNexusDbContext context)
         {
@@ -293,6 +294,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
         [HttpGet("GetGamePriceDataToDB")]
         public async Task<string> GetGamePriceDataToDB()
         {
+
             HttpClient client = new HttpClient();
             client.DefaultRequestHeaders.Add("Accept-Language", "zh-TW");
             int? num = _context.Games.OrderByDescending(g => g.GameId).FirstOrDefault()?.GameId ?? 0;

@@ -141,6 +141,7 @@ import { required, between, confirmed, numeric} from '@vee-validate/rules';
 import { localize } from '@vee-validate/i18n';
 import zh_TW from'@/components/backend/Game/zh_TW.json'
 import { CAlert } from '@coreui/vue';
+import dataTableLanguage from '@/components/backend/hardware/dataTableLanguage.js'
 
 defineRule('required', required)
 defineRule('between', between)
@@ -412,7 +413,7 @@ onMounted(() => {
     fixedHeader: true,
     // 響應式設計
     responsive: true,
-    language: { url: '//cdn.datatables.net/plug-ins/2.0.3/i18n/zh-HANT.json' },
+    language: dataTableLanguage,
     // 自動寬度 關閉
     autoWidth: true,
     // 資料載入中 gif
@@ -511,7 +512,7 @@ onBeforeRouteLeave(() => {
 })
 </script>
 
-<style>
+<style >
 @import 'bootstrap/dist/css/bootstrap.min.css';
 /* DataTables */
 @import 'datatables.net-dt/css/dataTables.datatables.min.css';
@@ -521,13 +522,14 @@ onBeforeRouteLeave(() => {
 @import 'datatables.net-responsive-dt/css/responsive.dataTables.min.css';
 
 .custom-toast {
-  /* 自定义 Toast 的样式 */
-  width: 600px; /* 设置宽度 */ /* 设置高度 */
-  margin-left:auto ;
-  margin-right:auto ;
+  width: 600px;
 }
 
-span,
+.formBox {
+  margin-bottom: 20px;
+}
+
+/* span,
 button {
   display: block;
   margin: 10px 0;
@@ -536,11 +538,9 @@ button {
 label {
   display: block;
   margin-bottom: 5px;
-}
+} */
 
-.formBox {
-  margin-bottom: 20px;
-}
+
 </style>
 <!-- AppId=""
 Name=""
