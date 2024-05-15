@@ -69,7 +69,47 @@ const router = createRouter({
     // 前台系統
     {
       path: '/',
-      component: FrontendLayout
+      component: FrontendLayout,
+      name: 'front',
+      children: [
+        // 首頁
+        {
+          path: '',
+          name: 'Home',
+          component: () => import('@/views/frontend/HomePage.vue')
+        },
+        // 硬體估價
+        {
+          path: 'computerBuilder',
+          name: 'ComputerBuilder',
+          component: () => import('@/views/frontend/ComputerBuilder.vue')
+        },
+        // 會員資料變更
+        {
+          path: 'userData',
+          name: 'UserData',
+          component: () => import('@/views/frontend/UserData.vue')
+        },
+        // 我的追蹤遊戲
+        {
+          path: 'trackedGames',
+          name: 'TrackedGames',
+          component: () => import('@/views/frontend/TrackedGames.vue')
+        },
+        // 搜尋頁面
+        {
+          path: 'searchSystem',
+          name: 'SearchSystem',
+          component: () => import('@/views/frontend/SearchSystem.vue')
+        },
+        // 遊戲頁面
+        {
+          path: 'game/:gameId',
+          name: 'Game',
+          component: () => import('@/views/frontend/GameInformation.vue'),
+          props: true
+        }
+      ]
     },
     // 無法辨別的路由，自動導向首頁
     {
