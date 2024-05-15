@@ -20,18 +20,68 @@
       </thead>
     </table>
   </section>
+
+  <!-- 刪除廣告的浮動式窗 -->
+  <CModal alignment="center" :visible="DeleteAdModal" @close="() => {
+    DeleteAdModal = false
+  }
+    " aria-labelledby="DeleteAdModal">
+    <CModalHeader>
+      <CModalTitle id="DeleteAdModal">刪除廣告</CModalTitle>
+    </CModalHeader>
+    <CModalBody>
+      <div class="container">
+        <div class="row">
+          <span class="col-3 text-end">ID:</span>
+          <span class="col-9">{{ deleteId }}</span><br /><br />
+          <span class="col-3 text-end">標題:</span>
+          <span class="col-9">{{ deleteTitle }}</span><br /><br />
+          <span class="col-3 text-end">Url:</span>
+          <span class="col-9" style="word-wrap: break-word;">{{ deleteUrl }}</span><br /><br /><br />
+          <span class="col-3 text-end">圖片:</span>
+          <div class="col-9">
+            <img class="" v-bind:src="deleteImage" style="width:80%" /><br /><br />
+          </div>
+          <span class="col-3 text-end">說明:</span>
+          <span class="col-9">{{ deleteDescription }}</span>
+        </div>
+      </div>
+    </CModalBody>
+    <CModalFooter>
+      <CButton color="secondary" @click="() => {
+        DeleteAdModal = false
+      }
+        ">
+        取消
+      </CButton>
+      <CButton color="primary" @click="DeleteAdBtn">刪除</CButton>
+    </CModalFooter>
+  </CModal>
 </template>
 <script setup>
 // 核心模組 import
 import $ from 'jquery'
+import dataTableLanguage from '@/components/backend/hardware/dataTableLanguage.js'
 import DataTable from 'datatables.net-dt'
 import 'datatables.net-fixedheader-dt'
 import 'datatables.net-buttons-dt'
 import 'datatables.net-responsive-dt'
 
-import { onMounted } from 'vue'
+
+// 特殊吐司
+import { toast } from 'vue3-toastify'
+import 'vue3-toastify/dist/index.css'
+
+import { ref, onMounted } from 'vue'
+import { CModal, CModalHeader, CModalTitle, CModalBody, CModalFooter, CButton } from '@coreui/vue'
 import { onBeforeRouteLeave } from 'vue-router'
 var dataTable = null
+let DeleteAdModal = ref(false)
+let deleteId = ref(0)
+let deleteTitle = ref('')
+let deleteUrl = ref('')
+let deleteImage = ref('')
+let deleteDescription = ref('')
 
 // 從環境變數取得 API BASE URL
 const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
@@ -56,6 +106,47 @@ function fetchDatatable() {
       console.error('Fetch error:', error);
     });
 };
+
+function DeleteAdBtn() {
+  // console.log(deleteId.value)
+  fetch(`${apiUrl}/api/Advertisement/DeleteAd`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      id: deleteId.value
+    })
+  })
+    .then(response => {
+      if (!response.ok) {
+        return response.text().then(errorMessage => {
+          throw new Error(errorMessage);
+        });
+      }
+      return response.text();
+    })
+    .then(result => {
+      // 成功處理回應
+      toast.success(result, {
+        theme: 'dark',
+        autoClose: 1000,
+        transition: toast.TRANSITIONS.ZOOM,
+        position: toast.POSITION.TOP_CENTER
+      });
+      DeleteAdModal.value = false;
+      fetchDatatable();
+    })
+    .catch(error => {
+      // 處理錯誤
+      toast.error(error.message, {
+        theme: 'dark',
+        autoClose: 1000,
+        transition: toast.TRANSITIONS.ZOOM,
+        position: toast.POSITION.TOP_CENTER
+      });
+    });
+}
 onMounted(() => {
   dataTable = new DataTable('#AdvertiseManageTable', {
     columns: [
@@ -94,15 +185,11 @@ onMounted(() => {
         // 按鈕 自定義
         "render": function (data, type, row) {
           // 取得 productId
-          let title = row.title;
           let AdId = row.advertisementId;
-          let url = row.url;
-          let disc = row.discription;
-          let image = row.imagePath;
           // 編輯按鈕
-          let editEle = '<button class="btn btn-primary" data-AdId="' + AdId + '"  data-title="' + title + '"  data-url="' + url + '"  data-disc="' + disc + '"  data-image="' + image + '" id="edit_button"><i class="bi bi-pencil-square"></i></button>';
+          let editEle = `<button class="btn btn-primary edit-btn" data-AdId="${AdId}"><i class="bi bi-pencil-square"></i></button>`;
           // 刪除按鈕
-          let deletEle = '<button class="btn btn-danger" data-AdId="' + AdId + '"  data-title="' + title + '"  data-url="' + url + '"  data-disc="' + disc + '"  data-image="' + image + '" id="delete_button"><i class="bi bi-trash3"></i></button>';
+          let deletEle = `<button class="btn btn-danger del-btn" data-AdId="${AdId}"><i class="bi bi-trash3"></i></button>`;
           if (type === 'display') {
             return `${editEle}${deletEle}`;
           }
@@ -117,9 +204,7 @@ onMounted(() => {
     // 響應式設計
     responsive: true,
     // 語言設定
-    language: {
-      url: '//cdn.datatables.net/plug-ins/2.0.3/i18n/zh-HANT.json',
-    },
+    language: dataTableLanguage,
     // 預設排序 ~ 根據第一個欄位 升冪排序
     order: [[0, 'asc']],
     // 自動寬度 開啟
@@ -151,18 +236,63 @@ onMounted(() => {
     fetch(`${apiUrl}/api/Advertisement/UpdateIsShow?adId=${adId}&isShow=${isShow}`, {
       method: 'PUT',
     }).then(response => {
-      if (response.ok) {
-        return response.text();
+      if (!response.ok) {
+        return response.text().then((errorMessage) => {
+          throw new Error(errorMessage)
+        })
       }
-      else {
-        return response.text();
-      }
+      return response.text()
     }).then(result => {
-      alert(result); // 處理成功回應的操作
+      // alert(result); // 處理成功回應的操作
+      toast.success(result, {
+        theme: 'dark',
+        autoClose: 1000,
+        transition: toast.TRANSITIONS.ZOOM,
+        position: toast.POSITION.TOP_CENTER
+      })
     }).catch(error => {
-      alert(error); // 處理錯誤
+      // alert(error); // 處理錯誤
+      toast.error(error.message, {
+        theme: 'dark',
+        autoClose: 1000,
+        transition: toast.TRANSITIONS.ZOOM,
+        position: toast.POSITION.TOP_CENTER
+      })
     });
   });
+
+  $(document).on('click', '.del-btn', function () {
+    // alert("del-btn");
+    const adId = $(this).data('adid');
+    fetch(`${apiUrl}/api/Advertisement/GetOneAdData?AdId=${adId}`, {
+      method: 'GET',
+    }).then(response => {
+      if (!response.ok) {
+        return response.text().then((errorMessage) => {
+          throw new Error(errorMessage)
+        })
+      }
+      return response.json()
+    }).then(result => {
+      deleteId.value = result.id;
+      deleteTitle.value = result.title;
+      deleteUrl.value = result.url;
+      deleteImage.value = result.image;
+      deleteDescription.value = result.discription;
+
+      DeleteAdModal.value = true;
+    }).catch(error => {
+      toast.error(error.message, {
+        theme: 'dark',
+        autoClose: 1000,
+        transition: toast.TRANSITIONS.ZOOM,
+        position: toast.POSITION.TOP_CENTER
+      })
+    });
+  })
+
+
+
 
 })
 
@@ -173,6 +303,8 @@ onBeforeRouteLeave(() => {
   dataTable.destroy()
   dataTable = null
   // 事件監聽器移除
+  $(document).off('change', '.radio-isShow')
+  $(document).off('click', '.del-btn')
   // $(document).off('click', '.Enter-btn')
   // $(document).off('click', '.Cancel-btn')
   // $(document).off('click', '.Edit-btn')
