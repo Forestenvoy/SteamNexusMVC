@@ -13,6 +13,7 @@
               :update-type="UpdateType"
             ></web-scraper-progress>
           </transition>
+          <button @click="test">123</button>
           <!-- 後台子系統 -->
           <router-view
             @update-one-hardware="UpdateOneHardware"
@@ -32,6 +33,11 @@ import AppFooter from '@/components/backend/share/AppFooter.vue'
 import AppHeader from '@/components/backend/share/AppHeader.vue'
 import AppSidebar from '@/components/backend/share/AppSidebar.vue'
 import WebScraperProgress from '@/components/backend/hardware/WebScraperProgress.vue'
+
+// 使用 Pinia
+import { useScraperStore } from '@/stores/scraper.js'
+// 利用 store 去訪問狀態 ✨
+const store = useScraperStore()
 
 // 從環境變數取得 API BASE URL
 const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
@@ -153,6 +159,15 @@ function UpdateAllHardware(productType) {
       alert(error)
       scraperState.value = false
     })
+}
+
+// 測試
+function test() {
+  if (store.state) {
+    store.stop()
+  } else {
+    store.start()
+  }
 }
 </script>
 

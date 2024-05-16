@@ -63,6 +63,11 @@ import {
   HardwareSelect
 } from '@/components/backend/hardware/productManageMethods.js'
 
+// 使用 Pinia
+import { useScraperStore } from '@/stores/scraper.js'
+// 利用 store 去訪問狀態 ✨
+const store = useScraperStore()
+
 // 從環境變數取得 API BASE URL
 const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
@@ -207,9 +212,12 @@ function UpdateOneHardware() {
 
 // 所有零件更新
 function UpdateAllHardware() {
-  const productType = 'All'
+  // const productType = 'All'
+
+  store.view()
+
   // 觸發 emit
-  emit('UpdateAllHardware', productType)
+  // emit('UpdateAllHardware', productType)
 }
 
 onMounted(() => {
