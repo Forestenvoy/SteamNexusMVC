@@ -187,7 +187,7 @@
                 v-model="birthday"
               />
             </div>
-            <div class="input-group input-group-lg">
+            <div class="clearfix">
               <span class="input-group-text" id="inputGroup-sizing-lg" style="color: white"
                 >大頭照：</span
               >
@@ -199,13 +199,16 @@
                 id="photo"
                 @change="uploadPhoto"
               />
-              <img
+              <CImage
+                align="center"
                 :src="photoPreview"
                 class="img-thumbnail"
                 aria-label="Sizing example input"
                 aria-describedby="inputGroup-sizing-lg"
                 id="display_photo"
                 alt="預覽圖片"
+                width="200"
+                height="200"
               />
             </div>
 
@@ -376,7 +379,7 @@
               v-model="newRoleName"
             />
           </div>
-          <div class="input-group input-group-lg">
+          <div class="clearfix">
             <span class="input-group-text" id="inputGroup-sizing-lg" style="color: white"
               >大頭照：</span
             >
@@ -388,15 +391,16 @@
               id="photo"
               v-on:change="uploadPhoto"
             />
-            <img
+            <CImage
+              align="center"
               :src="photoPreview"
               class="img-thumbnail"
               aria-label="Sizing example input"
               aria-describedby="inputGroup-sizing-lg"
               id="display_photo"
               alt="預覽圖片"
-              width="100%"
-              height="auto"
+              width="200"
+              height="200"
             />
           </div>
         </form>
