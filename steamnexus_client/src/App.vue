@@ -52,9 +52,9 @@ $font-family-sans-serif: 'Poppins', 'Noto Sans TC';
 
 // 深色模式
 // sidebar、header、footer 背景色
-$body-bg-dark: #272829;
+$body-bg-dark: #313131;
 // body 背景色
-$dark-bg-subtle-dark: #3d3b40;
+$dark-bg-subtle-dark: #0000;
 
 // Import Main styles for this application
 @import 'styles/style';

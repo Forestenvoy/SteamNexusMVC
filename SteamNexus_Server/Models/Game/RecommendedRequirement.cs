@@ -30,7 +30,7 @@ public partial class RecommendedRequirement
     [Required]
     public int RAM { get; set; } = 4;
 
-    #nullable enable
+#nullable enable
 
     [MaxLength(300)]
     public string? OriCpu { get; set; }
@@ -41,7 +41,7 @@ public partial class RecommendedRequirement
     [MaxLength(300)]
     public string? OriRam { get; set; }
 
-    [MaxLength(100)]
+    [MaxLength(300)]
     public string? OS { get; set; }
 
     [MaxLength(100)]
@@ -53,9 +53,9 @@ public partial class RecommendedRequirement
     [MaxLength(100)]
     public string? Storage { get; set; }
 
-    [MaxLength(100)]
+    [MaxLength(300)]
     public string? Audio { get; set; }
 
-    [MaxLength(500)]
+    [MaxLength(5000)]
     public string? Note { get; set; }
 }

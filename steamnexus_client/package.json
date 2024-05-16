@@ -11,6 +11,9 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@amcharts/amcharts5": "^5.9.8",
+    "@amcharts/amcharts5-fonts": "^5.0.1",
+    "@amcharts/amcharts5-geodata": "^5.1.2",
     "@coreui/chartjs": "^4.0.0",
     "@coreui/coreui": "^5.0.1",
     "@coreui/icons": "^3.0.1",
