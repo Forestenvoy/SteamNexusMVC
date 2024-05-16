@@ -147,7 +147,7 @@ namespace SteamNexus_Server.Controllers
         #endregion
 
 
-        #region Is there a Role?
+        #region Check Roles
         [HttpGet("CheckRolesExists")]
         public async Task<IActionResult> CheckRolesExists(string rolename)
         {

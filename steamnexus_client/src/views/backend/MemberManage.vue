@@ -54,7 +54,7 @@
     </CModalHeader>
     <CModalBody>
       <CRow class="mb-3">
-        <form @submit.prevent="submitForm">
+        <form v-on:submit.prevent="submitForm" autocomplete="off">
           <div class="input-group input-group-lg mb-3">
             <span class="input-group-text" id="inputGroup-sizing-lg" style="color: white"
               >Email：</span
@@ -69,9 +69,9 @@
               required
               maxlength="100"
               v-model="email"
-              V-on:blur="checkEmail"
+              v-on:input="checkEmail"
             />
-            <div v-if="emailExists" class="invalid-feedback">電子郵件已存在</div>
+            <!-- <div v-if="emailExists" class="invalid-feedback">電子郵件已存在</div>   V-on:blur="checkEmail"-->
             <div id="emailFeedback" class="invalid-feedback"></div>
           </div>
           <div class="input-group input-group-lg mb-3">
@@ -88,6 +88,7 @@
               required
               maxlength="20"
               v-model="password"
+              @input="validatePasswords"
             />
           </div>
           <div class="input-group input-group-lg mb-3">
@@ -104,6 +105,7 @@
               required
               maxlength="20"
               v-model="confirmPassword"
+              @input="validatePasswords"
             />
             <div id="passwordMismatchFeedback" class="invalid-feedback">密碼與確認密碼不一致</div>
           </div>
@@ -257,20 +259,52 @@ const photo = ref(null) // 存儲上傳的照片
 const photoPreview = ref(null) // 存儲照片預覽
 
 const checkEmail = async () => {
-  try {
-    const response = await axios.get(`${apiUrl}/api/MemberManagement/CheckEmailExists`, {
-      params: { email: email.value }
-    })
-    emailExists.value = !response.data
-  } catch (error) {
-    toast.error('檢查電子郵件失敗', {
-      theme: 'dark',
-      autoClose: 1000,
-      transition: toast.TRANSITIONS.ZOOM,
-      position: toast.POSITION.TOP_CENTER
-    })
+  const emailValue = email.value
+  if (emailValue) {
+    try {
+      const response = await axios.get(`${apiUrl}/api/MemberManagement/CheckEmailExists`, {
+        params: { email: email.value }
+      })
+      emailExists.value = !response.data
+      const feedbackElement = $('#emailFeedback')
+      if (response.data) {
+        feedbackElement
+          .text('此Email 可以使用')
+          .removeClass('invalid-feedback')
+          .addClass('valid-feedback')
+        $('#email').removeClass('is-invalid').addClass('is-valid')
+      } else {
+        feedbackElement
+          .text('該 Email 已被使用，請更換Email')
+          .removeClass('valid-feedback')
+          .addClass('invalid-feedback')
+        $('#email').removeClass('is-valid').addClass('is-invalid')
+      }
+      feedbackElement.show()
+    } catch (error) {
+      $('#emailFeedback').text('無法檢查 Email').addClass('invalid-feedback').show()
+    }
+  } else {
+    $('#emailFeedback').hide()
   }
 }
+
+// 檢查電子信箱是否重複
+// const checkEmail = async () => {
+//   try {
+//     const response = await axios.get(`${apiUrl}/api/MemberManagement/CheckEmailExists`, {
+//       params: { email: email.value }
+//     })
+//     emailExists.value = !response.data
+//   } catch (error) {
+//     toast.error('檢查電子郵件失敗', {
+//       theme: 'dark',
+//       autoClose: 1000,
+//       transition: toast.TRANSITIONS.ZOOM,
+//       position: toast.POSITION.TOP_CENTER
+//     })
+//   }
+// }
 
 // 上傳照片
 const uploadPhoto = (event) => {
@@ -288,18 +322,31 @@ const uploadPhoto = (event) => {
   }
 }
 
+// 檢查密碼是否一致
+const validatePasswords = () => {
+  const passwordValue = $('#Password').val()
+  const confirmPasswordValue = $('#ConfirmPassword').val()
+  if (passwordValue !== confirmPasswordValue) {
+    $('#passwordMismatchFeedback').show()
+    $('#ConfirmPassword').addClass('is-invalid')
+  } else {
+    $('#passwordMismatchFeedback').hide()
+    $('#ConfirmPassword').removeClass('is-invalid').addClass('is-valid')
+  }
+}
+
 // 新增使用者
 const submitForm = async () => {
   // 確認密碼是否一致
-  if (password.value !== confirmPassword.value) {
-    toast.error('密碼和確認密碼不匹配', {
-      theme: 'dark',
-      autoClose: 1000,
-      transition: toast.TRANSITIONS.ZOOM,
-      position: toast.POSITION.TOP_CENTER
-    })
-    return
-  }
+  // if (password.value !== confirmPassword.value) {
+  //   toast.error('密碼和確認密碼不匹配', {
+  //     theme: 'dark',
+  //     autoClose: 1000,
+  //     transition: toast.TRANSITIONS.ZOOM,
+  //     position: toast.POSITION.TOP_CENTER
+  //   })
+  //   return
+  // }
 
   // 確認電子信箱是否存在
   try {
@@ -510,6 +557,9 @@ onMounted(() => {
       deleteUser(userId)
     }
   })
+
+  // 確認密碼是否一致
+  $('#Password, #ConfirmPassword').on('input', validatePasswords)
 })
 
 // 路由離開時觸發
