@@ -24,6 +24,11 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import { CProgress, CSpinner } from '@coreui/vue'
 
+// 使用 Pinia
+import { useScraperStore } from '@/stores/scraper.js'
+// 利用 store 去訪問狀態 ✨
+const store = useScraperStore()
+
 // 從環境變數取得 API BASE URL
 const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
@@ -44,7 +49,71 @@ let sourceData = ''
 let resultStr = '爬蟲啟動中'
 var intervalID = null
 
+// 單一零件更新
+function UpdateOneHardware() {
+  fetch(`${apiUrl}/api/HardwareManage/UpdateHardwareOne`, {
+    method: 'POST',
+    body: JSON.stringify({
+      Type: store.getHardwareId
+    }),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+    .then((response) => {
+      if (!response) {
+        store.setState(false)
+        return null
+      }
+      if (!response.ok) {
+        return response.text().then((errorMessage) => {
+          throw new Error(errorMessage)
+        })
+      }
+      return response.text()
+    })
+    .then((data) => {
+      // 此時 data 為上一個 then 回傳的資料
+      console.log(data)
+      store.setState(false)
+    })
+    .catch((error) => {
+      alert(error.message)
+      store.setState(false)
+    })
+}
+
+// 所有零件更新
+function UpdateAllHardware() {
+  fetch(`${apiUrl}/api/HardwareManage/UpdateHardwareAll`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+    .then((response) => {
+      if (!response.ok) {
+        return response.text().then((errorMessage) => {
+          throw new Error(errorMessage)
+        })
+      }
+      return response.text()
+    })
+    .then((data) => {
+      console.log(data)
+      store.setState(false)
+    })
+    .catch((error) => {
+      alert(error)
+      store.setState(false)
+    })
+}
 onMounted(() => {
+  if (props.updateType === 'All') {
+    UpdateAllHardware()
+  } else {
+    UpdateOneHardware()
+  }
   // 建立連線
   source = new EventSource(`${apiUrl}/api/HardwareManage/UpdateMessage`)
   // onmessage 事件是預設用來接收 Server 端回傳的結果(data)

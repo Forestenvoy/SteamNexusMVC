@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 
 export const useScraperStore = defineStore('scraper', () => {
@@ -8,23 +8,45 @@ export const useScraperStore = defineStore('scraper', () => {
   // 宣告進度條顯示狀態
   const state = ref(false)
 
+  // 回傳進度條顯示狀態
+  const getState = computed(() => state.value)
+
+  // 設定進度條狀態
+  const setState = (value) => {
+    state.value = value
+  }
+
   // 宣告零件更新類型
   const type = ref('')
 
-  // 顯示進度條進度
-  const view = () => {
-    console.log(state.value)
+  // 回傳零件更新類型
+  const getType = computed(() => type.value)
+
+  // 設定零件更新類型
+  const setType = (value) => {
+    type.value = value
   }
 
-  // 啟用進度條
-  const start = () => {
-    state.value = true
+  // 宣告硬體 Id
+  const hardwareId = ref(0)
+
+  // 回傳硬體 Id
+  const getHardwareId = computed(() => hardwareId.value)
+
+  // 設定硬體 Id
+  const setHardwareId = (value) => {
+    hardwareId.value = value
   }
 
-  // 關閉進度條
-  const stop = () => {
-    state.value = false
+  return {
+    state,
+    getState,
+    setState,
+    type,
+    getType,
+    setType,
+    hardwareId,
+    getHardwareId,
+    setHardwareId
   }
-
-  return { state, type, start, stop, view }
 })

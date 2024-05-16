@@ -74,9 +74,6 @@ const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 // 宣告 硬體選擇 初始值
 const selectedItem = ref('0')
 
-// 宣告 Component Events
-const emit = defineEmits(['UpdateOneHardware', 'UpdateAllHardware'])
-
 // 初始化 DataTables
 let dataTable = null
 
@@ -201,23 +198,21 @@ function selectHardware() {
 function UpdateOneHardware() {
   // 取得硬體 ID
   const hardwareId = selectedItem.value
-  const productType = 'One'
+
   // 如果沒選擇硬體 => 中斷事件
   if (hardwareId == '0') {
     return
   }
-  // 觸發 emit
-  emit('UpdateOneHardware', hardwareId, productType)
+
+  store.setType('One')
+  store.setHardwareId(hardwareId)
+  store.setState(true)
 }
 
 // 所有零件更新
 function UpdateAllHardware() {
-  // const productType = 'All'
-
-  store.view()
-
-  // 觸發 emit
-  // emit('UpdateAllHardware', productType)
+  store.setType('All')
+  store.setState(true)
 }
 
 onMounted(() => {
