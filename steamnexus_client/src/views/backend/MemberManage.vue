@@ -212,6 +212,173 @@
       <CButton color="primary" v-on:click="submitForm">新增</CButton>
     </CModalFooter>
   </CModal>
+
+  <!-- 新增編輯浮動視窗 -->
+  <CModal
+    alignment="center"
+    :visible="EditUserModal"
+    @close="
+      () => {
+        EditUserModal = false
+      }
+    "
+    aria-labelledby="EditUserModal"
+  >
+    <CModalHeader>
+      <CModalTitle id="EditUserModal">編輯使用者</CModalTitle>
+    </CModalHeader>
+    <CModalBody>
+      <CRow class="mb-3">
+        <form v-on:submit.prevent="submitForm_Edit" autocomplete="off">
+          <div class="input-group input-group-lg mb-3">
+            <span class="input-group-text" id="inputGroup-sizing-lg" style="color: white"
+              >Email：</span
+            >
+            <input
+              type="email"
+              class="form-control"
+              aria-label="Sizing example input"
+              aria-describedby="inputGroup-sizing-lg"
+              id="email"
+              placeholder="請輸入您的電子信箱"
+              required
+              readonly
+              maxlength="100"
+              v-model="email"
+              v-on:input="checkEmail"
+            />
+            <!-- <div v-if="emailExists" class="invalid-feedback">電子郵件已存在</div>   V-on:blur="checkEmail"-->
+            <div id="emailFeedback" class="invalid-feedback"></div>
+          </div>
+          <div class="input-group input-group-lg mb-3">
+            <span class="input-group-text" id="inputGroup-sizing-lg" style="color: white"
+              >姓名：</span
+            >
+            <input
+              type="text"
+              class="form-control"
+              aria-label="Sizing example input"
+              aria-describedby="inputGroup-sizing-lg"
+              id="name"
+              placeholder="請輸入您的姓名"
+              required
+              maxlength="50"
+              v-model="name"
+            />
+          </div>
+          <div class="input-group input-group-lg mb-3">
+            <span class="input-group-text" id="inputGroup-sizing-lg" style="color: white"
+              >生日：</span
+            >
+            <input
+              type="date"
+              class="form-control"
+              aria-label="Sizing example input"
+              aria-describedby="inputGroup-sizing-lg"
+              id="birthday"
+              readonly
+              v-model="birthday"
+            />
+          </div>
+          <div class="input-group input-group-lg mb-3">
+            <span class="input-group-text" id="inputGroup-sizing-lg" style="color: white"
+              >電話：</span
+            >
+            <input
+              type="text"
+              class="form-control"
+              aria-label="Sizing example input"
+              aria-describedby="inputGroup-sizing-lg"
+              id="phone"
+              pattern="^09\d{8}$"
+              maxlength="10"
+              placeholder="手機號碼必須以09開頭且是10位數字"
+              v-model="phone"
+            />
+          </div>
+          <div class="input-group input-group-lg mb-3">
+            <span class="input-group-text" id="inputGroup-sizing-lg" style="color: white"
+              >性別：</span
+            >
+            <div class="d-flex align-items-center justify-content-start ps-4">
+              <div class="form-check form-check-inline">
+                <input
+                  class="form-check-input text-center"
+                  type="radio"
+                  name="gender"
+                  id="male"
+                  v-model="gender"
+                  :value="true"
+                />
+                <label class="form-check-label" for="male">男</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input
+                  class="form-check-input text-center"
+                  type="radio"
+                  name="gender"
+                  id="female"
+                  v-model="gender"
+                  :value="false"
+                />
+                <label class="form-check-label" for="female">女</label>
+              </div>
+            </div>
+          </div>
+          <div class="input-group input-group-lg mb-3">
+            <span class="input-group-text" id="inputGroup-sizing-lg" style="color: white"
+              >權限：</span
+            >
+            <input
+              type="text"
+              class="form-control"
+              aria-label="Sizing example input"
+              aria-describedby="inputGroup-sizing-lg"
+              id="roleName"
+              maxlength="50"
+              v-model="newRoleName"
+            />
+          </div>
+          <div class="input-group input-group-lg">
+            <span class="input-group-text" id="inputGroup-sizing-lg" style="color: white"
+              >大頭照：</span
+            >
+            <input
+              type="file"
+              class="form-control"
+              aria-label="Sizing example input"
+              aria-describedby="inputGroup-sizing-lg"
+              id="photo"
+              v-on:change="uploadPhoto"
+            />
+            <img
+              :src="photoPreview"
+              class="img-thumbnail"
+              aria-label="Sizing example input"
+              aria-describedby="inputGroup-sizing-lg"
+              id="display_photo"
+              alt="預覽圖片"
+              width="100%"
+              height="auto"
+            />
+          </div>
+        </form>
+      </CRow>
+    </CModalBody>
+    <CModalFooter>
+      <CButton
+        color="secondary"
+        @click="
+          () => {
+            EditUserModal = false
+          }
+        "
+      >
+        關閉
+      </CButton>
+      <CButton color="primary" v-on:click="submitForm_Edit">修改</CButton>
+    </CModalFooter>
+  </CModal>
 </template>
 
 <script setup>
@@ -236,7 +403,9 @@ const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
 var datatable = null
 
-let createUserModal = ref(false)
+let createUserModal = ref(false) // 建立使用者模態框
+let EditUserModal = ref(false) // 修改使用者模態框
+let EditUserId = ref(0)
 
 // 使用者名稱
 const email = ref('')
@@ -249,12 +418,15 @@ const phone = ref('')
 const gender = ref(true) // 默認為男性
 const photo = ref(null) // 存儲上傳的照片
 const photoPreview = ref(null) // 存儲照片預覽
+const newRoleName = ref('') //權限名稱
 
+// 清空表單
 const openCreateMemberModal = () => {
-  clearForm() // 清空表單
+  clearForm()
   createUserModal.value = true // 打開模態框
 }
 
+//確認電子信箱是否重複
 const checkEmail = async () => {
   const emailValue = email.value
   if (emailValue) {
@@ -461,6 +633,71 @@ const deleteUser = (userId) => {
     })
 }
 
+// 清空表單
+const openEditMemberModal = (user) => {
+  clearForm()
+
+  // 填充表單
+  //editUserId.value = user.userId
+  email.value = user.email
+  name.value = user.name
+  birthday.value = user.birthday ? new Date(user.birthday).toISOString().substring(0, 10) : ''
+  phone.value = user.phone
+  gender.value = user.gender === '男'
+  photoPreview.value = user.photo ? `${apiUrl}/images/headshots/${user.photo}` : null
+  newRoleName.value = user.roleName // 新增角色名稱
+
+  // 打開模態框
+  EditUserModal.value = true
+}
+
+// const submitForm_Edit = async () => {
+//   const formData = new FormData()
+//   formData.append('Name', name.value)
+//   formData.append('Email', email.value)
+//   formData.append('Birthday', birthday.value)
+//   formData.append('Phone', phone.value)
+//   // 確保性別值正確提交
+//   formData.append('Gender', gender.value ? 'true' : 'false')
+//   if (photo.value) {
+//     formData.append('Photo', photo.value)
+//   }
+//   formData.append('RoleName', newRoleName.value)
+
+//   try {
+//     const response = await axios.post(`${apiUrl}/api/MemberManagement/UpdateMember`, formData, {
+//       headers: {
+//         'Content-Type': 'multipart/form-data'
+//       }
+//     })
+//     if (response.data.success) {
+//       toast.success(response.data.message, {
+//         theme: 'dark',
+//         autoClose: 1000,
+//         transition: toast.TRANSITIONS.ZOOM,
+//         position: toast.POSITION.TOP_CENTER
+//       })
+//       datatable.ajax.reload()
+//       EditUserModal.value = false
+//       clearForm()
+//     } else {
+//       toast.error(response.data.message, {
+//         theme: 'dark',
+//         autoClose: 1000,
+//         transition: toast.TRANSITIONS.ZOOM,
+//         position: toast.POSITION.TOP_CENTER
+//       })
+//     }
+//   } catch (error) {
+//     toast.error('更新使用者失敗', {
+//       theme: 'dark',
+//       autoClose: 1000,
+//       transition: toast.TRANSITIONS.ZOOM,
+//       position: toast.POSITION.TOP_CENTER
+//     })
+//   }
+// }
+
 onMounted(() => {
   // 初始化 Datatables
   datatable = new DataTable('#MemberManageTable', {
@@ -557,6 +794,20 @@ onMounted(() => {
 
   // 確認密碼是否一致
   $('#Password, #ConfirmPassword').on('input', validatePasswords)
+
+  // 綁定編輯按鈕的點擊事件
+  $('#MemberManageTable').on('click', '#edit_btn', function () {
+    const userId = $(this).data('userid')
+    const user = datatable
+      .rows()
+      .data()
+      .toArray()
+      .find((user) => user.userId === userId)
+    if (user) {
+      console.log('user', user)
+      openEditMemberModal(user)
+    }
+  })
 })
 
 // 路由離開時觸發
