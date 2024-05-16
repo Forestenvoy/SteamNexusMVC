@@ -28,7 +28,7 @@
           </CNavItem>
           <CDropdown variant="nav-item" :popper="false">
             <CDropdownToggle color="secondary">會員中心</CDropdownToggle>
-            <CDropdownMenu class="text-center">
+            <CDropdownMenu class="text-center" style="z-index: 100">
               <CDropdownItem href="#" @click="$router.push('/userData')"
                 >會員資料變更</CDropdownItem
               >
@@ -66,7 +66,7 @@ const visible = ref(false)
 </script>
 <style scoped>
 /* 玻璃背景 */
-.navbar {
+/* .navbar {
   overflow-x: hidden;
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
@@ -97,7 +97,7 @@ const visible = ref(false)
 
 .nav-link:hover {
   color: aqua;
-}
+} */
 
 /* 
 .nav-item {
