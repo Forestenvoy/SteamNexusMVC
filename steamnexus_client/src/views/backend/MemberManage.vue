@@ -436,9 +436,13 @@ const photo = ref(null) // 存儲上傳的照片
 const photoPreview = ref(null) // 存儲照片預覽
 const newRoleName = ref('') //權限名稱
 
+// 預設圖片的URL
+const defaultPhotoUrl = `${apiUrl}/images/headshots/default.jpg`
+
 // 清空表單
 const openCreateMemberModal = () => {
   clearForm()
+  photoPreview.value = defaultPhotoUrl // 設置圖片預覽為預設圖片
   createUserModal.value = true // 打開模態框
 }
 
@@ -504,6 +508,7 @@ const uploadPhoto = (event) => {
   } else {
     photo.value = null
     photoPreview.value = null
+    // photoPreview.value = defaultPhotoUrl // 重置為預設圖片
   }
 }
 
@@ -617,7 +622,7 @@ const clearForm = () => {
   phone.value = ''
   gender.value = true
   photo.value = null
-  photoPreview.value = null
+  // photoPreview.value = null
 }
 
 // 刪除使用者
