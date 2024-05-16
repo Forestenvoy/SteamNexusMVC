@@ -8,7 +8,7 @@ using SteamNexus_Server.ViewModels.Game;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Cors;
 using System.Text;
-using System;
+using System.Linq;
 
 
 namespace SteamNexus.Areas.Administrator.Controllers
@@ -668,27 +668,15 @@ namespace SteamNexus.Areas.Administrator.Controllers
             return "總次數:" + allNum + "\nAPI找不到次數:" + APIerr + "\n欄位錯誤:" + errNum;
         }
 
+        [HttpGet("GetLineChartData")]
+        public async Task<JsonResult> GetLineChartData(int id)
+        {
+            // 获取相关的 PriceHistories 集合
+            var priceHistorie = await _context.PriceHistories
+                .Where(ph => ph.GameId == id).OrderBy(ph => ph.Date)  // 替换为实际条件
+                .ToListAsync();      
 
-        //public class LineChartData
-        //{
-        //    public int GameId { get; set; }
-        //    public DateTime Date { get; set; }
-        //    public int Price { get; set; }
-        //}
-        //public JsonResult GetLineChartData()
-        //{
-        //    var LineChartData = new LineChartData
-        //    {
-        //        Date = DateTime.Parse("2019-08-01"),
-        //        TemperatureCelsius = 25,
-        //        Summary = "Hot"
-        //    };
-
-        //    string jsonString = JsonSerializer.Serialize(weatherForecast);
-
-
-
-        //    return Json(_context.Games);
-        //}
+            return Json(priceHistorie);
+        }
     }
 }

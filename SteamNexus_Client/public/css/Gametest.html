@@ -100,233 +100,80 @@
     </style>
 </head>
 <body>
-    <script src="https://www.amcharts.com/lib/3/amcharts.js?x"></script>
-    <script src="https://www.amcharts.com/lib/3/serial.js?x"></script>
-    <script src="https://www.amcharts.com/lib/3/themes/dark.js"></script>
-    <div id="chartdiv"><div>																											<script>
-        var chartData = [
-    {
-        "date": "2012-01-01",
-        "distance": 227,
-        "townName": "New York",
-        "townName2": "New York",
-        "townSize": 25,
-        "duration": 408
-    },
-    {
-        "date": "2012-01-02",
-        "distance": 371,
-        "townName": "Washington",
-        "townSize": 14,
-        
-        "duration": 482
-    },
-    {
-        "date": "2012-01-03",
-        "distance": 433,
-        "townName": "Wilmington",
-        "townSize": 6,
-        
-        "duration": 562
-    },
-    {
-        "date": "2012-01-04",
-        "distance": 345,
-        "townName": "Jacksonville",
-        "townSize": 7,
-        
-        "duration": 379
-    },
-    {
-        "date": "2012-01-05",
-        "distance": 480,
-        "townName": "Miami",
-        "townName2": "Miami",
-        "townSize": 10,
-        
-        "duration": 501
-    },
-    {
-        "date": "2012-01-06",
-        "distance": 386,
-        "townName": "Tallahassee",
-        "townSize": 7,
-        
-        "duration": 443
-    },
-    {
-        "date": "2012-01-07",
-        "distance": 348,
-        "townName": "New Orleans",
-        "townSize": 10,
-        
-        "duration": 405
-    },
-    {
-        "date": "2012-01-08",
-        "distance": 238,
-        "townName": "Houston",
-        "townName2": "Houston",
-        "townSize": 16,
-        
-        "duration": 309
-    },
-    {
-        "date": "2012-01-09",
-        "distance": 218,
-        "townName": "Dalas",
-        "townSize": 17,
-        
-        "duration": 287
-    },
-    {
-        "date": "2012-01-10",
-        "distance": 349,
-        "townName": "Oklahoma City",
-        "townSize": 11,
-        
-        "duration": 485
-    },
-    {
-        "date": "2012-01-11",
-        "distance": 603,
-        "townName": "Kansas City",
-        "townSize": 10,
-        
-        "duration": 890
-    },
-    {
-        "date": "2012-01-12",
-        "distance": 534,
-        "townName": "Denver",
-        "townName2": "Denver",
-        "townSize": 18,
-        
-        "duration": 810
-    },
-    {
-        "date": "2012-01-13",
-        "townName": "Salt Lake City",
-        "townSize": 12,
-        "distance": 425,
-        "duration": 670,
-        
-        "alpha":0.4
-    },
-    {
-        "date": "2012-01-14",
-        
-        "duration": 470,
-        "townName": "Las Vegas",
-        "townName2": "Las Vegas",
-        "bulletClass": "lastBullet"
-    }
-];
-var chart = AmCharts.makeChart("chartdiv", {
-  type: "serial",
-  theme: "dark",
-  dataDateFormat: "YYYY-MM-DD",
-  dataProvider: chartData,
+    <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
+<script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
+    <div id="chartdiv"></div>
 
-  addClassNames: true,
-  startDuration: 1,
-  color: "#FFFFFF",
-  marginLeft: 0,
+<script>
+// Create root and chart
+var root = am5.Root.new("chartdiv"); 
+var chart = root.container.children.push( 
+  am5xy.XYChart.new(root, {
+    panY: false,
+    layout: root.verticalLayout
+  }) 
+);
 
-  categoryField: "date",
-  categoryAxis: {
-    parseDates: true,
-    minPeriod: "DD",
-    autoGridCount: false,
-    gridCount: 50,
-    gridAlpha: 0.1,
-    gridColor: "#FFFFFF",
-    axisColor: "#555555",
-    dateFormats: [{
-        period: 'DD',
-        format: 'DD'
-    }, {
-        period: 'WW',
-        format: 'MMM DD'
-    }, {
-        period: 'MM',
-        format: 'MMM'
-    }, {
-        period: 'YYYY',
-        format: 'YYYY'
-    }]
-  },
+// Define data
+var data = [{ 
+  category: "Research", 
+  value1: 1000, 
+  value2: 588 
+}, { 
+  category: "Marketing", 
+  value1: 1200, 
+  value2: 1800 
+}, { 
+  category: "Sales", 
+  value1: 850, 
+  value2: 1230 
+}];
 
-  valueAxes: [{
-    id: "a1",
-    title: "每日人數",
-    gridAlpha: 0,
-    axisAlpha: 0
-  },{
-    id: "a2",
-    position: "right",
-    gridAlpha: 0,
-    axisAlpha: 0,
-    labelsEnabled: false
-  },{
-    id: "a3",
-    title: "每日價格",
-    position: "right",
-    gridAlpha: 0,
-    axisAlpha: 0,
-    inside: true,
-    duration: "mm",
-    durationUnits: {
-        DD: "d. ",
-        hh: "h ",
-        mm: "min",
-        ss: ""
-    }
-  }],
-  graphs: [{
-    id: "g1",
-    valueField:  "distance",
-    title:  "每日人數",
-    type:  "column",
-    fillAlphas:  0.9,
-    valueAxis:  "a1",
-    balloonText:  "[[value]] 人",
-    legendValueText:  "[[value]] 人",
-    legendPeriodValueText:  "[[value.sum]] ",
-    lineColor:  "#263138",
-    alphaField:  "alpha",
-  }, {
-    id: "g3",
-    title: "每日價格",
-    valueField: "duration",
-    type: "line",
-    valueAxis: "a3",
-    lineColor: "#ff5755",
-    balloonText: "[[value]]",
-    lineThickness: 1,
-    legendValueText: "NT.[[value]]",
-    bullet: "square",
-    bulletBorderColor: "#ff5755",
-    bulletBorderThickness: 1,
-    bulletBorderAlpha: 1,
-    dashLengthField: "dashLength",
-    animationPlayed: true
-  }],
+// Craete Y-axis
+var yAxis = chart.yAxes.push( 
+  am5xy.ValueAxis.new(root, { 
+    renderer: am5xy.AxisRendererY.new(root, {}) 
+  }) 
+);
 
-  chartCursor: {
-    zoomable: false,
-    categoryBalloonDateFormat: "DD",
-    cursorAlpha: 0,
-    valueBalloonsEnabled: false
-  },
-  legend: {
-    bulletType: "round",
-    equalWidths: false,
-    valueWidth: 120,
-    useGraphSettings: true,
-    color: "#FFFFFF"
-  }
-});
-    </script>
+// Create X-Axis
+var xAxis = chart.xAxes.push(
+  am5xy.CategoryAxis.new(root, {
+    renderer: am5xy.AxisRendererX.new(root, {}),
+    categoryField: "category"
+  })
+);
+xAxis.data.setAll(data);
+
+// Create series
+var series1 = chart.series.push( 
+  am5xy.ColumnSeries.new(root, { 
+    name: "Series", 
+    xAxis: xAxis, 
+    yAxis: yAxis, 
+    valueYField: "value1", 
+    categoryXField: "category" 
+  }) 
+);
+series1.data.setAll(data);
+
+var series2 = chart.series.push( 
+  am5xy.ColumnSeries.new(root, { 
+    name: "Series", 
+    xAxis: xAxis, 
+    yAxis: yAxis, 
+    valueYField: "value2", 
+    categoryXField: "category" 
+  }) 
+);
+series2.data.setAll(data);
+
+// Add legend
+var legend = chart.children.push(am5.Legend.new(root, {})); 
+legend.data.setAll(chart.series.values);
+
+// Add cursor
+chart.set("cursor", am5xy.XYCursor.new(root, {}));
+</script></script>
 </body>
 </html>
