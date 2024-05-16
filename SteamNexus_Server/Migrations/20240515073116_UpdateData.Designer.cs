@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SteamNexus_Server.Data;
 
@@ -11,9 +12,11 @@ using SteamNexus_Server.Data;
 namespace SteamNexus_Server.Migrations
 {
     [DbContext(typeof(SteamNexusDbContext))]
-    partial class SteamNexusDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240515073116_UpdateData")]
+    partial class UpdateData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,7 +33,7 @@ namespace SteamNexus_Server.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AdvertisementId"), 10000L);
 
-                    b.Property<string>("Description")
+                    b.Property<string>("Discription")
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 

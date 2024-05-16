@@ -3,7 +3,7 @@
     <div class="wrapper d-flex flex-column min-vh-100">
       <app-header></app-header>
       <div class="body flex-grow-1">
-        <CContainer class="px-4" lg>
+        <CContainer class="px-5 pt-4" fluid>
           <router-view></router-view>
         </CContainer>
       </div>
@@ -16,4 +16,5 @@ import { CContainer } from '@coreui/vue'
 import AppHeader from '@/components/frontend/share/AppHeader.vue'
 import AppFooter from '@/components/frontend/share/AppFooter.vue'
 </script>
-<style></style>
+
+<style scoped></style>

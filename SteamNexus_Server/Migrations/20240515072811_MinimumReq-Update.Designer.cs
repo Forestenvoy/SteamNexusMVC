@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SteamNexus_Server.Data;
 
@@ -11,9 +12,11 @@ using SteamNexus_Server.Data;
 namespace SteamNexus_Server.Migrations
 {
     [DbContext(typeof(SteamNexusDbContext))]
-    partial class SteamNexusDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240515072811_MinimumReq-Update")]
+    partial class MinimumReqUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,7 +33,7 @@ namespace SteamNexus_Server.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AdvertisementId"), 10000L);
 
-                    b.Property<string>("Description")
+                    b.Property<string>("Discription")
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
@@ -558,8 +561,8 @@ namespace SteamNexus_Server.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RecReqId"), 10000L);
 
                     b.Property<string>("Audio")
-                        .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int>("CPUId")
                         .HasColumnType("int");
@@ -579,12 +582,12 @@ namespace SteamNexus_Server.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Note")
-                        .HasMaxLength(5000)
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("OS")
-                        .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("OriCpu")
                         .HasMaxLength(300)
