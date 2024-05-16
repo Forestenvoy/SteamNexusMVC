@@ -3,10 +3,7 @@
     <div class="col-12 col-md-6 order-md-1 d-flex justify-content-center justify-content-md-start">
       <h2 id="SystemName" style="margin-top: 8px">會員管理系統</h2>
     </div>
-    <div
-      class="col-12 col-md-6 order-md-2 d-flex justify-content-center justify-content-md-end"
-      id="SystemMenu"
-    ></div>
+    <div class="col-12 col-md-6 order-md-2 d-flex justify-content-center justify-content-md-end" id="SystemMenu"></div>
   </div>
   <section class="section">
     <table id="MemberManageTable" class="display" style="width: 100%">
@@ -24,29 +21,18 @@
       </thead>
     </table>
   </section>
-  <button
-    type="button"
-    class="btn btn-danger mb-3"
-    @click="
-      () => {
-        createUserModal = true
-      }
-    "
-  >
+  <button type="button" class="btn btn-danger mb-3" @click="() => {
+      createUserModal = true
+    }
+    ">
     新增使用者
   </button>
 
   <!-- 新增使用者浮動視窗 -->
-  <CModal
-    alignment="center"
-    :visible="createUserModal"
-    @close="
-      () => {
-        createUserModal = false
-      }
-    "
-    aria-labelledby="createUserModal"
-  >
+  <CModal alignment="center" :visible="createUserModal" @close="() => {
+      createUserModal = false
+    }
+    " aria-labelledby="createUserModal">
     <CModalHeader>
       <CModalTitle id="createUserModal">Modal title</CModalTitle>
     </CModalHeader>
@@ -59,14 +45,10 @@
       </CRow>
     </CModalBody>
     <CModalFooter>
-      <CButton
-        color="secondary"
-        @click="
-          () => {
-            createUserModal = false
-          }
-        "
-      >
+      <CButton color="secondary" @click="() => {
+          createUserModal = false
+        }
+        ">
         Close
       </CButton>
       <CButton color="primary">Save changes</CButton>
