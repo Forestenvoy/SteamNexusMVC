@@ -106,7 +106,13 @@
             <!-- 第一部分按鈕 -->
             <div class="d-flex justify-content-end">
               <CButton color="secondary" @click="closeCreateUserModal">取消</CButton>
-              <CButton color="primary" @click="goToNextPage" class="ms-2">下一頁</CButton>
+              <CButton
+                color="primary"
+                @click="goToNextPage"
+                class="ms-2"
+                :disabled="!isFirstPartValid"
+                >下一頁</CButton
+              >
             </div>
           </div>
 
@@ -126,7 +132,9 @@
                 required
                 maxlength="50"
                 v-model="name"
+                @input="validatename"
               />
+              <div id="nameFeedback" class="invalid-feedback">此為必填欄位</div>
             </div>
             <div class="input-group input-group-lg mb-3">
               <span class="input-group-text" id="inputGroup-sizing-lg" style="color: white"
@@ -429,7 +437,7 @@ import DataTable from 'datatables.net-dt'
 import 'datatables.net-fixedheader-dt'
 import 'datatables.net-buttons-dt'
 import 'datatables.net-responsive-dt'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { CModal, CModalHeader, CModalTitle, CModalBody, CModalFooter, CButton } from '@coreui/vue'
 import axios from 'axios'
 import dataTableLanguage from '@/components/backend/hardware/dataTableLanguage.js' //i18n
@@ -468,7 +476,9 @@ const currentPage = ref(1)
 
 //切換註冊頁面
 const goToNextPage = () => {
-  currentPage.value = 2
+  if (isFirstPartValid.value) {
+    currentPage.value = 2
+  }
 }
 
 const goToPreviousPage = () => {
@@ -567,6 +577,29 @@ const validatePasswords = () => {
   }
 }
 
+// 驗證姓名是否有填入數值
+const validatename = () => {
+  const nameValue = $('#name').val()
+  if (nameValue.trim() === '') {
+    $('#nameFeedback').show()
+    $('#name').addClass('is-invalid')
+  } else {
+    $('#nameFeedback').hide()
+    $('#name').removeClass('is-invalid').addClass('is-valid')
+  }
+}
+
+//驗證第一部份表單是否有誤
+const isFirstPartValid = computed(() => {
+  return (
+    email.value &&
+    password.value &&
+    confirmPassword.value &&
+    password.value === confirmPassword.value &&
+    !emailExists.value
+  )
+})
+
 // 新增使用者
 const submitForm = async () => {
   // 確認密碼是否一致
@@ -581,30 +614,30 @@ const submitForm = async () => {
   // }
 
   // 確認電子信箱是否存在
-  try {
-    const response = await axios.get(`${apiUrl}/api/MemberManagement/CheckEmailExists`, {
-      params: { email: email.value }
-    })
-    emailExists.value = !response.data
+  // try {
+  //   const response = await axios.get(`${apiUrl}/api/MemberManagement/CheckEmailExists`, {
+  //     params: { email: email.value }
+  //   })
+  //   emailExists.value = !response.data
 
-    if (emailExists.value) {
-      toast.error('電子郵件已存在', {
-        theme: 'dark',
-        autoClose: 1000,
-        transition: toast.TRANSITIONS.ZOOM,
-        position: toast.POSITION.TOP_CENTER
-      })
-      return
-    }
-  } catch (error) {
-    toast.error('檢查電子郵件失敗', {
-      theme: 'dark',
-      autoClose: 1000,
-      transition: toast.TRANSITIONS.ZOOM,
-      position: toast.POSITION.TOP_CENTER
-    })
-    return
-  }
+  //   if (emailExists.value) {
+  //     toast.error('電子郵件已存在', {
+  //       theme: 'dark',
+  //       autoClose: 1000,
+  //       transition: toast.TRANSITIONS.ZOOM,
+  //       position: toast.POSITION.TOP_CENTER
+  //     })
+  //     return
+  //   }
+  // } catch (error) {
+  //   toast.error('檢查電子郵件失敗', {
+  //     theme: 'dark',
+  //     autoClose: 1000,
+  //     transition: toast.TRANSITIONS.ZOOM,
+  //     position: toast.POSITION.TOP_CENTER
+  //   })
+  //   return
+  // }
 
   const formData = new FormData()
   formData.append('Name', name.value)
@@ -645,7 +678,7 @@ const submitForm = async () => {
       }
     })
     .catch((error) => {
-      toast.error('新增使用者失敗', {
+      toast.error('新增使用者失敗：姓名未填寫', {
         theme: 'dark',
         autoClose: 1000,
         transition: toast.TRANSITIONS.ZOOM,
