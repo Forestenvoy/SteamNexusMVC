@@ -7,6 +7,8 @@ using SteamNexus_Server.Models;
 using SteamNexus_Server.ViewModels.Game;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Cors;
+using System.Text;
+using System;
 
 
 namespace SteamNexus.Areas.Administrator.Controllers
@@ -18,6 +20,8 @@ namespace SteamNexus.Areas.Administrator.Controllers
     public class GamesManagementController : Controller
     {
         private readonly SteamNexusDbContext _context;
+        public static int progressNum = 0;
+        public static bool isPriceDataUsing = false;
 
         public GamesManagementController(SteamNexusDbContext context)
         {
@@ -290,6 +294,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
         [HttpGet("GetGamePriceDataToDB")]
         public async Task<string> GetGamePriceDataToDB()
         {
+
             HttpClient client = new HttpClient();
             client.DefaultRequestHeaders.Add("Accept-Language", "zh-TW");
             int? num = _context.Games.OrderByDescending(g => g.GameId).FirstOrDefault()?.GameId ?? 0;
@@ -299,6 +304,11 @@ namespace SteamNexus.Areas.Administrator.Controllers
 
             for (int GameId = 10000; GameId <= num; GameId++)
             {
+                int testNum = GameId - 9999;
+                double testprogressNum = Math.Round(((double)testNum / 1198) * 100, 2); ;
+                progressNum = (int)testprogressNum;
+                Console.WriteLine(testprogressNum);
+                Console.WriteLine(progressNum);
                 Console.WriteLine(GameId);
                 await Task.Delay(1400);
 
@@ -335,7 +345,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
                             //_context.Entry(game).State = EntityState.Modified;
                             _context.Update(game);
                             _context.PriceHistories.Add(PriceHistory);
-                            await _context.SaveChangesAsync();
+                            //await _context.SaveChangesAsync();
                         }
                         catch (DbUpdateConcurrencyException)
                         {
@@ -406,7 +416,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
                             //_context.Entry(game).State = EntityState.Modified;
                             _context.Update(game);
                             _context.PriceHistories.Add(PriceHistory);
-                            await _context.SaveChangesAsync();
+                            //await _context.SaveChangesAsync();
                         }
                         catch (DbUpdateConcurrencyException)
                         {
@@ -429,7 +439,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
                         PriceHistory.Price = (int)game.OriginalPrice;
                         //_context.Entry(game).State = EntityState.Modified;
                         _context.PriceHistories.Add(PriceHistory);
-                        await _context.SaveChangesAsync();
+                        //await _context.SaveChangesAsync();
                     }
                     catch (DbUpdateConcurrencyException)
                     {
@@ -449,6 +459,16 @@ namespace SteamNexus.Areas.Administrator.Controllers
             }
 
             return "總次數:" + allNum + "\nAPI找不到次數:" + errNum + "\n價錢錯誤次數:" + priceErrNum;
+        }
+
+        [HttpGet("GamePriceProgress")]
+        public IActionResult GamePriceProgress()
+        {
+            string progressData = "";
+            progressData += $"id={Guid.NewGuid()}\n";
+            progressData += "retry:1000\n";
+            progressData += $"data:{progressNum}\n\n";
+            return Content($"{progressData}", "text/event-stream", Encoding.UTF8);
         }
 
         //(API)拿取在線人數(新增)

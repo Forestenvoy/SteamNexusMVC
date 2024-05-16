@@ -3,10 +3,7 @@
     <div class="col-12 col-md-6 order-md-1 d-flex justify-content-center justify-content-md-start">
       <h2 id="SystemName" style="margin-top: 8px">會員管理系統</h2>
     </div>
-    <div
-      class="col-12 col-md-6 order-md-2 d-flex justify-content-center justify-content-md-end"
-      id="SystemMenu"
-    ></div>
+    <div class="col-12 col-md-6 order-md-2 d-flex justify-content-center justify-content-md-end" id="SystemMenu"></div>
   </div>
 
   <button
@@ -39,16 +36,10 @@
   </section>
 
   <!-- 新增使用者浮動視窗 -->
-  <CModal
-    alignment="center"
-    :visible="createUserModal"
-    @close="
-      () => {
-        createUserModal = false
-      }
-    "
-    aria-labelledby="createUserModal"
-  >
+  <CModal alignment="center" :visible="createUserModal" @close="() => {
+      createUserModal = false
+    }
+    " aria-labelledby="createUserModal">
     <CModalHeader>
       <CModalTitle id="createUserModal">新增使用者</CModalTitle>
     </CModalHeader>

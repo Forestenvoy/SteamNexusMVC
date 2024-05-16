@@ -21,18 +21,20 @@
       <CCollapse class="navbar-collapse" :visible="visible">
         <CNavbarNav class="mx-xl-auto">
           <CNavItem>
-            <CNavLink href="#"> 首頁 </CNavLink>
+            <CNavLink href="#" @click="$router.push('/')"> 首頁 </CNavLink>
           </CNavItem>
           <CNavItem>
-            <CNavLink href="#"> 硬體估價 </CNavLink>
+            <CNavLink href="#" @click="$router.push('/computerBuilder')"> 硬體估價 </CNavLink>
           </CNavItem>
           <CDropdown variant="nav-item" :popper="false">
             <CDropdownToggle color="secondary">會員中心</CDropdownToggle>
-            <CDropdownMenu>
-              <CDropdownItem href="#">會員資料變更</CDropdownItem>
-              <CDropdownItem href="#">客服中心</CDropdownItem>
-              <CDropdownDivider />
-              <CDropdownItem href="#">我的追蹤遊戲</CDropdownItem>
+            <CDropdownMenu class="text-center">
+              <CDropdownItem href="#" @click="$router.push('/userData')"
+                >會員資料變更</CDropdownItem
+              >
+              <CDropdownItem href="#" @click="$router.push('/trackedGames')"
+                >我的追蹤遊戲</CDropdownItem
+              >
             </CDropdownMenu>
           </CDropdown>
         </CNavbarNav>
@@ -48,7 +50,9 @@
         </CNavbarNav>
         <CForm class="d-flex order-1">
           <CFormInput type="search" class="me-2" placeholder="Search" />
-          <CButton type="submit" color="light" variant="outline">Search</CButton>
+          <CButton color="light" variant="outline" @click.prevent="$router.push('/searchSystem')"
+            >Search</CButton
+          >
         </CForm>
       </CCollapse>
     </CContainer>

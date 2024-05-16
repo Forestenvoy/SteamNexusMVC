@@ -167,7 +167,7 @@ const deleteRole = (roleId) => {
       // 重新加載表格數據
       datatable.ajax.reload()
     })
-    .catch((err) => {
+    .catch(() => {
       //alert('資料已有關聯紀錄，刪除失敗')
       toast.error('資料已有關聯紀錄，刪除失敗', {
         theme: 'dark',
@@ -197,9 +197,9 @@ onMounted(() => {
         orderable: false,
         width: '10%',
         className: 'text-center',
-        render: function (data, type, row, meta) {
+        render: function (data, type, row) {
           // 取得 roleId
-          let RoleId = row.roleId
+
           let RoleName = row.roleName
           // 刪除按鈕
           let resetEle = `<button class="btn btn-danger del-btn" data-roleid="${row.roleId}" data-rolename="${RoleName}" data-bs-toggle="popover" data-bs-content="nothing"><i class="bi bi-trash3-fill"></i></button>`
