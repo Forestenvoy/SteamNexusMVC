@@ -68,13 +68,13 @@
           <div class="formBox">
           <label class="text-center" for="ImagePath">遊戲圖片</label>
           <img v-bind:src="imagesrc" id="imgPreview" title="上無內容" style="width:250px;" /><br>
-          <Field name="ImagePath" class="form-control text-center" type="text" rules="" @change="ImageChange" v-model="ImagePath"/>
+          <Field name="ImagePath" class="form-control text-center" type="text" rules="url" @change="ImageChange" v-model="ImagePath"/>
           <ErrorMessage class="text-danger" name="ImagePath" />
         </div>
         <div class="formBox">
           <label class="text-center" for="VideoPath">遊戲影片</label>
           <video v-bind:src="videosrc" id="videoPreview" width="250" controls autoplay muted></video><br>
-          <Field name="VideoPath" class="form-control text-center" type="text" rules="" @change="VideoChange" v-model="VideoPath"/>
+          <Field name="VideoPath" class="form-control text-center" type="text" rules="url" @change="VideoChange" v-model="VideoPath"/>
           <ErrorMessage class="text-danger" name="VideoPath" />
         </div>
        </CModalBody>
@@ -87,6 +87,8 @@
     </CModalFooter>
   </CModal>
   </Form>
+
+  <Button type="button" @click="GetLineChartData" color="primary">測試</button>
 <!--Form End-->
 <CToaster class="p-3" placement="top-end" >
     <CToast v-for="(toast, index) in toasts" visible :key="index" class="text-white align-items-center custom-toast">
@@ -137,7 +139,7 @@ const handleClick = () => {
 
 //Form驗證製作
 import { defineRule, Form, Field, ErrorMessage, configure } from 'vee-validate';
-import { required, between, confirmed, numeric} from '@vee-validate/rules';
+import { required, between, confirmed, numeric,url} from '@vee-validate/rules';
 import { localize } from '@vee-validate/i18n';
 import zh_TW from'@/components/backend/Game/zh_TW.json'
 import { CAlert } from '@coreui/vue';
@@ -147,6 +149,7 @@ defineRule('required', required)
 defineRule('between', between)
 defineRule('confirmed', confirmed)
 defineRule('numeric', numeric)
+defineRule('url', url)
 
 var Title=ref("")
 var imagesrc = ref('http://localhost:5173/public/img/noImage.png')
@@ -196,8 +199,8 @@ configure({
       ReleaseDate: '上市日期',
       Publisher: '開發商',
       Description: '遊戲介紹',
-      ImagePath: '遊戲圖片',
-      VideoPath: '遊戲影片'
+      ImagePath: '圖片連結',
+      VideoPath: '影片連結'
     },
     messages: zh_TW.messages
   })
