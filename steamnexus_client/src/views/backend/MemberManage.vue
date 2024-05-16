@@ -232,6 +232,23 @@
         <form v-on:submit.prevent="submitForm_Edit" autocomplete="off">
           <div class="input-group input-group-lg mb-3">
             <span class="input-group-text" id="inputGroup-sizing-lg" style="color: white"
+              >編號：</span
+            >
+            <input
+              type="text"
+              class="form-control"
+              aria-label="Sizing example input"
+              aria-describedby="inputGroup-sizing-lg"
+              id="userid"
+              placeholder="請輸入您的姓名"
+              readonly
+              maxlength="50"
+              v-model="userid"
+            />
+          </div>
+
+          <div class="input-group input-group-lg mb-3">
+            <span class="input-group-text" id="inputGroup-sizing-lg" style="color: white"
               >Email：</span
             >
             <input
@@ -241,7 +258,6 @@
               aria-describedby="inputGroup-sizing-lg"
               id="email"
               placeholder="請輸入您的電子信箱"
-              required
               readonly
               maxlength="100"
               v-model="email"
@@ -376,7 +392,7 @@
       >
         關閉
       </CButton>
-      <CButton color="primary" v-on:click="submitForm_Edit">修改</CButton>
+      <CButton color="primary" v-on:click="submitEditForm">修改</CButton>
     </CModalFooter>
   </CModal>
 </template>
@@ -405,9 +421,9 @@ var datatable = null
 
 let createUserModal = ref(false) // 建立使用者模態框
 let EditUserModal = ref(false) // 修改使用者模態框
-let EditUserId = ref(0)
 
 // 使用者名稱
+const userid = ref(0)
 const email = ref('')
 const emailExists = ref(false) //確認電子信箱是否重複
 const password = ref('')
@@ -638,7 +654,7 @@ const openEditMemberModal = (user) => {
   clearForm()
 
   // 填充表單
-  //editUserId.value = user.userId
+  userid.value = user.userId
   email.value = user.email
   name.value = user.name
   birthday.value = user.birthday ? new Date(user.birthday).toISOString().substring(0, 10) : ''
@@ -651,52 +667,55 @@ const openEditMemberModal = (user) => {
   EditUserModal.value = true
 }
 
-// const submitForm_Edit = async () => {
-//   const formData = new FormData()
-//   formData.append('Name', name.value)
-//   formData.append('Email', email.value)
-//   formData.append('Birthday', birthday.value)
-//   formData.append('Phone', phone.value)
-//   // 確保性別值正確提交
-//   formData.append('Gender', gender.value ? 'true' : 'false')
-//   if (photo.value) {
-//     formData.append('Photo', photo.value)
-//   }
-//   formData.append('RoleName', newRoleName.value)
+// 提交編輯表單
+const submitEditForm = async () => {
+  console.log('submitEditForm called')
+  const formData = new FormData()
+  formData.append('UserId', userid.value)
+  formData.append('Email', email.value)
+  formData.append('Name', name.value)
+  formData.append('Birthday', birthday.value)
+  formData.append('Phone', phone.value)
+  formData.append('Gender', gender.value)
+  formData.append('RoleName', roleName.value)
+  if (photo.value) {
+    formData.append('Photo', photo.value)
+  }
 
-//   try {
-//     const response = await axios.post(`${apiUrl}/api/MemberManagement/UpdateMember`, formData, {
-//       headers: {
-//         'Content-Type': 'multipart/form-data'
-//       }
-//     })
-//     if (response.data.success) {
-//       toast.success(response.data.message, {
-//         theme: 'dark',
-//         autoClose: 1000,
-//         transition: toast.TRANSITIONS.ZOOM,
-//         position: toast.POSITION.TOP_CENTER
-//       })
-//       datatable.ajax.reload()
-//       EditUserModal.value = false
-//       clearForm()
-//     } else {
-//       toast.error(response.data.message, {
-//         theme: 'dark',
-//         autoClose: 1000,
-//         transition: toast.TRANSITIONS.ZOOM,
-//         position: toast.POSITION.TOP_CENTER
-//       })
-//     }
-//   } catch (error) {
-//     toast.error('更新使用者失敗', {
-//       theme: 'dark',
-//       autoClose: 1000,
-//       transition: toast.TRANSITIONS.ZOOM,
-//       position: toast.POSITION.TOP_CENTER
-//     })
-//   }
-// }
+  try {
+    const response = await axios.post(`${apiUrl}/api/MemberManagement/EditUser`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+
+    if (response.status === 204) {
+      toast.success('使用者信息已成功更新', {
+        theme: 'dark',
+        autoClose: 1000,
+        transition: toast.TRANSITIONS.ZOOM,
+        position: toast.POSITION.TOP_CENTER
+      })
+      datatable.ajax.reload()
+      EditUserModal.value = false
+      // 在這裡刷新數據表格，例如使用 emit 事件通知父組件
+    } else {
+      toast.error('更新使用者信息失敗', {
+        theme: 'dark',
+        autoClose: 1000,
+        transition: toast.TRANSITIONS.ZOOM,
+        position: toast.POSITION.TOP_CENTER
+      })
+    }
+  } catch (error) {
+    toast.error('更新使用者信息失敗', {
+      theme: 'dark',
+      autoClose: 1000,
+      transition: toast.TRANSITIONS.ZOOM,
+      position: toast.POSITION.TOP_CENTER
+    })
+  }
+}
 
 onMounted(() => {
   // 初始化 Datatables

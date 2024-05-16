@@ -315,14 +315,14 @@ namespace SteamNexus_Server.Controllers
         #endregion
 
 
-        #region UpdateUser
+        #region UpdateUser for data
         [HttpPost("EditUser")]
         public async Task<ActionResult> EditUser([FromForm] EditUserViewModel data)
         {
             if (ModelState.IsValid)
             {
                 var user = await _application.Users
-                    .Include(u => u.Role)
+                    .Include(u => u.Role)  // 使用 Include 載入相關的角色資料
                     .FirstOrDefaultAsync(u => u.UserId == data.UserId);
 
                 if (user == null)
@@ -337,14 +337,17 @@ namespace SteamNexus_Server.Controllers
                 user.Gender = data.Gender;
                 user.Birthday = data.Birthday;
 
+                // 查找新的角色ID
                 var newRole = await _application.Roles.FirstOrDefaultAsync(r => r.RoleName == data.RoleName);
                 if (newRole != null && newRole.RoleId != user.RoleId)
                 {
-                    user.RoleId = newRole.RoleId;
+                    user.RoleId = newRole.RoleId;  // 只在角色有變化時更新角色ID
                 }
 
+                // 處理檔案上傳，沒有預設圖片
                 if (data.Photo != null && data.Photo.Length > 0)
                 {
+                    // 刪除舊的圖片，除非它是預設圖片
                     if (!string.IsNullOrEmpty(user.Photo) && user.Photo != "default.jpg")
                     {
                         var oldFilePath = Path.Combine(_webHost.WebRootPath, "images/headshots", user.Photo);
@@ -354,6 +357,7 @@ namespace SteamNexus_Server.Controllers
                         }
                     }
 
+                    // 儲存新的圖片
                     string filename = Guid.NewGuid().ToString() + Path.GetExtension(data.Photo.FileName);
                     string uploadfolder = Path.Combine(_webHost.WebRootPath, "images/headshots");
                     string filepath = Path.Combine(uploadfolder, filename);
@@ -365,12 +369,82 @@ namespace SteamNexus_Server.Controllers
 
                     user.Photo = filename;
                 }
-                await _application.SaveChangesAsync();
-                return Ok(new { message = "用戶更新成功" });
-            }
-            return BadRequest(ModelState);
-        }
 
+                await _application.SaveChangesAsync();
+                return NoContent();
+            }
+
+            return BadRequest(ModelState);  // 返回表單與驗證錯誤
+        }
+        #endregion
+
+
+        #region UpdateUser for id
+        [HttpPut("{id}")]
+        public async Task<ActionResult> EditUser(int id, [FromForm] EditUserViewModel data)
+        {
+            if (id != data.UserId)
+            {
+                return BadRequest("User ID mismatch.");
+            }
+
+            if (ModelState.IsValid)
+            {
+                var user = await _application.Users
+                    .Include(u => u.Role)  // 使用 Include 載入相關的角色資料
+                    .FirstOrDefaultAsync(u => u.UserId == data.UserId);
+
+                if (user == null)
+                {
+                    return NotFound($"無法找到ID為 {data.UserId} 的用戶。");
+                }
+
+                user.UserId = data.UserId;
+                user.Name = data.Name;
+                user.Email = data.Email;
+                user.Phone = data.Phone;
+                user.Gender = data.Gender;
+                user.Birthday = data.Birthday;
+
+                // 查找新的角色ID
+                var newRole = await _application.Roles.FirstOrDefaultAsync(r => r.RoleName == data.RoleName);
+                if (newRole != null && newRole.RoleId != user.RoleId)
+                {
+                    user.RoleId = newRole.RoleId;  // 只在角色有變化時更新角色ID
+                }
+
+                // 處理檔案上傳，沒有預設圖片
+                if (data.Photo != null && data.Photo.Length > 0)
+                {
+                    // 刪除舊的圖片，除非它是預設圖片
+                    if (!string.IsNullOrEmpty(user.Photo) && user.Photo != "default.jpg")
+                    {
+                        var oldFilePath = Path.Combine(_webHost.WebRootPath, "images/headshots", user.Photo);
+                        if (System.IO.File.Exists(oldFilePath))
+                        {
+                            System.IO.File.Delete(oldFilePath);
+                        }
+                    }
+
+                    // 儲存新的圖片
+                    string filename = Guid.NewGuid().ToString() + Path.GetExtension(data.Photo.FileName);
+                    string uploadfolder = Path.Combine(_webHost.WebRootPath, "images/headshots");
+                    string filepath = Path.Combine(uploadfolder, filename);
+
+                    using (var fileStream = new FileStream(filepath, FileMode.Create))
+                    {
+                        await data.Photo.CopyToAsync(fileStream);
+                    }
+
+                    user.Photo = filename;
+                }
+
+                await _application.SaveChangesAsync();
+                return NoContent();
+            }
+
+            return BadRequest(ModelState);  // 返回表單與驗證錯誤
+        }
         #endregion
 
 
