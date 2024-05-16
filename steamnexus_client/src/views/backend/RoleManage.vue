@@ -9,17 +9,7 @@
     ></div>
   </div>
 
-  <button
-    type="button"
-    class="btn btn-danger mb-3"
-    @click="
-      () => {
-        createRoleModal = true
-      }
-    "
-  >
-    新增權限
-  </button>
+  <button type="button" class="btn btn-danger mb-3" @click="openCreateRoleModal">新增權限</button>
 
   <section class="section">
     <table id="RolesManageTable" class="display" style="width: 100%">
@@ -48,10 +38,13 @@
       <CModalTitle id="CreateRoleModal">新增權限</CModalTitle>
     </CModalHeader>
     <CModalBody>
-      <div class="form-group">
-        <label class="form-label">權限名稱：</label>
-        <input class="form-control" v-model="newRoleName" />
-      </div>
+      <form autocomplete="off">
+        <div class="form-group">
+          <label class="form-label">權限名稱：</label>
+          <input class="form-control" id="RoleName" v-model="newRoleName" v-on:input="checkRole" />
+          <div id="roleFeedback" class="invalid-feedback"></div>
+        </div>
+      </form>
     </CModalBody>
     <CModalFooter>
       <CButton
@@ -64,7 +57,7 @@
       >
         取消
       </CButton>
-      <CButton color="primary" @click="createRole">新增</CButton>
+      <CButton color="primary" v-on:click="createRole" :disabled="!isFormValid">新增</CButton>
     </CModalFooter>
   </CModal>
 </template>
@@ -95,14 +88,98 @@ var datatable = null
 
 // 角色名稱
 const newRoleName = ref('')
+const rolesExists = ref(false) //確認名稱是否重複
+const isFormValid = ref(false) //確認表單是否通過驗證，button disabled
 
 let createRoleModal = ref(false)
 
+const clearForm = () => {
+  newRoleName.value = '' // 重置權限名稱
+  isFormValid.value = false // 重置表單驗證狀態
+  $('#RoleName').removeClass('is-valid is-invalid') // 重置表單樣式
+  $('#roleFeedback').hide() // 隱藏反饋訊息
+}
+
+const openCreateRoleModal = () => {
+  clearForm() // 清空表單
+  createRoleModal.value = true // 打開模態框
+}
+
+// 檢查權限名稱與英文大小寫
+const checkRole = async () => {
+  const roleValue = RoleName.value
+  const englishRegex = /^[A-Za-z]+$/
+
+  if (!roleValue) {
+    $('#roleFeedback').hide()
+    isFormValid.value = false
+    return
+  }
+
+  // 檢查是否為英文字符
+  if (!englishRegex.test(roleValue)) {
+    const feedbackElement = $('#roleFeedback')
+    feedbackElement.text('請輸入英文').removeClass('valid-feedback').addClass('invalid-feedback')
+    $('#RoleName').removeClass('is-valid').addClass('is-invalid')
+    feedbackElement.show()
+    isFormValid.value = false
+    return
+  }
+
+  try {
+    const response = await axios.get(`${apiUrl}/api/MemberManagement/CheckRolesExists`, {
+      params: { rolename: roleValue }
+    })
+    rolesExists.value = !response.data
+    const feedbackElement = $('#roleFeedback')
+    if (response.data) {
+      feedbackElement
+        .text('此名稱 可以使用')
+        .removeClass('invalid-feedback')
+        .addClass('valid-feedback')
+      $('#RoleName').removeClass('is-invalid').addClass('is-valid')
+      isFormValid.value = true
+    } else {
+      feedbackElement
+        .text('該名稱 已被使用，請更換名稱')
+        .removeClass('valid-feedback')
+        .addClass('invalid-feedback')
+      $('#RoleName').removeClass('is-valid').addClass('is-invalid')
+      isFormValid.value = false
+    }
+    feedbackElement.show()
+  } catch (error) {
+    $('#roleFeedback').text('無法檢查名稱').addClass('invalid-feedback').show()
+    isFormValid.value = false
+  }
+}
+
+// 檢查角色名稱是否存在
+const checkRoleExists = async (roleName) => {
+  try {
+    const response = await axios.get(`${apiUrl}/api/MemberManagement/CheckRolesExists`, {
+      params: { rolename: roleName }
+    })
+    return response.data
+  } catch (error) {
+    console.error('檢查角色名稱失敗：', error)
+    return false
+  }
+}
+
 // 新增角色
-const createRole = () => {
+const createRole = async () => {
+  console.log('新增角色表單提交')
   if (newRoleName.value.trim() === '') {
     alert('請輸入權限名稱')
     // return
+  }
+
+  const roleExists = await checkRoleExists(newRoleName.value)
+  console.log('角色名稱檢查結果:', roleExists)
+  if (roleExists === false) {
+    alert('角色名稱已存在')
+    return
   }
 
   // 創建 FormData 對象
@@ -124,6 +201,7 @@ const createRole = () => {
         newRoleName.value = ''
         createRoleModal.value = false
         datatable.ajax.reload()
+        isFormValid.value = false // 重置表單狀態
       } else {
         alert('新增角色失敗，請重試')
       }
@@ -222,9 +300,7 @@ onMounted(() => {
     // 響應式設計
     responsive: true,
     // 語言設定
-    language: {
-      url: '//cdn.datatables.net/plug-ins/2.0.3/i18n/zh-HANT.json'
-    },
+    language: dataTableLanguage,
     // 預設排序 ~ 根據第一個欄位 升冪排序
     order: [[1, 'asc']],
     // 自動寬度 關閉
