@@ -9,15 +9,7 @@
     ></div>
   </div>
 
-  <button
-    type="button"
-    class="btn btn-danger mb-3"
-    @click="
-      () => {
-        createUserModal = true
-      }
-    "
-  >
+  <button type="button" class="btn btn-danger mb-3" @click="openCreateMemberModal">
     新增使用者
   </button>
 
@@ -258,6 +250,11 @@ const gender = ref(true) // 默認為男性
 const photo = ref(null) // 存儲上傳的照片
 const photoPreview = ref(null) // 存儲照片預覽
 
+const openCreateMemberModal = () => {
+  clearForm() // 清空表單
+  createUserModal.value = true // 打開模態框
+}
+
 const checkEmail = async () => {
   const emailValue = email.value
   if (emailValue) {
@@ -402,7 +399,7 @@ const submitForm = async () => {
         })
         datatable.ajax.reload()
         createUserModal.value = false
-        resetForm()
+        clearForm()
       } else {
         toast.error(response.data.message, {
           theme: 'dark',
@@ -423,7 +420,7 @@ const submitForm = async () => {
 }
 
 // 重置表單
-const resetForm = () => {
+const clearForm = () => {
   email.value = ''
   password.value = ''
   confirmPassword.value = ''

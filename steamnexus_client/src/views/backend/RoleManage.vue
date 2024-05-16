@@ -154,7 +154,7 @@ const checkRole = async () => {
   }
 }
 
-// 檢查角色名稱是否存在
+// 檢查權限名稱是否存在
 const checkRoleExists = async (roleName) => {
   try {
     const response = await axios.get(`${apiUrl}/api/MemberManagement/CheckRolesExists`, {
