@@ -59,52 +59,66 @@
   </CModal>
 
   <!-- 新增廣告的浮動式窗 -->
-  <CModal alignment="center" :visible="CreateAdModal" @close="() => {
-    CreateAdModal = false
-  }
-    " aria-labelledby="CreateAdModal">
-    <CModalHeader>
-      <CModalTitle id="CreateAdModal">新增廣告</CModalTitle>
-    </CModalHeader>
-    <CModalBody>
-      <form @submit.prevent="CreateAdBtn">
-        <div class="form-group">
+  <Form @submit.prevent="CreateAdBtn">
+    <CModal alignment="center" :visible="CreateAdModal" @close="() => {
+      CreateAdModal = false
+      createTitle = ''
+      createAdUrl = ''
+      createImageUrl = ''
+      createDescription = ''
+      showImageUrl = 'http://localhost:5173/public/img/noImage.png'
+    }
+      " aria-labelledby="CreateAdModal">
+      <CModalHeader>
+        <CModalTitle id="CreateAdModal">新增廣告</CModalTitle>
+      </CModalHeader>
+      <CModalBody>
+        <div class="mb-3">
           <label for="createTitle">標題</label>
-          <input id="createTitle" v-model="createTitle" class="form-control" required maxlength="50">
-          <span class="text-danger">{{ titleError }}</span>
+          <Field id="createTitle" name="createTitle" v-model="createTitle" class="form-control"
+            rules="required|max:50" />
+          <ErrorMessage class="text-danger" name="createTitle" />
         </div>
-        <div class="form-group">
+        <div class="mb-3">
           <label for="createAdUrl">網址</label>
-          <input id="createAdUrl" v-model="createAdUrl" class="form-control" type="url" required>
-          <span class="text-danger">{{ adUrlError }}</span>
+          <Field id="createAdUrl" name="createAdUrl" v-model="createAdUrl" class="form-control" rules="required|url" />
+          <ErrorMessage class="text-danger" name="createAdUrl" />
         </div>
-        <div class="form-group">
+        <div class="mb-3">
           <label for="createImageUrl">圖片網址</label>
-          <input id="createImageUrl" v-model="createImageUrl" class="form-control" type="url" required>
-          <img v-if="createImageUrl" :src="createImageUrl" alt="圖片預覽" style="max-width: 100%; height: auto;">
-          <span class="text-danger">{{ imageUrlError }}</span>
+          <Field id="createImageUrl" name="createImageUrl" v-model="createImageUrl" @change="ImageChange"
+            class="form-control mb-3" rules="required|url" />
+          <img :src="showImageUrl" alt="圖片預覽" style="max-width: 100%; height: auto;">
+          <ErrorMessage ref="errorMsg" class="text-danger errorImgUrl" name="createImageUrl" />
         </div>
-        <div class="form-group">
+        <div class="mb-3">
           <label for="createDescription">說明</label>
-          <textarea id="createDescription" v-model="createDescription" class="form-control" maxlength="100"></textarea>
-          <span class="text-danger">{{ descriptionError }}</span>
+          <Field name="createDescription" rules="max:100">
+            <textarea id="createDescription" v-model="createDescription" class="form-control"></textarea>
+            <ErrorMessage class="text-danger" name="createDescription" />
+          </Field>
         </div>
         <!-- <div class="text-center">
           <CButton color="secondary" @click="closeModal">取消</CButton>
           <CButton type="submit" color="primary">新增</CButton>
         </div> -->
-      </form>
-    </CModalBody>
-    <CModalFooter>
-      <CButton color="secondary" @click="() => {
-        CreateAdModal = false
-      }
-        ">
-        取消
-      </CButton>
-      <CButton color="primary" @click="CreateAdBtn">新增</CButton>
-    </CModalFooter>
-  </CModal>
+      </CModalBody>
+      <CModalFooter>
+        <CButton color="secondary" @click="() => {
+          CreateAdModal = false
+          createTitle = ''
+          createAdUrl = ''
+          createImageUrl = ''
+          createDescription = ''
+          showImageUrl = 'http://localhost:5173/public/img/noImage.png'
+        }
+          ">
+          取消
+        </CButton>
+        <CButton color="primary" @click="CreateAdBtn">新增</CButton>
+      </CModalFooter>
+    </CModal>
+  </Form>
 
   <!-- 修改廣告的浮動式窗 -->
   <CModal alignment="center" :visible="EditAdModal" @close="() => {
@@ -116,23 +130,23 @@
     </CModalHeader>
     <CModalBody>
       <form @submit.prevent="EditAdSaveBtn">
-        <div class="form-group">
+        <div class="mb-3">
           <label for="editTitle">標題</label>
           <input id="editTitle" v-model="editTitle" class="form-control" required maxlength="50">
           <span class="text-danger">{{ titleError }}</span>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
           <label for="editAdUrl">網址</label>
           <input id="editAdUrl" v-model="editAdUrl" class="form-control" type="url" required>
           <span class="text-danger">{{ adUrlError }}</span>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
           <label for="editImageUrl">圖片網址</label>
-          <input id="editImageUrl" v-model="editImageUrl" class="form-control" type="url" required>
+          <input id="editImageUrl" v-model="editImageUrl" class="form-control mb-3" type="url" required>
           <img v-if="editImageUrl" :src="editImageUrl" alt="圖片預覽" style="max-width: 100%; height: auto;">
           <span class="text-danger">{{ imageUrlError }}</span>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
           <label for="editDescription">說明</label>
           <textarea id="editDescription" v-model="editDescription" class="form-control" maxlength="100"></textarea>
           <span class="text-danger">{{ descriptionError }}</span>
@@ -163,6 +177,11 @@ import 'datatables.net-fixedheader-dt'
 import 'datatables.net-buttons-dt'
 import 'datatables.net-responsive-dt'
 
+//Form驗證製作
+import { defineRule, Form, Field, ErrorMessage, configure } from 'vee-validate';
+import { required, url, max } from '@vee-validate/rules';
+import { localize } from '@vee-validate/i18n';
+import validateErrorMsg from '@/components/backend/Ad/validateErrorMsg.json';
 
 // 特殊吐司
 import { toast } from 'vue3-toastify'
@@ -173,6 +192,11 @@ import { CModal, CModalHeader, CModalTitle, CModalBody, CModalFooter, CButton } 
 // import { useForm, useField } from 'vee-validate';
 // import { required, max, url } from '@vee-validate/rules';
 import { onBeforeRouteLeave } from 'vue-router'
+
+defineRule('required', required)
+defineRule('url', url)
+defineRule('max', max)
+
 var dataTable = null
 let DeleteAdModal = ref(false)
 let deleteId = ref(0)
@@ -185,49 +209,14 @@ let createTitle = ref('')
 let createAdUrl = ref('')
 let createImageUrl = ref('')
 let createDescription = ref('')
+let showImageUrl = ref('http://localhost:5173/public/img/noImage.png')
 let EditAdModal = ref(false)
 let editId = ref(0)
 let editTitle = ref('')
 let editAdUrl = ref('')
 let editImageUrl = ref('')
 let editDescription = ref('')
-
-// 定義表單數據
-// const formData = {
-//   title: ref(''),
-//   adUrl: ref(''),
-//   imageUrl: ref(''),
-//   description: ref(''),
-// };
-
-// 使用 useForm 創建表單
-// const { handleSubmit } = useForm();
-
-// 定義表單規則
-// const rules = {
-//   title: [required, max(50)],
-//   adUrl: [required, url],
-//   imageUrl: [required, url],
-//   description: [max(100)],
-// };
-
-// 使用 useField 創建表單字段
-// const { value: title, errorMessage: titleError } = useField('title', rules.title);
-// const { value: adUrl, errorMessage: adUrlError } = useField('url', rules.adUrl);
-// const { value: imageUrl, errorMessage: imageUrlError } = useField('imageUrl', rules.imageUrl);
-// const { value: description, errorMessage: descriptionError } = useField('description', rules.description);
-
-// 提交表單處理函數
-// const onSubmit = handleSubmit(async () => {
-//   try {
-//     // 在這裡處理表單提交的邏輯
-//     console.log('Form submitted:', formData);
-//     // 如果需要執行新增廣告的函數，請在這裡調用 CreateAdBtn 函數
-//     // CreateAdBtn();
-//   } catch (error) {
-//     console.error('Error submitting form:', error);
-//   }
-// });
+let errorMsg = ref(false)
 
 // 從環境變數取得 API BASE URL
 const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
@@ -294,6 +283,37 @@ function DeleteAdBtn() {
         position: toast.POSITION.TOP_CENTER
       });
     });
+}
+
+//設定驗證功能之{field}名稱(紅色的字的名稱預設為英文)
+configure({
+  generateMessage: localize('zh_TW', {
+    names: {
+      createTitle: '標題',
+      createImageUrl: '圖片網址',
+      createDescription: '說明',
+      createAdUrl: '廣告網址'
+    },
+    messages: validateErrorMsg.messages
+  })
+})
+
+//照片更新事件
+function ImageChange() {
+  if (createImageUrl.value != '') {
+    var img = new Image()
+    img.src = createImageUrl.value
+    img.onload = function () {
+      console.log("000");
+      showImageUrl.value = createImageUrl.value
+    }
+    img.onerror = function () {
+      // 如果網址有效但沒有圖片，顯示預設圖片
+      showImageUrl.value = 'http://localhost:5173/public/img/noImage.png'
+    }
+  } else {
+    showImageUrl.value = 'http://localhost:5173/public/img/noImage.png'
+  }
 }
 
 // 新增廣告
