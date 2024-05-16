@@ -1,7 +1,7 @@
 <template>
   <CNavbar expand="lg" color-scheme="dark">
     <CContainer fluid>
-      <CNavbarBrand href="#" class="pt-2">
+      <CNavbarBrand href="#" class="pt-2" @click="$router.push('/')">
         <img
           class="mx-2"
           style="width: 30px; height: 30px; padding-bottom: 3px; margin-bottom: 13px"
@@ -28,7 +28,7 @@
           </CNavItem>
           <CDropdown variant="nav-item" :popper="false">
             <CDropdownToggle color="secondary">會員中心</CDropdownToggle>
-            <CDropdownMenu class="text-center">
+            <CDropdownMenu class="text-center" style="z-index: 100">
               <CDropdownItem href="#" @click="$router.push('/userData')"
                 >會員資料變更</CDropdownItem
               >
@@ -65,6 +65,41 @@ import { CNavbar, CNavbarBrand, CNavbarToggler, CCollapse } from '@coreui/vue'
 const visible = ref(false)
 </script>
 <style scoped>
+/* 玻璃背景 */
+/* .navbar {
+  overflow-x: hidden;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.navbar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  transition: 0.5s;
+}
+
+.navbar:hover:before {
+  left: 100%;
+}
+
+.nav-item {
+  color: #fff;
+  font-size: 18px;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.nav-link:hover {
+  color: aqua;
+} */
+
+/* 
 .nav-item {
   padding: 1rem 2rem 1.15rem;
   text-transform: uppercase;
@@ -75,7 +110,6 @@ const visible = ref(false)
 }
 
 .nav-item:hover {
-  /* background-image: url('https://scottyzen.sirv.com/Images/v/button.png'); */
   background-color: black;
   background-size: 80% 80%;
   border-radius: 15px;
@@ -105,5 +139,5 @@ const visible = ref(false)
     -webkit-transform-origin: center center;
     -webkit-transform: scale(1, 1);
   }
-}
+} */
 </style>
