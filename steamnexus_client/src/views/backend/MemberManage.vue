@@ -3,7 +3,10 @@
     <div class="col-12 col-md-6 order-md-1 d-flex justify-content-center justify-content-md-start">
       <h2 id="SystemName" style="margin-top: 8px">會員管理系統</h2>
     </div>
-    <div class="col-12 col-md-6 order-md-2 d-flex justify-content-center justify-content-md-end" id="SystemMenu"></div>
+    <div
+      class="col-12 col-md-6 order-md-2 d-flex justify-content-center justify-content-md-end"
+      id="SystemMenu"
+    ></div>
   </div>
 
   <button
@@ -36,10 +39,16 @@
   </section>
 
   <!-- 新增使用者浮動視窗 -->
-  <CModal alignment="center" :visible="createUserModal" @close="() => {
-      createUserModal = false
-    }
-    " aria-labelledby="createUserModal">
+  <CModal
+    alignment="center"
+    :visible="createUserModal"
+    @close="
+      () => {
+        createUserModal = false
+      }
+    "
+    aria-labelledby="createUserModal"
+  >
     <CModalHeader>
       <CModalTitle id="createUserModal">新增使用者</CModalTitle>
     </CModalHeader>
@@ -60,7 +69,9 @@
               required
               maxlength="100"
               v-model="email"
+              V-on:blur="checkEmail"
             />
+            <div v-if="emailExists" class="invalid-feedback">電子郵件已存在</div>
             <div id="emailFeedback" class="invalid-feedback"></div>
           </div>
           <div class="input-group input-group-lg mb-3">
@@ -235,6 +246,7 @@ let createUserModal = ref(false)
 
 // 使用者名稱
 const email = ref('')
+const emailExists = ref(false) //確認電子信箱是否重複
 const password = ref('')
 const confirmPassword = ref('')
 const name = ref('')
@@ -243,6 +255,22 @@ const phone = ref('')
 const gender = ref(true) // 默認為男性
 const photo = ref(null) // 存儲上傳的照片
 const photoPreview = ref(null) // 存儲照片預覽
+
+const checkEmail = async () => {
+  try {
+    const response = await axios.get(`${apiUrl}/api/MemberManagement/CheckEmailExists`, {
+      params: { email: email.value }
+    })
+    emailExists.value = !response.data
+  } catch (error) {
+    toast.error('檢查電子郵件失敗', {
+      theme: 'dark',
+      autoClose: 1000,
+      transition: toast.TRANSITIONS.ZOOM,
+      position: toast.POSITION.TOP_CENTER
+    })
+  }
+}
 
 // 上傳照片
 const uploadPhoto = (event) => {
@@ -261,11 +289,36 @@ const uploadPhoto = (event) => {
 }
 
 // 新增使用者
-const submitForm = () => {
+const submitForm = async () => {
   // 確認密碼是否一致
   if (password.value !== confirmPassword.value) {
-    //alert('密碼和確認密碼不匹配')
     toast.error('密碼和確認密碼不匹配', {
+      theme: 'dark',
+      autoClose: 1000,
+      transition: toast.TRANSITIONS.ZOOM,
+      position: toast.POSITION.TOP_CENTER
+    })
+    return
+  }
+
+  // 確認電子信箱是否存在
+  try {
+    const response = await axios.get(`${apiUrl}/api/MemberManagement/CheckEmailExists`, {
+      params: { email: email.value }
+    })
+    emailExists.value = !response.data
+
+    if (emailExists.value) {
+      toast.error('電子郵件已存在', {
+        theme: 'dark',
+        autoClose: 1000,
+        transition: toast.TRANSITIONS.ZOOM,
+        position: toast.POSITION.TOP_CENTER
+      })
+      return
+    }
+  } catch (error) {
+    toast.error('檢查電子郵件失敗', {
       theme: 'dark',
       autoClose: 1000,
       transition: toast.TRANSITIONS.ZOOM,
