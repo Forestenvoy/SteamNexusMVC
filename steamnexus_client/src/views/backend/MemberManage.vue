@@ -46,160 +46,181 @@
     </CModalHeader>
     <CModalBody>
       <CRow class="mb-3">
-        <form v-on:submit.prevent="submitForm" autocomplete="off">
-          <div class="input-group input-group-lg mb-3">
-            <span class="input-group-text" id="inputGroup-sizing-lg" style="color: white"
-              >Email：</span
-            >
-            <input
-              type="email"
-              class="form-control"
-              aria-label="Sizing example input"
-              aria-describedby="inputGroup-sizing-lg"
-              id="email"
-              placeholder="請輸入您的電子信箱"
-              required
-              maxlength="100"
-              v-model="email"
-              v-on:input="checkEmail"
-            />
-            <!-- <div v-if="emailExists" class="invalid-feedback">電子郵件已存在</div>   V-on:blur="checkEmail"-->
-            <div id="emailFeedback" class="invalid-feedback"></div>
-          </div>
-          <div class="input-group input-group-lg mb-3">
-            <span class="input-group-text" id="inputGroup-sizing-lg" style="color: white"
-              >密碼：</span
-            >
-            <input
-              type="password"
-              class="form-control"
-              aria-label="Sizing example input"
-              aria-describedby="inputGroup-sizing-lg"
-              id="Password"
-              placeholder="請輸入您的密碼"
-              required
-              maxlength="20"
-              v-model="password"
-              @input="validatePasswords"
-            />
-          </div>
-          <div class="input-group input-group-lg mb-3">
-            <span class="input-group-text" id="inputGroup-sizing-lg" style="color: white"
-              >確認密碼：</span
-            >
-            <input
-              type="password"
-              class="form-control"
-              aria-label="Sizing example input"
-              aria-describedby="inputGroup-sizing-lg"
-              id="ConfirmPassword"
-              placeholder="請再次輸入您的密碼"
-              required
-              maxlength="20"
-              v-model="confirmPassword"
-              @input="validatePasswords"
-            />
-            <div id="passwordMismatchFeedback" class="invalid-feedback">密碼與確認密碼不一致</div>
-          </div>
-          <div class="input-group input-group-lg mb-3">
-            <span class="input-group-text" id="inputGroup-sizing-lg" style="color: white"
-              >姓名：</span
-            >
-            <input
-              type="text"
-              class="form-control"
-              aria-label="Sizing example input"
-              aria-describedby="inputGroup-sizing-lg"
-              id="name"
-              placeholder="請輸入您的姓名"
-              required
-              maxlength="50"
-              v-model="name"
-            />
-          </div>
-          <div class="input-group input-group-lg mb-3">
-            <span class="input-group-text" id="inputGroup-sizing-lg" style="color: white"
-              >生日：</span
-            >
-            <input
-              type="date"
-              class="form-control"
-              aria-label="Sizing example input"
-              aria-describedby="inputGroup-sizing-lg"
-              id="birthday"
-              v-model="birthday"
-            />
-          </div>
-          <div class="input-group input-group-lg mb-3">
-            <span class="input-group-text" id="inputGroup-sizing-lg" style="color: white"
-              >電話：</span
-            >
-            <input
-              type="text"
-              class="form-control"
-              aria-label="Sizing example input"
-              aria-describedby="inputGroup-sizing-lg"
-              id="phone"
-              pattern="^09\d{8}$"
-              maxlength="10"
-              placeholder="手機號碼必須以09開頭且是10位數字"
-              v-model="phone"
-            />
-          </div>
-          <div class="input-group input-group-lg mb-3">
-            <span class="input-group-text" id="inputGroup-sizing-lg" style="color: white"
-              >性別：</span
-            >
-            <div class="form-check form-check-inline">
+        <form @submit.prevent="submitForm" autocomplete="off">
+          <!-- 第一部分：信箱、密碼、確認密碼 -->
+          <div v-if="currentPage === 1">
+            <div class="input-group input-group-lg mb-3">
+              <span class="input-group-text" id="inputGroup-sizing-lg" style="color: white"
+                >Email：</span
+              >
               <input
-                class="form-check-input text-center"
-                type="radio"
-                name="gender2"
-                id="male2"
-                value="true"
-                checked
-                v-model="gender"
+                type="email"
+                class="form-control"
+                aria-label="Sizing example input"
+                aria-describedby="inputGroup-sizing-lg"
+                id="email"
+                placeholder="請輸入您的電子信箱"
+                required
+                maxlength="100"
+                v-model="email"
+                @input="checkEmail"
               />
-              <label class="form-check-label" for="male">男</label>
+              <div id="emailFeedback" class="invalid-feedback"></div>
             </div>
-            <div class="form-check form-check-inline">
+            <div class="input-group input-group-lg mb-3">
+              <span class="input-group-text" id="inputGroup-sizing-lg" style="color: white"
+                >密碼：</span
+              >
               <input
-                class="form-check-input text-center"
-                type="radio"
-                name="gender2"
-                id="female2"
-                value="false"
-                v-model="gender"
+                type="password"
+                class="form-control"
+                aria-label="Sizing example input"
+                aria-describedby="inputGroup-sizing-lg"
+                id="Password"
+                placeholder="請輸入您的密碼"
+                required
+                maxlength="20"
+                v-model="password"
+                @input="validatePasswords"
               />
-              <label class="form-check-label" for="female">女</label>
+            </div>
+            <div class="input-group input-group-lg mb-3">
+              <span class="input-group-text" id="inputGroup-sizing-lg" style="color: white"
+                >確認密碼：</span
+              >
+              <input
+                type="password"
+                class="form-control"
+                aria-label="Sizing example input"
+                aria-describedby="inputGroup-sizing-lg"
+                id="ConfirmPassword"
+                placeholder="請再次輸入您的密碼"
+                required
+                maxlength="20"
+                v-model="confirmPassword"
+                @input="validatePasswords"
+              />
+              <div id="passwordMismatchFeedback" class="invalid-feedback">密碼與確認密碼不一致</div>
+            </div>
+
+            <!-- 第一部分按鈕 -->
+            <div class="d-flex justify-content-end">
+              <CButton color="secondary" @click="closeCreateUserModal">取消</CButton>
+              <CButton color="primary" @click="goToNextPage" class="ms-2">下一頁</CButton>
             </div>
           </div>
-          <div class="input-group input-group-lg">
-            <span class="input-group-text" id="inputGroup-sizing-lg" style="color: white"
-              >大頭照：</span
-            >
-            <input
-              type="file"
-              class="form-control"
-              aria-label="Sizing example input"
-              aria-describedby="inputGroup-sizing-lg"
-              id="photo"
-              v-on:change="uploadPhoto"
-            />
-            <img
-              :src="photoPreview"
-              class="img-thumbnail"
-              aria-label="Sizing example input"
-              aria-describedby="inputGroup-sizing-lg"
-              id="display_photo"
-              alt="預覽圖片"
-            />
+
+          <!-- 第二部分：姓名、電話、性別、生日、大頭貼 -->
+          <div v-if="currentPage === 2">
+            <div class="input-group input-group-lg mb-3">
+              <span class="input-group-text" id="inputGroup-sizing-lg" style="color: white"
+                >姓名：</span
+              >
+              <input
+                type="text"
+                class="form-control"
+                aria-label="Sizing example input"
+                aria-describedby="inputGroup-sizing-lg"
+                id="name"
+                placeholder="請輸入您的姓名"
+                required
+                maxlength="50"
+                v-model="name"
+              />
+            </div>
+            <div class="input-group input-group-lg mb-3">
+              <span class="input-group-text" id="inputGroup-sizing-lg" style="color: white"
+                >電話：</span
+              >
+              <input
+                type="text"
+                class="form-control"
+                aria-label="Sizing example input"
+                aria-describedby="inputGroup-sizing-lg"
+                id="phone"
+                pattern="^09\d{8}$"
+                maxlength="10"
+                placeholder="手機號碼必須以09開頭且是10位數字"
+                v-model="phone"
+              />
+            </div>
+            <div class="input-group input-group-lg mb-3">
+              <span class="input-group-text" id="inputGroup-sizing-lg" style="color: white"
+                >性別：</span
+              >
+              <div class="d-flex align-items-center justify-content-start ps-4">
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input text-center"
+                    type="radio"
+                    name="gender2"
+                    id="male2"
+                    value="true"
+                    checked
+                    v-model="gender"
+                  />
+                  <label class="form-check-label" for="male">男</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input text-center"
+                    type="radio"
+                    name="gender2"
+                    id="female2"
+                    value="false"
+                    v-model="gender"
+                  />
+                  <label class="form-check-label" for="female">女</label>
+                </div>
+              </div>
+            </div>
+            <div class="input-group input-group-lg mb-3">
+              <span class="input-group-text" id="inputGroup-sizing-lg" style="color: white"
+                >生日：</span
+              >
+              <input
+                type="date"
+                class="form-control"
+                aria-label="Sizing example input"
+                aria-describedby="inputGroup-sizing-lg"
+                id="birthday"
+                v-model="birthday"
+              />
+            </div>
+            <div class="input-group input-group-lg">
+              <span class="input-group-text" id="inputGroup-sizing-lg" style="color: white"
+                >大頭照：</span
+              >
+              <input
+                type="file"
+                class="form-control"
+                aria-label="Sizing example input"
+                aria-describedby="inputGroup-sizing-lg"
+                id="photo"
+                @change="uploadPhoto"
+              />
+              <img
+                :src="photoPreview"
+                class="img-thumbnail"
+                aria-label="Sizing example input"
+                aria-describedby="inputGroup-sizing-lg"
+                id="display_photo"
+                alt="預覽圖片"
+              />
+            </div>
+
+            <!-- 第二部分按鈕 -->
+            <div class="d-flex justify-content-end">
+              <CButton color="secondary" @click="goToPreviousPage">上一頁</CButton>
+              <CButton color="secondary" @click="closeCreateUserModal" class="ms-2">取消</CButton>
+              <CButton color="primary" @click="submitForm" class="ms-2">新增</CButton>
+            </div>
           </div>
         </form>
       </CRow>
     </CModalBody>
     <CModalFooter>
-      <CButton
+      <!-- <CButton 
         color="secondary"
         @click="
           () => {
@@ -209,7 +230,7 @@
       >
         關閉
       </CButton>
-      <CButton color="primary" v-on:click="submitForm">新增</CButton>
+      <CButton color="primary" v-on:click="submitForm">新增</CButton> -->
     </CModalFooter>
   </CModal>
 
@@ -439,11 +460,28 @@ const newRoleName = ref('') //權限名稱
 // 預設圖片的URL
 const defaultPhotoUrl = `${apiUrl}/images/headshots/default.jpg`
 
+const currentPage = ref(1)
+
+//切換註冊頁面
+const goToNextPage = () => {
+  currentPage.value = 2
+}
+
+const goToPreviousPage = () => {
+  currentPage.value = 1
+}
+
 // 清空表單
 const openCreateMemberModal = () => {
   clearForm()
   photoPreview.value = defaultPhotoUrl // 設置圖片預覽為預設圖片
   createUserModal.value = true // 打開模態框
+  currentPage.value = 1
+}
+
+//關閉表單
+const closeCreateUserModal = () => {
+  createUserModal.value = false
 }
 
 //確認電子信箱是否重複
