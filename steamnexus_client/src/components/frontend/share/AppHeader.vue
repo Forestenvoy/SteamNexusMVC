@@ -12,7 +12,7 @@
         @click="visible = !visible"
       />
       <CCollapse class="navbar-collapse" :visible="visible">
-        <CNavbarNav class="mx-xl-auto">
+        <CNavbarNav class="mx-xl-auto text-center">
           <CNavItem>
             <CNavLink class="nLink" href="#" @click="$router.push('/')"> 首頁 </CNavLink>
           </CNavItem>
@@ -33,14 +33,14 @@
             </CDropdownMenu>
           </CDropdown>
         </CNavbarNav>
-        <CNavbarNav class="me-0 me-lg-2 order-0">
+        <CNavbarNav class="me-0 me-lg-2 order-0 text-center">
           <CNavItem>
             <CNavLink class="nLink" href="#" @click="$router.push('/admin')"> 後台系統 </CNavLink>
           </CNavItem>
         </CNavbarNav>
         <CNavbarNav class="ms-0 ms-lg-2 mb-2 mb-lg-0 order-2">
           <CNavItem>
-            <CNavLink class="nLink" href="#" active> 登入 </CNavLink>
+            <CNavLink class="nLink text-center" href="#" active> 登入 </CNavLink>
           </CNavItem>
         </CNavbarNav>
         <CForm class="d-flex order-1 pb-3 pb-lg-0">
