@@ -57,6 +57,116 @@
       <CButton color="primary" @click="DeleteAdBtn">刪除</CButton>
     </CModalFooter>
   </CModal>
+
+  <!-- 新增廣告的浮動式窗 -->
+  <Form @submit.prevent="CreateAdBtn">
+    <CModal alignment="center" :visible="CreateAdModal" @close="() => {
+      CreateAdModal = false
+      createTitle = ''
+      createAdUrl = ''
+      createImageUrl = ''
+      createDescription = ''
+      showImageUrl = 'http://localhost:5173/public/img/noImage.png'
+    }
+      " aria-labelledby="CreateAdModal">
+      <CModalHeader>
+        <CModalTitle id="CreateAdModal">新增廣告</CModalTitle>
+      </CModalHeader>
+      <CModalBody>
+        <div class="mb-3">
+          <label for="createTitle">標題</label>
+          <Field id="createTitle" name="createTitle" v-model="createTitle" class="form-control"
+            rules="required|max:50" />
+          <ErrorMessage class="text-danger" name="createTitle" />
+        </div>
+        <div class="mb-3">
+          <label for="createAdUrl">網址</label>
+          <Field id="createAdUrl" name="createAdUrl" v-model="createAdUrl" class="form-control" rules="required|url" />
+          <ErrorMessage class="text-danger" name="createAdUrl" />
+        </div>
+        <div class="mb-3">
+          <label for="createImageUrl">圖片網址</label>
+          <Field id="createImageUrl" name="createImageUrl" v-model="createImageUrl" @change="ImageChange"
+            class="form-control mb-3" rules="required|url" />
+          <img :src="showImageUrl" alt="圖片預覽" style="max-width: 100%; height: auto;">
+          <ErrorMessage ref="errorMsg" class="text-danger errorImgUrl" name="createImageUrl" />
+        </div>
+        <div class="mb-3">
+          <label for="createDescription">說明</label>
+          <Field name="createDescription" rules="max:100">
+            <textarea id="createDescription" v-model="createDescription" class="form-control"></textarea>
+            <ErrorMessage class="text-danger" name="createDescription" />
+          </Field>
+        </div>
+        <!-- <div class="text-center">
+          <CButton color="secondary" @click="closeModal">取消</CButton>
+          <CButton type="submit" color="primary">新增</CButton>
+        </div> -->
+      </CModalBody>
+      <CModalFooter>
+        <CButton color="secondary" @click="() => {
+          CreateAdModal = false
+          createTitle = ''
+          createAdUrl = ''
+          createImageUrl = ''
+          createDescription = ''
+          showImageUrl = 'http://localhost:5173/public/img/noImage.png'
+        }
+          ">
+          取消
+        </CButton>
+        <CButton color="primary" @click="CreateAdBtn">新增</CButton>
+      </CModalFooter>
+    </CModal>
+  </Form>
+
+  <!-- 修改廣告的浮動式窗 -->
+  <CModal alignment="center" :visible="EditAdModal" @close="() => {
+    EditAdModal = false
+  }
+    " aria-labelledby="EditAdModal">
+    <CModalHeader>
+      <CModalTitle id="EditAdModal">廣告編輯</CModalTitle>
+    </CModalHeader>
+    <CModalBody>
+      <form @submit.prevent="EditAdSaveBtn">
+        <div class="mb-3">
+          <label for="editTitle">標題</label>
+          <input id="editTitle" v-model="editTitle" class="form-control" required maxlength="50">
+          <span class="text-danger">{{ titleError }}</span>
+        </div>
+        <div class="mb-3">
+          <label for="editAdUrl">網址</label>
+          <input id="editAdUrl" v-model="editAdUrl" class="form-control" type="url" required>
+          <span class="text-danger">{{ adUrlError }}</span>
+        </div>
+        <div class="mb-3">
+          <label for="editImageUrl">圖片網址</label>
+          <input id="editImageUrl" v-model="editImageUrl" class="form-control mb-3" type="url" required>
+          <img v-if="editImageUrl" :src="editImageUrl" alt="圖片預覽" style="max-width: 100%; height: auto;">
+          <span class="text-danger">{{ imageUrlError }}</span>
+        </div>
+        <div class="mb-3">
+          <label for="editDescription">說明</label>
+          <textarea id="editDescription" v-model="editDescription" class="form-control" maxlength="100"></textarea>
+          <span class="text-danger">{{ descriptionError }}</span>
+        </div>
+        <!-- <div class="text-center">
+          <CButton color="secondary" @click="closeModal">取消</CButton>
+          <CButton type="submit" color="primary">新增</CButton>
+        </div> -->
+      </form>
+    </CModalBody>
+    <CModalFooter>
+      <CButton color="secondary" @click="() => {
+        EditAdModal = false
+      }
+        ">
+        取消
+      </CButton>
+      <CButton color="primary" @click="EditAdSaveBtn">儲存</CButton>
+    </CModalFooter>
+  </CModal>
 </template>
 <script setup>
 // 核心模組 import
@@ -67,6 +177,11 @@ import 'datatables.net-fixedheader-dt'
 import 'datatables.net-buttons-dt'
 import 'datatables.net-responsive-dt'
 
+//Form驗證製作
+import { defineRule, Form, Field, ErrorMessage, configure } from 'vee-validate';
+import { required, url, max } from '@vee-validate/rules';
+import { localize } from '@vee-validate/i18n';
+import validateErrorMsg from '@/components/backend/Ad/validateErrorMsg.json';
 
 // 特殊吐司
 import { toast } from 'vue3-toastify'
@@ -74,7 +189,14 @@ import 'vue3-toastify/dist/index.css'
 
 import { ref, onMounted } from 'vue'
 import { CModal, CModalHeader, CModalTitle, CModalBody, CModalFooter, CButton } from '@coreui/vue'
+// import { useForm, useField } from 'vee-validate';
+// import { required, max, url } from '@vee-validate/rules';
 import { onBeforeRouteLeave } from 'vue-router'
+
+defineRule('required', required)
+defineRule('url', url)
+defineRule('max', max)
+
 var dataTable = null
 let DeleteAdModal = ref(false)
 let deleteId = ref(0)
@@ -82,10 +204,24 @@ let deleteTitle = ref('')
 let deleteUrl = ref('')
 let deleteImage = ref('')
 let deleteDescription = ref('')
+let CreateAdModal = ref(false)
+let createTitle = ref('')
+let createAdUrl = ref('')
+let createImageUrl = ref('')
+let createDescription = ref('')
+let showImageUrl = ref('http://localhost:5173/public/img/noImage.png')
+let EditAdModal = ref(false)
+let editId = ref(0)
+let editTitle = ref('')
+let editAdUrl = ref('')
+let editImageUrl = ref('')
+let editDescription = ref('')
+let errorMsg = ref(false)
 
 // 從環境變數取得 API BASE URL
 const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
+// 產生表格
 function fetchDatatable() {
   fetch(`${apiUrl}/api/Advertisement/AdvertiseData`, {
     method: 'GET',
@@ -107,6 +243,7 @@ function fetchDatatable() {
     });
 };
 
+// 刪除廣告
 function DeleteAdBtn() {
   // console.log(deleteId.value)
   fetch(`${apiUrl}/api/Advertisement/DeleteAd`, {
@@ -147,6 +284,131 @@ function DeleteAdBtn() {
       });
     });
 }
+
+//設定驗證功能之{field}名稱(紅色的字的名稱預設為英文)
+configure({
+  generateMessage: localize('zh_TW', {
+    names: {
+      createTitle: '標題',
+      createImageUrl: '圖片網址',
+      createDescription: '說明',
+      createAdUrl: '廣告網址'
+    },
+    messages: validateErrorMsg.messages
+  })
+})
+
+//照片更新事件
+function ImageChange() {
+  if (createImageUrl.value != '') {
+    var img = new Image()
+    img.src = createImageUrl.value
+    img.onload = function () {
+      console.log("000");
+      showImageUrl.value = createImageUrl.value
+    }
+    img.onerror = function () {
+      // 如果網址有效但沒有圖片，顯示預設圖片
+      showImageUrl.value = 'http://localhost:5173/public/img/noImage.png'
+    }
+  } else {
+    showImageUrl.value = 'http://localhost:5173/public/img/noImage.png'
+  }
+}
+
+// 新增廣告
+function CreateAdBtn() {
+  fetch(`${apiUrl}/api/Advertisement/CreateAd`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      title: createTitle.value,
+      url: createAdUrl.value,
+      imagePath: createImageUrl.value,
+      description: createDescription.value
+    })
+  })
+    .then(response => {
+      if (!response.ok) {
+        return response.text().then(errorMessage => {
+          throw new Error(errorMessage);
+        });
+      }
+      return response.text();
+    })
+    .then(result => {
+      // 成功處理回應
+      toast.success(result, {
+        theme: 'dark',
+        autoClose: 1000,
+        transition: toast.TRANSITIONS.ZOOM,
+        position: toast.POSITION.TOP_CENTER
+      })
+      CreateAdModal.value = false;
+      createTitle.value = '';
+      createAdUrl.value = '';
+      createImageUrl.value = '';
+      createDescription.value = '';
+      fetchDatatable();
+    })
+    .catch(error => {
+      // 處理錯誤
+      toast.error(error.message, {
+        theme: 'dark',
+        autoClose: 1000,
+        transition: toast.TRANSITIONS.ZOOM,
+        position: toast.POSITION.TOP_CENTER
+      });
+    });
+}
+
+// 編輯廣告儲存
+function EditAdSaveBtn() {
+  fetch(`${apiUrl}/api/Advertisement/EditAd`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      id: editId.value,
+      title: editTitle.value,
+      url: editAdUrl.value,
+      imagePath: editImageUrl.value,
+      description: editDescription.value
+    })
+  })
+    .then(response => {
+      if (!response.ok) {
+        return response.text().then(errorMessage => {
+          throw new Error(errorMessage);
+        });
+      }
+      return response.text();
+    })
+    .then(result => {
+      // 成功處理回應
+      toast.success(result, {
+        theme: 'dark',
+        autoClose: 1000,
+        transition: toast.TRANSITIONS.ZOOM,
+        position: toast.POSITION.TOP_CENTER
+      })
+      EditAdModal.value = false;
+      fetchDatatable();
+    })
+    .catch(error => {
+      // 處理錯誤
+      toast.error(error.message, {
+        theme: 'dark',
+        autoClose: 1000,
+        transition: toast.TRANSITIONS.ZOOM,
+        position: toast.POSITION.TOP_CENTER
+      });
+    });
+}
+
 onMounted(() => {
   dataTable = new DataTable('#AdvertiseManageTable', {
     columns: [
@@ -160,7 +422,7 @@ onMounted(() => {
           return `<img src="${data}" alt="Image" style="width:80%" />`;
         }, responsivePriority: 1
       },
-      { "data": "discription", "width": "10%" },
+      { "data": "description", "width": "10%" },
       {
         "data": "isShow",
         "width": "20%",
@@ -215,9 +477,9 @@ onMounted(() => {
         buttons: [
           {
             text: '新增廣告',
+            className: 'btn btn-primary',
             action: function () {
-              // 彈出 Bootstrap modal 表單
-              $('#addAdvertisementModal').modal('show');
+              CreateAdModal.value = true;
             }
           }
         ]
@@ -261,6 +523,7 @@ onMounted(() => {
     });
   });
 
+  //主畫面刪除按鈕
   $(document).on('click', '.del-btn', function () {
     // alert("del-btn");
     const adId = $(this).data('adid');
@@ -278,7 +541,7 @@ onMounted(() => {
       deleteTitle.value = result.title;
       deleteUrl.value = result.url;
       deleteImage.value = result.image;
-      deleteDescription.value = result.discription;
+      deleteDescription.value = result.description;
 
       DeleteAdModal.value = true;
     }).catch(error => {
@@ -291,8 +554,36 @@ onMounted(() => {
     });
   })
 
+  // 主畫面編輯按鈕
+  $(document).on('click', '.edit-btn', function () {
+    // alert("edit-btn");
+    const adId = $(this).data('adid');
+    fetch(`${apiUrl}/api/Advertisement/GetOneAdData?AdId=${adId}`, {
+      method: 'GET',
+    }).then(response => {
+      if (!response.ok) {
+        return response.text().then((errorMessage) => {
+          throw new Error(errorMessage)
+        })
+      }
+      return response.json()
+    }).then(result => {
+      editId.value = result.id;
+      editTitle.value = result.title;
+      editAdUrl.value = result.url;
+      editImageUrl.value = result.image;
+      editDescription.value = result.description;
 
-
+      EditAdModal.value = true;
+    }).catch(error => {
+      toast.error(error.message, {
+        theme: 'dark',
+        autoClose: 1000,
+        transition: toast.TRANSITIONS.ZOOM,
+        position: toast.POSITION.TOP_CENTER
+      })
+    });
+  })
 
 })
 
@@ -305,6 +596,7 @@ onBeforeRouteLeave(() => {
   // 事件監聽器移除
   $(document).off('change', '.radio-isShow')
   $(document).off('click', '.del-btn')
+  $(document).off('click', '.edit-btn')
   // $(document).off('click', '.Enter-btn')
   // $(document).off('click', '.Cancel-btn')
   // $(document).off('click', '.Edit-btn')

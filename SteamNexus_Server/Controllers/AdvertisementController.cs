@@ -1,7 +1,11 @@
 ﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SteamNexus_Server.Data;
+using SteamNexus_Server.Models;
+using System.ComponentModel.DataAnnotations;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SteamNexus_Server.Controllers
 {
@@ -54,7 +58,7 @@ namespace SteamNexus_Server.Controllers
                 return NotFound("Advertisement not found.");
             }
 
-            var data = new { Id=advertisement.AdvertisementId, Title=advertisement.Title, Url=advertisement.Url, Image=advertisement.ImagePath, Discription=advertisement.Discription };
+            var data = new { Id=advertisement.AdvertisementId, Title=advertisement.Title, Url=advertisement.Url, Image=advertisement.ImagePath, Description=advertisement.Description };
             // 回傳一個ID Name 的物件
             return data;
         }
@@ -86,6 +90,147 @@ namespace SteamNexus_Server.Controllers
             _context.Advertisements.Remove(Ad);
             await _context.SaveChangesAsync();
             return Ok("刪除成功");
+        }
+
+        public class AdData
+        {
+            [Required]
+            [MaxLength(100)]
+            public string Title { get; set; }
+            [Required]
+            public string Url { get; set; }
+            [Required]
+            public string ImagePath { get; set; }
+            [MaxLength(200)]
+            public string? Description { get; set; }
+        }
+
+        [HttpPost("CreateAd")]
+        public async Task<IActionResult> CreateAd([FromBody] AdData adData)
+        {
+            if (ModelState.IsValid)
+            {
+                Advertisement Ad = new Advertisement
+                {
+                    Title = adData.Title,
+                    Url = adData.Url,
+                    ImagePath = adData.ImagePath,
+                    Description = adData.Description,
+                };
+                //if (data.ImageFile != null && data.ImageFile.Length > 0)
+                //{
+                //    string fileName = data.Title + Path.GetExtension(data.ImageFile.FileName);
+                //    // 構建文件路徑
+                //    var filePath = Path.Combine(_environment.WebRootPath, "AdImages", fileName);
+
+                //    // 寫入圖片檔到指定路徑
+                //    using (var stream = new FileStream(filePath, FileMode.Create))
+                //    {
+                //        await data.ImageFile.CopyToAsync(stream);
+                //    }
+
+                //    // 更新廣告的圖片路徑
+                //    Ad.ImagePath = $"{fileName}";
+                //}
+
+                try
+                {
+                    _context.Advertisements.Add(Ad);
+                    await _context.SaveChangesAsync();
+
+                    //// 在保存廣告成功後取得廣告的 ID
+                    //int adId = Ad.AdvertisementId;
+
+                    //// 使用廣告的 ID 來命名圖片檔案
+                    //string fileName = $"{adId}{Path.GetExtension(data.ImageFile.FileName)}";
+                    //var filePath = Path.Combine(_environment.WebRootPath, "AdImages", fileName);
+
+                    //// 寫入圖片檔到指定路徑
+                    //using (var stream = new FileStream(filePath, FileMode.Create))
+                    //{
+                    //    await data.ImageFile.CopyToAsync(stream);
+                    //}
+
+                    //// 更新廣告的圖片路徑
+                    //Ad.ImagePath = fileName;
+                    //await _context.SaveChangesAsync();
+
+                    return Ok("廣告新增成功!");
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    return BadRequest("廣告新增失敗!");
+                }
+            }
+            return BadRequest("廣告新增失敗!");
+        }
+
+        public class EditAdViewModel
+        {
+            [Required]
+            public int Id { get; set; }
+            [Required]
+            [MaxLength(100)]
+            public string Title { get; set; }
+            [MaxLength(200)]
+            public string? Description { get; set; }
+            [Required]
+            public string Url { get; set; }
+            [Required]
+            public string ImagePath { get; set; }
+        }
+
+        [HttpPost("EditAd")]
+        public async Task<IActionResult> EditAd([FromBody] EditAdViewModel data)
+        {
+            if (ModelState.IsValid)
+            {
+                var editAd = await _context.Advertisements.FindAsync(data.Id);
+                if (editAd == null)
+                {
+                    return BadRequest("修改失敗");
+                }
+                editAd.AdvertisementId = data.Id;
+                editAd.Title = data.Title;
+                editAd.Url = data.Url;
+                editAd.ImagePath = data.ImagePath;
+                editAd.Description = data.Description;
+
+                //if (data.ImageFile != null && data.ImageFile.Length > 0)
+                //{
+                //    //刪除舊照片
+                //    var oldFilePath = Path.Combine(_environment.WebRootPath, "AdImages", editAd.ImagePath);
+                //    if (System.IO.File.Exists(oldFilePath))
+                //    {
+                //        System.IO.File.Delete(oldFilePath);
+                //    }
+
+                //    //建立新照片
+                //    string fileName = data.Id + Path.GetExtension(data.ImageFile.FileName);
+                //    // 構建文件路徑
+                //    var filePath = Path.Combine(_environment.WebRootPath, "AdImages", fileName);
+
+                //    // 寫入圖片檔到指定路徑
+                //    using (var stream = new FileStream(filePath, FileMode.Create))
+                //    {
+                //        await data.ImageFile.CopyToAsync(stream);
+                //    }
+
+                //    // 更新廣告的圖片路徑
+                //    editAd.ImagePath = $"{fileName}";
+                //}
+
+                try
+                {
+                    await _context.SaveChangesAsync();
+                    return Ok("廣告修改成功!");
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    return BadRequest("廣告修改失敗!");
+                }
+            }
+            return BadRequest("廣告修改失敗!");
         }
     }
 }
