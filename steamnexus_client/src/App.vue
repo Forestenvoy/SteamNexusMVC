@@ -59,3 +59,21 @@ $dark-bg-subtle-dark: #0000;
 // Import Main styles for this application
 @import 'styles/style';
 </style>
+
+<style>
+/* 滾動條樣式 */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 8px;
+  background-color: transparent;
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  background-color: #363636;
+}
+</style>
