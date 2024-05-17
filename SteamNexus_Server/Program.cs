@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using SteamNexus_Server.Data;
 using SteamNexus_Server.Services;
@@ -20,6 +21,21 @@ builder.Services.AddCors(options =>
         policy => policy.WithOrigins("*").WithMethods("*").WithHeaders("*")
     );
 });
+
+
+#region cookie驗證
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
+{
+    //未登入時未自動導入到這個網址
+    option.LoginPath = new PathString("/api/Login/NoLogin");
+
+    //未授權角色會自動移轉到此網址
+    option.AccessDeniedPath = new PathString("/api/Login/NoLogin");
+});
+
+#endregion
+
 
 // DataBase Connection String
 var SteamNexusConnectionString = builder.Configuration.GetConnectionString("SteamNexus");
@@ -45,6 +61,10 @@ if (app.Environment.IsDevelopment())
 app.UseCors(MyAllowSpecificOrigins);
 
 app.UseHttpsRedirection();
+
+//cookie登入
+app.UseCookiePolicy();
+app.UseAuthentication();
 
 app.UseAuthorization();
 

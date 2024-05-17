@@ -1,16 +1,22 @@
-﻿using Microsoft.AspNetCore.Cors;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using SteamNexus_Server.Data;
 using SteamNexus_Server.Models;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
+using System.Security.Claims;
 using System.Text;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace SteamNexus_Server.Controllers
 {
+    //[Authorize] //權限標籤
     // 套用 CORS 策略
     [EnableCors("AllowAny")]
     [Route("api/[controller]")]
@@ -190,6 +196,7 @@ namespace SteamNexus_Server.Controllers
 
         #region CreateMember
         [HttpPost("CreateMember")]
+        
         public async Task<IActionResult> CreateMember([FromForm] CreateMemberViewModel data)
         {
             if (!ModelState.IsValid)
@@ -301,7 +308,7 @@ namespace SteamNexus_Server.Controllers
 
             public bool Gender { get; set; } = true;
 
-            #nullable enable
+#nullable enable
             [MaxLength(10)]
             [RegularExpression(@"^09\d{8}$", ErrorMessage = "手機號碼必須以09開頭並且是10位數字")]
             public string? Phone { get; set; }
@@ -445,6 +452,61 @@ namespace SteamNexus_Server.Controllers
 
             return BadRequest(ModelState);  // 返回表單與驗證錯誤
         }
+        #endregion
+
+
+        #region LonginViewModel
+        public class LoginPost()
+        {
+            public string Email { get; set; }
+            public string Password { get; set; }
+        }
+        #endregion
+
+
+        #region Lonin
+        [HttpPost("Login")]
+        public async Task<IActionResult> Login([FromBody] LoginPost data)
+        {
+            var user = (from a in _application.Users where a.Email == data.Email && a.Password == data.Password select a).SingleOrDefault();
+
+            if (user == null)
+            {
+                return Ok("帳號或密碼錯誤");
+            }
+            else
+            {
+                // 驗證成功
+                var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, user.Name),
+                new Claim("FullName", user.Name),
+                // new Claim(ClaimTypes.Role, "Admin")
+            };
+                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
+
+                return Ok("登入成功");
+            }
+        }
+        #endregion
+
+
+        #region Logout
+        [HttpDelete("Logout")]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return Ok("已登出");
+        }
+
+        [HttpGet("NoLogin")]
+        public IActionResult NoLogin()
+        {
+            return Ok("未登入");
+        }
+
         #endregion
 
 
