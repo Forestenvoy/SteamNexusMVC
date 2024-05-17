@@ -3,14 +3,14 @@
   <section class="box game-proportion"></section>
   <!-- 菜單系統 -->
   <section class="box menu-list">
-    <menu-carousel></menu-carousel>
+    <menu-card-slider></menu-card-slider>
   </section>
   <!-- 估價單系統 -->
   <section class="box pc-builder"></section>
 </template>
 
 <script setup>
-import MenuCarousel from '@/components/frontend/pcbuilder/MenuCarousel.vue'
+import MenuCardSlider from '@/components/frontend/pcbuilder/MenuCardSlider.vue'
 </script>
 
 <style scoped>
@@ -19,7 +19,7 @@ import MenuCarousel from '@/components/frontend/pcbuilder/MenuCarousel.vue'
   border-radius: 20px;
   border: 2px solid #525252;
   margin-bottom: 20px;
-  padding: 20px;
+  padding: 20px 20px;
 }
 
 .game-proportion {
@@ -29,7 +29,10 @@ import MenuCarousel from '@/components/frontend/pcbuilder/MenuCarousel.vue'
 
 .menu-list {
   width: 100%;
-  height: 300px;
+  height: 450px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .pc-builder {
