@@ -31,7 +31,10 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     option.LoginPath = new PathString("/api/Login/NoLogin");
 
     //未授權角色會自動移轉到此網址
-    option.AccessDeniedPath = new PathString("/api/Login/NoLogin");
+    option.AccessDeniedPath = new PathString("/api/Login/noAccess");
+
+    //登入後兩秒後失效；全部的cookie都會受到影響
+    //option.ExpireTimeSpan = TimeSpan.FromSeconds(5);
 });
 
 #endregion

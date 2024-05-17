@@ -16,7 +16,6 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace SteamNexus_Server.Controllers
 {
-    //[Authorize] //權限標籤
     // 套用 CORS 策略
     [EnableCors("AllowAny")]
     [Route("api/[controller]")]
@@ -37,7 +36,9 @@ namespace SteamNexus_Server.Controllers
 
         #region UserData
         [HttpGet("GetUsersWithRoles")]
-        public IEnumerable<Object> GetUsersWithRoles()
+        [Authorize(Roles = "Member")]
+        //[Authorize]
+        public IEnumerable<object> GetUsersWithRoles()
         {
             var result = _application.Users
                 .Join(_application.Roles, u => u.RoleId, r => r.RoleId,
@@ -60,6 +61,7 @@ namespace SteamNexus_Server.Controllers
 
         #region RolesData
         [HttpGet("RolesData")]
+        [Authorize(Roles = "Admin")]
         public IEnumerable<object> RolesData()
         {
             var result = _application.Roles.Select(result => new
@@ -455,59 +457,6 @@ namespace SteamNexus_Server.Controllers
         #endregion
 
 
-        #region LonginViewModel
-        public class LoginPost()
-        {
-            public string Email { get; set; }
-            public string Password { get; set; }
-        }
-        #endregion
-
-
-        #region Lonin
-        [HttpPost("Login")]
-        public async Task<IActionResult> Login([FromBody] LoginPost data)
-        {
-            var user = (from a in _application.Users where a.Email == data.Email && a.Password == data.Password select a).SingleOrDefault();
-
-            if (user == null)
-            {
-                return Ok("帳號或密碼錯誤");
-            }
-            else
-            {
-                // 驗證成功
-                var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, user.Name),
-                new Claim("FullName", user.Name),
-                // new Claim(ClaimTypes.Role, "Admin")
-            };
-                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-
-                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
-
-                return Ok("登入成功");
-            }
-        }
-        #endregion
-
-
-        #region Logout
-        [HttpDelete("Logout")]
-        public async Task<IActionResult> Logout()
-        {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return Ok("已登出");
-        }
-
-        [HttpGet("NoLogin")]
-        public IActionResult NoLogin()
-        {
-            return Ok("未登入");
-        }
-
-        #endregion
 
 
         #region 密碼加密
