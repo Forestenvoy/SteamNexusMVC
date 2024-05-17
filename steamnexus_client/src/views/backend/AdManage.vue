@@ -140,8 +140,8 @@
         <div class="mb-3">
           <label for="editImageUrl">圖片網址</label>
           <Field id="editImageUrl" name="editImageUrl" v-model="editImageUrl" class="form-control mb-3"
-            rules="required|url" />
-          <img v-if="editImageUrl" :src="editImageUrl" alt="圖片預覽" style="max-width: 100%; height: auto;">
+            rules="required|url" @change="editImageChange" />
+          <img :src="showEditImageUrl" alt="圖片預覽" style="max-width: 100%; height: auto;">
           <ErrorMessage class="text-danger" name="editImageUrl" />
         </div>
         <div class="mb-3">
@@ -212,7 +212,7 @@ let editTitle = ref('')
 let editAdUrl = ref('')
 let editImageUrl = ref('')
 let editDescription = ref('')
-
+let showEditImageUrl = ref('')
 // 從環境變數取得 API BASE URL
 const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
@@ -295,13 +295,12 @@ configure({
   })
 })
 
-//照片更新事件
+//新增照片更新事件
 function ImageChange() {
   if (createImageUrl.value != '') {
     var img = new Image()
     img.src = createImageUrl.value
     img.onload = function () {
-      console.log("000");
       showImageUrl.value = createImageUrl.value
     }
     img.onerror = function () {
@@ -359,6 +358,23 @@ function CreateAdBtn() {
         position: toast.POSITION.TOP_CENTER
       });
     });
+}
+
+// 編輯照片更新事件
+function editImageChange() {
+  if (editImageUrl.value != '') {
+    var img = new Image()
+    img.src = editImageUrl.value
+    img.onload = function () {
+      showEditImageUrl.value = editImageUrl.value
+    }
+    img.onerror = function () {
+      // 如果網址有效但沒有圖片，顯示預設圖片
+      showEditImageUrl.value = 'http://localhost:5173/public/img/noImage.png'
+    }
+  } else {
+    showEditImageUrl.value = 'http://localhost:5173/public/img/noImage.png'
+  }
 }
 
 // 編輯廣告儲存
@@ -569,6 +585,7 @@ onMounted(() => {
       editTitle.value = result.title;
       editAdUrl.value = result.url;
       editImageUrl.value = result.image;
+      showEditImageUrl.value = result.image;
       editDescription.value = result.description;
 
       EditAdModal.value = true;
