@@ -36,7 +36,7 @@ namespace SteamNexus_Server.Controllers
 
         #region UserData
         [HttpGet("GetUsersWithRoles")]
-        [Authorize(Roles = "Member")]
+        //[Authorize(Roles = "Member")]
         //[Authorize]
         public IEnumerable<object> GetUsersWithRoles()
         {
@@ -61,7 +61,7 @@ namespace SteamNexus_Server.Controllers
 
         #region RolesData
         [HttpGet("RolesData")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public IEnumerable<object> RolesData()
         {
             var result = _application.Roles.Select(result => new

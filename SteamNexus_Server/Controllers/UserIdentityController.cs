@@ -23,8 +23,10 @@ public class UserIdentityController : ControllerBase
     public UserIdentityController(SteamNexusDbContext application)
     {
         _application = application;
-
     }
+
+
+
     #region LonginViewModel
     public class LoginPost()
     {
@@ -34,8 +36,8 @@ public class UserIdentityController : ControllerBase
     #endregion
 
 
-    #region Lonin
-    [HttpPost("Login")]
+    #region LoninCookie
+    [HttpPost("LoginCookie")]
     public async Task<IActionResult> Login([FromBody] LoginPost data)
     {
         var user = _application.Users.SingleOrDefault(a => a.Email == data.Email && a.Password == data.Password);
@@ -48,7 +50,8 @@ public class UserIdentityController : ControllerBase
         {
             // 驗證成功
             var claims = new List<Claim>
-        {
+
+        {   //取得資料
             new Claim(ClaimTypes.Name, user.Name),
             new Claim("FullName", user.Name),
             new Claim("UserId",user.UserId.ToString()),
@@ -98,7 +101,7 @@ public class UserIdentityController : ControllerBase
     #endregion
 
 
-    #region Logout for UserId
+    #region Logout(cookie) for UserId
     //[HttpDelete("Logout")]
     //public async Task<IActionResult> Logout()
     //{
@@ -123,7 +126,7 @@ public class UserIdentityController : ControllerBase
     #endregion
 
 
-    #region Logout for Name
+    #region(cookie) Logout for Name
     [HttpDelete("Logout")]
     public async Task<IActionResult> Logout()
     {
