@@ -1,7 +1,6 @@
 <template>
   <div class="slide-container">
     <div class="slide-content">
-      <h2 class="title">Menu</h2>
       <!-- swiper 設置 -->
       <!-- slidesPerView: 設置 slider 容器能夠同時顯示的 slides 數量 -->
       <!-- slidesPerGroup: 設置每組的 slides 數量 -->

@@ -1,16 +1,27 @@
 <template>
   <!-- 硬體匹配遊戲比例 -->
-  <section class="box game-proportion"></section>
+  <section class="box game-proportion" data-aos="fade-up"></section>
   <!-- 菜單系統 -->
-  <section class="box menu-list">
+  <section class="box menu-list" data-aos="fade-up">
     <menu-card-slider></menu-card-slider>
   </section>
   <!-- 估價單系統 -->
-  <section class="box pc-builder"></section>
+  <section class="box pc-builder" data-aos="fade-up"></section>
 </template>
 
 <script setup>
+// AOS 滾動框架動畫
+import AOS from 'aos'
+import 'aos/dist/aos.css'
+
+// vue 核心模組
+import { onMounted } from 'vue'
+
 import MenuCardSlider from '@/components/frontend/pcbuilder/MenuCardSlider.vue'
+
+onMounted(() => {
+  AOS.init()
+})
 </script>
 
 <style scoped>
