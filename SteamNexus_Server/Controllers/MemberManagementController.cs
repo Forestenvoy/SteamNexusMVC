@@ -1,11 +1,16 @@
-﻿using Microsoft.AspNetCore.Cors;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using SteamNexus_Server.Data;
 using SteamNexus_Server.Models;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
+using System.Security.Claims;
 using System.Text;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -31,7 +36,9 @@ namespace SteamNexus_Server.Controllers
 
         #region UserData
         [HttpGet("GetUsersWithRoles")]
-        public IEnumerable<Object> GetUsersWithRoles()
+        [Authorize(Roles = "Member")]
+        //[Authorize]
+        public IEnumerable<object> GetUsersWithRoles()
         {
             var result = _application.Users
                 .Join(_application.Roles, u => u.RoleId, r => r.RoleId,
@@ -54,6 +61,7 @@ namespace SteamNexus_Server.Controllers
 
         #region RolesData
         [HttpGet("RolesData")]
+        [Authorize(Roles = "Admin")]
         public IEnumerable<object> RolesData()
         {
             var result = _application.Roles.Select(result => new
@@ -190,6 +198,7 @@ namespace SteamNexus_Server.Controllers
 
         #region CreateMember
         [HttpPost("CreateMember")]
+        
         public async Task<IActionResult> CreateMember([FromForm] CreateMemberViewModel data)
         {
             if (!ModelState.IsValid)
@@ -301,7 +310,7 @@ namespace SteamNexus_Server.Controllers
 
             public bool Gender { get; set; } = true;
 
-            #nullable enable
+#nullable enable
             [MaxLength(10)]
             [RegularExpression(@"^09\d{8}$", ErrorMessage = "手機號碼必須以09開頭並且是10位數字")]
             public string? Phone { get; set; }
@@ -446,6 +455,8 @@ namespace SteamNexus_Server.Controllers
             return BadRequest(ModelState);  // 返回表單與驗證錯誤
         }
         #endregion
+
+
 
 
         #region 密碼加密
