@@ -42,7 +42,7 @@
           <CNavItem>
             <CNavLink
               class="text-center"
-              :class="{nLink: canToggle, login_btn: !canToggle}"
+              :class="{ nLink: canToggle, login_btn: !canToggle }"
               href="#"
               active
               ><span> 登入 </span></CNavLink
@@ -68,7 +68,7 @@
   <section class="banner"></section>
 </template>
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { CNavbar, CNavbarBrand, CNavbarToggler, CCollapse } from '@coreui/vue'
 
 const visible = ref(false)
@@ -88,8 +88,15 @@ window.addEventListener('scroll', () => {
   }
 })
 
-// 偵測視窗大小變動事件
 window.addEventListener('resize', () => {
+  if (window.innerWidth > 991) {
+    canToggle.value = false
+  } else {
+    canToggle.value = true
+  }
+})
+
+onMounted(() => {
   if (window.innerWidth > 991) {
     canToggle.value = false
   } else {
@@ -272,8 +279,6 @@ window.addEventListener('resize', () => {
 .sticky .login_btn:hover {
   color: #fff;
 }
-
-
 </style>
 
 <style>

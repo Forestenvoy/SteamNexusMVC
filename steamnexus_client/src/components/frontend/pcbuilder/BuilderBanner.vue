@@ -2,37 +2,81 @@
   <section class="banner" data-aos="zoom-in-down" data-aos-duration="500">
     <CContainer>
       <CRow class="align-items-center">
-        <CCol xs="12" md="6" xl="7">
-          <h1 data-aos="fade-right" data-aos-duration="1200">一般人想組台遊戲用桌上型電腦</h1>
-          <h2 data-aos="fade-right" data-aos-duration="1400">
+        <CCol xs="12" md="6" xl="7" class="order-1 order-md-0">
+          <h1 data-aos="fade-up" data-aos-duration="1500" class="text-center text-md-start mb-3">
+            一般人想組台遊戲用桌上型電腦
+          </h1>
+          <h2
+            data-aos="fade-up"
+            data-aos-duration="1500"
+            data-aos-delay="500"
+            class="text-center text-md-start mb-3"
+          >
             打開電腦硬體零售商的網站，看不懂 <CIcon icon="cilFrown" size="xl" />
           </h2>
-          <h3>- 缺乏硬體基礎知識 -</h3>
-          <p>
-            電腦硬體種類繁多，包括中央處理器、圖形處理器、主機板、記憶體、儲存設備、散熱系統、電源供應器。且每種硬體都有許多技術參數，如處理器的核心數量和時脈速度，顯示卡的顯存大小和架構，記憶體的容量和頻率等。理解這些參數以及它們之間的相互影響需要一定的技術知識。
+          <CRow>
+            <CCol xs="12" md="6" class="text-center text-md-start mb-2">
+              <h4 data-aos="fade-up" data-aos-duration="1500" :data-aos-delay="aosDelay1">
+                ▪️ 缺乏基礎知識
+              </h4>
+            </CCol>
+            <CCol xs="12" md="6" class="text-center text-md-start mb-2">
+              <h4 data-aos="fade-up" data-aos-duration="1500" :data-aos-delay="aosDelay1">
+                ▪️ 相容性問題
+              </h4>
+            </CCol>
+            <CCol xs="12" md="6" class="text-center text-md-start mb-2">
+              <h4 data-aos="fade-up" data-aos-duration="1500" :data-aos-delay="aosDelay1">
+                ▪️ 技術規格複雜
+              </h4>
+            </CCol>
+            <CCol xs="12" md="6" class="text-center text-md-start mb-2">
+              <h4 data-aos="fade-up" data-aos-duration="1500" :data-aos-delay="aosDelay1">
+                ▪️ 品牌型號雜亂
+              </h4>
+            </CCol>
+          </CRow>
+          <h2
+            data-aos="fade-up"
+            data-aos-duration="1500"
+            :data-aos-delay="aosDelay2"
+            class="text-center text-md-start mb-3"
+          >
+            我該怎麼配單？產品是最新的嗎？
+          </h2>
+          <p data-aos="fade-up" data-aos-duration="1500" :data-aos-delay="aosDelay2" class="mb-3">
+            SteamNexus 提供了人性化的配單系統，同時也透過定時爬蟲獲取原價屋最新的產品資料
           </p>
-          <h3>- 配件兼容性複雜 -</h3>
-          <p>
-            選擇不相容的組件會導致系統無法正常工作或性能受限。像是主機板和中央處理器必須匹配特定的插槽類型、電源必須提供足夠的功率以支撐所有硬體等。
+          <h2
+            data-aos="fade-up"
+            data-aos-duration="1500"
+            :data-aos-delay="aosDelay2"
+            class="text-center text-md-start mb-3"
+          >
+            配好了我可以玩多少遊戲？
+          </h2>
+          <p data-aos="fade-up" data-aos-duration="1500" :data-aos-delay="aosDelay2" class="mb-3">
+            我們網站透過 Steam API
+            外加爬蟲補助獲取了所有數位遊戲配備需求資料，一配完就可以匹配我們的資料庫，馬上知道能玩多少的遊戲
           </p>
-          <h3>- 科技日新月異 -</h3>
-          <p>
-            每種硬體都有許多品牌和型號，需要仔細挑選和匹配。但技術更新速度很快，新產品不斷推出，市場上存在大量的訊息和選擇。
-          </p>
-          <h2>我該怎麼配單？配好了可以玩多少遊戲？</h2>
-          <p>
-            SteamNexus 提供了人性化的配單系統，同時可以讓你匹配我們網站內的數位遊戲資料，一配完就可以知道能玩多少的遊戲
-          </p>
-          <button @click="StartBuilder" data-aos="fade-right" data-aos-duration="2500">
-            你來對地方了，讓我們開始吧<i class="fa-solid fa-arrow-right"></i>
-          </button>
+          <div class="d-flex justify-content-center justify-content-md-start">
+            <button
+              @click="StartBuilder"
+              data-aos="fade-up"
+              data-aos-duration="1500"
+              :data-aos-delay="aosDelay2"
+              class="d-flex align-items-center"
+            >
+              你來對地方了，讓我們開始吧<i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
         </CCol>
-        <CCol xs="12" md="6" xl="5" class="d-flex justify-content-center">
+        <CCol xs="12" md="6" xl="5" class="d-flex justify-content-center order-0 order-md-1 mb-4">
           <img
             src="@/assets/images/builder/banner.png"
             alt="Header-img"
-            data-aos="fade-left"
-            data-aos-duration="2500"
+            data-aos="fade-down"
+            data-aos-duration="1500"
           />
         </CCol>
       </CRow>
@@ -46,12 +90,32 @@ import AOS from 'aos'
 import 'aos/dist/aos.css'
 
 // vue module
-import { onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 
 import { CContainer, CRow, CCol } from '@coreui/vue'
 
+let aosDelay1 = ref(500)
+let aosDelay2 = ref(1000)
+
+function aosDelayChange() {
+  if (window.innerWidth <= 768) {
+    aosDelay1.value = 0
+    aosDelay2.value = 0
+  } else {
+    aosDelay1.value = 500
+    aosDelay2.value = 1000
+  }
+}
+
+window.addEventListener('resize', aosDelayChange())
+
 onMounted(() => {
-  AOS.init()
+  AOS.init({
+    once: true // Animation happens only once
+  })
+
+  // 設定 AOS 動畫延遲
+  aosDelayChange()
 })
 </script>
 
@@ -93,7 +157,7 @@ onMounted(() => {
 }
 
 .banner h1 {
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0.8px;
   line-height: 1;
   margin-bottom: 10px;
@@ -106,6 +170,7 @@ onMounted(() => {
   line-height: 1;
   margin-bottom: 10px;
   display: block;
+  color: antiquewhite;
 }
 
 .banner p {
@@ -151,6 +216,7 @@ onMounted(() => {
   .banner img {
     width: 400px;
     height: 400px;
+    animation: none;
   }
 }
 
