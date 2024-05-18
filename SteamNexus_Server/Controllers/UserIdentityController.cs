@@ -6,6 +6,10 @@ using SteamNexus_Server.Data;
 using SteamNexus_Server.Models;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Cors;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.EntityFrameworkCore;
 
 namespace SteamNexus_Server.Controllers;
 
@@ -20,9 +24,13 @@ public class UserIdentityController : ControllerBase
 {
     private SteamNexusDbContext _application;
 
-    public UserIdentityController(SteamNexusDbContext application)
+    //JWT引用
+    public IConfiguration _configuration;
+
+    public UserIdentityController(SteamNexusDbContext application,IConfiguration configuration)
     {
         _application = application;
+        _configuration = configuration;
     }
 
 
@@ -58,7 +66,7 @@ public class UserIdentityController : ControllerBase
             // new Claim(ClaimTypes.Role, "Admin")
         };
 
-            //多個權限設定
+            //多個權限設定 for 新增使用者
             //var role = from r in _application.Roles where r.RoleId == user.UserId select r;
 
             //foreach (var temp in role)
@@ -159,6 +167,74 @@ public class UserIdentityController : ControllerBase
     }
     #endregion
 
+
+    #region LoginJWT
+    [HttpPost("JwtLogin")]
+    public async Task<IActionResult> JwtLogin([FromBody] LoginPost data)
+    {
+        var user = _application.Users
+                              .Include(u => u.Role) // 確保 Role 被包含在查詢結果中
+                              .SingleOrDefault(a => a.Email == data.Email && a.Password == data.Password);
+
+        if (user == null)
+        {
+            return BadRequest("帳號或密碼錯誤");
+        }
+        else
+        {
+            // 驗證成功
+            var claims = new List<Claim>
+        {
+            new Claim(JwtRegisteredClaimNames.Sub, _configuration["Jwt:Subject"]),
+            //new Claim(JwtRegisteredClaimNames.Email, user.Email),
+            new Claim(ClaimTypes.Name, user.Name),
+            new Claim("FullName", user.Name),
+            new Claim("UserId", user.UserId.ToString()),
+            //new Claim("Roles", user.Role.RoleName),
+            new Claim(ClaimTypes.Role, user.Role.RoleName)
+        };
+
+            // 如果使用者有多個角色，可以在這裡添加多個角色權限
+            //var roles = from r in _application.UserRoles
+            //            where r.UserId == user.UserId
+            //            select r.Role.RoleName;
+
+            //foreach (var roleName in roles)
+            //{
+            //    claims.Add(new Claim(ClaimTypes.Role, roleName));
+            //}
+
+            // Jwt 金鑰資訊
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+            var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var token = new JwtSecurityToken(
+                        issuer: _configuration["Jwt:Issuer"],
+                        audience: _configuration["Jwt:Audience"],
+                        claims: claims,
+                        expires: DateTime.UtcNow.AddMinutes(10), // 登入過期時間
+                        signingCredentials: signIn);
+
+            //直接回傳結果
+            //return Ok(new JwtSecurityTokenHandler().WriteToken(token));
+
+            //先宣告再回傳結果
+            var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+            return Ok(new { Token = tokenString });
+        }
+    }
+    #endregion
+
+
+    #region CheckUserRoles
+    [HttpGet("CheckUserRoles")]
+    public IActionResult CheckUserRoles()
+    {
+        var user = HttpContext.User;
+        var roles = user.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToList();
+        var claims = user.Claims.Select(c => new { c.Type, c.Value }).ToList();
+        return Ok(new { UserName = user.Identity.Name, Roles = roles, Claims = claims });
+    }
+    #endregion
 
 }
 
