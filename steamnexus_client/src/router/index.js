@@ -80,7 +80,7 @@ const router = createRouter({
         },
         // 硬體估價
         {
-          path: 'computerBuilder',
+          path: 'pc-builder',
           name: 'ComputerBuilder',
           component: () => import('@/views/frontend/ComputerBuilder.vue')
         },
