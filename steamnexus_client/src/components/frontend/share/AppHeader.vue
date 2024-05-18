@@ -17,7 +17,7 @@
             <CNavLink class="nLink" href="#" @click="$router.push('/')"> 首頁 </CNavLink>
           </CNavItem>
           <CNavItem>
-            <CNavLink class="nLink" href="#" @click="$router.push('/computerBuilder')">
+            <CNavLink class="nLink" href="#" @click="$router.push('/pc-builder')">
               硬體估價
             </CNavLink>
           </CNavItem>

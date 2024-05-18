@@ -89,14 +89,11 @@
           <Field id="createImageUrl" name="createImageUrl" v-model="createImageUrl" @change="ImageChange"
             class="form-control mb-3" rules="required|url" />
           <img :src="showImageUrl" alt="圖片預覽" style="max-width: 100%; height: auto;">
-          <ErrorMessage ref="errorMsg" class="text-danger errorImgUrl" name="createImageUrl" />
+          <ErrorMessage class="text-danger" name="createImageUrl" />
         </div>
         <div class="mb-3">
           <label for="createDescription">說明</label>
-          <Field name="createDescription" rules="max:100">
-            <textarea id="createDescription" v-model="createDescription" class="form-control"></textarea>
-            <ErrorMessage class="text-danger" name="createDescription" />
-          </Field>
+          <textarea id="createDescription" v-model="createDescription" class="form-control" maxlength="100"></textarea>
         </div>
         <!-- <div class="text-center">
           <CButton color="secondary" @click="closeModal">取消</CButton>
@@ -121,52 +118,52 @@
   </Form>
 
   <!-- 修改廣告的浮動式窗 -->
-  <CModal alignment="center" :visible="EditAdModal" @close="() => {
-    EditAdModal = false
-  }
-    " aria-labelledby="EditAdModal">
-    <CModalHeader>
-      <CModalTitle id="EditAdModal">廣告編輯</CModalTitle>
-    </CModalHeader>
-    <CModalBody>
-      <form @submit.prevent="EditAdSaveBtn">
+  <Form @submit.prevent="EditAdSaveBtn">
+    <CModal alignment="center" :visible="EditAdModal" @close="() => {
+      EditAdModal = false
+    }
+      " aria-labelledby="EditAdModal">
+      <CModalHeader>
+        <CModalTitle id="EditAdModal">廣告編輯</CModalTitle>
+      </CModalHeader>
+      <CModalBody>
         <div class="mb-3">
           <label for="editTitle">標題</label>
-          <input id="editTitle" v-model="editTitle" class="form-control" required maxlength="50">
-          <span class="text-danger">{{ titleError }}</span>
+          <Field id="editTitle" name="editTitle" v-model="editTitle" class="form-control" rules="required|max:50" />
+          <ErrorMessage class="text-danger" name="editTitle" />
         </div>
         <div class="mb-3">
           <label for="editAdUrl">網址</label>
-          <input id="editAdUrl" v-model="editAdUrl" class="form-control" type="url" required>
-          <span class="text-danger">{{ adUrlError }}</span>
+          <Field id="editAdUrl" name="editAdUrl" v-model="editAdUrl" class="form-control" rules="required|url" />
+          <ErrorMessage class="text-danger" name="editAdUrl" />
         </div>
         <div class="mb-3">
           <label for="editImageUrl">圖片網址</label>
-          <input id="editImageUrl" v-model="editImageUrl" class="form-control mb-3" type="url" required>
-          <img v-if="editImageUrl" :src="editImageUrl" alt="圖片預覽" style="max-width: 100%; height: auto;">
-          <span class="text-danger">{{ imageUrlError }}</span>
+          <Field id="editImageUrl" name="editImageUrl" v-model="editImageUrl" class="form-control mb-3"
+            rules="required|url" @change="editImageChange" />
+          <img :src="showEditImageUrl" alt="圖片預覽" style="max-width: 100%; height: auto;">
+          <ErrorMessage class="text-danger" name="editImageUrl" />
         </div>
         <div class="mb-3">
           <label for="editDescription">說明</label>
           <textarea id="editDescription" v-model="editDescription" class="form-control" maxlength="100"></textarea>
-          <span class="text-danger">{{ descriptionError }}</span>
         </div>
         <!-- <div class="text-center">
           <CButton color="secondary" @click="closeModal">取消</CButton>
           <CButton type="submit" color="primary">新增</CButton>
         </div> -->
-      </form>
-    </CModalBody>
-    <CModalFooter>
-      <CButton color="secondary" @click="() => {
-        EditAdModal = false
-      }
-        ">
-        取消
-      </CButton>
-      <CButton color="primary" @click="EditAdSaveBtn">儲存</CButton>
-    </CModalFooter>
-  </CModal>
+      </CModalBody>
+      <CModalFooter>
+        <CButton color="secondary" @click="() => {
+          EditAdModal = false
+        }
+          ">
+          取消
+        </CButton>
+        <CButton color="primary" @click="EditAdSaveBtn">儲存</CButton>
+      </CModalFooter>
+    </CModal>
+  </Form>
 </template>
 <script setup>
 // 核心模組 import
@@ -189,8 +186,7 @@ import 'vue3-toastify/dist/index.css'
 
 import { ref, onMounted } from 'vue'
 import { CModal, CModalHeader, CModalTitle, CModalBody, CModalFooter, CButton } from '@coreui/vue'
-// import { useForm, useField } from 'vee-validate';
-// import { required, max, url } from '@vee-validate/rules';
+
 import { onBeforeRouteLeave } from 'vue-router'
 
 defineRule('required', required)
@@ -216,8 +212,7 @@ let editTitle = ref('')
 let editAdUrl = ref('')
 let editImageUrl = ref('')
 let editDescription = ref('')
-let errorMsg = ref(false)
-
+let showEditImageUrl = ref('')
 // 從環境變數取得 API BASE URL
 const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
@@ -291,20 +286,21 @@ configure({
     names: {
       createTitle: '標題',
       createImageUrl: '圖片網址',
-      createDescription: '說明',
-      createAdUrl: '廣告網址'
+      createAdUrl: '廣告網址',
+      editTitle: '標題',
+      editImageUrl: '圖片網址',
+      editAdUrl: '廣告網址'
     },
     messages: validateErrorMsg.messages
   })
 })
 
-//照片更新事件
+//新增照片更新事件
 function ImageChange() {
   if (createImageUrl.value != '') {
     var img = new Image()
     img.src = createImageUrl.value
     img.onload = function () {
-      console.log("000");
       showImageUrl.value = createImageUrl.value
     }
     img.onerror = function () {
@@ -362,6 +358,23 @@ function CreateAdBtn() {
         position: toast.POSITION.TOP_CENTER
       });
     });
+}
+
+// 編輯照片更新事件
+function editImageChange() {
+  if (editImageUrl.value != '') {
+    var img = new Image()
+    img.src = editImageUrl.value
+    img.onload = function () {
+      showEditImageUrl.value = editImageUrl.value
+    }
+    img.onerror = function () {
+      // 如果網址有效但沒有圖片，顯示預設圖片
+      showEditImageUrl.value = 'http://localhost:5173/public/img/noImage.png'
+    }
+  } else {
+    showEditImageUrl.value = 'http://localhost:5173/public/img/noImage.png'
+  }
 }
 
 // 編輯廣告儲存
@@ -572,6 +585,7 @@ onMounted(() => {
       editTitle.value = result.title;
       editAdUrl.value = result.url;
       editImageUrl.value = result.image;
+      showEditImageUrl.value = result.image;
       editDescription.value = result.description;
 
       EditAdModal.value = true;
