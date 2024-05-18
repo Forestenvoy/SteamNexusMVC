@@ -26,6 +26,7 @@
     "@sweetalert2/themes": "^5.0.16",
     "@vee-validate/i18n": "^4.12.8",
     "@vee-validate/rules": "^4.12.8",
+    "aos": "^2.3.4",
     "axios": "^1.6.8",
     "bootstrap": "^5.3.3",
     "chart.js": "^4.4.2",
