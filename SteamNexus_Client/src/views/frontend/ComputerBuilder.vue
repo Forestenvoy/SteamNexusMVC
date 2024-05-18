@@ -1,12 +1,14 @@
 <template>
+  <!-- Main Banner -->
+  <builder-banner></builder-banner>
   <!-- 硬體匹配遊戲比例 -->
-  <section class="box game-proportion" data-aos="fade-up"></section>
+  <!-- <section class="box game-proportion" data-aos="fade-up"></section> -->
   <!-- 菜單系統 -->
-  <section class="box menu-list" data-aos="fade-up">
+  <!-- <section class="box menu-list" data-aos="fade-up">
     <menu-card-slider></menu-card-slider>
-  </section>
+  </section> -->
   <!-- 估價單系統 -->
-  <section class="box pc-builder" data-aos="fade-up"></section>
+  <!-- <section class="box pc-builder" data-aos="fade-up"></section> -->
 </template>
 
 <script setup>
@@ -17,6 +19,8 @@ import 'aos/dist/aos.css'
 // vue 核心模組
 import { onMounted } from 'vue'
 
+// 頁面元件
+import BuilderBanner from '@/components/frontend/pcbuilder/BuilderBanner.vue'
 import MenuCardSlider from '@/components/frontend/pcbuilder/MenuCardSlider.vue'
 
 onMounted(() => {
@@ -27,8 +31,6 @@ onMounted(() => {
 <style scoped>
 .box {
   background-color: #eeecec;
-  border-radius: 20px;
-  border: 2px solid #525252;
   margin-bottom: 20px;
   padding: 20px 20px;
 }
