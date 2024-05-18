@@ -673,8 +673,10 @@ namespace SteamNexus.Areas.Administrator.Controllers
         {
             // 获取相关的 PriceHistories 集合
             var priceHistorie = await _context.PriceHistories
-                .Where(ph => ph.GameId == id).OrderBy(ph => ph.Date)  // 替换为实际条件
+                .Where(ph => ph.GameId == id).OrderBy(ph => ph.Date).Select(ph => new { ph.Date, ph.Price })  // 替换为实际条件
                 .ToListAsync();      
+
+
 
             return Json(priceHistorie);
         }

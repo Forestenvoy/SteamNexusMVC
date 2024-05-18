@@ -234,6 +234,8 @@ $(document).on('click', 'button[id$="edit_button"]', function (event) {
       Description = val.description
       ImagePath = val.imagePath
       VideoPath = val.videoPath
+      imagesrc.value=val.imagePath
+      videosrc.value=val.videoPath
       handleClick()
     })
     .catch((error) => {
@@ -523,6 +525,21 @@ onBeforeRouteLeave(() => {
 @import 'datatables.net-rowgroup-dt/css/rowGroup.dataTables.min.css';
 @import 'datatables.net-buttons-dt/css/buttons.dataTables.min.css';
 @import 'datatables.net-responsive-dt/css/responsive.dataTables.min.css';
+
+/* datatables 頂部布局調整 */
+#GameManageTable_wrapper .dt-end .dt-search {
+  text-align: center !important;
+}
+
+#GameManageTable_wrapper .dt-middle {
+  /* text-align: end !important; */
+  display: flex;
+  justify-content: flex-end;
+}
+
+#GameManageTable_wrapper .dt-button {
+  margin-bottom: 0;
+}
 
 .custom-toast {
   width: 600px;
