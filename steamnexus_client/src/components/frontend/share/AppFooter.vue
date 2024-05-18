@@ -14,6 +14,7 @@
 <style scoped>
 .footer {
   position: relative;
+  margin-top: 120px;
 }
 .wave {
   position: absolute;

@@ -3,7 +3,7 @@
     <div class="wrapper d-flex flex-column min-vh-100">
       <app-header></app-header>
       <div class="body flex-grow-1">
-        <CContainer class="px-5 pt-4" fluid>
+        <CContainer class="px-5 pt-4 position-relative" fluid>
           <router-view></router-view>
         </CContainer>
       </div>
