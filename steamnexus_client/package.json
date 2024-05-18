@@ -50,7 +50,6 @@
     "vue-datatables": "^0.1.4",
     "vue-router": "^4.3.0",
     "vue3-toastify": "^0.2.1",
-    "wowjs": "^1.1.3",
     "yup": "1.4.0"
   },
   "devDependencies": {
