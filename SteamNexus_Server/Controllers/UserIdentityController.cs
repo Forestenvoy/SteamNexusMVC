@@ -48,7 +48,9 @@ public class UserIdentityController : ControllerBase
     [HttpPost("LoginCookie")]
     public async Task<IActionResult> Login([FromBody] LoginPost data)
     {
-        var user = _application.Users.SingleOrDefault(a => a.Email == data.Email && a.Password == data.Password);
+        var user = _application.Users
+                              .Include(u => u.Role) // 確保 Role 被包含在查詢結果中
+                              .SingleOrDefault(a => a.Email == data.Email && a.Password == data.Password);
 
         if (user == null)
         {
@@ -59,8 +61,11 @@ public class UserIdentityController : ControllerBase
             // 驗證成功
             var claims = new List<Claim>
 
-        {   //取得資料
+        {   //使用系統預設取得資料
             new Claim(ClaimTypes.Name, user.Name),
+            new Claim(ClaimTypes.Role, user.Role.RoleName),
+            
+            //自訂異取得資料
             new Claim("FullName", user.Name),
             new Claim("UserId",user.UserId.ToString()),
             // new Claim(ClaimTypes.Role, "Admin")
@@ -232,7 +237,7 @@ public class UserIdentityController : ControllerBase
     #endregion
 
 
-    #region CheckUserRoles
+    #region JWTCheckUserRoles
     [HttpGet("CheckUserRoles")]
     public IActionResult CheckUserRoles()
     {
@@ -240,6 +245,32 @@ public class UserIdentityController : ControllerBase
         var roles = user.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToList();
         var claims = user.Claims.Select(c => new { c.Type, c.Value }).ToList();
         return Ok(new { UserName = user.Identity.Name, Roles = roles, Claims = claims });
+    }
+    #endregion
+
+
+    #region CookieCheckUserRoles
+    [HttpGet("CheckUserRolescookie")]
+    public IActionResult CheckUserRolescookie()
+    {
+        var user = HttpContext.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            var roles = user.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToList();
+            var claims = user.Claims.Select(c => new { c.Type, c.Value }).ToList();
+
+            return Ok(new
+            {
+                UserName = user.Identity.Name,
+                Roles = roles,
+                Claims = claims
+            });
+        }
+        else
+        {
+            return Unauthorized("未登入或Cookie無效");
+        }
     }
     #endregion
 

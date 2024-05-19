@@ -3,7 +3,7 @@
     <div class="wrapper d-flex flex-column min-vh-100">
       <app-header></app-header>
       <div class="body flex-grow-1 position-relative">
-        <!-- <login-temp></login-temp> -->
+        <login-temp></login-temp>
         <router-view></router-view>
       </div>
       <app-footer></app-footer>
