@@ -6,28 +6,22 @@
 
     <div class="form-box login">
       <h2>Login</h2>
-      <form action="#">
-        <!-- 信箱 -->
+      <form @submit.prevent="login">
         <div class="input-box">
           <span class="icon"><i class="fas fa-envelope"></i></span>
-          <input type="text" class="mx-2" required />
+          <input type="email" v-model="loginEmail" class="mx-2" required />
           <label>Email</label>
         </div>
-        <!-- 密碼 -->
         <div class="input-box">
           <span class="icon"><i class="fas fa-lock"></i></span>
-          <input type="password" class="mx-2" required />
+          <input type="password" v-model="loginPassword" class="mx-2" required />
           <label>Password</label>
         </div>
-        <!-- 記住我 -->
         <div class="remember-forgot">
-          <label><input type="checkbox" /> Remember me</label>
-          <!-- 忘記密碼 -->
+          <label><input type="checkbox" v-model="rememberMe" /> Remember me</label>
           <a href="#">Forgot password?</a>
         </div>
-        <!-- 登入按鈕 -->
         <button type="submit" class="btn">Login</button>
-        <!-- 註冊按鈕 -->
         <div class="login-register">
           <p>Don't have an account?<a href="#" class="register-link"> Register</a></p>
         </div>
@@ -36,38 +30,34 @@
 
     <div class="form-box register">
       <h2>Registration</h2>
-      <form action="#">
-        <!-- 名字 -->
+      <form @submit.prevent="register">
         <div class="input-box">
           <span class="icon"><i class="fa fa-user" aria-hidden="true"></i></span>
-          <input type="text" class="mx-2" required />
+          <input type="text" v-model="registerName" class="mx-2" required />
           <label>Name</label>
         </div>
-        <!-- 信箱 -->
         <div class="input-box">
           <span class="icon"><i class="fas fa-envelope"></i></span>
-          <input type="text" class="mx-2" required />
+          <input type="email" v-model="registerEmail" class="mx-2" required />
           <label>Email</label>
         </div>
-        <!-- 密碼 -->
         <div class="input-box">
           <span class="icon"><i class="fas fa-lock"></i></span>
-          <input type="text" class="mx-2" required />
+          <input type="password" v-model="registerPassword" class="mx-2" required />
           <label>Password</label>
         </div>
-        <!-- 確認密碼 -->
         <div class="input-box">
           <span class="icon"><i class="fas fa-lock"></i></span>
-          <input type="text" class="mx-2" required />
+          <input type="password" v-model="confirmPassword" class="mx-2" required />
           <label>Confirm Password</label>
         </div>
-        <!-- 註冊前確認規定同意書 -->
         <div class="remember-forgot">
-          <label><input type="checkbox" /> I agree to the terms & conditions</label>
+          <label
+            ><input type="checkbox" v-model="agreeToTerms" required /> I agree to the terms &
+            conditions</label
+          >
         </div>
-        <!-- 註冊按鈕 -->
         <button type="submit" class="btn">Register</button>
-        <!-- 登入按鈕 -->
         <div class="login-register">
           <p>Already have an account?<a href="#" class="login-link"> Login</a></p>
         </div>
@@ -79,6 +69,27 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 
+const loginEmail = ref('')
+const loginPassword = ref('')
+const rememberMe = ref(false)
+const registerName = ref('')
+const registerEmail = ref('')
+const registerPassword = ref('')
+const confirmPassword = ref('')
+const agreeToTerms = ref(false)
+
+const hideLogin = () => {
+  document.querySelector('.LRModal').style.display = 'none'
+}
+
+const login = () => {
+  // 登入邏輯
+}
+
+const register = () => {
+  // 註冊邏輯
+}
+
 onMounted(() => {
   const LRModal = document.querySelector('.LRModal')
   const loginLink = document.querySelector('.login-link')
@@ -87,24 +98,13 @@ onMounted(() => {
   if (registerLink) {
     registerLink.addEventListener('click', () => {
       LRModal.classList.add('active')
-    })
-  }
-
-  if (loginLink) {
-    loginLink.addEventListener('click', () => {
-      LRModal.classList.remove('active')
-    })
-  }
-
-  //設定切換時的高度
-  if (registerLink) {
-    registerLink.addEventListener('click', () => {
       LRModal.style.height = '600px'
     })
   }
 
   if (loginLink) {
     loginLink.addEventListener('click', () => {
+      LRModal.classList.remove('active')
       LRModal.style.height = '400px'
     })
   }

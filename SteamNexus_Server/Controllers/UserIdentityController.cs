@@ -134,7 +134,7 @@ public class UserIdentityController : ControllerBase
     #endregion
 
 
-    #region(cookie) Logout for Name
+    #region Logout(cookie) for Name
     [HttpDelete("Logout")]
     public async Task<IActionResult> Logout()
     {
