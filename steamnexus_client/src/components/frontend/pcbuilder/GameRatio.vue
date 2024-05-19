@@ -19,19 +19,52 @@
       </CRow>
       <!-- 圓形進度條 -->
       <CRow>
-        <CCol xs="12" md="6" class="ratio-box">
-          <div class="rating">
-            <h2><span class="counter" data-target="90">90</span><sup class="percent">%</sup></h2>
-            <!-- 生成進度條 -->
-            <div
-              class="block"
-              v-for="i in 100"
-              :key="i"
-              :style="`transform: rotate(${i * 3.6}deg)`"
-            ></div>
+        <CCol xs="12" md="6">
+          <h2 class="text-center mb-3">最低配備</h2>
+          <div class="ratio-box">
+            <div class="rating">
+              <h2>
+                <span class="counter">{{ valueMin }}</span
+                ><sup class="percent">%</sup>
+              </h2>
+              <!-- 生成進度條 -->
+              <div
+                class="block"
+                v-for="i in 100"
+                :key="i"
+                :style="{
+                  transform: `rotate(${i * 3.6}deg)`,
+                  animationDelay: `${i / 40}s`,
+                  backgroundColor: i <= progressMin ? '#0f0' : '#4f4d4d', // 根據進度設置顏色
+                  boxShadow: i <= progressMin ? '0 0 15px #0f0' : '0 0 15px #4f4d4d'
+                }"
+              ></div>
+            </div>
           </div>
         </CCol>
-        <CCol xs="12" md="6" class="ratio-box"> </CCol>
+        <CCol xs="12" md="6">
+          <h2 class="text-center mb-3">建議配備</h2>
+          <div class="ratio-box">
+            <div class="rating">
+              <h2>
+                <span class="counter">{{ valueMax }}</span
+                ><sup class="percent">%</sup>
+              </h2>
+              <!-- 生成進度條 -->
+              <div
+                class="block"
+                v-for="i in 100"
+                :key="i"
+                :style="{
+                  transform: `rotate(${i * 3.6}deg)`,
+                  animationDelay: `${i / 40}s`,
+                  backgroundColor: i <= progressMax ? '#0f0' : '#4f4d4d', // 根據進度設置顏色
+                  boxShadow: i <= progressMax ? '0 0 15px #0f0' : '0 0 15px #4f4d4d'
+                }"
+              ></div>
+            </div>
+          </div>
+        </CCol>
       </CRow>
     </CContainer>
   </section>
@@ -39,12 +72,29 @@
 
 <script setup>
 // vue
-import { onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 
 // Core UI
 import { CContainer, CRow, CCol } from '@coreui/vue'
 
-onMounted(() => {})
+// 進度條進度
+let progressMin = ref(70)
+let valueMin = ref(0)
+const progressMax = ref(100)
+const valueMax = ref(0)
+
+// 數字特效
+const NumberCounter = (target, counter) => {
+  if (counter.value < target) {
+    counter.value++
+    setTimeout(() => NumberCounter(target, counter), 25)
+  }
+}
+
+onMounted(() => {
+  NumberCounter(progressMin.value, valueMin)
+  NumberCounter(progressMax.value, valueMax)
+})
 </script>
 
 <style scoped>
@@ -64,7 +114,6 @@ onMounted(() => {})
   align-items: center;
   position: relative;
   height: 200px;
-  width: 200px;
   padding: 0;
 }
 
@@ -78,7 +127,7 @@ onMounted(() => {})
   position: absolute;
   width: 2px;
   height: 15px;
-  background-color: #fff;
+  background-color: #4f4d4d;
   left: 50%;
   transform-origin: 50% 100px;
   opacity: 0;
