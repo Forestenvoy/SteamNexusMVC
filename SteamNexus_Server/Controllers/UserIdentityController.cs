@@ -195,8 +195,8 @@ public class UserIdentityController : ControllerBase
             new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()), //顯示發行時間
             //new Claim(JwtRegisteredClaimNames.Email, user.Email),
 
-            new Claim(ClaimTypes.Name, user.Name),
             new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
+            new Claim(ClaimTypes.Name, user.Name),
             new Claim(ClaimTypes.Role, user.Role.RoleName),
 
             new Claim("UserId", user.UserId.ToString()),
