@@ -5,7 +5,8 @@
           <thead>
               <tr>
                   <th></th>
-                  <th>代碼</th>
+                  <th>GameId</th>
+                  <th>SteamId</th>
                   <th>名稱</th>
                   <th>原始價格</th>
                   <th>現在價格</th>
@@ -374,6 +375,7 @@ onMounted(() => {
         },
         responsivePriority: 1
       },
+      { data: 'gameId', width: '5%' },
       { data: 'appId', width: '5%' },
       { data: 'name', responsivePriority: 1, width: '5%' },
       { data: 'originalPrice', width: '2%' },
