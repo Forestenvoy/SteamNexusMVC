@@ -2,9 +2,7 @@
   <!-- Main Banner -->
   <builder-banner></builder-banner>
   <!-- 菜單系統 -->
-  <!-- <section class="box menu-list" data-aos="fade-up">
-    <menu-card-slider></menu-card-slider>
-  </section> -->
+  <menu-slider></menu-slider>
   <!-- 估價單系統 -->
   <!-- <section class="box pc-builder" data-aos="fade-up"></section> -->
   <!-- Hardware Matching Game Ratio -->
@@ -21,7 +19,7 @@ import { onMounted } from 'vue'
 
 // 頁面元件
 import BuilderBanner from '@/components/frontend/pcbuilder/BuilderBanner.vue'
-// import MenuCardSlider from '@/components/frontend/pcbuilder/MenuCardSlider.vue'
+import MenuSlider from '@/components/frontend/pcbuilder/MenuSlider.vue'
 import GameRatio from '@/components/frontend/pcbuilder/GameRatio.vue'
 
 onMounted(() => {
