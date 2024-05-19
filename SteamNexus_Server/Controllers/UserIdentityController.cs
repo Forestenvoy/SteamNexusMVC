@@ -36,7 +36,7 @@ public class UserIdentityController : ControllerBase
 
 
     #region LonginViewModel
-    public class LoginPost()
+    public class LoginPost
     {
         public string Email { get; set; }
         public string Password { get; set; }
@@ -191,12 +191,18 @@ public class UserIdentityController : ControllerBase
             var claims = new List<Claim>
         {
             new Claim(JwtRegisteredClaimNames.Sub, _configuration["Jwt:Subject"]),
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()), //token識別標籤，唯一值
+            new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()), //顯示發行時間
             //new Claim(JwtRegisteredClaimNames.Email, user.Email),
+
             new Claim(ClaimTypes.Name, user.Name),
-            new Claim("FullName", user.Name),
+            new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
+            new Claim(ClaimTypes.Role, user.Role.RoleName),
+
             new Claim("UserId", user.UserId.ToString()),
+            new Claim("FullName", user.Name),
             //new Claim("Roles", user.Role.RoleName),
-            new Claim(ClaimTypes.Role, user.Role.RoleName)
+                        
         };
 
             // 如果使用者有多個角色，可以在這裡添加多個角色權限
@@ -229,7 +235,7 @@ public class UserIdentityController : ControllerBase
             //顯示使用者登入訊息
             return Ok(new
             {
-                Message = $"{user.Name} 已登入成功" ,// 顯示登入成功訊息
+                Message = $"{user.Name} 已登入成功",// 顯示登入成功訊息
                 Token = tokenString,
             });
         }
