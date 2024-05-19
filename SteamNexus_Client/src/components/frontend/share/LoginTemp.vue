@@ -1,5 +1,5 @@
 <template>
-  <div class="LRModal" ref="LRModal" :style="{ display: showLogin ? 'block' : 'none' }">
+  <div class="LRModal" ref="LRModal" v-if="store.getShowLogin">
     <span class="icon-close" @click="closeModal">
       <i class="fa fa-times" aria-hidden="true"></i>
     </span>
@@ -10,13 +10,13 @@
         <!-- 信箱 -->
         <div class="input-box">
           <span class="icon"><i class="fas fa-envelope"></i></span>
-          <input type="text" class="mx-2" required v-model="loginemail" />
+          <input type="text" class="mx-2" required v-model="loginEmail" autocomplete="off" />
           <label>Email</label>
         </div>
         <!-- 密碼 -->
         <div class="input-box">
           <span class="icon"><i class="fas fa-lock"></i></span>
-          <input type="password" class="mx-2" required v-model="loginpassword" />
+          <input type="password" class="mx-2" required v-model="loginpassword" autocomplete="off" />
           <label>Password</label>
         </div>
         <!-- 記住我 -->
@@ -40,25 +40,37 @@
         <!-- 名字 -->
         <div class="input-box">
           <span class="icon"><i class="fa fa-user" aria-hidden="true"></i></span>
-          <input type="text" class="mx-2" required v-model="registername" />
+          <input type="text" class="mx-2" required v-model="registername" autocomplete="off" />
           <label>Name</label>
         </div>
         <!-- 信箱 -->
         <div class="input-box">
           <span class="icon"><i class="fas fa-envelope"></i></span>
-          <input type="text" class="mx-2" required v-model="registeremail" />
+          <input type="text" class="mx-2" required v-model="registeremail" autocomplete="off" />
           <label>Email</label>
         </div>
         <!-- 密碼 -->
         <div class="input-box">
           <span class="icon"><i class="fas fa-lock"></i></span>
-          <input type="password" class="mx-2" required v-model="registerpassword" />
+          <input
+            type="password"
+            class="mx-2"
+            required
+            v-model="registerpassword"
+            autocomplete="off"
+          />
           <label>Password</label>
         </div>
         <!-- 確認密碼 -->
         <div class="input-box">
           <span class="icon"><i class="fas fa-lock"></i></span>
-          <input type="password" class="mx-2" required v-model="confirmPassword" />
+          <input
+            type="password"
+            class="mx-2"
+            required
+            v-model="confirmPassword"
+            autocomplete="off"
+          />
           <label>Confirm Password</label>
         </div>
         <!-- 註冊前確認規定同意書 -->
@@ -77,10 +89,14 @@
 </template>
 
 <script setup>
+// 使用 Pinia，利用 store 去訪問狀態
+import { useIdentityStore } from '@/stores/identity.js'
+const store = useIdentityStore()
+
 import { ref, onMounted } from 'vue'
 
 const LRModal = ref(null)
-const loginemail = ref('')
+const loginEmail = ref('')
 const loginpassword = ref('')
 const confirmPassword = ref('')
 const rememberMe = ref(false)
@@ -91,9 +107,8 @@ const loginForm = ref(null)
 const registerForm = ref(null)
 
 const closeModal = () => {
-  if (LRModal.value) {
-    LRModal.value.style.display = 'none'
-  }
+  // 隱藏登入畫面
+  store.hide()
 }
 
 const showLogin = () => {
@@ -127,7 +142,7 @@ const submitRegister = () => {
 }
 
 onMounted(() => {
-  showLogin() // 預設顯示登入表單
+  showLogin()
 })
 </script>
 

@@ -44,7 +44,7 @@
               class="text-center"
               :class="{ nLink: canToggle, login_btn: !canToggle }"
               href="#"
-              active
+              @click="showLogin"
               ><span> 登入 </span></CNavLink
             >
           </CNavItem>
@@ -71,6 +71,10 @@
 import { ref, onMounted } from 'vue'
 import { CNavbar, CNavbarBrand, CNavbarToggler, CCollapse } from '@coreui/vue'
 
+// 使用 Pinia，利用 store 去訪問狀態
+import { useIdentityStore } from '@/stores/identity.js'
+const store = useIdentityStore()
+
 const visible = ref(false)
 
 const isScrolled = ref(false)
@@ -95,6 +99,11 @@ window.addEventListener('resize', () => {
     canToggle.value = true
   }
 })
+
+// 顯示登入視窗
+const showLogin = () => {
+  store.show()
+}
 
 onMounted(() => {
   if (window.innerWidth > 991) {
