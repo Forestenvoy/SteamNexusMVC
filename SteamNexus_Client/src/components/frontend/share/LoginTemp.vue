@@ -29,7 +29,7 @@
         <button type="submit" class="btn">Login</button>
         <!-- 註冊按鈕 -->
         <div class="login-register">
-          <p>Don't have an account?<a href="#" @click.prevent="showRegister"> Register</a></p>
+          <p>Don't have an account? <a href="#" @click.prevent="showRegister"> Register</a></p>
         </div>
       </form>
     </div>
@@ -69,7 +69,7 @@
         <button type="submit" class="btn">Register</button>
         <!-- 登入按鈕 -->
         <div class="login-register">
-          <p>Already have an account?<a href="#" @click.prevent="showLoginModel"> Login</a></p>
+          <p>Already have an account? <a href="#" @click.prevent="showLogin"> Login</a></p>
         </div>
       </form>
     </div>
@@ -89,7 +89,6 @@ const registeremail = ref('')
 const registerpassword = ref('')
 const loginForm = ref(null)
 const registerForm = ref(null)
-const showLogin = ref(true)
 
 const closeModal = () => {
   if (LRModal.value) {
@@ -97,7 +96,7 @@ const closeModal = () => {
   }
 }
 
-const showLoginModel = () => {
+const showLogin = () => {
   if (LRModal.value && loginForm.value && registerForm.value) {
     LRModal.value.classList.remove('active')
     setTimeout(() => {
@@ -152,7 +151,7 @@ onMounted(() => {
   overflow: hidden;
   transition:
     height 0.3s ease,
-    transform 0.3s ease;
+    transform 0.5s ease;
 }
 
 .LRModal .form-box {
