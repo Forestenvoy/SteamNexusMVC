@@ -63,7 +63,11 @@
                 :modules="modules"
                 class="card-wrapper"
               >
-                <swiper-slide class="swiper-card" v-for="menu in menuLists" :key="menu.id">
+                <swiper-slide
+                  class="swiper-card d-flex justify-content-center align-items-center"
+                  v-for="menu in menuLists"
+                  :key="menu.id"
+                >
                   <menu-card :menu="menu"></menu-card>
                 </swiper-slide>
               </swiper>
@@ -123,8 +127,13 @@ onMounted(() => {
 </script>
 
 <style>
-.swiper{
-  height: 400px;
+.swiper {
+  height: 300px;
+  transition: 0.5s;
+}
+
+.menu-slider:hover .swiper {
+  height: 500px;
 }
 
 .swiper-button-prev,
@@ -138,6 +147,17 @@ onMounted(() => {
 </style>
 
 <style scoped>
+@media (min-width: 1600px) {
+  .container-xxl,
+  .container-xl,
+  .container-lg,
+  .container-md,
+  .container-sm,
+  .container {
+    max-width: 1440px;
+  }
+}
+
 /* 容器 */
 .menu-slider {
   position: relative;
