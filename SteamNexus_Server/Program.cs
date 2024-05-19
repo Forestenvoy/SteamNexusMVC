@@ -26,6 +26,7 @@ builder.Services.AddCors(options =>
     );
 });
 
+
 #region cookieÅçÃÒ
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>

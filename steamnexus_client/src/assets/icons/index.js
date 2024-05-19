@@ -81,7 +81,8 @@ import {
   cilXCircle,
   cilGamepad,
   cilCheckAlt,
-  cilSearch
+  cilSearch,
+  cilFrown
 } from '@coreui/icons'
 
 export const iconsSet = Object.assign(
@@ -142,7 +143,8 @@ export const iconsSet = Object.assign(
     cilXCircle,
     cilGamepad,
     cilCheckAlt,
-    cilSearch
+    cilSearch,
+    cilFrown
   },
   {
     cifUs,

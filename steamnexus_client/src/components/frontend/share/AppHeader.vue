@@ -40,7 +40,13 @@
         </CNavbarNav>
         <CNavbarNav class="ms-0 ms-lg-2 mb-2 mb-lg-0 order-2">
           <CNavItem>
-            <CNavLink class="nLink text-center" href="#" active> 登入 </CNavLink>
+            <CNavLink
+              class="text-center"
+              :class="{ nLink: canToggle, login_btn: !canToggle }"
+              href="#"
+              active
+              ><span> 登入 </span></CNavLink
+            >
           </CNavItem>
         </CNavbarNav>
         <CForm class="d-flex order-1 pb-3 pb-lg-0">
@@ -62,13 +68,16 @@
   <section class="banner"></section>
 </template>
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { CNavbar, CNavbarBrand, CNavbarToggler, CCollapse } from '@coreui/vue'
 
 const visible = ref(false)
 
 const isScrolled = ref(false)
 const buttonColor = ref('light')
+const canToggle = ref(false)
+
+// 偵測滾動事件
 window.addEventListener('scroll', () => {
   if (window.scrollY > 0) {
     isScrolled.value = true
@@ -76,6 +85,22 @@ window.addEventListener('scroll', () => {
   } else {
     isScrolled.value = false
     buttonColor.value = 'light'
+  }
+})
+
+window.addEventListener('resize', () => {
+  if (window.innerWidth > 991) {
+    canToggle.value = false
+  } else {
+    canToggle.value = true
+  }
+})
+
+onMounted(() => {
+  if (window.innerWidth > 991) {
+    canToggle.value = false
+  } else {
+    canToggle.value = true
   }
 })
 </script>
@@ -197,6 +222,62 @@ window.addEventListener('scroll', () => {
 
 .sticky .nLink::after {
   background: #000;
+}
+
+/* 登入按鈕 */
+
+.login_btn {
+  font-weight: 700;
+  color: #fff;
+  border: 1px solid #fff;
+  padding: 18px 34px;
+  position: relative;
+  background-color: transparent;
+  transition: 0.3s ease-in-out;
+  width: 80px;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.login_btn span {
+  font-size: 25px;
+  z-index: 1;
+}
+
+.login_btn::before {
+  content: '';
+  width: 0%;
+  height: 100%;
+  position: absolute;
+  background-color: #fff;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  transition: 0.3s ease-in-out;
+}
+
+.login_btn:hover {
+  color: #000;
+}
+
+.login_btn:hover::before {
+  content: '';
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+
+.sticky .login_btn {
+  color: #000;
+  border: 1px solid #000;
+}
+
+.sticky .login_btn::before {
+  background-color: #000;
+}
+
+.sticky .login_btn:hover {
+  color: #fff;
 }
 </style>
 

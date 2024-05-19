@@ -139,7 +139,7 @@ public class UserIdentityController : ControllerBase
     #endregion
 
 
-    #region(cookie) Logout for Name
+    #region Logout(cookie) for Name
     [HttpDelete("Logout")]
     public async Task<IActionResult> Logout()
     {
@@ -224,7 +224,14 @@ public class UserIdentityController : ControllerBase
 
             //先宣告再回傳結果
             var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
-            return Ok(new { Token = tokenString });
+            //return Ok(new { Token = tokenString });
+
+            //顯示使用者登入訊息
+            return Ok(new
+            {
+                Message = $"{user.Name} 已登入成功" ,// 顯示登入成功訊息
+                Token = tokenString,
+            });
         }
     }
     #endregion
