@@ -33,7 +33,7 @@
     </CCol>
     <CCol xs="12" md="6">
       <select name="CPU" class="form-select" v-model="selectedCPU" @change="selectedProduct">
-        <option value="0" disabled selected hidden>---- 請選擇硬體 ----</option>
+        <option :value="0" disabled selected hidden>---- 請選擇硬體 ----</option>
         <optgroup :label="groupName" v-for="(group, groupName) in SortGroups" :key="groupName">
           <option
             v-for="item in group"
@@ -43,10 +43,19 @@
             :data-wattage="item.wattage"
             :data-recommend="item.recommend"
           >
-            {{ item.productName }} {{ item.specification }} ,${{ item.price }}
+            {{ item.name }} {{ item.specification }} ,${{ item.price }}
           </option>
         </optgroup>
       </select>
+    </CCol>
+  </CRow>
+  <!-- 上一頁、下一頁 -->
+  <CRow>
+    <CCol xs="12" md="6">
+      <button class="button-80" @click="builderStore.prev()">上一頁</button>
+    </CCol>
+    <CCol xs="12" md="6">
+      <button class="button-80" @click="builderStore.next()">下一頁</button>
     </CCol>
   </CRow>
 </template>
@@ -58,20 +67,26 @@ import { ref, onMounted } from 'vue'
 // core UI
 import { CRow, CCol, CForm, CFormCheck } from '@coreui/vue'
 
+// pinia
+import { useBuilderStore } from '@/stores/builder.js'
+const builderStore = useBuilderStore()
+
 // API URL
 const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
 // Original Data : CPU Products (Classified)
 const CPUGroups = ref({})
 
+// Sort Data
+const SortGroups = ref({})
+
+// Selected Product
+const selectedCPU = ref(0)
+
 // filter ref
 const brand = ref('All')
 const min = ref('')
 const max = ref('')
-const selectedCPU = ref(0)
-
-// Sort Data
-const SortGroups = ref({})
 
 // (Async) get CPU Data
 const getData = async () => {
@@ -158,6 +173,40 @@ const filterByPrice = () => {
   }
 }
 
+// 產品選擇事件
+const selectedProduct = (event) => {
+  const Id = event.target.value
+  const endIndex = event.target.options[event.target.selectedIndex].text.indexOf(',')
+  const Name = event.target.options[event.target.selectedIndex].text.slice(0, endIndex)
+  const Price = event.target.options[event.target.selectedIndex].getAttribute('data-price')
+  const Wattage = event.target.options[event.target.selectedIndex].getAttribute('data-wattage')
+  const Product = {
+    type: 'CPU',
+    id: Id,
+    name: Name,
+    price: Price,
+    wattage: Wattage
+  }
+  // 加入至產品清單
+  builderStore.addProduct('CPU', Product)
+
+  // 腳位判定
+  const optgroup = event.target.options[event.target.selectedIndex].parentNode.getAttribute('label')
+  let Socket = ''
+  if (optgroup.indexOf('Intel') !== -1) {
+    const start = optgroup.indexOf('代')
+    const end = optgroup.indexOf('腳')
+    Socket = optgroup.slice(start + 1, end).trim()
+  } else {
+    const start = optgroup.indexOf(' ')
+    const temp = optgroup.slice(start + 1).trim()
+    const end = temp.indexOf(' ')
+    Socket = temp.slice(0, end).trim()
+  }
+  // 儲存腳位
+  builderStore.setSocket(Socket)
+}
+
 onMounted(() => {
   // 檢查 session storage 是否有資料
   const storedData = sessionStorage.getItem('CPUList')
@@ -182,5 +231,66 @@ input[type='number'] {
   -webkit-appearance: textfield; /* Safari */
   -moz-appearance: textfield; /* Firefox */
   appearance: textfield;
+}
+
+/* button */
+.button-80 {
+  background: #fff;
+  backface-visibility: hidden;
+  border-radius: 0.375rem;
+  border-style: solid;
+  border-width: 0.125rem;
+  box-sizing: border-box;
+  color: #212121;
+  cursor: pointer;
+  display: inline-block;
+  font-family: Circular, Helvetica, sans-serif;
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  padding: 0.875rem 1.125rem;
+  position: relative;
+  text-align: left;
+  text-decoration: none;
+  transform: translateZ(0) scale(1);
+  transition: transform 0.2s;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.button-80:not(:disabled):hover {
+  transform: scale(1.05);
+}
+
+.button-80:not(:disabled):hover:active {
+  transform: scale(1.05) translateY(0.125rem);
+}
+
+.button-80:focus {
+  outline: 0 solid transparent;
+}
+
+.button-80:focus:before {
+  content: '';
+  left: calc(-1 * 0.375rem);
+  pointer-events: none;
+  position: absolute;
+  top: calc(-1 * 0.375rem);
+  transition: border-radius;
+  user-select: none;
+}
+
+.button-80:focus:not(:focus-visible) {
+  outline: 0 solid transparent;
+}
+
+.button-80:focus:not(:focus-visible):before {
+  border-width: 0;
+}
+
+.button-80:not(:disabled):active {
+  transform: translateY(0.125rem);
 }
 </style>

@@ -10,24 +10,44 @@
       <!-- 進度條 -->
       <!-- 核心系統 -->
       <CRow class="content">
-        <FirstQuestion v-if="builderStore.getCurrentStep === 0" />
-        <CPUSelector v-else-if="builderStore.getCurrentStep === 1" />
+        <component :is="currentStepComponent" />
       </CRow>
     </CContainer>
   </section>
 </template>
 
 <script setup>
+// vue
+import { computed } from 'vue'
+
 // Core UI
 import { CContainer, CRow, CCol } from '@coreui/vue'
 
 // my components
 import FirstQuestion from '@/components/frontend/pcbuilder/section/FirstQuestion.vue'
-import CPUSelector from '@/components/frontend/pcbuilder/section/CPUSelector.vue'
+import CentralProcessingUnit from '@/components/frontend/pcbuilder/section/CentralProcessingUnit.vue'
+import MotherBoard from '@/components/frontend/pcbuilder/section/MotherBoard.vue'
+import GraphicsProcessingUnit from '@/components/frontend/pcbuilder/section/GraphicsProcessingUnit.vue'
 
 // pinia
 import { useBuilderStore } from '@/stores/builder.js'
 const builderStore = useBuilderStore()
+
+// computed
+const currentStepComponent = computed(() => {
+  switch (builderStore.getCurrentStep) {
+    case 0:
+      return FirstQuestion
+    case 1:
+      return CentralProcessingUnit
+    case 2:
+      return MotherBoard
+    case 3:
+      return GraphicsProcessingUnit
+    default:
+      return FirstQuestion
+  }
+})
 </script>
 
 <style scoped>
