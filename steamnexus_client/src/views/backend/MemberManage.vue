@@ -924,8 +924,8 @@ onBeforeRouteLeave(() => {
 
 <style>
 /* DataTables */
-@import 'datatables.net-dt/css/dataTables.datatables.min.css';
-@import 'datatables.net-fixedheader-dt/css/fixedHeader.dataTables.min.css';
-@import 'datatables.net-buttons-dt/css/buttons.dataTables.min.css';
-@import 'datatables.net-responsive-dt/css/responsive.dataTables.min.css';
+@import '/node_modules/datatables.net-dt/css/dataTables.datatables.min.css';
+@import '/node_modules/datatables.net-fixedheader-dt/css/fixedHeader.dataTables.min.css';
+@import '/node_modules/datatables.net-buttons-dt/css/buttons.dataTables.min.css';
+@import '/node_modules/datatables.net-responsive-dt/css/responsive.dataTables.min.css';
 </style>
