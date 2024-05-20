@@ -22,15 +22,17 @@ namespace SteamNexus_Server.Controllers;
 [ApiController]
 public class UserIdentityController : ControllerBase
 {
+    private readonly ILogger<MemberManagementController> _logger;
     private SteamNexusDbContext _application;
 
     //JWT引用
     public IConfiguration _configuration;
 
-    public UserIdentityController(SteamNexusDbContext application,IConfiguration configuration)
+    public UserIdentityController(SteamNexusDbContext application,IConfiguration configuration, ILogger<MemberManagementController> logger)
     {
         _application = application;
         _configuration = configuration;
+        _logger = logger;
     }
 
 
@@ -192,14 +194,15 @@ public class UserIdentityController : ControllerBase
         {
             new Claim(JwtRegisteredClaimNames.Sub, _configuration["Jwt:Subject"]),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()), //token識別標籤，唯一值
-            new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()), //顯示發行時間
+            //new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()), //顯示發行時間
+            new Claim(JwtRegisteredClaimNames.Iat, ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds().ToString()),  //修正為 Unix 時間
             //new Claim(JwtRegisteredClaimNames.Email, user.Email),
 
             new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
             new Claim(ClaimTypes.Name, user.Name),
             new Claim(ClaimTypes.Role, user.Role.RoleName),
 
-            new Claim("UserId", user.UserId.ToString()),
+            //new Claim("UserId", user.UserId.ToString()),
             new Claim("FullName", user.Name),
             //new Claim("Roles", user.Role.RoleName),
                         
@@ -279,6 +282,83 @@ public class UserIdentityController : ControllerBase
         }
     }
     #endregion
+
+
+    #region JWT CheckTime
+    [HttpGet("CheckJwtExpiration")]
+    public IActionResult CheckJwtExpiration()
+    {
+        //從Header取得Authorization的數值，並轉換字串
+        var authHeader = Request.Headers["Authorization"].ToString();
+
+        //檢查欄位是否有Bearer開頭的欄位
+        if (authHeader != null && authHeader.StartsWith("Bearer "))
+        {   
+            //提取token
+            var token = authHeader.Substring("Bearer ".Length).Trim();
+
+            //解析token
+            var jwtToken = new JwtSecurityTokenHandler().ReadToken(token) as JwtSecurityToken;
+
+            if (jwtToken == null)
+            {
+                return BadRequest("無效的JWT");
+            }
+
+            // 將 UTC 時間轉換為當地時間
+            var localTime = jwtToken.ValidTo.ToLocalTime();
+
+            //設定顯示時間格式
+            var formattedExpiration = localTime.ToString("yyyy/MM/dd:HH:mm:ss");
+            return Ok(new { Expiration = formattedExpiration });
+        }
+        else
+        {
+            return BadRequest("Authorization header is missing or does not contain a Bearer token");
+        }
+    }
+    #endregion
+
+
+    [HttpGet("GetUserIdFromToken")]
+    public IActionResult GetUserIdFromToken()
+    {
+        //從Header取得Authorization的數值，並轉換字串
+        var authHeader = Request.Headers["Authorization"].ToString();
+
+        //檢查欄位是否有Bearer開頭的欄位
+        if (authHeader != null && authHeader.StartsWith("Bearer "))
+        {
+            //提取token
+            var token = authHeader.Substring("Bearer ".Length).Trim();
+
+            //解析token
+            var jwtToken = new JwtSecurityTokenHandler().ReadToken(token) as JwtSecurityToken;
+
+            if (jwtToken == null)
+            {
+                return BadRequest("無效的JWT");
+            }
+
+            //取得ID
+            var userIdClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+            if (userIdClaim != null)
+            {
+                Console.WriteLine($"UserId: {userIdClaim.Value}");
+                _logger.LogInformation($"UserId: {userIdClaim.Value}");
+                return Ok(new { UserId = userIdClaim.Value });
+            }
+            else
+            {
+                return BadRequest("未找到用戶 ID");
+            }
+        }
+        else
+        {
+            return BadRequest("Authorization 欄位不存在或不以 Bearer  開頭");
+        }
+    }
+
 
 }
 
