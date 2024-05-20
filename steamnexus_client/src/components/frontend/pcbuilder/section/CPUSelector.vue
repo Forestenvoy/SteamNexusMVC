@@ -66,8 +66,8 @@ const CPUGroups = ref({})
 
 // filter ref
 const brand = ref('All')
-const min = ref(null)
-const max = ref(null)
+const min = ref('')
+const max = ref('')
 const selectedCPU = ref(0)
 
 // Sort Data
@@ -134,8 +134,27 @@ const filterByBrand = () => {
 
 // Filter By Price
 const filterByPrice = () => {
-  if (min.value == null || min.value === '') {
-    console.log('請輸入最低價格')
+  // 過濾最低價格
+  if (min.value !== '') {
+    const filteredGroups = Object.keys(SortGroups.value).reduce((result, key) => {
+      const filteredProducts = SortGroups.value[key].filter((product) => product.price >= min.value)
+      if (filteredProducts.length > 0) {
+        result[key] = filteredProducts
+      }
+      return result
+    }, {})
+    SortGroups.value = filteredGroups
+  }
+  // 過濾最高價格
+  if (max.value !== '') {
+    const filteredGroups = Object.keys(SortGroups.value).reduce((result, key) => {
+      const filteredProducts = SortGroups.value[key].filter((product) => product.price <= max.value)
+      if (filteredProducts.length > 0) {
+        result[key] = filteredProducts
+      }
+      return result
+    }, {})
+    SortGroups.value = filteredGroups
   }
 }
 
