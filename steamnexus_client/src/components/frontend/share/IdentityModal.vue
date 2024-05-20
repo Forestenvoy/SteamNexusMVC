@@ -98,7 +98,6 @@ import axios from 'axios'
 
 // 從環境變數取得 API BASE URL
 const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
-console.log(apiUrl)
 
 const LRModal = ref(null)
 const loginEmail = ref('')
@@ -199,11 +198,16 @@ const submitLogin = () => {
       if (response.status === 200 && response.data.token) {
         const { token, message } = response.data // 從回應中提取 token 和 message
 
-        console.log('Login successful:', message)
-        console.log('Token:', token)
+        // console.log('Login successful:', message)
+        // console.log('Token:', token)
 
-        // 儲存 token 到 Pinia store 或 localStorage
-        // store.setUser({ token }) // 根據你的 store 結構來設置用戶資料
+        // 儲存 token 到 Pinia store
+        store.setToken(token)
+
+        // 紀錄登入狀態
+        store.Login()
+
+        // 儲存至 localStorage ~ 記住登入(可關閉瀏覽器) (未實作)
         // localStorage.setItem('token', token);
 
         // 顯示登入成功訊息或進行頁面跳轉

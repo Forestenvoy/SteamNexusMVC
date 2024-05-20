@@ -1,22 +1,68 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
+// 解析 JWT Token
+import { jwtDecode } from 'jwt-decode'
 
 export const useIdentityStore = defineStore('identity', () => {
-  // 宣告進度條顯示狀態
+  // 是否顯示登入互動視窗
+  // state
   const showLogin = ref(false)
-
-  // 回傳登入畫面顯示狀態
+  // getter
   const getShowLogin = computed(() => showLogin.value)
-
-  // 顯示登入畫面
+  // actions
   const show = () => {
+    // 顯示登入畫面
     showLogin.value = true
   }
-
-  // 隱藏登入畫面
   const hide = () => {
+    // 隱藏登入畫面
     showLogin.value = false
   }
 
-  return { showLogin, getShowLogin, show, hide }
+  // JWT Token
+  // state
+  const token = ref('')
+  // getter
+  const getToken = computed(() => token.value)
+  // actions
+  const setToken = (value) => {
+    token.value = value
+  }
+
+  // 使用者是否登入
+  // state
+  const isLogin = ref(false)
+  // getter
+  const getIsLogin = computed(() => isLogin.value)
+  // actions
+  const Login = () => {
+    // 登入
+    isLogin.value = true
+  }
+  const Logout = () => {
+    // 登出
+    isLogin.value = false
+  }
+
+  // 使用者權限
+  // state
+  const userRole = ref('')
+  // getter
+  const getUserRole = computed(() => {
+    if (token.value) {
+      try {
+        const decodedToken = jwtDecode(token.value)
+        userRole.value =
+          decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']
+      } catch (error) {
+        console.error('Invalid token:', error)
+        userRole.value = ''
+      }
+    } else {
+      userRole.value = ''
+    }
+    return userRole.value
+  })
+
+  return { getShowLogin, show, hide, getToken, setToken, getUserRole, getIsLogin, Login, Logout }
 })

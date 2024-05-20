@@ -33,12 +33,12 @@
             </CDropdownMenu>
           </CDropdown>
         </CNavbarNav>
-        <CNavbarNav class="me-0 me-lg-2 order-0 text-center">
+        <CNavbarNav class="me-0 me-lg-2 order-0 text-center" v-if="store.getUserRole === 'Admin'">
           <CNavItem>
             <CNavLink class="nLink" href="#" @click="$router.push('/admin')"> 後台系統 </CNavLink>
           </CNavItem>
         </CNavbarNav>
-        <CNavbarNav class="ms-0 ms-lg-2 mb-2 mb-lg-0 order-2">
+        <CNavbarNav class="ms-0 ms-lg-2 mb-2 mb-lg-0 order-2" v-if="!store.getIsLogin">
           <CNavItem>
             <CNavLink
               class="text-center"
