@@ -1,1 +1,0 @@
-import{_ as e}from"./_plugin-vue_export-helper-DlAUqK2U.js";import{i as n,o}from"./index-XlqSScU4.js";const t={};function a(r,c,s,p,_,f){return o(),n("h1",null,"MenuManage")}const l=e(t,[["render",a]]);export{l as default};
