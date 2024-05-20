@@ -5,9 +5,9 @@ VisualStudioVersion = 17.9.34723.18
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SteamNexus", "SteamNexus\SteamNexus.csproj", "{E6CA5EE2-84DC-492B-BEBE-A88B93E38217}"
 EndProject
-Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "steamnexus_client", "SteamNexus_Client\steamnexus_client.esproj", "{54041F3B-2BDE-40F1-B725-03714883EFD4}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SteamNexus_Server", "SteamNexus_Server\SteamNexus_Server.csproj", "{8E34F2AA-64F4-4A4D-8523-4917F52DE994}"
+EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "steamnexus_client", "..\..\SteamNexus_Client\steamnexus_client.esproj", "{5985CEFD-CA5E-4E0E-BB61-2B9054356D0E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,16 +19,16 @@ Global
 		{E6CA5EE2-84DC-492B-BEBE-A88B93E38217}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E6CA5EE2-84DC-492B-BEBE-A88B93E38217}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E6CA5EE2-84DC-492B-BEBE-A88B93E38217}.Release|Any CPU.Build.0 = Release|Any CPU
-		{54041F3B-2BDE-40F1-B725-03714883EFD4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{54041F3B-2BDE-40F1-B725-03714883EFD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{54041F3B-2BDE-40F1-B725-03714883EFD4}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{54041F3B-2BDE-40F1-B725-03714883EFD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{54041F3B-2BDE-40F1-B725-03714883EFD4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{54041F3B-2BDE-40F1-B725-03714883EFD4}.Release|Any CPU.Deploy.0 = Release|Any CPU
 		{8E34F2AA-64F4-4A4D-8523-4917F52DE994}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8E34F2AA-64F4-4A4D-8523-4917F52DE994}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8E34F2AA-64F4-4A4D-8523-4917F52DE994}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8E34F2AA-64F4-4A4D-8523-4917F52DE994}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5985CEFD-CA5E-4E0E-BB61-2B9054356D0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5985CEFD-CA5E-4E0E-BB61-2B9054356D0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5985CEFD-CA5E-4E0E-BB61-2B9054356D0E}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{5985CEFD-CA5E-4E0E-BB61-2B9054356D0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5985CEFD-CA5E-4E0E-BB61-2B9054356D0E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5985CEFD-CA5E-4E0E-BB61-2B9054356D0E}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
