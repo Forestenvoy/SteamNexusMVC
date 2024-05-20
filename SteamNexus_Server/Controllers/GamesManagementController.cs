@@ -738,13 +738,30 @@ namespace SteamNexus.Areas.Administrator.Controllers
             return Json(result);
         }
 
-        //(前台)拿取價格
-        [HttpGet("GetMinRecData")]
-        public async Task<JsonResult> GetMinRecData(int id)
+        //(前台)拿取最低配備
+        [HttpGet("GetMinReqData")]
+        public async Task<JsonResult> GetMinReqData(int id)
         {
-            var MinRecData = _context.MinimumRequirements.FindAsync(id).Result;
+            var MinReqData = _context.MinimumRequirements.FindAsync(id).Result;
 
-            return Json(MinRecData);
+            return Json(MinReqData);
         }
+        //(前台)拿取最高配備
+        [HttpGet("GetRecReqData")]
+        public async Task<JsonResult> GetRecReqData(int id)
+        {
+            var RecReqData = _context.RecommendedRequirements.FindAsync(id).Result;
+
+            return Json(RecReqData);
+        }
+        //(前台)拿取相關遊戲
+        //[HttpGet("GetGameTagSameData")]
+        //public async Task<JsonResult> GetGameTagSameData(int id)
+        //{
+        //    var TagGroups = _context.TagGroups.FindAsync(id).Result;
+        //    var sameTagGame= _context.TagGroups.Where(t => tagIds.Contains(t.TagId)).TagGroups
+
+        //    return Json(RecReqData);
+        //}
     }
 }
