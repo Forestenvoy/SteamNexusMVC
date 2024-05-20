@@ -667,7 +667,8 @@ namespace SteamNexus.Areas.Administrator.Controllers
             }
             return "總次數:" + allNum + "\nAPI找不到次數:" + APIerr + "\n欄位錯誤:" + errNum;
         }
-
+        
+        //(前台)拿取價格
         [HttpGet("GetLineChartData")]
         public async Task<JsonResult> GetLineChartData(int id)
         {
@@ -680,5 +681,87 @@ namespace SteamNexus.Areas.Administrator.Controllers
 
             return Json(priceHistorie);
         }
+
+        //(前台)拿取tag
+        [HttpGet("GetTagGroup")]
+        public async Task<JsonResult> GetTagGroup(int id)
+        {
+            // 获取相关的 PriceHistories 集合
+            var TagGroupFind = await _context.TagGroups
+                               .Where(ph => ph.GameId == id)
+                               .Select(ph => new { ph.TagId })
+                               .ToListAsync();
+    
+            var tagIds = TagGroupFind.Select(t => t.TagId).ToList();
+
+            var tags = await _context.Tags
+                .Where(t => tagIds.Contains(t.TagId))
+                .Select(t => new { t.Name })
+                .ToListAsync();
+
+            var tagNames = tags.Select(t => t.Name).ToList();
+
+            return Json(tagNames);
+        }
+
+        //(前台)拿取Language中文
+        [HttpGet("GetLanguageGroup")]
+        public async Task<JsonResult> GetLanguageGroup(int id)
+        {
+            // 获取相关的 PriceHistories 集合
+            var LanguageGroupFind = await _context.GameLanguages
+                               .Where(ph => ph.GameId == id)
+                               .Select(ph => new { ph.LanguageId, ph.Support })
+                               .ToListAsync();
+
+            var LanguageIds = LanguageGroupFind.Select(t => t.LanguageId).ToList();
+
+            var LanguagesGroup = await _context.Languages
+                .Where(t => LanguageIds.Contains(t.LanguageId))
+                .Select(t => new
+                {
+                    t.LanguageId,
+                    t.Name
+                })
+                .ToListAsync();
+
+            var result = from lg in LanguageGroupFind
+                         join lang in LanguagesGroup on lg.LanguageId equals lang.LanguageId
+                         select new
+                         {
+                             lang.Name,
+                             lg.Support
+                         };
+
+            //var LanguageNames = Languages.Select(t => t.Name).ToList();
+
+            return Json(result);
+        }
+
+        //(前台)拿取最低配備
+        [HttpGet("GetMinReqData")]
+        public async Task<JsonResult> GetMinReqData(int id)
+        {
+            var MinReqData = _context.MinimumRequirements.FindAsync(id).Result;
+
+            return Json(MinReqData);
+        }
+        //(前台)拿取最高配備
+        [HttpGet("GetRecReqData")]
+        public async Task<JsonResult> GetRecReqData(int id)
+        {
+            var RecReqData = _context.RecommendedRequirements.FindAsync(id).Result;
+
+            return Json(RecReqData);
+        }
+        //(前台)拿取相關遊戲
+        //[HttpGet("GetGameTagSameData")]
+        //public async Task<JsonResult> GetGameTagSameData(int id)
+        //{
+        //    var TagGroups = _context.TagGroups.FindAsync(id).Result;
+        //    var sameTagGame= _context.TagGroups.Where(t => tagIds.Contains(t.TagId)).TagGroups
+
+        //    return Json(RecReqData);
+        //}
     }
 }
