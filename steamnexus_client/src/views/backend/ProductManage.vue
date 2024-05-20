@@ -52,6 +52,13 @@ import 'datatables.net-rowgroup-dt'
 import 'datatables.net-buttons-dt'
 import 'datatables.net-responsive-dt'
 
+import 'datatables.net-dt/css/dataTables.datatables.min.css';
+import 'datatables.net-fixedheader-dt/css/fixedHeader.dataTables.min.css';
+import 'datatables.net-rowgroup-dt/css/rowGroup.dataTables.min.css';
+import 'datatables.net-buttons-dt/css/buttons.dataTables.min.css';
+import 'datatables.net-responsive-dt/css/responsive.dataTables.min.css';
+
+
 import { ref, onMounted } from 'vue'
 import { onBeforeRouteLeave } from 'vue-router'
 
@@ -365,14 +372,7 @@ onBeforeRouteLeave(() => {
   $(document).off('click', '.Edit-btn')
 })
 </script>
-<style>
-/* DataTables */
-@import 'datatables.net-dt/css/dataTables.datatables.min.css';
-@import 'datatables.net-fixedheader-dt/css/fixedHeader.dataTables.min.css';
-@import 'datatables.net-rowgroup-dt/css/rowGroup.dataTables.min.css';
-@import 'datatables.net-buttons-dt/css/buttons.dataTables.min.css';
-@import 'datatables.net-responsive-dt/css/responsive.dataTables.min.css';
-</style>
+
 
 <style>
 /* datatables 頂部布局調整 */

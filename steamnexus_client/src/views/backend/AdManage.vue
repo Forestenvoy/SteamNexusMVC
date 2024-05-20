@@ -174,6 +174,12 @@ import 'datatables.net-fixedheader-dt'
 import 'datatables.net-buttons-dt'
 import 'datatables.net-responsive-dt'
 
+
+import 'datatables.net-dt/css/dataTables.datatables.min.css'
+import 'datatables.net-fixedheader-dt/css/fixedHeader.dataTables.min.css'
+import 'datatables.net-buttons-dt/css/buttons.dataTables.min.css'
+import 'datatables.net-responsive-dt/css/responsive.dataTables.min.css'
+
 //Form驗證製作
 import { defineRule, Form, Field, ErrorMessage, configure } from 'vee-validate';
 import { required, url, max } from '@vee-validate/rules';
@@ -617,13 +623,7 @@ onBeforeRouteLeave(() => {
 })
 </script>
 
-<style>
-/* DataTables */
-@import 'datatables.net-dt/css/dataTables.datatables.min.css';
-@import 'datatables.net-fixedheader-dt/css/fixedHeader.dataTables.min.css';
-@import 'datatables.net-buttons-dt/css/buttons.dataTables.min.css';
-@import 'datatables.net-responsive-dt/css/responsive.dataTables.min.css';
-</style>
+
 <style>
 /***** datatables 自訂樣式 *****/
 
