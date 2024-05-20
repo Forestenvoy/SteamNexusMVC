@@ -31,5 +31,16 @@ export default defineConfig({
         'node_modules/datatables.net-responsive-dt'
       )
     }
+  },
+  build: {
+    rollupOptions: {
+      external: [
+        'datatables.net-dt/css/dataTables.datatables.min.css',
+        'datatables.net-fixedheader-dt/css/fixedHeader.dataTables.min.css',
+        'datatables.net-rowgroup-dt/css/rowGroup.dataTables.min.css',
+        'datatables.net-buttons-dt/css/buttons.dataTables.min.css',
+        'datatables.net-responsive-dt/css/responsive.dataTables.min.css'
+      ]
+    }
   }
 })
