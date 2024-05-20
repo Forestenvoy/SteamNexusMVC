@@ -3,6 +3,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 // 前台系統
 const FrontendLayout = () => import('@/layouts/FrontendLayout.vue')
+// 首頁
+const HomePage = () => import('@/views/frontend/HomePage.vue')
 
 // 後台系統
 const BackendLayout = () => import('@/layouts/BackendLayout.vue')
@@ -76,7 +78,7 @@ const router = createRouter({
         {
           path: '',
           name: 'Home',
-          component: () => import('@/views/frontend/HomePage.vue')
+          component: HomePage
         },
         // 硬體估價
         {
