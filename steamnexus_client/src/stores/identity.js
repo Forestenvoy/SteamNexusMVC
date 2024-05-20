@@ -42,6 +42,7 @@ export const useIdentityStore = defineStore('identity', () => {
   const Logout = () => {
     // 登出
     isLogin.value = false
+    token.value = ''
   }
 
   // 使用者權限
