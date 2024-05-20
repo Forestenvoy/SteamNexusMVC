@@ -3,8 +3,8 @@
   <builder-banner></builder-banner>
   <!-- 菜單系統 -->
   <menu-slider></menu-slider>
-  <!-- 估價單系統 -->
-  <!-- <section class="box pc-builder" data-aos="fade-up"></section> -->
+  <!-- 電腦配單系統 -->
+  <main-system></main-system>
   <!-- Hardware Matching Game Ratio -->
   <game-ratio></game-ratio>
 </template>
@@ -20,6 +20,7 @@ import { onMounted } from 'vue'
 // 頁面元件
 import BuilderBanner from '@/components/frontend/pcbuilder/BuilderBanner.vue'
 import MenuSlider from '@/components/frontend/pcbuilder/MenuSlider.vue'
+import MainSystem from '@/components/frontend/pcbuilder/MainSystem.vue'
 import GameRatio from '@/components/frontend/pcbuilder/GameRatio.vue'
 
 onMounted(() => {

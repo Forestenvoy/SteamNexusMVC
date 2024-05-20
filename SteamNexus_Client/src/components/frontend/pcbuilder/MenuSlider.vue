@@ -1,5 +1,5 @@
 <template>
-  <section class="menu-slider mx-1 mx-md-5 mb-5">
+  <section class="menu-slider mx-1 mx-md-5 mb-5" id="menuSlider">
     <CContainer>
       <!-- 標題 -->
       <CRow class="mb-3">
