@@ -6,11 +6,14 @@
         <img v-else class="mx-2 brand-img" src="/img/logo-dark.png" />
         <span class="text-uppercase brand-title">SteamNexus</span>
       </CNavbarBrand>
+
       <CNavbarToggler
         aria-label="Toggle navigation"
         aria-expanded="{visible}"
         @click="visible = !visible"
       />
+      <!-- 使用者小型介面 -->
+      <AccountDropdown class="order-4" v-if="store.getIsLogin" />
       <CCollapse class="navbar-collapse" :visible="visible">
         <CNavbarNav class="mx-xl-auto text-center">
           <CNavItem>
@@ -21,35 +24,24 @@
               硬體估價
             </CNavLink>
           </CNavItem>
-          <CDropdown variant="nav-item" :popper="false">
-            <CDropdownToggle class="nLink" color="secondary">會員中心</CDropdownToggle>
-            <CDropdownMenu class="text-center" style="z-index: 100">
-              <CDropdownItem href="#" @click="$router.push('/userData')"
-                >會員資料變更</CDropdownItem
-              >
-              <CDropdownItem href="#" @click="$router.push('/trackedGames')"
-                >我的追蹤遊戲</CDropdownItem
-              >
-            </CDropdownMenu>
-          </CDropdown>
         </CNavbarNav>
-        <CNavbarNav class="me-0 me-lg-2 order-0 text-center">
+        <CNavbarNav class="me-0 me-lg-2 order-3 text-center" v-if="store.getUserRole === 'Admin'">
           <CNavItem>
             <CNavLink class="nLink" href="#" @click="$router.push('/admin')"> 後台系統 </CNavLink>
           </CNavItem>
         </CNavbarNav>
-        <CNavbarNav class="ms-0 ms-lg-2 mb-2 mb-lg-0 order-2">
+        <CNavbarNav class="ms-0 ms-lg-2 mb-2 mb-lg-0 order-5" v-if="!store.getIsLogin">
           <CNavItem>
             <CNavLink
               class="text-center"
               :class="{ nLink: canToggle, login_btn: !canToggle }"
               href="#"
-              active
+              @click="showLogin"
               ><span> 登入 </span></CNavLink
             >
           </CNavItem>
         </CNavbarNav>
-        <CForm class="d-flex order-1 pb-3 pb-lg-0">
+        <CForm class="d-flex order-4 pb-3 pb-lg-0">
           <input
             type="text"
             class="form-control me-2 input-search"
@@ -70,6 +62,12 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { CNavbar, CNavbarBrand, CNavbarToggler, CCollapse } from '@coreui/vue'
+
+import AccountDropdown from '@/components/frontend/share/AccountDropdown.vue'
+
+// 使用 Pinia，利用 store 去訪問狀態
+import { useIdentityStore } from '@/stores/identity.js'
+const store = useIdentityStore()
 
 const visible = ref(false)
 
@@ -95,6 +93,11 @@ window.addEventListener('resize', () => {
     canToggle.value = true
   }
 })
+
+// 顯示登入視窗
+const showLogin = () => {
+  store.show()
+}
 
 onMounted(() => {
   if (window.innerWidth > 991) {
@@ -135,6 +138,13 @@ onMounted(() => {
     padding: 0 30px;
   }
 }
+
+@media screen and (max-width: 576px) {
+  .navbar {
+    padding: 0px 0px;
+  }
+}
+
 .navbar-brand {
   position: relative;
   letter-spacing: 2px;

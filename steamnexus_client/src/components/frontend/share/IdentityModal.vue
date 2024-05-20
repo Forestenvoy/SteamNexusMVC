@@ -1,5 +1,5 @@
 <template>
-  <div class="LRModal" ref="LRModal" :style="{ display: showLogin ? 'block' : 'none' }">
+  <div class="LRModal" ref="LRModal" v-if="store.getShowLogin">
     <span class="icon-close" @click="closeModal">
       <i class="fa fa-times" aria-hidden="true"></i>
     </span>
@@ -10,13 +10,13 @@
         <!-- 信箱 -->
         <div class="input-box">
           <span class="icon"><i class="fas fa-envelope"></i></span>
-          <input type="text" class="mx-2" required v-model="loginemail" />
+          <input type="text" class="mx-2" required v-model="loginEmail" autocomplete="off" />
           <label>Email</label>
         </div>
         <!-- 密碼 -->
         <div class="input-box">
           <span class="icon"><i class="fas fa-lock"></i></span>
-          <input type="password" class="mx-2" required v-model="loginpassword" />
+          <input type="password" class="mx-2" required v-model="loginPassword" autocomplete="off" />
           <label>Password</label>
         </div>
         <!-- 記住我 -->
@@ -40,25 +40,37 @@
         <!-- 名字 -->
         <div class="input-box">
           <span class="icon"><i class="fa fa-user" aria-hidden="true"></i></span>
-          <input type="text" class="mx-2" required v-model="registername" />
+          <input type="text" class="mx-2" required v-model="registerName" autocomplete="off" />
           <label>Name</label>
         </div>
         <!-- 信箱 -->
         <div class="input-box">
           <span class="icon"><i class="fas fa-envelope"></i></span>
-          <input type="text" class="mx-2" required v-model="registeremail" />
+          <input type="text" class="mx-2" required v-model="registerEmail" autocomplete="off" />
           <label>Email</label>
         </div>
         <!-- 密碼 -->
         <div class="input-box">
           <span class="icon"><i class="fas fa-lock"></i></span>
-          <input type="password" class="mx-2" required v-model="registerpassword" />
+          <input
+            type="password"
+            class="mx-2"
+            required
+            v-model="registerPassword"
+            autocomplete="off"
+          />
           <label>Password</label>
         </div>
         <!-- 確認密碼 -->
         <div class="input-box">
           <span class="icon"><i class="fas fa-lock"></i></span>
-          <input type="password" class="mx-2" required v-model="confirmPassword" />
+          <input
+            type="password"
+            class="mx-2"
+            required
+            v-model="confirmPassword"
+            autocomplete="off"
+          />
           <label>Confirm Password</label>
         </div>
         <!-- 註冊前確認規定同意書 -->
@@ -77,23 +89,30 @@
 </template>
 
 <script setup>
+// 使用 Pinia，利用 store 去訪問狀態
+import { useIdentityStore } from '@/stores/identity.js'
+const store = useIdentityStore()
+
 import { ref, onMounted } from 'vue'
+import axios from 'axios'
+
+// 從環境變數取得 API BASE URL
+const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
 const LRModal = ref(null)
-const loginemail = ref('')
-const loginpassword = ref('')
+const loginEmail = ref('')
+const loginPassword = ref('')
 const confirmPassword = ref('')
 const rememberMe = ref(false)
-const registername = ref('')
-const registeremail = ref('')
-const registerpassword = ref('')
+const registerName = ref('')
+const registerEmail = ref('')
+const registerPassword = ref('')
 const loginForm = ref(null)
 const registerForm = ref(null)
 
 const closeModal = () => {
-  if (LRModal.value) {
-    LRModal.value.style.display = 'none'
-  }
+  // 隱藏登入畫面
+  store.hide()
 }
 
 const showLogin = () => {
@@ -118,8 +137,104 @@ const showRegister = () => {
   }
 }
 
+//cookie登入
+// const submitLogin = async () => {
+//   try {
+//     // 將輸入的密碼進行加密
+//     const hashedPassword = await hashPassword(loginPassword.value)
+
+//     // 構建登入請求的資料
+//     const loginData = {
+//       email: loginEmail.value,
+//       password: hashedPassword
+//     }
+
+//     // 發送 POST 請求到後端 API
+//     const response = await axios.post(`${apiUrl}/api/UserIdentity/LoginCookie`, loginData)
+//     console.log('Response received:', response)
+
+//     // 檢查回應狀態和數據
+//     if (response.status === 200 && response.data.includes('登入成功')) {
+//       const message = response.data // 從回應中提取 message
+
+//       console.log('Login successful:', message)
+
+//       // 顯示登入成功訊息或進行頁面跳轉
+//       alert(message) // 使用回應中的訊息
+//       closeModal()
+//     } else {
+//       console.log('Unexpected response structure:', response)
+//       alert('登入過程中發生錯誤：無法獲取 cookie')
+//     }
+//   } catch (error) {
+//     // 處理錯誤情況，例如顯示錯誤消息
+//     console.error('Error occurred during login:', error)
+//     if (error.response && error.response.status === 400) {
+//       alert('帳號或密碼錯誤')
+//     } else {
+//       alert('登入過程中發生錯誤')
+//     }
+//   }
+// }
+
+//Jwt登入
 const submitLogin = () => {
-  // 處理登入表單提交
+  // 將輸入的密碼進行加密
+  hashPassword(loginPassword.value)
+    .then((hashedPassword) => {
+      // 構建登入請求的資料
+      const loginData = {
+        email: loginEmail.value,
+        password: hashedPassword
+      }
+
+      // 發送 POST 請求到後端 API
+      return axios.post(`${apiUrl}/api/UserIdentity/JwtLogin`, loginData)
+    })
+    .then((response) => {
+      console.log('Response received:', response)
+
+      // 檢查回應狀態和數據
+      if (response.status === 200 && response.data.token) {
+        const { token, message } = response.data // 從回應中提取 token 和 message
+
+        // console.log('Login successful:', message)
+        // console.log('Token:', token)
+
+        // 儲存 token 到 Pinia store
+        store.setToken(token)
+
+        // 紀錄登入狀態
+        store.Login()
+
+        // 儲存至 localStorage ~ 記住登入(可關閉瀏覽器) (未實作)
+        // localStorage.setItem('token', token);
+
+        // 顯示登入成功訊息或進行頁面跳轉
+        alert(message) // 使用回應中的訊息
+        closeModal()
+      } else {
+        console.log('Unexpected response structure:', response)
+        alert('登入過程中發生錯誤：無法獲取 token')
+      }
+    })
+    .catch((error) => {
+      // 處理錯誤情況，例如顯示錯誤消息
+      console.error('Error occurred during login:', error)
+      if (error.response && error.response.status === 400) {
+        alert('帳號或密碼錯誤')
+      } else {
+        alert('登入過程中發生錯誤')
+      }
+    })
+}
+
+// JavaScript 實現 SHA-256 加密
+async function hashPassword(password) {
+  const encoder = new TextEncoder()
+  const data = encoder.encode(password)
+  const hash = await crypto.subtle.digest('SHA-256', data)
+  return btoa(String.fromCharCode(...new Uint8Array(hash)))
 }
 
 const submitRegister = () => {
@@ -127,7 +242,7 @@ const submitRegister = () => {
 }
 
 onMounted(() => {
-  showLogin() // 預設顯示登入表單
+  showLogin()
 })
 </script>
 

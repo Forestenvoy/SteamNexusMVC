@@ -2,7 +2,7 @@
 import { onMounted, ref } from 'vue'
 import { useColorModes } from '@coreui/vue'
 
-import AppHeaderDropdownAccnt from '@/components/backend/share/AppHeaderDropdownAccnt.vue'
+import AccountDropdown from '@/components/frontend/share/AccountDropdown.vue'
 import { useSidebarStore } from '@/stores/sidebar.js'
 
 const headerClassNames = ref('mb-4 p-0')
@@ -82,7 +82,7 @@ onMounted(() => {
           <div class="vr h-100 mx-2 text-body text-opacity-75"></div>
         </li>
         <!-- 使用者小型介面 -->
-        <AppHeaderDropdownAccnt />
+        <AccountDropdown />
       </CHeaderNav>
     </CContainer>
   </CHeader>
