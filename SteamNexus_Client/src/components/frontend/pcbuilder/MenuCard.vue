@@ -1,203 +1,208 @@
 <template>
-  <div class="nft">
-    <div class="main">
-      <h2 class="ms-1">{{ props.menu.name }}</h2>
-      <p class="description h2">$ {{ props.menu.totalPrice }}</p>
-      <p class="description mb-3">總共 {{ props.menu.detailCount }} 個零件</p>
-      <div class="tokenInfo">
-        <div class="status">
-          <p>1223</p>
-        </div>
-        <div class="duration">123</div>
-      </div>
-      <hr />
-      <div class="creator d-flex justify-content-evenly">
-        <button role="button" class="button-59">編輯</button>
+  <div class="menu">
+    <div class="lines"></div>
+    <div class="imageBox">
+      <img src="@/assets/images/builder/rocket.gif" alt="" />
+    </div>
+    <div class="content">
+      <div class="details">
+        <h2>$ {{ props.menu.totalPrice }}</h2>
+        <h3>{{ props.menu.name }}</h3>
+        <a href="#">Read More</a>
       </div>
     </div>
   </div>
 </template>
-
 <script setup>
 const props = defineProps({
   menu: Object
 })
 </script>
-
 <style scoped>
-.button-59 {
-  align-items: center;
-  background-color: #fff;
-  border: 2px solid #000;
+* {
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
-  color: #000;
-  cursor: pointer;
-  display: inline-flex;
-  fill: #000;
-  font-family: Inter, sans-serif;
-  font-size: 16px;
-  font-weight: 600;
-  height: 48px;
-  justify-content: center;
-  letter-spacing: -0.8px;
-  line-height: 24px;
-  min-width: 100px;
-  outline: 0;
-  padding: 0 17px;
-  text-align: center;
-  text-decoration: none;
-  transition: all 0.3s;
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: manipulation;
 }
 
-.button-59:focus {
-  color: #171e29;
+/* 卡片本體 */
+.menu {
+  position: relative;
+  width: 350px;
+  height: 180px;
+  background-color: #313131;
+  transition: 0.5s;
 }
 
-.button-59:hover {
-  border-color: #06f;
-  background-color: #06f;
-  color: #fff;
-  fill: #06f;
+.menu:hover {
+  height: 450px;
 }
 
-.button-59-del:hover {
-  border-color: red;
-  background-color: red;
-  color: #fff;
-  fill: red;
-}
-
-.button-59:active {
-  border-color: #06f;
-  background-color: #06f;
-  color: #fff;
-  fill: #06f;
-}
-
-.button-59-del:active {
-  border-color: red;
-  background-color: red;
-  color: #fff;
-  fill: red;
-}
-</style>
-
-<style lang="scss" scoped>
-.nft {
-  user-select: none;
-  width: 300px;
-  height: 285px;
-  margin: 5rem auto;
-  border: 1px solid #ffffff22;
-  background-color: #282c34;
-  background: linear-gradient(0deg, rgba(40, 44, 52, 1) 0%, rgba(0, 0, 0, 0.5) 100%);
-  box-shadow: 0 7px 20px 5px #00000088;
-  border-radius: 0.7rem;
-  backdrop-filter: blur(7px);
-  -webkit-backdrop-filter: blur(7px);
+/* 線條 */
+.lines {
+  position: absolute;
+  inset: 0;
+  background-color: #000;
   overflow: hidden;
-  transition: 0.5s all;
-  hr {
-    width: 100%;
-    border: none;
-    border-bottom: 1px solid #88888855;
-    margin-top: 0;
+}
+
+.lines::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 120px;
+  background: linear-gradient(transparent, antiquewhite, antiquewhite, antiquewhite, transparent);
+  animation: animate 4s linear infinite;
+  animation-play-state: paused;
+}
+
+.menu:hover .lines::before {
+  animation-play-state: running;
+}
+
+@keyframes animate {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
   }
-  ins {
-    text-decoration: none;
+
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
   }
-  .main {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    padding: 1rem;
-    .tokenImage {
-      border-radius: 0.5rem;
-      max-width: 100%;
-      height: 250px;
-      object-fit: cover;
-    }
-    .description {
-      margin: 0.5rem 0;
-      color: white;
-    }
-    .tokenInfo {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      .status {
-        display: flex;
-        align-items: center;
-        color: #4eed73;
-        font-weight: 700;
-        ins {
-          margin-left: -0.3rem;
-          margin-right: 0.5rem;
-        }
-      }
-      .duration {
-        display: flex;
-        align-items: center;
-        color: gray;
-        margin-right: 0.2rem;
-        ins {
-          margin: 0.5rem;
-          margin-bottom: 0.4rem;
-        }
-      }
-    }
-    .creator {
-      display: flex;
-      align-items: center;
-      margin-top: 0.2rem;
-      margin-bottom: -0.3rem;
-      ins {
-        color: #a89ec9;
-        text-decoration: none;
-      }
-      .wrapper {
-        display: flex;
-        align-items: center;
-        border: 1px solid #ffffff22;
-        padding: 0.3rem;
-        margin: 0;
-        margin-right: 0.5rem;
-        border-radius: 100%;
-        box-shadow: inset 0 0 0 4px #000000aa;
-        img {
-          border-radius: 100%;
-          border: 1px solid #ffffff22;
-          width: 2rem;
-          height: 2rem;
-          object-fit: cover;
-          margin: 0;
-        }
-      }
-    }
+}
+
+.lines::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  background-color: #292929;
+}
+
+/* 圖片 */
+
+.imageBox {
+  position: absolute;
+  top: -60px;
+  left: 50%;
+  width: 150px;
+  height: 150px;
+  transform: translateX(-50%);
+  background: #000;
+  transition: 0.5s;
+  z-index: 10;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.menu:hover .imageBox {
+  top: 25px;
+  width: 200px;
+  height: 200px;
+}
+
+.imageBox::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 500px;
+  height: 150px;
+  transform: translate(-50%, -50%);
+  background: linear-gradient(transparent, #ff0f0f, #ff0f0f, #ff0f0f, transparent);
+  animation: animate2 6s linear infinite;
+  animation-play-state: paused;
+}
+
+.menu:hover .imageBox::before {
+  animation-play-state: running;
+}
+
+@keyframes animate2 {
+  0% {
+    transform: translate(-50%, -50%) rotate(360deg);
   }
-  ::before {
-    position: fixed;
-    content: '';
-    box-shadow: 0 0 100px 40px #ffffff08;
-    top: -10%;
-    left: -100%;
-    transform: rotate(-45deg);
-    height: 60rem;
-    transition: 0.7s all;
+
+  100% {
+    transform: translate(-50%, -50%) rotate(0deg);
   }
-  &:hover {
-    border: 1px solid #ffffff44;
-    box-shadow: 0 7px 50px 10px #000000aa;
-    transform: scale(1.015);
-    filter: brightness(1.3);
-    ::before {
-      filter: brightness(0.5);
-      top: -100%;
-      left: 200%;
-    }
-  }
+}
+
+.imageBox::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  background-color: #292929;
+}
+
+img {
+  position: absolute;
+  width: 100px;
+  z-index: 1;
+  filter: invert(1);
+  opacity: 0.5;
+  transition: 0.5s;
+}
+
+.menu:hover img {
+  opacity: 1;
+}
+
+/* 文字內容 */
+.content {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  overflow: hidden;
+}
+
+.details {
+  padding: 30px 20px;
+  text-align: center;
+  width: 100%;
+  transition: 0.5s;
+  transform: translateY(145px);
+}
+
+.menu:hover .details {
+  transform: translateY(0);
+}
+
+h2 {
+  font-size: 1.5em;
+  font-weight: 500;
+  color: antiquewhite;
+  line-height: 1.2em;
+  margin-bottom: 25px;
+}
+
+h3 {
+  color: #fff;
+  opacity: 0;
+  transition: 0.5s;
+  margin-bottom: 35px;
+}
+
+a {
+  display: inline-block;
+  padding: 8px 15px;
+  background-color: antiquewhite;
+  color: #292929;
+  font-weight: 500;
+  text-decoration: none;
+  opacity: 0;
+  transition: 0.5s;
+  margin-bottom: 10px;
+}
+
+.menu:hover h3,
+.menu:hover a {
+  opacity: 1;
 }
 </style>

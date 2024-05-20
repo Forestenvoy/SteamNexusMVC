@@ -1,14 +1,12 @@
 <template>
   <!-- Main Banner -->
   <builder-banner></builder-banner>
-  <!-- 硬體匹配遊戲比例 -->
-  <!-- <section class="box game-proportion" data-aos="fade-up"></section> -->
   <!-- 菜單系統 -->
-  <!-- <section class="box menu-list" data-aos="fade-up">
-    <menu-card-slider></menu-card-slider>
-  </section> -->
-  <!-- 估價單系統 -->
-  <!-- <section class="box pc-builder" data-aos="fade-up"></section> -->
+  <menu-slider></menu-slider>
+  <!-- 電腦配單系統 -->
+  <main-system></main-system>
+  <!-- Hardware Matching Game Ratio -->
+  <game-ratio></game-ratio>
 </template>
 
 <script setup>
@@ -21,35 +19,13 @@ import { onMounted } from 'vue'
 
 // 頁面元件
 import BuilderBanner from '@/components/frontend/pcbuilder/BuilderBanner.vue'
-import MenuCardSlider from '@/components/frontend/pcbuilder/MenuCardSlider.vue'
+import MenuSlider from '@/components/frontend/pcbuilder/MenuSlider.vue'
+import MainSystem from '@/components/frontend/pcbuilder/MainSystem.vue'
+import GameRatio from '@/components/frontend/pcbuilder/GameRatio.vue'
 
 onMounted(() => {
   AOS.init()
 })
 </script>
 
-<style scoped>
-.box {
-  background-color: #eeecec;
-  margin-bottom: 20px;
-  padding: 20px 20px;
-}
-
-.game-proportion {
-  width: 100%;
-  height: 500px;
-}
-
-.menu-list {
-  width: 100%;
-  height: 450px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.pc-builder {
-  width: 100%;
-  height: 300px;
-}
-</style>
+<style scoped></style>

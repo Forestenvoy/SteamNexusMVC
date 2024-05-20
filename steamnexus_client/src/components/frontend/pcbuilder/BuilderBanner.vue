@@ -1,5 +1,5 @@
 <template>
-  <section class="banner" data-aos="zoom-in-down" data-aos-duration="500">
+  <section class="banner mb-5" data-aos="zoom-in-down" data-aos-duration="500">
     <CContainer>
       <CRow class="align-items-center">
         <CCol xs="12" md="6" xl="7" class="order-1 order-md-0">
@@ -60,15 +60,16 @@
             外加爬蟲補助獲取了所有數位遊戲配備需求資料，一配完就可以匹配我們的資料庫，馬上知道能玩多少的遊戲
           </p>
           <div class="d-flex justify-content-center justify-content-md-start">
-            <button
+            <a
               @click="StartBuilder"
               data-aos="fade-up"
               data-aos-duration="1500"
               :data-aos-delay="aosDelay2"
               class="d-flex align-items-center"
+              href="#mainSystem"
             >
               你來對地方了，讓我們開始吧<i class="fa-solid fa-arrow-right"></i>
-            </button>
+            </a>
           </div>
         </CCol>
         <CCol xs="12" md="6" xl="5" class="d-flex justify-content-center order-0 order-md-1 mb-4">
@@ -183,9 +184,10 @@ onMounted(() => {
   margin-bottom: 8px;
 }
 
-.banner button {
+.banner a {
   color: #fff;
   background-color: transparent;
+  text-decoration: none;
   border: none;
   font-weight: 700;
   font-size: 20px;
@@ -195,14 +197,14 @@ onMounted(() => {
   padding-left: 0;
 }
 
-.banner button svg {
+.banner a svg {
   font-size: 25px;
   margin-left: 10px;
   transition: 0.3s ease-in-out;
   line-height: 1;
 }
 
-.banner button:hover svg {
+.banner a:hover svg {
   margin-left: 25px;
 }
 
