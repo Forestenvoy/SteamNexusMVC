@@ -232,5 +232,14 @@ namespace SteamNexus_Server.Controllers
             }
             return BadRequest("廣告修改失敗!");
         }
+
+        [HttpGet("GetAdSlides")]
+        public async Task<ActionResult<IEnumerable<Advertisement>>> GetAdSlides()
+        {
+            var advertisements = await _context.Advertisements.Where(ad => ad.IsShow).ToListAsync();
+
+            return advertisements;
+        }
+
     }
 }
