@@ -175,10 +175,10 @@ import 'datatables.net-buttons-dt'
 import 'datatables.net-responsive-dt'
 
 
-import '../node_modules/datatables.net-dt/css/dataTables.datatables.min.css'
-import '../node_modules/datatables.net-fixedheader-dt/css/fixedHeader.dataTables.min.css'
-import '../node_modules/datatables.net-buttons-dt/css/buttons.dataTables.min.css'
-import '../node_modules/datatables.net-responsive-dt/css/responsive.dataTables.min.css'
+import '@/assets/css/dataTables.datatables.min.css';
+import '@/assets/css/fixedHeader.dataTables.min.css';
+import '@/assets/css/buttons.dataTables.min.css';
+import '@/assets/css/responsive.dataTables.min.css';
 
 //Form驗證製作
 import { defineRule, Form, Field, ErrorMessage, configure } from 'vee-validate';

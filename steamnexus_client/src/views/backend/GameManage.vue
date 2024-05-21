@@ -196,11 +196,11 @@ import 'datatables.net-rowgroup-dt'
 import 'datatables.net-buttons-dt'
 import 'datatables.net-responsive-dt'
 
-import '../node_modules/datatables.net-dt/css/dataTables.datatables.min.css'
-import '../node_modules/datatables.net-fixedheader-dt/css/fixedHeader.dataTables.min.css'
-import '../node_modules/datatables.net-rowgroup-dt/css/rowGroup.dataTables.min.css'
-import '../node_modules/datatables.net-buttons-dt/css/buttons.dataTables.min.css'
-import '../node_modules/datatables.net-responsive-dt/css/responsive.dataTables.min.css'
+import '@/assets/css/dataTables.datatables.min.css';
+import '@/assets/css/fixedHeader.dataTables.min.css';
+import '@/assets/css/rowGroup.dataTables.min.css';
+import '@/assets/css/buttons.dataTables.min.css';
+import '@/assets/css/responsive.dataTables.min.css';
 
 import { ref, onMounted, onUpdated } from 'vue'
 import { onBeforeRouteLeave } from 'vue-router'
