@@ -22,7 +22,7 @@ const GameManage = () => import('@/views/backend/GameManage.vue')
 const AdManage = () => import('@/views/backend/AdManage.vue')
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHistory(import.meta.env.VITE_APP_VUE_BASE_URL),
   routes: [
     // 後台系統(巢狀路由)
     {
