@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Cors;
 using System.Text;
 using System.Linq;
+using SteamNexus_Server.Dtos.Game;
 
 
 namespace SteamNexus.Areas.Administrator.Controllers
@@ -675,9 +676,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
             // 获取相关的 PriceHistories 集合
             var priceHistorie = await _context.PriceHistories
                 .Where(ph => ph.GameId == id).OrderBy(ph => ph.Date).Select(ph => new { ph.Date, ph.Price })  // 替换为实际条件
-                .ToListAsync();      
-
-
+                .ToListAsync();
 
             return Json(priceHistorie);
         }
@@ -742,7 +741,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
         [HttpGet("GetMinReqData")]
         public async Task<JsonResult> GetMinReqData(int id)
         {
-            var MinReqData = _context.MinimumRequirements.FindAsync(id).Result;
+            var MinReqData = await _context.MinimumRequirements.FindAsync(id);
 
             return Json(MinReqData);
         }
@@ -750,18 +749,85 @@ namespace SteamNexus.Areas.Administrator.Controllers
         [HttpGet("GetRecReqData")]
         public async Task<JsonResult> GetRecReqData(int id)
         {
-            var RecReqData = _context.RecommendedRequirements.FindAsync(id).Result;
+            var RecReqData = await _context.RecommendedRequirements.FindAsync(id);
 
             return Json(RecReqData);
         }
         //(前台)拿取相關遊戲
-        //[HttpGet("GetGameTagSameData")]
-        //public async Task<JsonResult> GetGameTagSameData(int id)
-        //{
-        //    var TagGroups = _context.TagGroups.FindAsync(id).Result;
-        //    var sameTagGame= _context.TagGroups.Where(t => tagIds.Contains(t.TagId)).TagGroups
+        [HttpGet("GetGameTagSameData")]
+        public async Task<JsonResult> GetGameTagSameData(int id)
+        {
+            // 獲取目標遊戲的所有 TagId
+            var targetTagIds = await _context.TagGroups
+                                             .Where(ph => ph.GameId == id)
+                                             .Select(ph => ph.TagId)
+                                             .ToListAsync();
 
-        //    return Json(RecReqData);
-        //}
+            // 獲取包含這些 TagId 的所有遊戲並進行分組和計算匹配數量
+            var gameTagMatches = await _context.TagGroups
+                                               .Where(tg => targetTagIds.Contains(tg.TagId))
+                                               .GroupBy(tg => tg.GameId)
+                                               .Select(g => new
+                                               {
+                                                   GameId = g.Key,
+                                                   MatchCount = g.Count(tg => targetTagIds.Contains(tg.TagId))
+                                               })
+                                               .OrderByDescending(g => g.MatchCount)
+                                               .Select(g => new
+                                               {
+                                                   GameId = g.GameId // 仅返回游戏 ID，不返回 MatchCount
+                                               })
+                                               .Skip(1)
+                                               .Take(20)
+                                               .ToListAsync();
+
+            var GameTagSameData = await _context.Games
+                                               .Where(g => gameTagMatches.Select(gtm => gtm.GameId).Contains(g.GameId))
+                                               .ToListAsync();
+
+            // 返回 JSON 結果
+            return Json(GameTagSameData);
+        }
     }
 }
+
+////(前台)拿取相關遊戲
+//[HttpGet("GetGameTagSameData")]
+//public async Task<IEnumerable<GameDTO>> GetGameTagSameData(GameDTO TagSameData)
+//{
+//    IEnumerable<GameDTO> TagSameDatas = null;
+
+//    // 獲取目標遊戲的所有 TagId
+//    var targetTagIds = await _context.TagGroups
+//                                     .Where(ph => ph.GameId == id)
+//                                     .Select(ph => ph.TagId)
+//                                     .ToListAsync();
+
+//    // 獲取包含這些 TagId 的所有遊戲並進行分組和計算匹配數量
+//    var gameTagMatches = await _context.TagGroups
+//                                       .Where(tg => targetTagIds.Contains(tg.TagId))
+//                                       .GroupBy(tg => tg.GameId)
+//                                       .Select(g => new
+//                                       {
+//                                           GameId = g.Key,
+//                                           MatchCount = g.Count(tg => targetTagIds.Contains(tg.TagId))
+//                                       })
+//                                       .OrderByDescending(g => g.Count(tg => targetTagIds.Contains(tg.TagId)))
+//                                       .Take(10)
+//                                       .ToListAsync();
+
+//    var GameTagSameData = await _context.Games
+//                                       .Where(tg => gameTagMatches.Contains(tg.GameId))
+//                                       .GroupBy(tg => tg.GameId)
+//                                       .Select(g => new
+//                                       {
+//                                           GameId = g.Key,
+//                                           MatchCount = g.Count(tg => targetTagIds.Contains(tg.TagId))
+//                                       })
+//                                       .OrderByDescending(g => g.MatchCount)
+//                                       .Take(10)
+//                                       .ToListAsync();
+
+//    // 返回 JSON 結果
+//    return TagSameDatas;
+//}
