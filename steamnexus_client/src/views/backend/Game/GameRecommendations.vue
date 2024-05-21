@@ -13,7 +13,7 @@
 </template>
 
 <script setup>
-import carousel from 'vue-owl-carousel'
+// import carousel from 'vue-owl-carousel'
 import { ref, onMounted, onBeforeUnmount,reactive,watch} from 'vue';
 </script>
 
