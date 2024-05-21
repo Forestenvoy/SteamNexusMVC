@@ -65,7 +65,7 @@
 <script setup>
 // 核心模組 import
 import $ from 'jquery'
-import 'bootstrap/dist/css/bootstrap.css'
+// import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap/dist/js/bootstrap.bundle.js'
 import DataTable from 'datatables.net-dt'
 import 'datatables.net-fixedheader-dt'
