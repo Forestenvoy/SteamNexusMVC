@@ -4,7 +4,7 @@
       <CRow class="align-items-center">
         <CCol xs="12" md="6" xl="7" class="order-1 order-md-0">
           <h1 data-aos="fade-up" data-aos-duration="1500" class="text-center text-md-start mb-3">
-            一般人想組台遊戲用桌上型電腦
+            組台遊戲用桌上型電腦
           </h1>
           <h2
             data-aos="fade-up"
@@ -12,30 +12,11 @@
             data-aos-delay="500"
             class="text-center text-md-start mb-3"
           >
-            打開電腦硬體零售商的網站，看不懂 <CIcon icon="cilFrown" size="xl" />
+            我需要懂甚麼?
           </h2>
-          <CRow>
-            <CCol xs="12" md="6" class="text-center text-md-start mb-2">
-              <h4 data-aos="fade-up" data-aos-duration="1500" :data-aos-delay="aosDelay1">
-                ▪️ 缺乏基礎知識
-              </h4>
-            </CCol>
-            <CCol xs="12" md="6" class="text-center text-md-start mb-2">
-              <h4 data-aos="fade-up" data-aos-duration="1500" :data-aos-delay="aosDelay1">
-                ▪️ 相容性問題
-              </h4>
-            </CCol>
-            <CCol xs="12" md="6" class="text-center text-md-start mb-2">
-              <h4 data-aos="fade-up" data-aos-duration="1500" :data-aos-delay="aosDelay1">
-                ▪️ 技術規格複雜
-              </h4>
-            </CCol>
-            <CCol xs="12" md="6" class="text-center text-md-start mb-2">
-              <h4 data-aos="fade-up" data-aos-duration="1500" :data-aos-delay="aosDelay1">
-                ▪️ 品牌型號雜亂
-              </h4>
-            </CCol>
-          </CRow>
+          <p data-aos="fade-up" data-aos-duration="1500" :data-aos-delay="aosDelay2" class="mb-3">
+            你不需要懂技術知識，不需要處理相容性問題，只需要大體了解電腦裡面有什麼零件，就可以來這裡配一張屬於你的電腦估價單
+          </p>
           <h2
             data-aos="fade-up"
             data-aos-duration="1500"
@@ -45,7 +26,7 @@
             我該怎麼配單？產品是最新的嗎？
           </h2>
           <p data-aos="fade-up" data-aos-duration="1500" :data-aos-delay="aosDelay2" class="mb-3">
-            SteamNexus 提供了人性化的配單系統，同時也透過定時爬蟲獲取原價屋最新的產品資料
+            SteamNexus 提供了步驟式的配單系統，同時也透過定時爬蟲提供原價屋最新的產品資料
           </p>
           <h2
             data-aos="fade-up"
@@ -56,8 +37,8 @@
             配好了我可以玩多少遊戲？
           </h2>
           <p data-aos="fade-up" data-aos-duration="1500" :data-aos-delay="aosDelay2" class="mb-3">
-            我們網站透過 Steam API
-            外加爬蟲補助獲取了所有數位遊戲配備需求資料，一配完就可以匹配我們的資料庫，馬上知道能玩多少的遊戲
+            SteamNexus 透過 Steam API
+            取得了所有數位遊戲配備需求資料，一配完就可以匹配網站的資料庫，馬上就能知道能玩多少的遊戲
           </p>
           <div class="d-flex justify-content-center justify-content-md-start">
             <a
@@ -68,7 +49,7 @@
               class="d-flex align-items-center"
               href="#mainSystem"
             >
-              你來對地方了，讓我們開始吧<i class="fa-solid fa-arrow-right"></i>
+              讓我們開始吧<i class="fa-solid fa-arrow-right"></i>
             </a>
           </div>
         </CCol>
