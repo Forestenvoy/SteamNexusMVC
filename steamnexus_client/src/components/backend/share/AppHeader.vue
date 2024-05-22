@@ -24,9 +24,17 @@ onMounted(() => {
   <CHeader position="sticky" :class="headerClassNames">
     <CContainer class="border-bottom px-4" fluid id="app-header">
       <!-- 側邊欄展開按鈕 -->
-      <CHeaderToggler @click="sidebar.toggleVisible()" style="margin-inline-start: -14px">
-        <CIcon icon="cil-menu" size="lg" />
-      </CHeaderToggler>
+      <input
+        type="checkbox"
+        id="menu_checkbox"
+        @click="sidebar.toggleVisible()"
+        style="margin-inline-start: -14px"
+      />
+      <label for="menu_checkbox" class="menu_btn">
+        <div></div>
+        <div></div>
+        <div></div>
+      </label>
       <!-- 通知系統(待製作) -->
       <CHeaderNav class="ms-auto">
         <CNavItem>
@@ -87,3 +95,56 @@ onMounted(() => {
     </CContainer>
   </CHeader>
 </template>
+
+<style>
+/* 漢堡 icon */
+#menu_checkbox {
+  display: none;
+}
+
+label {
+  display: block;
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+label:before {
+  content: '';
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transition: 1.2s cubic-bezier(0, 0.96, 1, 0.02) background-color;
+}
+
+label div {
+  position: relative;
+  top: 0;
+  height: 6px;
+  background-color: #fff;
+  margin-bottom: 6px;
+  transition:
+    0.3s ease transform,
+    0.3s ease top,
+    0.3s ease width,
+    0.3s ease right;
+  border-radius: 2px;
+}
+
+label div:first-child {
+  transform-origin: 0;
+}
+
+label div:last-child {
+  margin-bottom: 0;
+  transform-origin: 30px;
+}
+
+label div:nth-child(2) {
+  right: 0;
+  width: 30px;
+}
+</style>
