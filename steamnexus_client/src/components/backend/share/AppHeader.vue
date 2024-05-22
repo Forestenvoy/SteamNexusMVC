@@ -96,13 +96,13 @@ onMounted(() => {
   </CHeader>
 </template>
 
-<style>
+<style scoped>
 /* 漢堡 icon */
 #menu_checkbox {
   display: none;
 }
 
-label {
+.menu_btn {
   display: block;
   width: 30px;
   height: 30px;
@@ -110,7 +110,7 @@ label {
   cursor: pointer;
 }
 
-label div {
+.menu_btn div {
   position: relative;
   top: 0;
   height: 6px;
@@ -124,16 +124,16 @@ label div {
   border-radius: 2px;
 }
 
-label div:first-child {
+.menu_btn div:first-child {
   transform-origin: 0;
 }
 
-label div:last-child {
+.menu_btn div:last-child {
   margin-bottom: 0;
   transform-origin: 30px;
 }
 
-label div:nth-child(2) {
+.menu_btn div:nth-child(2) {
   right: 0;
   width: 30px;
 }
