@@ -28,6 +28,7 @@ import FirstQuestion from '@/components/frontend/pcbuilder/section/FirstQuestion
 import CentralProcessingUnit from '@/components/frontend/pcbuilder/section/CentralProcessingUnit.vue'
 import MotherBoard from '@/components/frontend/pcbuilder/section/MotherBoard.vue'
 import GraphicsProcessingUnit from '@/components/frontend/pcbuilder/section/GraphicsProcessingUnit.vue'
+import RandomAccessMemory from '@/components/frontend/pcbuilder/section/RandomAccessMemory.vue'
 
 // pinia
 import { useBuilderStore } from '@/stores/builder.js'
@@ -44,6 +45,8 @@ const currentStepComponent = computed(() => {
       return MotherBoard
     case 3:
       return GraphicsProcessingUnit
+    case 4:
+      return RandomAccessMemory
     default:
       return FirstQuestion
   }

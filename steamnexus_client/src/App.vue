@@ -56,14 +56,19 @@ $font-family-sans-serif: 'Poppins', 'cwTeXYen';
 // sidebar、header、footer 背景色
 $body-bg-dark: #313131;
 // body 背景色
-$dark-bg-subtle-dark: #141E30;
+$dark-bg-subtle-dark: #141e30;
+
+// 取消 toggle icon 避免 CSP
+$navbar-light-toggler-icon-bg: none;
+$navbar-dark-toggler-icon-bg: none;
+$header-toggler-icon-bg: none;
+$header-toggler-hover-icon-bg: none;
 
 // Import Main styles for this application
 @import 'styles/style';
 </style>
 
 <style>
-
 /* 滾動條樣式 */
 ::-webkit-scrollbar {
   width: 12px;
