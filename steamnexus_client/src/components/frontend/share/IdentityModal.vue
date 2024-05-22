@@ -112,8 +112,8 @@
         <!-- 註冊前確認規定同意書 -->
         <div class="remember-forgot">
           <label
-            ><input type="checkbox" required :tabindex="registerTabIndex" /> I agree to the terms &
-            conditions</label
+            ><input type="checkbox" required :tabindex="registerTabIndex" v-model="agree" /> I agree
+            to the terms & conditions</label
           >
         </div>
         <!-- 註冊按鈕 -->
@@ -149,6 +149,7 @@ const rememberMe = ref(false)
 const registerName = ref('')
 const registerEmail = ref('')
 const registerPassword = ref('')
+const agree = ref(false)
 const loginForm = ref(null)
 const registerForm = ref(null)
 const loginTabIndex = ref(0)
@@ -160,6 +161,7 @@ const closeModal = () => {
 }
 
 const showLogin = () => {
+  clearForm()
   if (LRModal.value && loginForm.value && registerForm.value) {
     LRModal.value.classList.remove('active')
     setTimeout(() => {
@@ -173,6 +175,7 @@ const showLogin = () => {
 }
 
 const showRegister = () => {
+  clearForm()
   if (LRModal.value && loginForm.value && registerForm.value) {
     LRModal.value.classList.add('active')
     setTimeout(() => {
@@ -283,6 +286,18 @@ async function hashPassword(password) {
   const data = encoder.encode(password)
   const hash = await crypto.subtle.digest('SHA-256', data)
   return btoa(String.fromCharCode(...new Uint8Array(hash)))
+}
+
+//清空表單
+const clearForm = () => {
+  loginEmail.value = ''
+  loginPassword.value = ''
+  confirmPassword.value = ''
+  rememberMe.value = false
+  registerName.value = ''
+  registerEmail.value = ''
+  registerPassword.value = ''
+  agree.value = false
 }
 
 const submitRegister = () => {
