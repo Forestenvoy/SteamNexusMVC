@@ -320,6 +320,7 @@ public class UserIdentityController : ControllerBase
     #endregion
 
 
+    #region Get UserId
     [HttpGet("GetUserIdFromToken")]
     public IActionResult GetUserIdFromToken()
     {
@@ -358,8 +359,69 @@ public class UserIdentityController : ControllerBase
             return BadRequest("Authorization 欄位不存在或不以 Bearer  開頭");
         }
     }
+    #endregion
+
+
+    #region Get UserInfo by UserId
+    [HttpGet("GetUserInfoFromToken")]
+    public IActionResult GetUserInfoFromToken()
+    {
+        // 從Header取得Authorization的數值，並轉換字串
+        var authHeader = Request.Headers["Authorization"].ToString();
+
+        // 檢查欄位是否有Bearer開頭的欄位
+        if (authHeader != null && authHeader.StartsWith("Bearer "))
+        {
+            // 提取token
+            var token = authHeader.Substring("Bearer ".Length).Trim();
+
+            // 解析token
+            var jwtToken = new JwtSecurityTokenHandler().ReadToken(token) as JwtSecurityToken;
+
+            if (jwtToken == null)
+            {
+                return BadRequest("無效的JWT");
+            }
+
+            // 取得ID
+            var userIdClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+            if (userIdClaim != null)
+            {
+                var userId = int.Parse(userIdClaim.Value);
+                var user = _application.Users
+                                      .Include(u => u.Role) // 確保Role被包含在查詢結果中
+                                      .SingleOrDefault(u => u.UserId == userId);
+
+                if (user == null)
+                {
+                    return NotFound("未找到用戶");
+                }
+
+                // 返回會員的所有資訊
+                return Ok(new
+                {
+                    user.UserId,
+                    user.RoleId,
+                    user.Email,
+                    user.Password,
+                    user.Name,
+                    user.Gender,
+                    user.Phone,
+                    user.Birthday,
+                    user.Photo,
+                });
+            }
+            else
+            {
+                return BadRequest("未找到用戶 ID");
+            }
+        }
+        else
+        {
+            return BadRequest("Authorization 欄位不存在或不以 Bearer 開頭");
+        }
+    }
+    #endregion
 
 
 }
-
-
