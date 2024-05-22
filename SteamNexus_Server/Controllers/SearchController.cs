@@ -31,9 +31,7 @@ namespace SteamNexus_Server.Controllers
 
             var results =  _context.Games.Where(i => i.Name.Contains(keyword, System.StringComparison.OrdinalIgnoreCase));
 
-            GameData.GameId = results.FirstOrDefault().GameId;
-            GameData.Name = results.FirstOrDefault().Name;
-            GameData.ImagePath = results.FirstOrDefault().ImagePath;
+            
 
             return Ok(GameData);
         }
