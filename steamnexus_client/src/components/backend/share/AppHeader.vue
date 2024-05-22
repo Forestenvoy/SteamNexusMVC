@@ -110,16 +110,6 @@ label {
   cursor: pointer;
 }
 
-label:before {
-  content: '';
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  transition: 1.2s cubic-bezier(0, 0.96, 1, 0.02) background-color;
-}
-
 label div {
   position: relative;
   top: 0;
