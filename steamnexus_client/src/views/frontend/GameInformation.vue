@@ -2,8 +2,8 @@
   <div class="mt-5 container mb-2 text-white">
     <div class="position-absolute top-0 start-50 translate-middle-x" :style="ImageBackground"></div>
     <div style="margin-top: 200px;">
-       <div class="fs-6 row">
-      <div class="col-4 leftbox">
+       <div class="fs-6 row " data-aos="fade-in">
+      <div class="col-4 leftbox" data-aos="fade-right">
         <img :src="ImagePath" class="w-100 animate__animated animate__fadeIn" alt="">
         <div class="p-3">
           <p class=" text-secondary">{{Description}}</p>
@@ -21,8 +21,10 @@
         <span >所有評論： {{Comment}}（ {{CommentNum}}人評論 ）</span><br>
         <span>開發商： {{Publisher}}</span><br>
         <span >發行日期： {{ReleaseDate}}</span><br>
-        <img :src="AgeRating=='18+'?'https://www.gamerating.org.tw/Content/img/index_icon_05.jpg':AgeRating=='15+'?'https://www.gamerating.org.tw/Content/img/index_icon_04.jpg':AgeRating=='12+'?'https://www.gamerating.org.tw/Content/img/index_icon_03.jpg':AgeRating=='6+'?'https://www.gamerating.org.tw/Content/img/index_icon_02.jpg':'https://www.gamerating.org.tw/Content/img/index_icon_01.jpg'" alt="" class="w-25 mt-3 me-3"><span >遊戲分級： {{AgeRating}}</span><br>
-        <div>
+        <div data-aos="fade-up">
+          <img  :src="AgeRating=='18+'?'https://www.gamerating.org.tw/Content/img/index_icon_05.jpg':AgeRating=='15+'?'https://www.gamerating.org.tw/Content/img/index_icon_04.jpg':AgeRating=='12+'?'https://www.gamerating.org.tw/Content/img/index_icon_03.jpg':AgeRating=='6+'?'https://www.gamerating.org.tw/Content/img/index_icon_02.jpg':'https://www.gamerating.org.tw/Content/img/index_icon_01.jpg'" alt="" class="w-25 mt-3 me-3"><span >遊戲分級： {{AgeRating}}</span><br>
+        </div>
+        <div data-aos="fade-up">
           <table class="table table-dark table-hover mt-3">
             <thead>
               <tr>
@@ -43,24 +45,29 @@
         </div>
       </div>
       <div class="col-8 p-1 ">
-        <h1 class="shadow-sm ms-4" :key="Name">{{Name}}</h1>
-        <hr style="height: 2px; background-color:white; border: none;opacity: 1;"  class="mt-3 mb-4 ms-3">
+        <h1 class="shadow-sm ms-4" :key="Name" data-aos="fade-left">{{Name}} <button class="fontawesome" @click="love">
+          <i v-if="loveclick==true" class="fa-regular fa-heart"></i>
+          <i v-else class="fa-solid fa-heart "></i>
+        </button></h1>
+        <hr style="height: 2px; background-color:white; border: none;opacity: 1;"  class="mt-3 mb-4 ms-3" data-aos="fade-left">
         <div class="d-flex justify-content-between ">
-          <h3 class="ms-4 fs-1" data-aos="fade-in">歷史價格分析</h3>
-          <div class="d-flex ">
+          <h3 class="ms-4 fs-1" data-aos="fade-left">歷史價格分析</h3>
+          <div class="d-flex "  data-aos="fade-left">
             <h3 data-aos="fade-in">{{OriginalPrice==0?"免費":`NT.${OriginalPrice}`}}</h3>
             <a :href="steamWeb" target="_blank" :title="steamWebtitle"><button type="button" class="btn btn-primary ms-3">前往Steam購買</button></a>
           </div>  
         </div>
         <!-- 圖表開始 -->
-        <div class="hello animate__animated animate__fadeIn" ref="chartdiv"></div>
+        <div data-aos="fade-left" data-aos-duration="500">
+          <div class="hello" ref="chartdiv"></div>
+        </div>
+        
         <!-- 圖表結束 -->
-        <h3 class="ms-4 fs-1" data-aos="fade-in">遊玩門檻</h3>
-        <hr style="height: 2px; background-color:white; border: none;opacity: 1;"  class="mt-3  ms-3">
+        <h3 class="ms-4 fs-1 mt-4" data-aos="fade-left">遊玩門檻</h3>
         <div class="d-flex ps-2">
-          <div class="leftbox p-3 rounded m-1 " style="width: 50%;">
+          <div class="leftbox p-3 rounded m-1 " style="width: 50%;" data-aos="fade-left">
             <span class="fw-bold text-white fs-6">最低配備：</span><br>
-            <div v-if='MinOriCpu!=null'>
+            <div v-if='MinOriCpu!=null' data-aos-duration="100">
               <span class="text-white">Cpu：</span>
               <span>{{MinOriCpu}}</span>
             </div>
@@ -97,7 +104,7 @@
               <span>{{MinNote}}</span>
             </div>
           </div>
-          <div class="leftbox p-3 rounded m-1 " style="width: 50%;">
+          <div class="leftbox p-3 rounded m-1 " style="width: 50%;"   data-aos="fade-left" data-aos-duration="500">
             <span class="fw-bold text-white fs-6">最高配備：</span><br>
             <div v-if='RecOriCpu!=null'>
               <span class="text-white">Cpu：</span>
@@ -137,9 +144,10 @@
             </div>
           </div>
         </div>
-        <h3 class="ms-4 fs-1" data-aos="fade-in">推薦遊戲</h3>
+        <h3 class="ms-4 fs-1 mt-4" data-aos="fade-left">推薦遊戲</h3>
         <!-- 推薦遊戲 -->
-        <Carousel  :items-to-show="4">
+        <div  data-aos="fade-left"  data-aos-duration="500">
+          <Carousel  :items-to-show="4" class="ms-2">
           <Slide class="slide" v-for="slide in TagSamegamesName" :key="slide">
             <div class="carousel__item">
               <img width=" 100%" :src="slide.imagePath" alt="">
@@ -148,15 +156,18 @@
                 <p class="fs-6 text-decoration-line-through d-inline text-danger">NT.{{slide.originalPrice}}</p>
                 <p  class="fs-6 d-inline bg-danger ps-1 pe-1 ms-1">NT.{{slide.currentPrice}}</p>
               </div>
-              <p v-else class="fs-6 d-inline">{{slide.currentPrice==0?"免費":"NT."+slide.currentPrice}}</p>
+              <div v-else>
+                 <p  class="fs-6">{{slide.currentPrice==0?"免費":"NT."+ slide.currentPrice}}</p>
+              </div>
              
-              
             </div>
           </Slide>
           <template #addons>
             <Navigation class="text-danger fw-bold" />
           </template>
         </Carousel>
+        </div>
+        
         <!-- carousel -->
       </div>
     </div>  
@@ -165,11 +176,14 @@
 </template>
 
 <script setup>
+
+
 import  { ref, onMounted, onBeforeUnmount,reactive,watch , defineComponent } from 'vue';
 import * as am5 from '@amcharts/amcharts5';
 import * as am5xy from '@amcharts/amcharts5/xy';
 import Dark from '@amcharts/amcharts5/themes/Dark';
 import AOS from 'aos'
+import 'aos/dist/aos.css'
 
 const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
@@ -219,6 +233,7 @@ var tagDataOpen=ref([])
 var tagShow=ref(true)
 var LanguageTable=ref([])
 var TagSamegamesName=ref([])
+var loveclick=ref("")
 
 import { Carousel, Navigation, Slide } from 'vue3-carousel'
 import 'vue3-carousel/dist/carousel.css'
@@ -265,6 +280,11 @@ function tagclick(event){
 function moreclick(){
   tagShow.value=!tagShow.value
 }
+
+function love(){
+  loveclick.value=false
+}
+
 //拿取遊戲資料
 function getData(){
   fetch(`${apiUrl}/api/GamesManagement/GetEditJSON?id=${props.gameId}`, {
@@ -284,7 +304,7 @@ function getData(){
       Name.value = val.name
       OriginalPrice.value = val.originalPrice
       AgeRating.value = val.ageRating
-      ReleaseDate.value = val.releaseDate
+      ReleaseDate.value = val.releaseDate.substring(0, 10)
       Publisher.value = val.publisher
       Description.value = val.description
       ImagePath.value = val.imagePath
@@ -474,6 +494,7 @@ onMounted(() => {
   getMinReqData();
   getRecReqData();
   GetGameTagSameData();
+  loveclick.value=true
 
   fetch(`${apiUrl}/api/GamesManagement/GetLineChartData?id=${props.gameId}`, {
     method: 'GET'
@@ -586,22 +607,35 @@ onBeforeUnmount(() => {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.fontawesome{
+  background-color: rgba(0, 0, 0, 0);
+  border: 0px solid black;
+}
+.nowrap {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 10px;
+  /* text-align: left; */
+}
+
 .carousel__item {
-  min-height: 200px;
+  height: 180px;
+  padding: 10px;
   width: 100%;
   background-color: #0f1c27;
   color: var(--vc-clr-white);
   font-size: 20px;
   border-radius: 8px;
-  display: flex;
+  /* display: flex;
   Flex-direction:column;
   align-items: center;
-  justify-content:Space-between;
+  justify-content:Space-between; */
 }
 
 .carousel__slide {
   width: 100%;
-  padding: 10px;
+  padding: 2.5px;
 }
 
 .carousel__prev,
