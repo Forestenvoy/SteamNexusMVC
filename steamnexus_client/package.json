@@ -43,6 +43,7 @@
     "swiper": "^11.1.3",
     "vee-validate": "^4.12.8",
     "vue": "^3.4.27",
+    "vue-carousel-3d": "^1.0.1",
     "vue-datatables": "^0.1.4",
     "vue-router": "^4.3.0",
     "vue3-carousel": "^0.3.3",

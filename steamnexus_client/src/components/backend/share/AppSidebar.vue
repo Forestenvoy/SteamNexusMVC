@@ -73,7 +73,7 @@ const sidebar = useSidebarStore()
         <CIcon customClassName="nav-icon" icon="cilGamepad" /> 遊戲管理
       </CNavItem>
       <CNavItem href="#" @click="$router.push('/admin/adManage')">
-        <CIcon customClassName="nav-icon" icon="cilSpeech" /> 廣告管理
+        <CIcon customClassName="nav-icon" icon="cilSpeech" /> 公告管理
       </CNavItem>
     </CSidebarNav>
     <!-- 側邊欄摺疊按鈕(底部) -->
