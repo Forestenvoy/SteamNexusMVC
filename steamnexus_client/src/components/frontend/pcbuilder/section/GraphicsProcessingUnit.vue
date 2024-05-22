@@ -2,14 +2,32 @@
   <!-- 過濾 -->
   <CRow>
     <CCol xs="12" md="6">
-      <h3>廠牌</h3>
+      <h3>製造商</h3>
+    </CCol>
+    <CCol xs="12" md="6">
+      <CForm @change="filter">
+        <CFormCheck type="radio" inline label="全部" value="All" v-model="manufacturer" />
+        <CFormCheck type="radio" inline label="Intel" value="INTEL" v-model="manufacturer" />
+        <CFormCheck type="radio" inline label="AMD" value="AMD" v-model="manufacturer" />
+        <CFormCheck type="radio" inline label="NVIDIA" value="NVIDIA" v-model="manufacturer" />
+      </CForm>
+    </CCol>
+  </CRow>
+  <CRow>
+    <CCol xs="12" md="6">
+      <h3>板廠</h3>
     </CCol>
     <CCol xs="12" md="6">
       <CForm @change="filter">
         <CFormCheck type="radio" inline label="全部" value="All" v-model="brand" />
         <CFormCheck type="radio" inline label="Intel" value="INTEL" v-model="brand" />
-        <CFormCheck type="radio" inline label="AMD" value="AMD" v-model="brand" />
-        <CFormCheck type="radio" inline label="NVIDIA" value="NVIDIA" v-model="brand" />
+        <CFormCheck type="radio" inline label="宏碁" value="宏碁" v-model="brand" />
+        <CFormCheck type="radio" inline label="華碩" value="華碩" v-model="brand" />
+        <CFormCheck type="radio" inline label="技嘉" value="技嘉" v-model="brand" />
+        <CFormCheck type="radio" inline label="微星" value="微星" v-model="brand" />
+        <CFormCheck type="radio" inline label="華擎" value="華擎" v-model="brand" />
+        <CFormCheck type="radio" inline label="索泰" value="ZOTAC" v-model="brand" />
+        <CFormCheck type="radio" inline label="映眾" value="INNO3D" v-model="brand" />
       </CForm>
     </CCol>
   </CRow>
@@ -85,6 +103,7 @@ const SortGroups = ref({})
 const selectedGPU = ref(0)
 
 // filter ref
+const manufacturer = ref('All')
 const brand = ref('All')
 const min = ref('')
 const max = ref('')
@@ -128,23 +147,41 @@ const classification = (data) => {
 
 // Filter
 const filter = () => {
+  filterByManufacturer()
   filterByBrand()
   filterByPrice()
 }
 
-// Filter By Brand
-const filterByBrand = () => {
-  if (brand.value === 'All') {
+// Filter By Manufacturer
+const filterByManufacturer = () => {
+  if (manufacturer.value === 'All') {
     SortGroups.value = GPUGroups.value
   } else {
     // 過濾名稱內含有該品牌的資料
     const filteredData = Object.keys(GPUGroups.value)
-      .filter((key) => key.includes(brand.value))
+      .filter((key) => key.includes(manufacturer.value))
       .reduce((obj, key) => {
         obj[key] = GPUGroups.value[key]
         return obj
       }, {})
     SortGroups.value = filteredData
+  }
+}
+
+// Filter By Brand
+const filterByBrand = () => {
+  if (brand.value !== 'All') {
+    // 過濾名稱內含有該品牌的資料
+    const filteredGroups = Object.keys(SortGroups.value).reduce((result, key) => {
+      const filteredProducts = SortGroups.value[key].filter((product) =>
+        product.name.includes(brand.value)
+      )
+      if (filteredProducts.length > 0) {
+        result[key] = filteredProducts
+      }
+      return result
+    }, {})
+    SortGroups.value = filteredGroups
   }
 }
 
