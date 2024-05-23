@@ -22,7 +22,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy(
         name: MyAllowSpecificOrigins,
-        policy => policy.WithOrigins("*").WithMethods("*").WithHeaders("*")
+        policy => policy.WithOrigins("http://localhost:5173", "https://www.steamnexus.org").WithMethods("*").WithHeaders("*")
     );
 });
 

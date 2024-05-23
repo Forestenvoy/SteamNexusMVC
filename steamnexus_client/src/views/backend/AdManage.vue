@@ -1,7 +1,7 @@
 <template>
   <div class="row">
     <div class="col-12 col-md-6 order-md-1 d-flex justify-content-center justify-content-md-start">
-      <h2 id="SystemName" style="margin-top: 8px;">廣告管理系統</h2>
+      <h2 id="SystemName" style="margin-top: 8px;">公告管理系統</h2>
     </div>
     <div class="col-12 col-md-6 order-md-2 d-flex justify-content-center justify-content-md-end" id="SystemMenu">
     </div>
@@ -11,7 +11,7 @@
       <thead>
         <tr>
           <th>ID</th>
-          <th>標題</th>
+          <th>來源</th>
           <th>Url</th>
           <th>圖片</th>
           <th>說明</th>
@@ -27,14 +27,14 @@
   }
     " aria-labelledby="DeleteAdModal">
     <CModalHeader>
-      <CModalTitle id="DeleteAdModal">刪除廣告</CModalTitle>
+      <CModalTitle id="DeleteAdModal">刪除公告</CModalTitle>
     </CModalHeader>
     <CModalBody>
       <div class="container">
         <div class="row">
           <span class="col-3 text-end">ID:</span>
           <span class="col-9">{{ deleteId }}</span><br /><br />
-          <span class="col-3 text-end">標題:</span>
+          <span class="col-3 text-end">來源:</span>
           <span class="col-9">{{ deleteTitle }}</span><br /><br />
           <span class="col-3 text-end">Url:</span>
           <span class="col-9" style="word-wrap: break-word;">{{ deleteUrl }}</span><br /><br /><br />
@@ -66,28 +66,29 @@
       createAdUrl = ''
       createImageUrl = ''
       createDescription = ''
-      showImageUrl = 'http://localhost:5173/public/img/noImage.png'
+      showImageUrl = '/img/noImage.png'
     }
       " aria-labelledby="CreateAdModal">
       <CModalHeader>
-        <CModalTitle id="CreateAdModal">新增廣告</CModalTitle>
+        <CModalTitle id="CreateAdModal">新增公告</CModalTitle>
       </CModalHeader>
       <CModalBody>
         <div class="mb-3">
-          <label for="createTitle">標題</label>
+          <label for="createTitle">來源</label>
           <Field id="createTitle" name="createTitle" v-model="createTitle" class="form-control"
             rules="required|max:50" />
           <ErrorMessage class="text-danger" name="createTitle" />
         </div>
         <div class="mb-3">
           <label for="createAdUrl">網址</label>
-          <Field id="createAdUrl" name="createAdUrl" v-model="createAdUrl" class="form-control" rules="required|url" />
+          <Field id="createAdUrl" name="createAdUrl" v-model="createAdUrl" class="form-control" rules="required|url"
+            autocomplete="off" />
           <ErrorMessage class="text-danger" name="createAdUrl" />
         </div>
         <div class="mb-3">
           <label for="createImageUrl">圖片網址</label>
           <Field id="createImageUrl" name="createImageUrl" v-model="createImageUrl" @change="ImageChange"
-            class="form-control mb-3" rules="required|url" />
+            class="form-control mb-3" rules="required|url" autocomplete="off" />
           <img :src="showImageUrl" alt="圖片預覽" style="max-width: 100%; height: auto;">
           <ErrorMessage class="text-danger" name="createImageUrl" />
         </div>
@@ -107,7 +108,7 @@
           createAdUrl = ''
           createImageUrl = ''
           createDescription = ''
-          showImageUrl = 'http://localhost:5173/public/img/noImage.png'
+          showImageUrl = '/img/noImage.png'
         }
           ">
           取消
@@ -124,11 +125,11 @@
     }
       " aria-labelledby="EditAdModal">
       <CModalHeader>
-        <CModalTitle id="EditAdModal">廣告編輯</CModalTitle>
+        <CModalTitle id="EditAdModal">公告編輯</CModalTitle>
       </CModalHeader>
       <CModalBody>
         <div class="mb-3">
-          <label for="editTitle">標題</label>
+          <label for="editTitle">來源</label>
           <Field id="editTitle" name="editTitle" v-model="editTitle" class="form-control" rules="required|max:50" />
           <ErrorMessage class="text-danger" name="editTitle" />
         </div>
@@ -175,10 +176,10 @@ import 'datatables.net-buttons-dt'
 import 'datatables.net-responsive-dt'
 
 
-import 'datatables.net-dt/css/dataTables.datatables.min.css'
-import 'datatables.net-fixedheader-dt/css/fixedHeader.dataTables.min.css'
-import 'datatables.net-buttons-dt/css/buttons.dataTables.min.css'
-import 'datatables.net-responsive-dt/css/responsive.dataTables.min.css'
+import '@/assets/css/dataTables.datatables.min.css';
+import '@/assets/css/fixedHeader.dataTables.min.css';
+import '@/assets/css/buttons.dataTables.min.css';
+import '@/assets/css/responsive.dataTables.min.css';
 
 //Form驗證製作
 import { defineRule, Form, Field, ErrorMessage, configure } from 'vee-validate';
@@ -199,6 +200,9 @@ defineRule('required', required)
 defineRule('url', url)
 defineRule('max', max)
 
+// 從環境變數取得 API BASE URL
+const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
+
 var dataTable = null
 let DeleteAdModal = ref(false)
 let deleteId = ref(0)
@@ -211,7 +215,7 @@ let createTitle = ref('')
 let createAdUrl = ref('')
 let createImageUrl = ref('')
 let createDescription = ref('')
-let showImageUrl = ref('http://localhost:5173/public/img/noImage.png')
+let showImageUrl = ref('/img/noImage.png')
 let EditAdModal = ref(false)
 let editId = ref(0)
 let editTitle = ref('')
@@ -219,8 +223,7 @@ let editAdUrl = ref('')
 let editImageUrl = ref('')
 let editDescription = ref('')
 let showEditImageUrl = ref('')
-// 從環境變數取得 API BASE URL
-const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
+
 
 // 產生表格
 function fetchDatatable() {
@@ -311,10 +314,10 @@ function ImageChange() {
     }
     img.onerror = function () {
       // 如果網址有效但沒有圖片，顯示預設圖片
-      showImageUrl.value = 'http://localhost:5173/public/img/noImage.png'
+      showImageUrl.value = '/img/noImage.png'
     }
   } else {
-    showImageUrl.value = 'http://localhost:5173/public/img/noImage.png'
+    showImageUrl.value = '/img/noImage.png'
   }
 }
 
@@ -352,6 +355,7 @@ function CreateAdBtn() {
       createTitle.value = '';
       createAdUrl.value = '';
       createImageUrl.value = '';
+      showImageUrl.value = '/img/noImage.png';
       createDescription.value = '';
       fetchDatatable();
     })
@@ -376,10 +380,10 @@ function editImageChange() {
     }
     img.onerror = function () {
       // 如果網址有效但沒有圖片，顯示預設圖片
-      showEditImageUrl.value = 'http://localhost:5173/public/img/noImage.png'
+      showEditImageUrl.value = '/img/noImage.png'
     }
   } else {
-    showEditImageUrl.value = 'http://localhost:5173/public/img/noImage.png'
+    showEditImageUrl.value = '/img/noImage.png'
   }
 }
 
@@ -429,23 +433,32 @@ function EditAdSaveBtn() {
 }
 
 onMounted(() => {
+  //重設排序
+  $.fn.dataTable.ext.order['dom-radio'] = function(settings, col) {
+    return this.api().column(col, {order: 'index'}).nodes().map(function(td,) {
+      return $('input[type="radio"]:checked', td).val() === "true" ? 0 : 1;
+    });
+  };
   dataTable = new DataTable('#AdvertiseManageTable', {
     columns: [
       { "data": "advertisementId", "width": "5%" },
-      { "data": "title", "width": "10%" },
-      { "data": "url", "width": "25%" },
+      { "data": "title", "width": "8%", },
+      { "data": "url", "width": "25%", "orderable": false, },
       {
         "data": "imagePath", "width": "15%",
         "className": "text-center",
+        "orderable": false,
         "render": function (data) {
           return `<img src="${data}" alt="Image" style="width:80%" />`;
         }, responsivePriority: 1
       },
-      { "data": "description", "width": "10%" },
+      { "data": "description", "width": "17%", "orderable": false, },
       {
         "data": "isShow",
-        "width": "20%",
+        "width": "15%",
         "className": "text-center",
+        "orderable": true, // 確保該欄位可以排序
+        "orderDataType": "dom-radio",
         "render": function (data, type, row) {
           // data: 欄位的資料值
           // type: render 的呼叫類型，例如 'display', 'filter', 'sort', 'type'
@@ -456,13 +469,14 @@ onMounted(() => {
           let showEle = `<input type="radio" class="radio-isShow" name = "${AdId}" value = "true" data-AdId="${AdId}" id = "${AdId}Show" ${Show}><label for= "${AdId}Show" style="margin-right: 10px">上架</label>`;
           let unShowEle = `<input type="radio" class="radio-isShow" name="${AdId}" value="false" data-AdId="${AdId}" id="${AdId}UnShow" ${UnShow}><label for="${AdId}UnShow">下架</label>`;
           return `${showEle}${unShowEle}`;
-        }
+        }, responsivePriority: 1,
       },
       {
         "data": null,
         "orderable": false,
         "width": "15%",
         "className": "text-center",
+        "orderDataType": "dom-radio",
         // 按鈕 自定義
         "render": function (data, type, row) {
           // 取得 productId
@@ -475,7 +489,7 @@ onMounted(() => {
             return `${editEle}${deletEle}`;
           }
           return data;
-        }, responsivePriority: 1
+        }, responsivePriority: 2
       }
     ],
     fixedHeader: {
@@ -495,7 +509,7 @@ onMounted(() => {
         //Create按鈕建立
         buttons: [
           {
-            text: '新增廣告',
+            text: '新增公告',
             className: 'btn btn-primary',
             action: function () {
               CreateAdModal.value = true;
