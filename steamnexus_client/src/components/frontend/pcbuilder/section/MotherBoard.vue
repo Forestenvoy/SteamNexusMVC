@@ -122,7 +122,7 @@ const classification = (data) => {
   })
   // 將資料存入 session storage
   sessionStorage.setItem('MBList', JSON.stringify(MBGroups.value))
-  SortGroups.value = MBGroups.value
+  filterBySocket()
 }
 
 // Filter By Socket
@@ -228,10 +228,10 @@ onMounted(() => {
   if (storedData !== null && storedData !== undefined) {
     MBGroups.value = JSON.parse(storedData)
     SortGroups.value = MBGroups.value
+    filterBySocket()
   } else {
     getData()
   }
-  filterBySocket()
 })
 </script>
 
