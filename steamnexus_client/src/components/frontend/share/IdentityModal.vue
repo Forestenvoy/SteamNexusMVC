@@ -10,26 +10,46 @@
         <!-- 信箱 -->
         <div class="input-box">
           <span class="icon"><i class="fas fa-envelope"></i></span>
-          <input type="text" class="mx-2" required v-model="loginEmail" autocomplete="off" />
+          <input
+            type="text"
+            class="mx-2"
+            required
+            v-model="loginEmail"
+            autocomplete="off"
+            :tabindex="loginTabIndex"
+          />
           <label>Email</label>
         </div>
         <!-- 密碼 -->
         <div class="input-box">
           <span class="icon"><i class="fas fa-lock"></i></span>
-          <input type="password" class="mx-2" required v-model="loginPassword" autocomplete="off" />
+          <input
+            type="password"
+            class="mx-2"
+            required
+            v-model="loginPassword"
+            autocomplete="off"
+            :tabindex="loginTabIndex"
+          />
           <label>Password</label>
         </div>
         <!-- 記住我 -->
         <div class="remember-forgot">
-          <label><input type="checkbox" v-model="rememberMe" /> Remember me</label>
+          <label
+            ><input type="checkbox" v-model="rememberMe" :tabindex="loginTabIndex" /> Remember
+            me</label
+          >
           <!-- 忘記密碼 -->
-          <a href="#">Forgot password?</a>
+          <a href="#" :tabindex="loginTabIndex">Forgot password?</a>
         </div>
         <!-- 登入按鈕 -->
-        <button type="submit" class="btn">Login</button>
+        <button type="submit" class="btn" :tabindex="loginTabIndex">Login</button>
         <!-- 註冊按鈕 -->
         <div class="login-register">
-          <p>Don't have an account? <a href="#" @click.prevent="showRegister"> Register</a></p>
+          <p>
+            Don't have an account?
+            <a href="#" @click.prevent="showRegister" :tabindex="loginTabIndex"> Register</a>
+          </p>
         </div>
       </form>
     </div>
@@ -40,13 +60,27 @@
         <!-- 名字 -->
         <div class="input-box">
           <span class="icon"><i class="fa fa-user" aria-hidden="true"></i></span>
-          <input type="text" class="mx-2" required v-model="registerName" autocomplete="off" />
+          <input
+            type="text"
+            class="mx-2"
+            required
+            v-model="registerName"
+            autocomplete="off"
+            :tabindex="registerTabIndex"
+          />
           <label>Name</label>
         </div>
         <!-- 信箱 -->
         <div class="input-box">
           <span class="icon"><i class="fas fa-envelope"></i></span>
-          <input type="text" class="mx-2" required v-model="registerEmail" autocomplete="off" />
+          <input
+            type="text"
+            class="mx-2"
+            required
+            v-model="registerEmail"
+            autocomplete="off"
+            :tabindex="registerTabIndex"
+          />
           <label>Email</label>
         </div>
         <!-- 密碼 -->
@@ -58,6 +92,7 @@
             required
             v-model="registerPassword"
             autocomplete="off"
+            :tabindex="registerTabIndex"
           />
           <label>Password</label>
         </div>
@@ -70,18 +105,25 @@
             required
             v-model="confirmPassword"
             autocomplete="off"
+            :tabindex="registerTabIndex"
           />
           <label>Confirm Password</label>
         </div>
         <!-- 註冊前確認規定同意書 -->
         <div class="remember-forgot">
-          <label><input type="checkbox" required /> I agree to the terms & conditions</label>
+          <label
+            ><input type="checkbox" required :tabindex="registerTabIndex" v-model="agree" /> I agree
+            to the terms & conditions</label
+          >
         </div>
         <!-- 註冊按鈕 -->
-        <button type="submit" class="btn">Register</button>
+        <button type="submit" class="btn" :tabindex="registerTabIndex">Register</button>
         <!-- 登入按鈕 -->
         <div class="login-register">
-          <p>Already have an account? <a href="#" @click.prevent="showLogin"> Login</a></p>
+          <p>
+            Already have an account?
+            <a href="#" @click.prevent="showLogin" :tabindex="registerTabIndex"> Login</a>
+          </p>
         </div>
       </form>
     </div>
@@ -107,8 +149,11 @@ const rememberMe = ref(false)
 const registerName = ref('')
 const registerEmail = ref('')
 const registerPassword = ref('')
+const agree = ref(false)
 const loginForm = ref(null)
 const registerForm = ref(null)
+const loginTabIndex = ref(0)
+const registerTabIndex = ref(-1)
 
 const closeModal = () => {
   // 隱藏登入畫面
@@ -116,23 +161,29 @@ const closeModal = () => {
 }
 
 const showLogin = () => {
+  clearForm()
   if (LRModal.value && loginForm.value && registerForm.value) {
     LRModal.value.classList.remove('active')
     setTimeout(() => {
       loginForm.value.style.transform = 'translateX(0)'
       registerForm.value.style.transform = 'translateX(400px)'
       LRModal.value.style.height = '500px'
+      loginTabIndex.value = 0
+      registerTabIndex.value = -1
     }, 200)
   }
 }
 
 const showRegister = () => {
+  clearForm()
   if (LRModal.value && loginForm.value && registerForm.value) {
     LRModal.value.classList.add('active')
     setTimeout(() => {
       loginForm.value.style.transform = 'translateX(-400px)'
       registerForm.value.style.transform = 'translateX(0)'
       LRModal.value.style.height = '600px'
+      loginTabIndex.value = -1
+      registerTabIndex.value = 0
     }, 200)
   }
 }
@@ -235,6 +286,18 @@ async function hashPassword(password) {
   const data = encoder.encode(password)
   const hash = await crypto.subtle.digest('SHA-256', data)
   return btoa(String.fromCharCode(...new Uint8Array(hash)))
+}
+
+//清空表單
+const clearForm = () => {
+  loginEmail.value = ''
+  loginPassword.value = ''
+  confirmPassword.value = ''
+  rememberMe.value = false
+  registerName.value = ''
+  registerEmail.value = ''
+  registerPassword.value = ''
+  agree.value = false
 }
 
 const submitRegister = () => {

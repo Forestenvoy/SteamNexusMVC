@@ -1,7 +1,12 @@
 <template>
-  <div>搜尋系統</div>
+  <div class="container p-2">
+<keyword-serch></keyword-serch>
+  </div>
 </template>
-<script>
-export default {}
+<script setup>
+import KeywordSerch from '@/components/frontend/search/KeywordSearch.vue'
+
 </script>
-<style></style>
+<style scoped>
+
+</style>

@@ -2,17 +2,17 @@
   <div class="mt-5 container mb-2 text-white">
     <div class="position-absolute top-0 start-50 translate-middle-x" :style="ImageBackground"></div>
     <div style="margin-top: 200px;">
-       <div class="fs-5 row">
+       <div class="fs-6 row">
       <div class="col-4 leftbox">
         <img :src="ImagePath" class="w-100 animate__animated animate__fadeIn" alt="">
         <div class="p-3">
           <p class=" text-secondary">{{Description}}</p>
           <div v-if="tagShow" class="mt-3 tagShow">
-          <h7>熱門標籤：</h7>
+          <span class="h7">熱門標籤：</span>
           <button v-for="tag in tagData" class="badge" :key="tag" @click="tagclick">{{tag}}</button>
         </div>
         <div v-if="!tagShow" class="mt-3 tagShow" :key="tagShow">
-          <h7>熱門標籤： </h7>
+          <span class="h7">熱門標籤： </span>
           <button v-for="tag in tagDataOpen" class="badge" :key="tag" @click="tagclick">{{tag}}</button>
         </div>
         <button class="badge" @click="moreclick(tagShow)">...</button><br>
@@ -52,11 +52,12 @@
             <a :href="steamWeb" target="_blank" :title="steamWebtitle"><button type="button" class="btn btn-primary ms-3">前往Steam購買</button></a>
           </div>  
         </div>
-        <div>
-
-        </div>
+        <!-- 圖表開始 -->
         <div class="hello animate__animated animate__fadeIn" ref="chartdiv"></div>
-        <div class="d-flex p-2 mt-2">
+        <!-- 圖表結束 -->
+        <h3 class="ms-4 fs-1" data-aos="fade-in">遊玩門檻</h3>
+        <hr style="height: 2px; background-color:white; border: none;opacity: 1;"  class="mt-3  ms-3">
+        <div class="d-flex ps-2">
           <div class="leftbox p-3 rounded m-1 " style="width: 50%;">
             <span class="fw-bold text-white fs-6">最低配備：</span><br>
             <div v-if='MinOriCpu!=null'>
@@ -136,18 +137,24 @@
             </div>
           </div>
         </div>
+        <h3 class="ms-4 fs-1" data-aos="fade-in">推薦遊戲</h3>
         <!-- 推薦遊戲 -->
-        <Carousel  :items-to-show="3" v-bind="settings" >
-          <Slide class="slide" v-for="slide in 10" :key="slide">
+        <Carousel  :items-to-show="4">
+          <Slide class="slide" v-for="slide in TagSamegamesName" :key="slide">
             <div class="carousel__item">
-              <img width=" 100%" src="https://cdn.cloudflare.steamstatic.com/steam/apps/570/header.jpg?t=1710346933" alt="">
-              <span>123</span>
+              <img width=" 100%" :src="slide.imagePath" alt="">
+              <p height= 45px class="fs-7 nowrap">{{slide.name}}</p>
+              <div v-if="slide.originalPrice!=slide.currentPrice">
+                <p class="fs-6 text-decoration-line-through d-inline text-danger">NT.{{slide.originalPrice}}</p>
+                <p  class="fs-6 d-inline bg-danger ps-1 pe-1 ms-1">NT.{{slide.currentPrice}}</p>
+              </div>
+              <p v-else class="fs-6 d-inline">{{slide.currentPrice==0?"免費":"NT."+slide.currentPrice}}</p>
+             
+              
             </div>
-            
-            
           </Slide>
           <template #addons>
-            <Navigation class="bg-danger" />
+            <Navigation class="text-danger fw-bold" />
           </template>
         </Carousel>
         <!-- carousel -->
@@ -211,6 +218,7 @@ var tagData=ref([])
 var tagDataOpen=ref([])
 var tagShow=ref(true)
 var LanguageTable=ref([])
+var TagSamegamesName=ref([])
 
 import { Carousel, Navigation, Slide } from 'vue3-carousel'
 import 'vue3-carousel/dist/carousel.css'
@@ -424,6 +432,40 @@ function getRecReqData(){
     })
 }
 
+function GetGameTagSameData(){
+  fetch(`${apiUrl}/api/GamesManagement/GetGameTagSameData?id=${props.gameId}`, {
+    method: 'GET'
+  })
+    .then((response) => {
+      // 確保請求是否成功
+      if (!response.ok) {
+        throw new Error('Network response was not ok')
+      }
+      // 解析 html
+      return response.json()
+    })
+    .then((val) => {
+      console.log(val);
+      for (var i = 0; i < val.length; i++){
+        TagSamegamesName.value.push({
+        name: val[i].name,
+        imagePath: val[i].imagePath,
+        originalPrice:val[i].originalPrice,
+        currentPrice:val[i].currentPrice,
+      });
+      }
+      // TagSamegamesName=val.
+      console.log(TagSamegamesName);
+    })
+    .catch((error) => {
+      alert(error)
+    })
+    .finally(() => {
+      // 异步操作完成后启用按钮
+      $(this).prop('disabled', false)
+    })
+}
+
 onMounted(() => {
   AOS.init()
   getData();
@@ -431,6 +473,7 @@ onMounted(() => {
   GetLanguageGroup();
   getMinReqData();
   getRecReqData();
+  GetGameTagSameData();
 
   fetch(`${apiUrl}/api/GamesManagement/GetLineChartData?id=${props.gameId}`, {
     method: 'GET'
@@ -544,15 +587,16 @@ onBeforeUnmount(() => {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .carousel__item {
-  padding: 20px;
-  min-height: 300px;
+  min-height: 200px;
   width: 100%;
   background-color: #0f1c27;
   color: var(--vc-clr-white);
   font-size: 20px;
   border-radius: 8px;
-
+  display: flex;
+  Flex-direction:column;
   align-items: center;
+  justify-content:Space-between;
 }
 
 .carousel__slide {
@@ -566,19 +610,25 @@ onBeforeUnmount(() => {
   border: 5px solid white;
   
 }
+.fs-7{
+  color: gray;
+  font-size: 15px;
+}
 
 .rounded span{
   color: gray
 }
 .leftbox{
  background: #0f1c27;  /* fallback for old browsers */
-
 }
 .hello {
   width: 100%;
   height: 300px;
 }
 
+.slidename{
+  height: 45px;
+}
 
 .badge{
   font-size: 13px;
@@ -592,7 +642,7 @@ onBeforeUnmount(() => {
   display: inline;
 }
 
-h7{
+.h7{
   font-weight:500;
 }
 h3{
