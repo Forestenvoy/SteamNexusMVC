@@ -324,7 +324,6 @@
               aria-label="Sizing example input"
               aria-describedby="inputGroup-sizing-lg"
               id="birthday"
-              readonly
               v-model="birthday"
             />
           </div>

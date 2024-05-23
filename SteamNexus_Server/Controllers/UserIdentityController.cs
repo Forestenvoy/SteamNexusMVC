@@ -27,8 +27,7 @@ public class UserIdentityController : ControllerBase
     private SteamNexusDbContext _application;
     private readonly IWebHostEnvironment _webHost;  //上傳圖片使用
 
-    //JWT引用
-    public IConfiguration _configuration;
+    public IConfiguration _configuration; //JWT引用
 
     public UserIdentityController(SteamNexusDbContext application,IConfiguration configuration, ILogger<MemberManagementController> logger, IWebHostEnvironment webHost)
     {
