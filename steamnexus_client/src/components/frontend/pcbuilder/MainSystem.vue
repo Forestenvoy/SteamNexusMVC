@@ -30,6 +30,7 @@ import MotherBoard from '@/components/frontend/pcbuilder/section/MotherBoard.vue
 import GraphicsProcessingUnit from '@/components/frontend/pcbuilder/section/GraphicsProcessingUnit.vue'
 import RandomAccessMemory from '@/components/frontend/pcbuilder/section/RandomAccessMemory.vue'
 import TwoCooler from '@/components/frontend/pcbuilder/section/TwoCooler.vue'
+import DriveStorage from '@/components/frontend/pcbuilder/section/DriveStorage.vue'
 
 // pinia
 import { useBuilderStore } from '@/stores/builder.js'
@@ -50,6 +51,8 @@ const currentStepComponent = computed(() => {
       return RandomAccessMemory
     case 5:
       return TwoCooler
+    case 6:
+      return DriveStorage
     default:
       return FirstQuestion
   }
