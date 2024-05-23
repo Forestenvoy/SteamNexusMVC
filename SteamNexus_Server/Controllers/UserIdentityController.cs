@@ -10,6 +10,7 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace SteamNexus_Server.Controllers;
 
@@ -24,15 +25,17 @@ public class UserIdentityController : ControllerBase
 {
     private readonly ILogger<MemberManagementController> _logger;
     private SteamNexusDbContext _application;
+    private readonly IWebHostEnvironment _webHost;  //上傳圖片使用
 
     //JWT引用
     public IConfiguration _configuration;
 
-    public UserIdentityController(SteamNexusDbContext application,IConfiguration configuration, ILogger<MemberManagementController> logger)
+    public UserIdentityController(SteamNexusDbContext application,IConfiguration configuration, ILogger<MemberManagementController> logger, IWebHostEnvironment webHost)
     {
         _application = application;
         _configuration = configuration;
         _logger = logger;
+        _webHost = webHost;
     }
 
 
@@ -423,5 +426,89 @@ public class UserIdentityController : ControllerBase
     }
     #endregion
 
+
+    #region CreateMember ViewModels
+    public class CreateMemberViewModel
+    {
+        [Required]
+        [MaxLength(50)]
+        public string? Name { get; set; }
+
+        [Required]
+        public string Password { get; set; }
+
+        [Required]
+        public string ConfirmPassword { get; set; }
+
+        [Required]
+        public string Email { get; set; }
+
+        public IFormFile? Photo { get; set; }
+    }
+    #endregion
+
+
+    #region CreateMember
+    [HttpPost("CreateMember")]
+
+    public async Task<IActionResult> CreateMember([FromForm] CreateMemberViewModel data)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        try
+        {
+            string photoPath = "default.jpg";
+            var photoFile = data.Photo;
+            if (photoFile != null && photoFile.Length > 0)
+            {
+                string filename = Guid.NewGuid().ToString() + Path.GetExtension(photoFile.FileName);
+                string uploadfolder = Path.Combine(_webHost.WebRootPath, "images/headshots");
+                string filepath = Path.Combine(uploadfolder, filename);
+
+                using (var fileStream = new FileStream(filepath, FileMode.Create))
+                {
+                    await photoFile.CopyToAsync(fileStream);
+                }
+
+                //photoPath = Path.Combine("images/headshots", filename);
+                photoPath = filename;
+            }
+
+            _application.Users.Add(new User
+            {
+                Name = data.Name,
+                Email = data.Email,
+                Password = HashPassword(data.Password),
+                Photo = photoPath,
+                RoleId = 10000
+            });
+
+            await _application.SaveChangesAsync();
+
+            return Ok(new { success = true, message = "會員新增成功" });
+        }
+        catch (Exception ex)
+        {
+            var innerMessage = ex.InnerException != null ? ex.InnerException.Message : "No inner exception";
+            return StatusCode(StatusCodes.Status500InternalServerError, new { success = false, message = ex.Message, innerException = innerMessage });
+        }
+    }
+    #endregion
+
+
+    #region 密碼加密
+    private string HashPassword(string password)
+    {
+        using (var sha256 = System.Security.Cryptography.SHA256.Create())
+        {
+            var bytes = Encoding.UTF8.GetBytes(password);
+            var hash = sha256.ComputeHash(bytes);
+            return Convert.ToBase64String(hash);
+        }
+    }
+    #endregion
 
 }

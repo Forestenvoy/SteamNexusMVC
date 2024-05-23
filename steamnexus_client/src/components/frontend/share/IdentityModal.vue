@@ -63,36 +63,44 @@
           <input
             type="text"
             class="mx-2"
+            id="name"
             required
-            v-model="registerName"
+            v-model="name"
             autocomplete="off"
             :tabindex="registerTabIndex"
+            @input="validatename"
           />
           <label>Name</label>
+          <div id="nameFeedback" class="invalid-feedback">此為必填欄位</div>
         </div>
         <!-- 信箱 -->
-        <div class="input-box">
+        <div class="input-box mt-5">
           <span class="icon"><i class="fas fa-envelope"></i></span>
           <input
-            type="text"
+            type="email"
             class="mx-2"
+            id="email"
             required
-            v-model="registerEmail"
+            v-model="email"
             autocomplete="off"
             :tabindex="registerTabIndex"
+            @input="checkEmail"
           />
           <label>Email</label>
+          <div id="emailFeedback" class="invalid-feedback mb-3"></div>
         </div>
         <!-- 密碼 -->
-        <div class="input-box">
+        <div class="input-box mt-5">
           <span class="icon"><i class="fas fa-lock"></i></span>
           <input
             type="password"
             class="mx-2"
+            id="Password"
             required
-            v-model="registerPassword"
+            v-model="password"
             autocomplete="off"
             :tabindex="registerTabIndex"
+            @input="validatePasswords"
           />
           <label>Password</label>
         </div>
@@ -102,22 +110,32 @@
           <input
             type="password"
             class="mx-2"
+            id="ConfirmPassword"
             required
             v-model="confirmPassword"
             autocomplete="off"
             :tabindex="registerTabIndex"
+            @input="validatePasswords"
           />
           <label>Confirm Password</label>
+          <div id="passwordMismatchFeedback" class="invalid-feedback">密碼與確認密碼不一致</div>
         </div>
         <!-- 註冊前確認規定同意書 -->
-        <div class="remember-forgot">
+        <div class="remember-forgot mt-3">
           <label
             ><input type="checkbox" required :tabindex="registerTabIndex" v-model="agree" /> I agree
             to the terms & conditions</label
           >
         </div>
         <!-- 註冊按鈕 -->
-        <button type="submit" class="btn" :tabindex="registerTabIndex">Register</button>
+        <button
+          type="submit"
+          class="btn"
+          :tabindex="registerTabIndex"
+          :disabled="!isFirstPartValid"
+        >
+          Register
+        </button>
         <!-- 登入按鈕 -->
         <div class="login-register">
           <p>
@@ -135,7 +153,7 @@
 import { useIdentityStore } from '@/stores/identity.js'
 const store = useIdentityStore()
 
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import axios from 'axios'
 
 // 從環境變數取得 API BASE URL
@@ -144,11 +162,14 @@ const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 const LRModal = ref(null)
 const loginEmail = ref('')
 const loginPassword = ref('')
-const confirmPassword = ref('')
 const rememberMe = ref(false)
-const registerName = ref('')
-const registerEmail = ref('')
-const registerPassword = ref('')
+
+const userid = ref(0)
+const name = ref('')
+const email = ref('')
+const emailExists = ref(false) //確認電子信箱是否重複
+const password = ref('')
+const confirmPassword = ref('')
 const agree = ref(false)
 const loginForm = ref(null)
 const registerForm = ref(null)
@@ -185,6 +206,63 @@ const showRegister = () => {
       loginTabIndex.value = -1
       registerTabIndex.value = 0
     }, 200)
+  }
+}
+
+//確認電子信箱是否重複
+const checkEmail = async () => {
+  const emailValue = email.value
+  if (emailValue) {
+    try {
+      const response = await axios.get(`${apiUrl}/api/MemberManagement/CheckEmailExists`, {
+        params: { email: email.value }
+      })
+      emailExists.value = !response.data
+      const feedbackElement = $('#emailFeedback')
+      if (response.data) {
+        feedbackElement
+          .text('此Email 可以使用')
+          .removeClass('invalid-feedback')
+          .addClass('valid-feedback')
+        $('#email').removeClass('is-invalid').addClass('is-valid')
+      } else {
+        feedbackElement
+          .text('該 Email 已被使用，請更換Email')
+          .removeClass('valid-feedback')
+          .addClass('invalid-feedback')
+        $('#email').removeClass('is-valid').addClass('is-invalid')
+      }
+      feedbackElement.show()
+    } catch (error) {
+      $('#emailFeedback').text('無法檢查 Email').addClass('invalid-feedback').show()
+    }
+  } else {
+    $('#emailFeedback').hide()
+  }
+}
+
+// 檢查密碼是否一致
+const validatePasswords = () => {
+  const passwordValue = $('#Password').val()
+  const confirmPasswordValue = $('#ConfirmPassword').val()
+  if (passwordValue !== confirmPasswordValue) {
+    $('#passwordMismatchFeedback').show()
+    $('#ConfirmPassword').addClass('is-invalid')
+  } else {
+    $('#passwordMismatchFeedback').hide()
+    $('#ConfirmPassword').removeClass('is-invalid').addClass('is-valid')
+  }
+}
+
+// 驗證姓名是否有填入數值
+const validatename = () => {
+  const nameValue = $('#name').val()
+  if (nameValue.trim() === '') {
+    $('#nameFeedback').show()
+    $('#name').addClass('is-invalid')
+  } else {
+    $('#nameFeedback').hide()
+    $('#name').removeClass('is-invalid').addClass('is-valid')
   }
 }
 
@@ -288,20 +366,67 @@ async function hashPassword(password) {
   return btoa(String.fromCharCode(...new Uint8Array(hash)))
 }
 
+//驗證第一部份表單是否有誤
+const isFirstPartValid = computed(() => {
+  return (
+    name.value &&
+    email.value &&
+    password.value &&
+    confirmPassword.value &&
+    password.value === confirmPassword.value &&
+    !emailExists.value
+  )
+})
+
 //清空表單
 const clearForm = () => {
   loginEmail.value = ''
   loginPassword.value = ''
   confirmPassword.value = ''
   rememberMe.value = false
-  registerName.value = ''
-  registerEmail.value = ''
-  registerPassword.value = ''
+  name.value = ''
+  email.value = ''
+  password.value = ''
   agree.value = false
 }
 
-const submitRegister = () => {
-  // 處理註冊表單提交
+const submitRegister = async () => {
+  // 檢查表單是否有效
+  if (!isFirstPartValid.value) {
+    alert('請填寫完整且正確的表單資料')
+    return
+  }
+
+  // 檢查密碼和確認密碼是否一致
+  if (password.value !== confirmPassword.value) {
+    alert('密碼與確認密碼不一致')
+    return
+  }
+
+  // 構建註冊請求的資料
+  const formData = new FormData()
+  formData.append('Name', name.value)
+  formData.append('Password', password.value)
+  formData.append('ConfirmPassword', confirmPassword.value)
+  formData.append('Email', email.value)
+
+  try {
+    // 發送 POST 請求到後端 API
+    // const response = await axios.post(`${apiUrl}/api/MemberManagement/CreateMember`, formData) //後端使用的API，ViewModel有非必填欄位
+    const response = await axios.post(`${apiUrl}/api/UserIdentity/CreateMember`, formData) //前端使用的API，ViewModel移除非必填欄位
+
+    // 檢查回應狀態和數據
+    if (response.status === 200 && response.data.success) {
+      alert(response.data.message)
+      showLogin()
+    } else {
+      alert(response.data.message || '註冊過程中發生錯誤')
+    }
+  } catch (error) {
+    // 處理錯誤情況，例如顯示錯誤消息
+    console.error('Error occurred during registration:', error)
+    alert('註冊過程中發生錯誤')
+  }
 }
 
 onMounted(() => {
