@@ -32,8 +32,8 @@
         </CNavbarNav>
         <CNavbarNav class="ms-0 ms-lg-2 mb-2 mb-lg-0 order-5" v-if="!store.getIsLogin">
           <CNavItem>
-            <CNavLink
-              class="text-center"
+            <CNavLink 
+              class="text-center CNavLink"
               :class="{ nLink: canToggle, login_btn: !canToggle }"
               href="#"
               @click="showLogin"
@@ -47,11 +47,11 @@
             class="form-control me-2 input-search"
             placeholder="請輸入遊戲關鍵字"
           />
-          <CButton
+          <CButton style="border: 0px;"
             :color="buttonColor"
             variant="outline"
             @click.prevent="$router.push('/searchSystem')"
-            >Search</CButton
+            ><i class="fa-solid fa-magnifying-glass"></i></CButton
           >
         </CForm>
       </CCollapse>
@@ -108,6 +108,7 @@ onMounted(() => {
 })
 </script>
 <style scoped>
+
 .navbar {
   position: fixed;
   top: 0;
@@ -222,6 +223,7 @@ onMounted(() => {
   left: 0;
   bottom: 0;
   background: #fff;
+  
   transform: scale(0, 1);
   transition: transform 0.3s ease;
 }
@@ -238,8 +240,8 @@ onMounted(() => {
 
 .login_btn {
   font-weight: 700;
-  color: #fff;
-  border: 1px solid #fff;
+  color: #ffffff;
+  border-radius: 10px;
   padding: 18px 34px;
   position: relative;
   background-color: transparent;
@@ -252,6 +254,7 @@ onMounted(() => {
 .login_btn span {
   font-size: 25px;
   z-index: 1;
+  
 }
 
 .login_btn::before {
@@ -259,12 +262,14 @@ onMounted(() => {
   width: 0%;
   height: 100%;
   position: absolute;
-  background-color: #fff;
+  background-color:#F3AE0B;
+  border-radius: 8px;
   top: 0;
   left: 0;
   z-index: -1;
   transition: 0.3s ease-in-out;
 }
+
 
 .login_btn:hover {
   color: #000;
@@ -275,6 +280,7 @@ onMounted(() => {
   width: 100%;
   height: 100%;
   position: absolute;
+  
 }
 
 .sticky .login_btn {
