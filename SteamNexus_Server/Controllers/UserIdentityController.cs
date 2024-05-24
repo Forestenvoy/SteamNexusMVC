@@ -568,6 +568,31 @@ public class UserIdentityController : ControllerBase
     #endregion
 
 
+    #region EditUserViewModel
+    public class EditUserViewModel
+    {
+
+        public int UserId { get; set; }
+
+        [MaxLength(50)]
+        public string? Name { get; set; }
+
+        public bool? Gender { get; set; } = true;
+
+        #nullable enable
+        [MaxLength(10)]
+        [RegularExpression(@"^09\d{8}$", ErrorMessage = "手機號碼必須以09開頭並且是10位數字")]
+        public string? Phone { get; set; }
+
+        [Display(Name = "生日")]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime? Birthday { get; set; }
+
+        public IFormFile? Photo { get; set; }
+    }
+    #endregion
+
+
     #region 密碼加密
     private string HashPassword(string password)
     {
