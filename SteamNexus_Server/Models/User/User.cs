@@ -40,4 +40,6 @@ public partial class User
     [MaxLength(200)]
     public string? Photo { get; set; }
 
+    public virtual ICollection<GameTracking> GameTrackings { get; set; } = new List<GameTracking>();
+
 }

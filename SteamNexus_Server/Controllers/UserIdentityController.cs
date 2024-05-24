@@ -593,7 +593,6 @@ public class UserIdentityController : ControllerBase
     #endregion
 
 
-    #region EditMember
     [HttpPut("EditMember")]
     public async Task<IActionResult> EditMember([FromForm] EditUserViewModel data)
     {
@@ -645,6 +644,17 @@ public class UserIdentityController : ControllerBase
         var photoFile = data.Photo;
         if (photoFile != null && photoFile.Length > 0)
         {
+            // 刪除原本的圖片，排除預設圖片
+            if (!string.IsNullOrEmpty(user.Photo) && user.Photo != "default.jpg")
+            {
+                string existingFilePath = Path.Combine(_webHost.WebRootPath, "images/headshots", user.Photo);
+                if (System.IO.File.Exists(existingFilePath))
+                {
+                    System.IO.File.Delete(existingFilePath);
+                }
+            }
+
+            // 上傳新圖片
             string filename = Guid.NewGuid().ToString() + Path.GetExtension(photoFile.FileName);
             string uploadfolder = Path.Combine(_webHost.WebRootPath, "images/headshots");
             string filepath = Path.Combine(uploadfolder, filename);
@@ -654,7 +664,6 @@ public class UserIdentityController : ControllerBase
                 await photoFile.CopyToAsync(fileStream);
             }
 
-            // 更新用戶的圖片路徑
             user.Photo = filename;
         }
 
@@ -663,7 +672,6 @@ public class UserIdentityController : ControllerBase
 
         return Ok("會員資料修改成功");
     }
-    #endregion
 
 
     #region 密碼加密

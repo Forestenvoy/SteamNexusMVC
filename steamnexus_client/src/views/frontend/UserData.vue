@@ -24,8 +24,8 @@
                   <label for="avatar">大頭貼</label>
                   <input type="file" class="form-control" id="avatar" @change="onAvatarChange" />
                   <img
-                    v-if="profile.photo"
-                    :src="profile.photo"
+                    v-if="profile.photo || profile.previewPhoto"
+                    :src="profile.previewPhoto || profile.photo"
                     alt="大頭貼"
                     class="img-thumbnail mt-2"
                   />
@@ -64,7 +64,16 @@
                 </div>
                 <div class="form-group mt-2">
                   <label for="phone">電話</label>
-                  <input type="text" class="form-control" id="phone" v-model="profile.phone" />
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="phone"
+                    v-model="profile.phone"
+                    maxlength="10"
+                    pattern="\d*"
+                    @input="validatePhone"
+                  />
+                  <div id="phoneFeedback" class="invalid-feedback">請輸入數字</div>
                 </div>
                 <div class="form-group mt-2">
                   <label for="birthday">生日</label>
@@ -156,7 +165,10 @@ const profile = ref({
   phone: '',
   mobile: '',
   birthday: '',
-  avatar: null
+  avatar: null,
+  photo: null,
+  previewPhoto: null, // 新增預覽照片屬性
+  originalPhoto: null // 存放原本的圖片路徑
 })
 const oldPassword = ref('')
 const confirmOldPassword = ref('')
@@ -174,7 +186,15 @@ const showPassword = () => {
 
 // 確認大頭貼是否有進行變更
 const onAvatarChange = (event) => {
-  profile.value.avatar = event.target.files[0]
+  const file = event.target.files[0]
+  if (file) {
+    profile.value.avatar = file
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      profile.value.previewPhoto = e.target.result
+    }
+    reader.readAsDataURL(file)
+  }
 }
 
 // 檢查舊密碼是否一致
@@ -200,6 +220,19 @@ const validateNewPasswords = () => {
   } else {
     $('#newPasswordFeedback').hide()
     $('#confirmNewPassword').removeClass('is-invalid').addClass('is-valid')
+  }
+}
+
+//確認電話號碼是否為數字
+const validatePhone = () => {
+  const phoneValue = profile.value.phone
+  const phonePattern = /^\d*$/
+  if (!phonePattern.test(phoneValue)) {
+    $('#phoneFeedback').show()
+    $('#phone').addClass('is-invalid')
+  } else {
+    $('#phoneFeedback').hide()
+    $('#phone').removeClass('is-invalid').addClass('is-valid')
   }
 }
 
@@ -241,12 +274,22 @@ const loadUserProfile = async () => {
       }
     })
     const userData = response.data
+
+    const formatDateForInput = (dateString) => {
+      if (!dateString) return ''
+      const date = new Date(dateString)
+      const year = date.getFullYear()
+      const month = (date.getMonth() + 1).toString().padStart(2, '0')
+      const day = date.getDate().toString().padStart(2, '0')
+      return `${year}-${month}-${day}`
+    }
+
     profile.value.name = userData.name
-    profile.value.gender = userData.gender ? 'true' : 'false'
+    profile.value.gender = userData.gender ? 'true' : 'false' // 確保性別以布林值形式處理
     profile.value.phone = userData.phone
-    profile.value.mobile = userData.mobile
-    profile.value.birthday = userData.birthday
+    profile.value.birthday = formatDateForInput(userData.birthday) // 格式化日期為 yyyy-mm-dd
     profile.value.photo = userData.photo ? `${apiUrl}/images/headshots/${userData.photo}` : null
+    profile.value.originalPhoto = userData.photo // 存放原本的圖片路徑
   } catch (error) {
     console.error('Error loading user profile:', error)
     alert('加載用戶資料失敗')
@@ -259,11 +302,11 @@ const editUserSubmit = async () => {
   formData.append('Name', profile.value.name)
   formData.append('Gender', profile.value.gender)
   formData.append('Phone', profile.value.phone)
-  formData.append('Mobile', profile.value.mobile)
   formData.append('Birthday', profile.value.birthday)
   if (profile.value.avatar) {
     formData.append('Photo', profile.value.avatar)
   }
+  formData.append('OriginalPhoto', profile.value.originalPhoto) // 傳遞原本的圖片信息
 
   const token = store.getToken
 
