@@ -3,10 +3,15 @@
     <CContainer>
       <CRow class="align-items-center">
         <CCol xs="12" md="6" xl="7" class="order-1 order-md-0 text-center">
-          <h1 class="display-1 mb-5" data-aos="fade-up" data-aos-duration="1000">Game PC</h1>
-          <h1 class="display-1 mb-5" data-aos="fade-up" data-aos-duration="1000">Builder</h1>
+          <h1 class="display-1 mb-5" :data-aos="animation" data-aos-duration="1000">Game PC</h1>
+          <h1 class="display-1 mb-5" :data-aos="animation" data-aos-duration="1000">Builder</h1>
           <div class="d-flex justify-content-center align-items-center">
-            <a class="button" href="#" data-aos="fade-up" data-aos-duration="1000">
+            <a
+              class="button"
+              href="#systemIntroduction"
+              :data-aos="animation"
+              data-aos-duration="1000"
+            >
               開始
               <svg fill="currentColor" viewBox="0 0 24 24" class="icon">
                 <path
@@ -36,16 +41,13 @@ import { ref, onMounted } from 'vue'
 
 import { CContainer, CRow, CCol } from '@coreui/vue'
 
-let aosDelay1 = ref(500)
-let aosDelay2 = ref(1000)
+let animation = ref('zoom-in')
 
 function aosDelayChange() {
   if (window.innerWidth <= 768) {
-    aosDelay1.value = 0
-    aosDelay2.value = 0
+    animation.value = 'fade-up'
   } else {
-    aosDelay1.value = 500
-    aosDelay2.value = 1000
+    animation.value = 'zoom-in'
   }
 }
 
