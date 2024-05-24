@@ -310,7 +310,7 @@ namespace SteamNexus_Server.Controllers
 
             public bool Gender { get; set; } = true;
 
-#nullable enable
+            #nullable enable
             [MaxLength(10)]
             [RegularExpression(@"^09\d{8}$", ErrorMessage = "手機號碼必須以09開頭並且是10位數字")]
             public string? Phone { get; set; }

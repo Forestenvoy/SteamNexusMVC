@@ -31,7 +31,6 @@
                 :keyboard="{
                   enabled: true
                 }"
-                :loop="true"
                 :spaceBetween="30"
                 :navigation="true"
                 :pagination="{

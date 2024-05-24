@@ -10,6 +10,8 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SteamNexus_Server.Controllers;
 
@@ -24,15 +26,16 @@ public class UserIdentityController : ControllerBase
 {
     private readonly ILogger<MemberManagementController> _logger;
     private SteamNexusDbContext _application;
+    private readonly IWebHostEnvironment _webHost;  //上傳圖片使用
 
-    //JWT引用
-    public IConfiguration _configuration;
+    public IConfiguration _configuration; //JWT引用
 
-    public UserIdentityController(SteamNexusDbContext application,IConfiguration configuration, ILogger<MemberManagementController> logger)
+    public UserIdentityController(SteamNexusDbContext application,IConfiguration configuration, ILogger<MemberManagementController> logger, IWebHostEnvironment webHost)
     {
         _application = application;
         _configuration = configuration;
         _logger = logger;
+        _webHost = webHost;
     }
 
 
@@ -401,9 +404,9 @@ public class UserIdentityController : ControllerBase
                 return Ok(new
                 {
                     user.UserId,
-                    user.RoleId,
+                    //user.RoleId,
                     user.Email,
-                    user.Password,
+                    //user.Password,
                     user.Name,
                     user.Gender,
                     user.Phone,
@@ -423,5 +426,256 @@ public class UserIdentityController : ControllerBase
     }
     #endregion
 
+
+    #region CreateMember ViewModels
+    public class CreateMemberViewModel
+    {
+        [Required]
+        [MaxLength(50)]
+        public string? Name { get; set; }
+
+        [Required]
+        public string Password { get; set; }
+
+        [Required]
+        public string ConfirmPassword { get; set; }
+
+        [Required]
+        public string Email { get; set; }
+
+        public IFormFile? Photo { get; set; }
+    }
+    #endregion
+
+
+    #region CreateMember
+    [HttpPost("CreateMember")]
+
+    public async Task<IActionResult> CreateMember([FromForm] CreateMemberViewModel data)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        try
+        {
+            string photoPath = "default.jpg";
+            var photoFile = data.Photo;
+            if (photoFile != null && photoFile.Length > 0)
+            {
+                string filename = Guid.NewGuid().ToString() + Path.GetExtension(photoFile.FileName);
+                string uploadfolder = Path.Combine(_webHost.WebRootPath, "images/headshots");
+                string filepath = Path.Combine(uploadfolder, filename);
+
+                using (var fileStream = new FileStream(filepath, FileMode.Create))
+                {
+                    await photoFile.CopyToAsync(fileStream);
+                }
+
+                //photoPath = Path.Combine("images/headshots", filename);
+                photoPath = filename;
+            }
+
+            _application.Users.Add(new User
+            {
+                Name = data.Name,
+                Email = data.Email,
+                Password = HashPassword(data.Password),
+                Photo = photoPath,
+                RoleId = 10000
+            });
+
+            await _application.SaveChangesAsync();
+
+            return Ok(new { success = true, message = "會員新增成功" });
+        }
+        catch (Exception ex)
+        {
+            var innerMessage = ex.InnerException != null ? ex.InnerException.Message : "No inner exception";
+            return StatusCode(StatusCodes.Status500InternalServerError, new { success = false, message = ex.Message, innerException = innerMessage });
+        }
+    }
+    #endregion
+
+
+    #region ChangePasswordViewModel
+    public class ChangePasswordViewModel
+    {
+        public string oldPassword { get; set; }
+        public string newPassword { get; set; }
+    }
+    #endregion
+
+
+    #region ChangePassword
+    [HttpPost("ChangePassword")]
+    public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordViewModel data)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        // 從 Header 取得 JWT
+        var authHeader = Request.Headers["Authorization"].ToString();
+        if (authHeader == null || !authHeader.StartsWith("Bearer "))
+        {
+            return BadRequest("Authorization header is missing or does not contain a Bearer token");
+        }
+
+        var token = authHeader.Substring("Bearer ".Length).Trim();
+
+        // 解析 JWT
+        var jwtToken = new JwtSecurityTokenHandler().ReadToken(token) as JwtSecurityToken;
+        if (jwtToken == null)
+        {
+            return BadRequest("Invalid JWT");
+        }
+
+        // 從 JWT 中取得用戶 ID
+        var userIdClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+        if (userIdClaim == null)
+        {
+            return Unauthorized("Unable to identify user");
+        }
+
+        if (!int.TryParse(userIdClaim.Value, out int userId))
+        {
+            return BadRequest("Invalid user ID format");
+        }
+
+        // 從資料庫取得用戶
+        var user = await _application.Users.FindAsync(userId);
+        if (user == null)
+        {
+            return NotFound("未找到用戶");
+        }
+
+        // 檢查舊密碼是否正確
+        if (HashPassword(data.oldPassword) != user.Password)
+        {
+            return BadRequest("舊密碼不正確");
+        }
+
+        // 更新用戶密碼
+        user.Password = HashPassword(data.newPassword);
+        _application.Users.Update(user);
+        await _application.SaveChangesAsync();
+
+        return Ok("密碼修改成功");
+    }
+    #endregion
+
+
+    #region EditUserViewModel
+    public class EditUserViewModel
+    {
+
+        public int UserId { get; set; }
+
+        [MaxLength(50)]
+        public string? Name { get; set; }
+
+        public bool? Gender { get; set; } = true;
+
+        #nullable enable
+        [MaxLength(10)]
+        [RegularExpression(@"^09\d{8}$", ErrorMessage = "手機號碼必須以09開頭並且是10位數字")]
+        public string? Phone { get; set; }
+
+        [Display(Name = "生日")]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime? Birthday { get; set; }
+
+        public IFormFile? Photo { get; set; }
+    }
+    #endregion
+
+
+    #region EditMember
+    [HttpPut("EditMember")]
+    public async Task<IActionResult> EditMember([FromForm] EditUserViewModel data)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        // 從 Header 取得 JWT
+        var authHeader = Request.Headers["Authorization"].ToString();
+        if (authHeader == null || !authHeader.StartsWith("Bearer "))
+        {
+            return BadRequest("Authorization header is missing or does not contain a Bearer token");
+        }
+
+        var token = authHeader.Substring("Bearer ".Length).Trim();
+        var jwtToken = new JwtSecurityTokenHandler().ReadToken(token) as JwtSecurityToken;
+        if (jwtToken == null)
+        {
+            return BadRequest("Invalid JWT");
+        }
+
+        // 從 JWT 中取得用戶 ID
+        var userIdClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+        if (userIdClaim == null)
+        {
+            return Unauthorized("Unable to identify user");
+        }
+
+        if (!int.TryParse(userIdClaim.Value, out int userId))
+        {
+            return BadRequest("Invalid user ID format");
+        }
+
+        // 從資料庫取得用戶
+        var user = await _application.Users.FindAsync(userId);
+        if (user == null)
+        {
+            return NotFound("未找到用戶");
+        }
+
+        // 更新用戶資料
+        if (data.Name != null) user.Name = data.Name;
+        if (data.Gender.HasValue) user.Gender = data.Gender.Value;
+        if (data.Phone != null) user.Phone = data.Phone;
+        if (data.Birthday.HasValue) user.Birthday = data.Birthday.Value;
+
+        // 檢查是否有上傳新圖片
+        var photoFile = data.Photo;
+        if (photoFile != null && photoFile.Length > 0)
+        {
+            string filename = Guid.NewGuid().ToString() + Path.GetExtension(photoFile.FileName);
+            string uploadfolder = Path.Combine(_webHost.WebRootPath, "images/headshots");
+            string filepath = Path.Combine(uploadfolder, filename);
+
+            using (var fileStream = new FileStream(filepath, FileMode.Create))
+            {
+                await photoFile.CopyToAsync(fileStream);
+            }
+
+            // 更新用戶的圖片路徑
+            user.Photo = filename;
+        }
+
+        _application.Users.Update(user);
+        await _application.SaveChangesAsync();
+
+        return Ok("會員資料修改成功");
+    }
+    #endregion
+
+
+    #region 密碼加密
+    private string HashPassword(string password)
+    {
+        using (var sha256 = System.Security.Cryptography.SHA256.Create())
+        {
+            var bytes = Encoding.UTF8.GetBytes(password);
+            var hash = sha256.ComputeHash(bytes);
+            return Convert.ToBase64String(hash);
+        }
+    }
+    #endregion
 
 }
