@@ -85,5 +85,55 @@ public class PcBuilderController : ControllerBase
 
     }
 
+    // 回傳產品資料 RAM
+    // GET: api/PcBuilder
+    [HttpGet("GetRAMData")]
+    public ActionResult<IEnumerable<ProductDto>> GetRAMData()
+    {
+        try
+        {
+            // 尋找特定硬體的產品資料
+            var result = _context.ComponentClassifications
+                .Where(c => c.ComputerPartCategoryId == 10002)
+                .Join(
+                    _context.ProductInformations,
+                    c => c.ComponentClassificationId,
+                    p => p.ComponentClassificationId,
+                    (c, p) => new { c, p }
+                )
+                .Join(
+                    _context.ProductRAMs,
+                    cp => cp.p.ProductInformationId,
+                    r => r.ProductInformationId,
+                    (cp, r) => new RamDto
+                    {
+                        Id = cp.p.ProductInformationId,
+                        Classification = cp.c.Name,
+                        Name = cp.p.Name,
+                        Specification = cp.p.Specification,
+                        Price = cp.p.Price,
+                        Wattage = cp.p.Wattage,
+                        Recommend = cp.p.Recommend,
+                        Size = r.Size  // 從 ProductRAM 中獲取 Size
+                    }
+                );
+
+            if (result == null || !result.Any())
+            {
+                return NotFound("Data not found.");
+            }
+
+            return Ok(result);
+        }
+        catch (Exception error)
+        {
+            // 未來考慮引用日誌框架如 Serilog 記錄異常 
+            Console.WriteLine(error.Message);
+
+            // 未來考慮引用中介軟體 RequestDelegate 做 例外處理
+            return StatusCode(500, "An internal server error occurred. Please try again later.");
+        }
+
+    }
 
 }

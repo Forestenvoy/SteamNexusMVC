@@ -7,11 +7,15 @@
     <CCol xs="12" md="6">
       <CForm @change="filter">
         <CFormCheck type="radio" inline label="全部" value="All" v-model="brand" />
-        <CFormCheck type="radio" inline label="華碩" value="華碩" v-model="brand" />
-        <CFormCheck type="radio" inline label="技嘉" value="技嘉" v-model="brand" />
-        <CFormCheck type="radio" inline label="微星" value="微星" v-model="brand" />
-        <CFormCheck type="radio" inline label="華擎" value="華擎" v-model="brand" />
-        <CFormCheck type="radio" inline label="NZXT" value="NZXT" v-model="brand" />
+        <CFormCheck
+          type="radio"
+          inline
+          v-for="item in brandGroups"
+          :key="item"
+          :label="item"
+          :value="item"
+          v-model="brand"
+        />
       </CForm>
     </CCol>
   </CRow>
@@ -32,10 +36,15 @@
   <!-- 選單 -->
   <CRow>
     <CCol xs="12" md="6">
-      <h3>主機板</h3>
+      <h3>LiquidCooler</h3>
     </CCol>
     <CCol xs="12" md="6">
-      <select name="CPU" class="form-select" v-model="selectedMB" @change="selectedProduct">
+      <select
+        name="LiquidCooler"
+        class="form-select"
+        v-model="selectedLiquidCooler"
+        @change="selectedProduct"
+      >
         <option :value="0" disabled selected hidden>---- 請選擇硬體 ----</option>
         <optgroup :label="groupName" v-for="(group, groupName) in SortGroups" :key="groupName">
           <option
@@ -45,6 +54,7 @@
             :data-price="item.price"
             :data-wattage="item.wattage"
             :data-recommend="item.recommend"
+            :data-size="item.size"
           >
             {{ item.name }} {{ item.specification }} ,${{ item.price }}
           </option>
@@ -52,20 +62,14 @@
       </select>
     </CCol>
   </CRow>
-  <!-- 上一頁、下一頁 -->
-  <CRow>
-    <CCol xs="12" md="6">
-      <button class="button-80" @click="builderStore.prev()">上一頁</button>
-    </CCol>
-    <CCol xs="12" md="6">
-      <button class="button-80" @click="builderStore.next()">下一頁</button>
-    </CCol>
-  </CRow>
 </template>
 
 <script setup>
 // vue
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
+
+// core UI
+import { CRow, CCol, CForm, CFormCheck } from '@coreui/vue'
 
 // pinia
 import { useBuilderStore } from '@/stores/builder.js'
@@ -74,24 +78,53 @@ const builderStore = useBuilderStore()
 // API URL
 const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
-// Original Data : CPU Products (Classified)
-const MBGroups = ref({})
+// Original Data : LiquidCooler Products (Classified)
+const LiquidCoolerGroups = ref({})
 
 // Sort Data
 const SortGroups = ref({})
 
+// props
+const props = defineProps(['defaultSelected'])
+
+// emits
+const emits = defineEmits(['selected'])
+
 // Selected Product
-const selectedMB = ref(0)
+const selectedLiquidCooler = ref(props.defaultSelected)
+
+const brandGroups = ref([
+  '華碩',
+  '微星',
+  '美洲獅',
+  'abee',
+  '追風者',
+  '喬思伯',
+  '安耐美',
+  '九州風神',
+  'ID-COOLING',
+  '安鈦克',
+  '旋剛',
+  '酷碼',
+  '恩傑',
+  '大飛',
+  '首利',
+  '銀欣',
+  '利民',
+  '海盜船',
+  '技嘉',
+  '聯力'
+])
 
 // filter ref
 const brand = ref('All')
 const min = ref('')
 const max = ref('')
 
-// (Async) get MB Data
+// (Async) get LiquidCooler Data
 const getData = async () => {
-  console.log('Get CPU Data...')
-  await fetch(`${apiUrl}/api/PcBuilder?type=10003`, {
+  console.log('Get LiquidCooler Data...')
+  await fetch(`${apiUrl}/api/PcBuilder?type=10007`, {
     method: 'GET'
   })
     .then((response) => {
@@ -115,26 +148,14 @@ const getData = async () => {
 const classification = (data) => {
   data.forEach((item) => {
     const className = item.classification
-    if (!MBGroups.value[className]) {
-      MBGroups.value[className] = []
+    if (!LiquidCoolerGroups.value[className]) {
+      LiquidCoolerGroups.value[className] = []
     }
-    MBGroups.value[className].push(item)
+    LiquidCoolerGroups.value[className].push(item)
   })
   // 將資料存入 session storage
-  sessionStorage.setItem('MBList', JSON.stringify(MBGroups.value))
-  filterBySocket()
-}
-
-// Filter By Socket
-const filterBySocket = () => {
-  const filteredData = Object.keys(MBGroups.value)
-    .filter((key) => key.includes(builderStore.getSocket))
-    .reduce((obj, key) => {
-      obj[key] = MBGroups.value[key]
-      return obj
-    }, {})
-  MBGroups.value = filteredData
-  SortGroups.value = MBGroups.value
+  sessionStorage.setItem('LiquidCoolerList', JSON.stringify(LiquidCoolerGroups.value))
+  SortGroups.value = LiquidCoolerGroups.value
 }
 
 // Filter
@@ -146,19 +167,16 @@ const filter = () => {
 // Filter By Brand
 const filterByBrand = () => {
   if (brand.value === 'All') {
-    SortGroups.value = MBGroups.value
+    SortGroups.value = LiquidCoolerGroups.value
   } else {
     // 過濾名稱內含有該品牌的資料
-    const filteredGroups = Object.keys(MBGroups.value).reduce((result, key) => {
-      const filteredProducts = MBGroups.value[key].filter((product) =>
-        product.name.includes(brand.value)
-      )
-      if (filteredProducts.length > 0) {
-        result[key] = filteredProducts
-      }
-      return result
-    }, {})
-    SortGroups.value = filteredGroups
+    const filteredData = Object.keys(LiquidCoolerGroups.value)
+      .filter((key) => key.includes(brand.value))
+      .reduce((obj, key) => {
+        obj[key] = LiquidCoolerGroups.value[key]
+        return obj
+      }, {})
+    SortGroups.value = filteredData
   }
 }
 
@@ -196,39 +214,31 @@ const selectedProduct = (event) => {
   const Price = event.target.options[event.target.selectedIndex].getAttribute('data-price')
   const Wattage = event.target.options[event.target.selectedIndex].getAttribute('data-wattage')
   const Product = {
-    type: 'MB',
+    type: 'LiquidCooler',
     id: Id,
     name: Name,
     price: Price,
     wattage: Wattage
   }
   // 加入至產品清單
-  builderStore.addProduct('MB', Product)
-
-  // 記憶體支援規格判定
-  const optgroup = event.target.options[event.target.selectedIndex].parentNode.getAttribute('label')
-  let memory = ''
-  if (optgroup.indexOf('Intel') !== -1 || optgroup.indexOf('AM5') !== -1) {
-    const start = optgroup.indexOf('(')
-    const end = optgroup.indexOf(')')
-    memory = optgroup.slice(start + 1, end).trim()
-  } else {
-    memory = 'DDR5'
-    if (optgroup.indexOf('AM4') !== -1) {
-      memory = 'DDR4'
-    }
-  }
-  // 儲存記憶體支援規格
-  builderStore.setMemory(memory)
+  builderStore.addProduct('LiquidCooler', Product)
+  emits('selected', selectedLiquidCooler.value)
 }
+
+// 監看 props.defaultSelected 是否有變動
+watch(
+  () => props.defaultSelected,
+  (newValue) => {
+    selectedLiquidCooler.value = newValue
+  }
+)
 
 onMounted(() => {
   // 檢查 session storage 是否有資料
-  const storedData = sessionStorage.getItem('MBList')
+  const storedData = sessionStorage.getItem('LiquidCoolerList')
   if (storedData !== null && storedData !== undefined) {
-    MBGroups.value = JSON.parse(storedData)
-    SortGroups.value = MBGroups.value
-    filterBySocket()
+    LiquidCoolerGroups.value = JSON.parse(storedData)
+    SortGroups.value = LiquidCoolerGroups.value
   } else {
     getData()
   }

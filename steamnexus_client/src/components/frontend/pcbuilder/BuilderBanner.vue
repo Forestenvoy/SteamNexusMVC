@@ -3,7 +3,11 @@
     <CContainer>
       <CRow class="align-items-center">
         <CCol xs="12" md="6" xl="7" class="order-1 order-md-0">
-          <h1 data-aos="fade-up" data-aos-duration="1500" class="text-center text-md-start mb-3">
+          <h1
+            data-aos="fade-up"
+            data-aos-duration="1500"
+            class="title text-center text-md-start mb-3"
+          >
             組台遊戲用桌上型電腦
           </h1>
           <h2

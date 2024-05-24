@@ -31,6 +31,15 @@ export const useBuilderStore = defineStore('builder', () => {
   // action
   // 加入產品
   const addProduct = (type, product) => {
+    // 風冷散熱器、水冷散熱器，兩者只能擇一
+    if (type === 'AirCooler') {
+      // 刪除水冷散熱器
+      productList.value = productList.value.filter((p) => p.type !== 'LiquidCooler')
+    }
+    if (type === 'LiquidCooler') {
+      // 刪除風冷散熱器
+      productList.value = productList.value.filter((p) => p.type !== 'AirCooler')
+    }
     // 檢查有沒有重複產品
     if (productList.value.find((p) => p.type === type)) {
       // 刪除重複產品
