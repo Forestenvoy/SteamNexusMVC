@@ -1,4 +1,6 @@
 <template>
+  <!-- Opening -->
+  <opening-animation></opening-animation>
   <!-- Main Banner -->
   <builder-banner></builder-banner>
   <!-- 菜單系統 -->
@@ -18,6 +20,7 @@ import 'aos/dist/aos.css'
 import { onMounted } from 'vue'
 
 // 頁面元件
+import OpeningAnimation from '@/components/frontend/pcbuilder/OpeningAnimation.vue'
 import BuilderBanner from '@/components/frontend/pcbuilder/BuilderBanner.vue'
 import MenuSlider from '@/components/frontend/pcbuilder/MenuSlider.vue'
 import MainSystem from '@/components/frontend/pcbuilder/MainSystem.vue'
