@@ -789,7 +789,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
             return Json(GameTagSameData);
         }
 
-        //(前台)拿取相關遊戲
+        //(前台)拿取最低價
         [HttpGet("GetGamePricelowestData")]
         public async Task<JsonResult> GetGamePricelowestData(int id)
         {
@@ -806,6 +806,24 @@ namespace SteamNexus.Areas.Administrator.Controllers
 
             // 返回 JSON 結果
             return Json(lowestData);
+        }
+
+        //(前台)拿取相關遊戲
+        [HttpGet("GetGamePeopleData")]
+        public async Task<JsonResult> GetGamePeopleData(int id)
+        {
+            var peopleData = _context.PlayersHistories
+                .Where(pc => pc.GameId == id)
+                .OrderByDescending(record => record.Date)
+                .Select(group => new
+                {
+                    Date = group.Date,
+                    Players = group.Players
+                }).FirstOrDefault();
+
+
+            // 返回 JSON 結果
+            return Json(peopleData);
         }
     }
 }
