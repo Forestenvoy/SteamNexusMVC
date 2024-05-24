@@ -32,14 +32,39 @@
                   <input type="text" class="form-control" id="name" v-model="profile.name" />
                 </div>
                 <div class="form-group">
+                  <label class="mt-2">性別</label>
+                  <div>
+                    <div class="form-check form-check-inline">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        id="genderMale"
+                        value="男"
+                        v-model="profile.gender"
+                      />
+                      <label class="form-check-label" for="genderMale">男</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        id="genderFemale"
+                        value="女"
+                        v-model="profile.gender"
+                      />
+                      <label class="form-check-label" for="genderFemale">女</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group mt-2">
                   <label for="phone">電話</label>
                   <input type="text" class="form-control" id="phone" v-model="profile.phone" />
                 </div>
-                <div class="form-group">
+                <div class="form-group mt-2">
                   <label for="mobile">手機</label>
                   <input type="text" class="form-control" id="mobile" v-model="profile.mobile" />
                 </div>
-                <div class="form-group">
+                <div class="form-group mt-2">
                   <label for="birthday">生日</label>
                   <input
                     type="date"
