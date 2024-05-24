@@ -404,9 +404,9 @@ public class UserIdentityController : ControllerBase
                 return Ok(new
                 {
                     user.UserId,
-                    user.RoleId,
+                    //user.RoleId,
                     user.Email,
-                    user.Password,
+                    //user.Password,
                     user.Name,
                     user.Gender,
                     user.Phone,
@@ -589,6 +589,79 @@ public class UserIdentityController : ControllerBase
         public DateTime? Birthday { get; set; }
 
         public IFormFile? Photo { get; set; }
+    }
+    #endregion
+
+
+    #region EditMember
+    [HttpPut("EditMember")]
+    public async Task<IActionResult> EditMember([FromForm] EditUserViewModel data)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        // 從 Header 取得 JWT
+        var authHeader = Request.Headers["Authorization"].ToString();
+        if (authHeader == null || !authHeader.StartsWith("Bearer "))
+        {
+            return BadRequest("Authorization header is missing or does not contain a Bearer token");
+        }
+
+        var token = authHeader.Substring("Bearer ".Length).Trim();
+        var jwtToken = new JwtSecurityTokenHandler().ReadToken(token) as JwtSecurityToken;
+        if (jwtToken == null)
+        {
+            return BadRequest("Invalid JWT");
+        }
+
+        // 從 JWT 中取得用戶 ID
+        var userIdClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+        if (userIdClaim == null)
+        {
+            return Unauthorized("Unable to identify user");
+        }
+
+        if (!int.TryParse(userIdClaim.Value, out int userId))
+        {
+            return BadRequest("Invalid user ID format");
+        }
+
+        // 從資料庫取得用戶
+        var user = await _application.Users.FindAsync(userId);
+        if (user == null)
+        {
+            return NotFound("未找到用戶");
+        }
+
+        // 更新用戶資料
+        if (data.Name != null) user.Name = data.Name;
+        if (data.Gender.HasValue) user.Gender = data.Gender.Value;
+        if (data.Phone != null) user.Phone = data.Phone;
+        if (data.Birthday.HasValue) user.Birthday = data.Birthday.Value;
+
+        // 檢查是否有上傳新圖片
+        var photoFile = data.Photo;
+        if (photoFile != null && photoFile.Length > 0)
+        {
+            string filename = Guid.NewGuid().ToString() + Path.GetExtension(photoFile.FileName);
+            string uploadfolder = Path.Combine(_webHost.WebRootPath, "images/headshots");
+            string filepath = Path.Combine(uploadfolder, filename);
+
+            using (var fileStream = new FileStream(filepath, FileMode.Create))
+            {
+                await photoFile.CopyToAsync(fileStream);
+            }
+
+            // 更新用戶的圖片路徑
+            user.Photo = filename;
+        }
+
+        _application.Users.Update(user);
+        await _application.SaveChangesAsync();
+
+        return Ok("會員資料修改成功");
     }
     #endregion
 

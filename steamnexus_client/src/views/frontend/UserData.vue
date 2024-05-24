@@ -16,13 +16,19 @@
         <!-- 基本資料修改表單 -->
         <div v-if="activeItem === 'profile'">
           <h2>會員基本資料修改</h2>
-          <form autocomplete="off">
+          <form @submit.prevent="editUserSubmit" autocomplete="off">
             <div class="row">
               <!-- 左邊部分：大頭貼 -->
               <div class="col-md-4">
                 <div class="form-group">
                   <label for="avatar">大頭貼</label>
                   <input type="file" class="form-control" id="avatar" @change="onAvatarChange" />
+                  <img
+                    v-if="profile.photo"
+                    :src="profile.photo"
+                    alt="大頭貼"
+                    class="img-thumbnail mt-2"
+                  />
                 </div>
               </div>
               <!-- 右邊部分：其他資料 -->
@@ -39,7 +45,7 @@
                         class="form-check-input"
                         type="radio"
                         id="genderMale"
-                        value="男"
+                        value="true"
                         v-model="profile.gender"
                       />
                       <label class="form-check-label" for="genderMale">男</label>
@@ -49,7 +55,7 @@
                         class="form-check-input"
                         type="radio"
                         id="genderFemale"
-                        value="女"
+                        value="false"
                         v-model="profile.gender"
                       />
                       <label class="form-check-label" for="genderFemale">女</label>
@@ -59,10 +65,6 @@
                 <div class="form-group mt-2">
                   <label for="phone">電話</label>
                   <input type="text" class="form-control" id="phone" v-model="profile.phone" />
-                </div>
-                <div class="form-group mt-2">
-                  <label for="mobile">手機</label>
-                  <input type="text" class="form-control" id="mobile" v-model="profile.mobile" />
                 </div>
                 <div class="form-group mt-2">
                   <label for="birthday">生日</label>
@@ -229,7 +231,59 @@ const changePassword = () => {
     })
 }
 
-onMounted(() => {})
+// 加載用戶資料
+const loadUserProfile = async () => {
+  const token = store.getToken
+  try {
+    const response = await axios.get(`${apiUrl}/api/UserIdentity/GetUserInfoFromToken`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+    const userData = response.data
+    profile.value.name = userData.name
+    profile.value.gender = userData.gender ? 'true' : 'false'
+    profile.value.phone = userData.phone
+    profile.value.mobile = userData.mobile
+    profile.value.birthday = userData.birthday
+    profile.value.photo = userData.photo ? `${apiUrl}/images/headshots/${userData.photo}` : null
+  } catch (error) {
+    console.error('Error loading user profile:', error)
+    alert('加載用戶資料失敗')
+  }
+}
+
+// 修改基本資料
+const editUserSubmit = async () => {
+  const formData = new FormData()
+  formData.append('Name', profile.value.name)
+  formData.append('Gender', profile.value.gender)
+  formData.append('Phone', profile.value.phone)
+  formData.append('Mobile', profile.value.mobile)
+  formData.append('Birthday', profile.value.birthday)
+  if (profile.value.avatar) {
+    formData.append('Photo', profile.value.avatar)
+  }
+
+  const token = store.getToken
+
+  try {
+    const response = await axios.put(`${apiUrl}/api/UserIdentity/EditMember`, formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+    alert(response.data)
+  } catch (error) {
+    console.error('Error:', error.response)
+    alert('修改失敗: ' + error.response.data)
+  }
+}
+
+onMounted(() => {
+  loadUserProfile()
+})
 </script>
 
 <style scoped>
