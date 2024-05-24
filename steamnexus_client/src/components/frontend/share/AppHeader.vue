@@ -197,7 +197,7 @@ label div:nth-child(2) {
 
 .sticky {
   padding: 5px 100px;
-  background: #fff;
+  background:linear-gradient(to bottom, #F3AE0B, rgb(239, 155, 0));
 }
 
 @media screen and (max-width: 1400px) {
@@ -264,7 +264,8 @@ label div:nth-child(2) {
 }
 
 .sticky input {
-  background-color: #d6d6d6;
+  background-color: rgba(255 , 255, 255,0.6);
+  border: 0px;
 }
 
 .sticky input::placeholder {
@@ -272,7 +273,7 @@ label div:nth-child(2) {
 }
 
 .sticky .navbar-toggler {
-  border-color: #d6d6d6;
+  border-color: #fff;
 }
 
 .banner {
@@ -292,8 +293,7 @@ label div:nth-child(2) {
   height: 0.175rem;
   left: 0;
   bottom: 0;
-  background: #fff;
-  
+  background: #F3AE0B;
   transform: scale(0, 1);
   transition: transform 0.3s ease;
 }
@@ -355,7 +355,7 @@ label div:nth-child(2) {
 
 .sticky .login_btn {
   color: #000;
-  border: 1px solid #000;
+  border: 0px solid #000;
 }
 
 .sticky .login_btn::before {
