@@ -30,4 +30,7 @@ import { useIdentityStore } from '@/stores/identity.js'
 const store = useIdentityStore()
 
 import avatar from '@/assets/images/avatars/2.jpg'
+
+
+
 </script>

@@ -11,6 +11,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SteamNexus_Server.Controllers;
 
@@ -494,6 +495,75 @@ public class UserIdentityController : ControllerBase
             var innerMessage = ex.InnerException != null ? ex.InnerException.Message : "No inner exception";
             return StatusCode(StatusCodes.Status500InternalServerError, new { success = false, message = ex.Message, innerException = innerMessage });
         }
+    }
+    #endregion
+
+
+    #region ChangePasswordViewModel
+    public class ChangePasswordViewModel
+    {
+        public string oldPassword { get; set; }
+        public string newPassword { get; set; }
+    }
+    #endregion
+
+
+    #region ChangePassword
+    [HttpPost("ChangePassword")]
+    public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordViewModel data)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        // 從 Header 取得 JWT
+        var authHeader = Request.Headers["Authorization"].ToString();
+        if (authHeader == null || !authHeader.StartsWith("Bearer "))
+        {
+            return BadRequest("Authorization header is missing or does not contain a Bearer token");
+        }
+
+        var token = authHeader.Substring("Bearer ".Length).Trim();
+
+        // 解析 JWT
+        var jwtToken = new JwtSecurityTokenHandler().ReadToken(token) as JwtSecurityToken;
+        if (jwtToken == null)
+        {
+            return BadRequest("Invalid JWT");
+        }
+
+        // 從 JWT 中取得用戶 ID
+        var userIdClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+        if (userIdClaim == null)
+        {
+            return Unauthorized("Unable to identify user");
+        }
+
+        if (!int.TryParse(userIdClaim.Value, out int userId))
+        {
+            return BadRequest("Invalid user ID format");
+        }
+
+        // 從資料庫取得用戶
+        var user = await _application.Users.FindAsync(userId);
+        if (user == null)
+        {
+            return NotFound("未找到用戶");
+        }
+
+        // 檢查舊密碼是否正確
+        if (HashPassword(data.oldPassword) != user.Password)
+        {
+            return BadRequest("舊密碼不正確");
+        }
+
+        // 更新用戶密碼
+        user.Password = HashPassword(data.newPassword);
+        _application.Users.Update(user);
+        await _application.SaveChangesAsync();
+
+        return Ok("密碼修改成功");
     }
     #endregion
 
