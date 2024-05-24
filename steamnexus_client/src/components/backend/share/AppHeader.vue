@@ -24,9 +24,17 @@ onMounted(() => {
   <CHeader position="sticky" :class="headerClassNames">
     <CContainer class="border-bottom px-4" fluid id="app-header">
       <!-- 側邊欄展開按鈕 -->
-      <CHeaderToggler @click="sidebar.toggleVisible()" style="margin-inline-start: -14px">
-        <CIcon icon="cil-menu" size="lg" />
-      </CHeaderToggler>
+      <input
+        type="checkbox"
+        id="menu_checkbox"
+        @click="sidebar.toggleVisible()"
+        style="margin-inline-start: -14px"
+      />
+      <label for="menu_checkbox" class="menu_btn">
+        <div></div>
+        <div></div>
+        <div></div>
+      </label>
       <!-- 通知系統(待製作) -->
       <CHeaderNav class="ms-auto">
         <CNavItem>
@@ -87,3 +95,46 @@ onMounted(() => {
     </CContainer>
   </CHeader>
 </template>
+
+<style scoped>
+/* 漢堡 icon */
+#menu_checkbox {
+  display: none;
+}
+
+.menu_btn {
+  display: block;
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.menu_btn div {
+  position: relative;
+  top: 0;
+  height: 6px;
+  background-color: #fff;
+  margin-bottom: 6px;
+  transition:
+    0.3s ease transform,
+    0.3s ease top,
+    0.3s ease width,
+    0.3s ease right;
+  border-radius: 2px;
+}
+
+.menu_btn div:first-child {
+  transform-origin: 0;
+}
+
+.menu_btn div:last-child {
+  margin-bottom: 0;
+  transform-origin: 30px;
+}
+
+.menu_btn div:nth-child(2) {
+  right: 0;
+  width: 30px;
+}
+</style>

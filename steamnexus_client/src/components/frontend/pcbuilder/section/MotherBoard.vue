@@ -204,6 +204,22 @@ const selectedProduct = (event) => {
   }
   // 加入至產品清單
   builderStore.addProduct('MB', Product)
+
+  // 記憶體支援規格判定
+  const optgroup = event.target.options[event.target.selectedIndex].parentNode.getAttribute('label')
+  let memory = ''
+  if (optgroup.indexOf('Intel') !== -1 || optgroup.indexOf('AM5') !== -1) {
+    const start = optgroup.indexOf('(')
+    const end = optgroup.indexOf(')')
+    memory = optgroup.slice(start + 1, end).trim()
+  } else {
+    memory = 'DDR5'
+    if (optgroup.indexOf('AM4') !== -1) {
+      memory = 'DDR4'
+    }
+  }
+  // 儲存記憶體支援規格
+  builderStore.setMemory(memory)
 }
 
 onMounted(() => {

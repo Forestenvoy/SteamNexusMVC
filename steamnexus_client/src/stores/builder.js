@@ -46,12 +46,22 @@ export const useBuilderStore = defineStore('builder', () => {
 
   // CPU 腳位
   // state
-  const socket = ref({})
+  const socket = ref('')
   // getter
   const getSocket = computed(() => socket.value)
   // action
   const setSocket = (value) => {
     socket.value = value
+  }
+
+  // RAM SDRAM
+  // state
+  const memory = ref('')
+  // getter
+  const getMemory = computed(() => memory.value)
+  // action
+  const setMemory = (value) => {
+    memory.value = value
   }
 
   return {
@@ -62,6 +72,8 @@ export const useBuilderStore = defineStore('builder', () => {
     getProductList,
     addProduct,
     getSocket,
-    setSocket
+    setSocket,
+    getMemory,
+    setMemory
   }
 })

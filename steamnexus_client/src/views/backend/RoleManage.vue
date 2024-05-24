@@ -65,17 +65,17 @@
 <script setup>
 // 核心模組 import
 import $ from 'jquery'
-import 'bootstrap/dist/css/bootstrap.css'
+// import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap/dist/js/bootstrap.bundle.js'
 import DataTable from 'datatables.net-dt'
 import 'datatables.net-fixedheader-dt'
 import 'datatables.net-buttons-dt'
 import 'datatables.net-responsive-dt'
 
-import 'datatables.net-dt/css/dataTables.datatables.min.css'
-import 'datatables.net-fixedheader-dt/css/fixedHeader.dataTables.min.css'
-import 'datatables.net-buttons-dt/css/buttons.dataTables.min.css'
-import 'datatables.net-responsive-dt/css/responsive.dataTables.min.css'
+import '@/assets/css/dataTables.datatables.min.css'
+import '@/assets/css/fixedHeader.dataTables.min.css'
+import '@/assets/css/buttons.dataTables.min.css'
+import '@/assets/css/responsive.dataTables.min.css'
 
 import { ref, onMounted } from 'vue'
 import { CModal, CModalHeader, CModalTitle, CModalBody, CModalFooter, CButton } from '@coreui/vue'

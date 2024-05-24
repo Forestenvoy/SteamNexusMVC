@@ -1108,7 +1108,7 @@ namespace SteamNexus_Server.Services
                             continue;
                         }
 
-                        // Console.WriteLine(optgroups[i][j]);
+                        //Console.WriteLine(optgroups[i][j]);
 
                         // 找到各段資訊的索引值斷點
                         int NameEnd = optgroups[i][j].IndexOf("▼");
@@ -1117,6 +1117,8 @@ namespace SteamNexus_Server.Services
                         int PriceFirst = optgroups[i][j].LastIndexOf("$");
 
                         if (NameEnd == -1 || SpecEnd == -1 || PriceFirst == -1) { continue; }
+
+                        //Console.WriteLine($"{NameEnd}!{SpecEnd}!{PriceFirst}");
 
                         // 名稱、規格
                         string Name = optgroups[i][j].Substring(0, NameEnd).Trim();
@@ -1127,12 +1129,17 @@ namespace SteamNexus_Server.Services
                         }
 
                         // 價格
-                        string PriceStr = optgroups[i][j].Substring(PriceFirst);
+                        string PriceStr = optgroups[i][j].Substring(PriceFirst).Trim();
                         int Price = 0;
                         int PriceEnd = PriceStr.IndexOf(" ");
-                        Price = int.Parse(PriceStr.Substring(1, PriceEnd - 1));
+                        //Console.WriteLine($"{Name}!!!{PriceStr}");
+                        if (PriceEnd != -1)
+                        {
+                            Price = int.Parse(PriceStr.Substring(1, PriceEnd - 1));
+                        }
+                        else { Price = int.Parse(PriceStr.Substring(1)); }
 
-                        // Console.WriteLine($"{Name} {Spec} {Price}");
+                        Console.WriteLine($"{Name}!!!{Spec}!!!{Price}");
 
                         // 記憶體容量
                         // 找到 XXGB 的索引值

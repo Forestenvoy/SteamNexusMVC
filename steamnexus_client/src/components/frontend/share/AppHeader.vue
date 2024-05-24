@@ -6,12 +6,13 @@
         <img v-else class="mx-2 brand-img" src="/img/logo-dark.png" />
         <span class="text-uppercase brand-title">SteamNexus</span>
       </CNavbarBrand>
-
-      <CNavbarToggler
-        aria-label="Toggle navigation"
-        aria-expanded="{visible}"
-        @click="visible = !visible"
-      />
+      <!-- 漢堡 icon -->
+      <input type="checkbox" id="menu_checkbox" @click="visible = !visible" />
+      <label for="menu_checkbox" class="menu_btn">
+        <div></div>
+        <div></div>
+        <div></div>
+      </label>
       <!-- 使用者小型介面 -->
       <AccountDropdown class="order-4" v-if="store.getIsLogin" />
       <CCollapse class="navbar-collapse" :visible="visible">
@@ -61,7 +62,7 @@
 </template>
 <script setup>
 import { ref, onMounted } from 'vue'
-import { CNavbar, CNavbarBrand, CNavbarToggler, CCollapse } from '@coreui/vue'
+import { CNavbar, CNavbarBrand, CCollapse } from '@coreui/vue'
 
 import AccountDropdown from '@/components/frontend/share/AccountDropdown.vue'
 
@@ -108,7 +109,76 @@ onMounted(() => {
 })
 </script>
 <style scoped>
+/* 漢堡 icon */
+#menu_checkbox {
+  display: none;
+}
 
+label {
+  display: block;
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+label div {
+  position: relative;
+  top: 0;
+  height: 6px;
+  background-color: #fff;
+  margin-bottom: 6px;
+  transition:
+    0.3s ease transform,
+    0.3s ease top,
+    0.3s ease width,
+    0.3s ease right;
+  border-radius: 2px;
+}
+
+label div:first-child {
+  transform-origin: 0;
+}
+
+label div:last-child {
+  margin-bottom: 0;
+  transform-origin: 30px;
+}
+
+label div:nth-child(2) {
+  right: 0;
+  width: 30px;
+}
+
+#menu_checkbox:checked + label div:first-child {
+  display: none;
+}
+
+#menu_checkbox:checked + label div:last-child {
+  width: 35px;
+  top: 6px;
+  right: 5px;
+  transform: rotateZ(45deg);
+}
+
+#menu_checkbox:checked + label div:nth-child(2) {
+  width: 35px;
+  top: 9px;
+  right: 0px;
+  transform: rotateZ(-45deg);
+}
+
+.sticky label div {
+  background-color: #000;
+}
+
+@media screen and (min-width: 992px) {
+  label {
+    display: none;
+  }
+}
+
+/* 導覽列 */
 .navbar {
   position: fixed;
   top: 0;

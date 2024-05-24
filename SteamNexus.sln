@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SteamNexus", "SteamNexus\St
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SteamNexus_Server", "SteamNexus_Server\SteamNexus_Server.csproj", "{8E34F2AA-64F4-4A4D-8523-4917F52DE994}"
 EndProject
-Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "steamnexus_client", "steamnexus_client\steamnexus_client.esproj", "{B7429DFD-9ED8-4EAD-A87A-9B51FE094BC0}"
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "steamnexus_client", "steamnexus_client\steamnexus_client.esproj", "{F9A46479-B04B-4524-A771-D7BD32F90931}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,12 +23,12 @@ Global
 		{8E34F2AA-64F4-4A4D-8523-4917F52DE994}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8E34F2AA-64F4-4A4D-8523-4917F52DE994}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8E34F2AA-64F4-4A4D-8523-4917F52DE994}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B7429DFD-9ED8-4EAD-A87A-9B51FE094BC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B7429DFD-9ED8-4EAD-A87A-9B51FE094BC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B7429DFD-9ED8-4EAD-A87A-9B51FE094BC0}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{B7429DFD-9ED8-4EAD-A87A-9B51FE094BC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B7429DFD-9ED8-4EAD-A87A-9B51FE094BC0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B7429DFD-9ED8-4EAD-A87A-9B51FE094BC0}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{F9A46479-B04B-4524-A771-D7BD32F90931}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9A46479-B04B-4524-A771-D7BD32F90931}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9A46479-B04B-4524-A771-D7BD32F90931}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{F9A46479-B04B-4524-A771-D7BD32F90931}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9A46479-B04B-4524-A771-D7BD32F90931}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9A46479-B04B-4524-A771-D7BD32F90931}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
