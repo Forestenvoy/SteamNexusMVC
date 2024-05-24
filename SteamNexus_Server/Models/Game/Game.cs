@@ -72,4 +72,6 @@ public partial class Game
     public virtual ICollection<MinimumRequirement> MinimumRequirements { get; set; } = new List<MinimumRequirement>();
 
     public virtual ICollection<RecommendedRequirement> RecommendedRequirements { get; set; } = new List<RecommendedRequirement>();
+
+    public virtual ICollection<GameTracking> GameTrackings { get; set; } = new List<GameTracking>();
 }

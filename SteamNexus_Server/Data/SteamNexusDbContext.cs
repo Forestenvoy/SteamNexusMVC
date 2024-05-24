@@ -59,6 +59,8 @@ namespace SteamNexus_Server.Data
 
         public virtual DbSet<MenuDetail> MenuDetails { get; set; }
 
+        public virtual DbSet<GameTracking> GameTrackings { get; set; }
+
         // Model 屬性設定
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -403,6 +405,26 @@ namespace SteamNexus_Server.Data
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_MenuDetails_Menus");
 
+            });
+
+            modelBuilder.Entity<GameTracking>(entity =>
+            {
+                // 主鍵設定
+                // ValueGeneratedOnAdd 插入新的實體時，值自動生成
+                // UseIdentityColumn(10000, 1) 識別碼起始值和增量
+                entity.Property(e => e.GameTrackingId)
+                    .ValueGeneratedOnAdd()
+                    .UseIdentityColumn(10000, 1);
+
+                entity.HasOne(d => d.User).WithMany(p => p.GameTrackings)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_GameTrackings_Users");
+
+                entity.HasOne(d => d.Game).WithMany(p => p.GameTrackings)
+                    .HasForeignKey(d => d.GameId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_GameTrackings_Games");
             });
         }
 
