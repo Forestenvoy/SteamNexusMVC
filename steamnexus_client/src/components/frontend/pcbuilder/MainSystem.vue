@@ -59,8 +59,4 @@ const currentStepComponent = computed(() => {
 })
 </script>
 
-<style scoped>
-.content {
-  transition: 1s;
-}
-</style>
+<style scoped></style>
