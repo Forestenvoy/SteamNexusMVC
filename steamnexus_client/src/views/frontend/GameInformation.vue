@@ -1,14 +1,15 @@
 <template>
-  <div class="mt-5 container mb-2 text-white">
+  <div class="mt-5 container-sm mb-2 text-white">
     <div class="position-absolute top-0 start-50 translate-middle-x" :style="ImageBackground"></div>
     <div style="margin-top: 200px;">
-       <div class="fs-6 row">
-      <div class="col-4 leftbox">
-        <img :src="ImagePath" class="w-100 animate__animated animate__fadeIn" alt="">
-        <div class="p-3">
-          <p class=" text-secondary">{{Description}}</p>
-          <div v-if="tagShow" class="mt-3 tagShow">
-          <span class="h7">熱門標籤：</span>
+      <div class="fs-6 row " data-aos="fade-in">
+        <div class="col-xl-4 leftbox" style="height: 100%;" data-aos="fade-right">
+          
+          <img :src="ImagePath" class="w-100" alt="">
+          
+          <div class="p-3">
+            <div v-if="tagShow" class="mt-3 tagShow">
+          <span class="h7 ">熱門標籤：</span>
           <button v-for="tag in tagData" class="badge" :key="tag" @click="tagclick">{{tag}}</button>
         </div>
         <div v-if="!tagShow" class="mt-3 tagShow" :key="tagShow">
@@ -16,14 +17,45 @@
           <button v-for="tag in tagDataOpen" class="badge" :key="tag" @click="tagclick">{{tag}}</button>
         </div>
         <button class="badge" @click="moreclick(tagShow)">...</button><br>
+            <p class=" mt-2">{{Description}}</p>
+          </div>
+        </div>
+        <div class="col-xl-8 p-1 ">
+        <h1 class="shadow-sm ms-4 mt-2" :key="Name" data-aos="fade-left" style="color: #F3AE0B; text-shadow: 2px 2px 4px #000000;">{{Name}} <button class="fontawesome" @click="love">
+          <i v-if="loveclick==true" class="fa-regular fa-heart"></i>
+          <i v-else class="fa-solid fa-heart "></i>
+        </button></h1>
+        <hr style="height: 2px; background-color:white; border: none;opacity: 1;"  class="mt-3 mb-4 ms-3" data-aos="fade-left">
+        <div class="d-flex justify-content-between "  style="text-shadow: 2px 2px 4px #000000;">
+          <span class="ms-4 fs-1 fw-bold" data-aos="fade-left">歷史價格分析</span>
+          <div class="d-flex"  data-aos="fade-left">
+            <span class="fs-2 mt-auto mb-auto"  data-aos="fade-in">{{OriginalPrice==0?"免費":`NT.${OriginalPrice}`}}</span>
+            <a :href="steamWeb" target="_blank" :title="steamWebtitle" class=" mt-auto mb-auto"><button style="background-color: #F3AE0B;color: black ;border: 0px;font-weight:500" type="button" class="btn btn-primary ms-3 ">前往Steam購買</button></a>
+          </div>  
+        </div>
+        <!-- 圖表開始 -->
+        <div data-aos="fade-left" data-aos-duration="500">
+          <div class="hello ms-4" ref="chartdiv"></div>
+        </div>
+        <!-- 圖表結束 -->
+      </div>
+      </div>
+      
+       <div class="fs-6 row " data-aos="fade-in">
+      <div class="col-xl-4  leftbox" data-aos="fade-right">
+        
+        <div class="p-3">
+         
         <span >名稱： {{Name}}</span><br>
         <span >原始價格： {{OriginalPrice==0?"免費":`NT.${OriginalPrice}`}}</span><br>
         <span >所有評論： {{Comment}}（ {{CommentNum}}人評論 ）</span><br>
         <span>開發商： {{Publisher}}</span><br>
         <span >發行日期： {{ReleaseDate}}</span><br>
-        <img :src="AgeRating=='18+'?'https://www.gamerating.org.tw/Content/img/index_icon_05.jpg':AgeRating=='15+'?'https://www.gamerating.org.tw/Content/img/index_icon_04.jpg':AgeRating=='12+'?'https://www.gamerating.org.tw/Content/img/index_icon_03.jpg':AgeRating=='6+'?'https://www.gamerating.org.tw/Content/img/index_icon_02.jpg':'https://www.gamerating.org.tw/Content/img/index_icon_01.jpg'" alt="" class="w-25 mt-3 me-3"><span >遊戲分級： {{AgeRating}}</span><br>
-        <div>
-          <table class="table table-dark table-hover mt-3">
+        <div data-aos="fade-up">
+          <img  :src="AgeRating=='18+'?'https://www.gamerating.org.tw/Content/img/index_icon_05.jpg':AgeRating=='15+'?'https://www.gamerating.org.tw/Content/img/index_icon_04.jpg':AgeRating=='12+'?'https://www.gamerating.org.tw/Content/img/index_icon_03.jpg':AgeRating=='6+'?'https://www.gamerating.org.tw/Content/img/index_icon_02.jpg':'https://www.gamerating.org.tw/Content/img/index_icon_01.jpg'" alt="" class="w-25 mt-3 me-3"><span >遊戲分級： {{AgeRating}}</span><br>
+        </div>
+        <div data-aos="fade-up">
+          <table class="table table-hover mt-3">
             <thead>
               <tr>
                 <th>語言支援</th>
@@ -42,25 +74,12 @@
         </div>
         </div>
       </div>
-      <div class="col-8 p-1 ">
-        <h1 class="shadow-sm ms-4" :key="Name">{{Name}}</h1>
-        <hr style="height: 2px; background-color:white; border: none;opacity: 1;"  class="mt-3 mb-4 ms-3">
-        <div class="d-flex justify-content-between ">
-          <h3 class="ms-4 fs-1" data-aos="fade-in">歷史價格分析</h3>
-          <div class="d-flex ">
-            <h3 data-aos="fade-in">{{OriginalPrice==0?"免費":`NT.${OriginalPrice}`}}</h3>
-            <a :href="steamWeb" target="_blank" :title="steamWebtitle"><button type="button" class="btn btn-primary ms-3">前往Steam購買</button></a>
-          </div>  
-        </div>
-        <!-- 圖表開始 -->
-        <div class="hello animate__animated animate__fadeIn" ref="chartdiv"></div>
-        <!-- 圖表結束 -->
-        <h3 class="ms-4 fs-1" data-aos="fade-in">遊玩門檻</h3>
-        <hr style="height: 2px; background-color:white; border: none;opacity: 1;"  class="mt-3  ms-3">
+      <div class="col-xl-8 p-1 ">
+        <span class="ms-3 fs-1 mt-4 fw-bold" data-aos="fade-left">遊玩門檻</span >
         <div class="d-flex ps-2">
-          <div class="leftbox p-3 rounded m-1 " style="width: 50%;">
+          <div class="leftbox p-3 rounded m-1 " style="width: 50%;" data-aos="fade-left">
             <span class="fw-bold text-white fs-6">最低配備：</span><br>
-            <div v-if='MinOriCpu!=null'>
+            <div v-if='MinOriCpu!=null' data-aos-duration="100">
               <span class="text-white">Cpu：</span>
               <span>{{MinOriCpu}}</span>
             </div>
@@ -97,7 +116,7 @@
               <span>{{MinNote}}</span>
             </div>
           </div>
-          <div class="leftbox p-3 rounded m-1 " style="width: 50%;">
+          <div class="leftbox p-3 rounded m-1 " style="width: 50%;"   data-aos="fade-left" data-aos-duration="500">
             <span class="fw-bold text-white fs-6">最高配備：</span><br>
             <div v-if='RecOriCpu!=null'>
               <span class="text-white">Cpu：</span>
@@ -137,9 +156,10 @@
             </div>
           </div>
         </div>
-        <h3 class="ms-4 fs-1" data-aos="fade-in">推薦遊戲</h3>
+        <span class="ms-4 fs-1 fw-bold" data-aos="fade-left">推薦遊戲</span>
         <!-- 推薦遊戲 -->
-        <Carousel  :items-to-show="4">
+        <div  data-aos="fade-left"  data-aos-duration="500">
+          <Carousel  :items-to-show="4" class="ms-2">
           <Slide class="slide" v-for="slide in TagSamegamesName" :key="slide">
             <div class="carousel__item">
               <img width=" 100%" :src="slide.imagePath" alt="">
@@ -148,15 +168,18 @@
                 <p class="fs-6 text-decoration-line-through d-inline text-danger">NT.{{slide.originalPrice}}</p>
                 <p  class="fs-6 d-inline bg-danger ps-1 pe-1 ms-1">NT.{{slide.currentPrice}}</p>
               </div>
-              <p v-else class="fs-6 d-inline">{{slide.currentPrice==0?"免費":"NT."+slide.currentPrice}}</p>
+              <div v-else>
+                 <p  class="fs-6">{{slide.currentPrice==0?"免費":"NT."+ slide.currentPrice}}</p>
+              </div>
              
-              
             </div>
           </Slide>
           <template #addons>
             <Navigation class="text-danger fw-bold" />
           </template>
         </Carousel>
+        </div>
+        
         <!-- carousel -->
       </div>
     </div>  
@@ -168,8 +191,11 @@
 import  { ref, onMounted, onBeforeUnmount,reactive,watch , defineComponent } from 'vue';
 import * as am5 from '@amcharts/amcharts5';
 import * as am5xy from '@amcharts/amcharts5/xy';
+
+import am5locales_zh_Hant from "@amcharts/amcharts5/locales/zh_Hant";
 import Dark from '@amcharts/amcharts5/themes/Dark';
 import AOS from 'aos'
+import 'aos/dist/aos.css'
 
 const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
@@ -219,6 +245,8 @@ var tagDataOpen=ref([])
 var tagShow=ref(true)
 var LanguageTable=ref([])
 var TagSamegamesName=ref([])
+var loveclick=ref("")
+var PricelowestData=ref("")
 
 import { Carousel, Navigation, Slide } from 'vue3-carousel'
 import 'vue3-carousel/dist/carousel.css'
@@ -265,6 +293,11 @@ function tagclick(event){
 function moreclick(){
   tagShow.value=!tagShow.value
 }
+
+function love(){
+  loveclick.value=false
+}
+
 //拿取遊戲資料
 function getData(){
   fetch(`${apiUrl}/api/GamesManagement/GetEditJSON?id=${props.gameId}`, {
@@ -284,7 +317,7 @@ function getData(){
       Name.value = val.name
       OriginalPrice.value = val.originalPrice
       AgeRating.value = val.ageRating
-      ReleaseDate.value = val.releaseDate
+      ReleaseDate.value = val.releaseDate.substring(0, 10)
       Publisher.value = val.publisher
       Description.value = val.description
       ImagePath.value = val.imagePath
@@ -466,6 +499,31 @@ function GetGameTagSameData(){
     })
 }
 
+function GetGamePricelowestData(){
+  fetch(`${apiUrl}/api/GamesManagement/GetGamePricelowestData?id=${props.gameId}`, {
+    method: 'GET'
+  })
+    .then((response) => {
+      // 確保請求是否成功
+      if (!response.ok) {
+        throw new Error('Network response was not ok')
+      }
+      // 解析 html
+      return response.json()
+    })
+    .then((val) => {
+      console.log(val);
+      PricelowestData.value=val.lowestPrice
+    })
+    .catch((error) => {
+      alert(error)
+    })
+    .finally(() => {
+      // 异步操作完成后启用按钮
+      $(this).prop('disabled', false)
+    })
+}
+
 onMounted(() => {
   AOS.init()
   getData();
@@ -474,6 +532,8 @@ onMounted(() => {
   getMinReqData();
   getRecReqData();
   GetGameTagSameData();
+  GetGamePricelowestData();
+  loveclick.value=true
 
   fetch(`${apiUrl}/api/GamesManagement/GetLineChartData?id=${props.gameId}`, {
     method: 'GET'
@@ -494,80 +554,142 @@ onMounted(() => {
 
     root = am5.Root.new(chartdiv.value);
     root.setThemes([Dark.new(root)]);
+    root.locale = am5locales_zh_Hant;
 
     let chart = root.container.children.push(
       am5xy.XYChart.new(root, {
-        panY: false,
-        layout: root.verticalLayout,
+        panX: true,
+        panY: true,
+        wheelX: "panX",
+        wheelY: "zoomX",
+        pinchZoomX:true,
+        paddingLeft: 0,
+        height: am5.percent(90) ,
+        layout: am5.GridLayout.new(root, {})
       })
     );
+
+    chart.children.unshift(am5.Label.new(root, {
+  html: "<span>Chart title</span>",
+  x: am5.percent(100),
+  centerX: am5.percent(100),  
+}));
+
+    
+
+    var cursor = chart.set("cursor", am5xy.XYCursor.new(root, {
+                  behavior: "none"
+                }));
+    cursor.lineY.set("visible", false);
+
+
   
   // Create Y-axis
-  let yAxis = chart.yAxes.push(
-    am5xy.ValueAxis.new(root, {
-      renderer: am5xy.AxisRendererY.new(root, {}),
-    })
-  );
-  
+  var yAxis = chart.yAxes.push(am5xy.ValueAxis.new(root, {
+  renderer: am5xy.AxisRendererY.new(root, {
+        pan:"zoom"
+    })  
+  }));
 
   // Create X-Axis
-let xAxis = chart.xAxes.push(
-  am5xy.DateAxis.new(root, {
-    baseInterval: { timeUnit: "day", count: 1 },
-    renderer: am5xy.AxisRendererX.new(root, {})
-  })
-);
+var xAxis = chart.xAxes.push(am5xy.DateAxis.new(root, {
+  // groupData: true,
+  // groupIntervals: [{ timeUnit: "month", count: 0.1 }],
+  maxDeviation: 0,
+  baseInterval: {
+    timeUnit: "day",
+    count: 1
+  },
+  renderer: am5xy.AxisRendererX.new(root, {
+    minorGridEnabled: true,
+    minGridDistance: 200,    
+    minorLabelsEnabled: true
+  }),
+  tooltip: am5.Tooltip.new(root, {})
+}));
 
-xAxis.get("renderer").labels.template.setAll({
-  fill: root.interfaceColors.get("alternativeText")
+  xAxis.get("renderer").labels.template.setAll({
+    fill: "#FFF"
+  });
+  
+  xAxis.setAll({
+    background: am5.Rectangle.new(root, {
+      fill: "#313131"
+    }),
+    tooltipDateFormat: "yyyy年MM月dd日",
+periodChangeDateFormats: {
+    day: "dd", // 設置在日期改變時的格式
+    month: "yyyy年" // 設置在月份改變時的格式
+  },
+  });
+
+// 設置標籤樣式
+xAxis.get("renderer").labels.template.adapters.add("fontSize", function(fontSize, target) {
+  if (target.dataItem && target.dataItem.get("value")) {
+    var date = new Date(target.dataItem.get("value"));
+    if (date.getMonth() === 0 && date.getDate() === 1) { // 如果是“年”的標籤
+      return 14; // 設置“年”的標籤大小
+    } else {
+      return 10; // 設置其他標籤大小
+    }
+  }
+  return fontSize;
 });
 
-xAxis.setAll({
-  background: am5.Rectangle.new(root, {
-    color:"#ff5755",
-    fill: root.interfaceColors.get("alternativeBackground"),
-    fillOpacity: 0.7
-  })
-});
+var series1 = chart.series.push(am5xy.StepLineSeries.new(root, {
+  name: "Series",
+  xAxis: xAxis,
+  yAxis: yAxis,
+  valueYField: "price",
+  valueXField: "date"
+}));
 
-xAxis.get("dateFormats")["day"] = "MM/dd";
-xAxis.get("periodChangeDateFormats")["day"] = "MMM";
 
-  // Create series
-  let series1 = chart.series.push(
-    am5xy.StepLineSeries.new(root, {
-      name: 'Series',
-      xAxis: xAxis,
-      yAxis: yAxis,
-      valueYField: 'price',
-      valueXField: 'date',
-      tooltip: am5.Tooltip.new(root, {}),
-      fill: am5.color(0xff5755),
-      stroke: am5.color(0xff5755)
-    })
-  );
+
   series1.data.setAll(data);
+
+chart.set("scrollbarX", am5.Scrollbar.new(root, {
+  orientation: "horizontal",
+  minHeight: 3
+}));
 
   //設定點點樣式
   series1.bullets.push(function() {
     return am5.Bullet.new(root, {
+      stacked: "up",
       sprite: am5.Circle.new(root, {
-        radius: 5,
+        radius: 4,
         fill: series1.get("fill")
       })
     });
   });
 
+  series1.set("fill", am5.color(0xF3AE0B));
+  series1.set("stroke", am5.color(0xF3AE0B));
+
   //設定線條粗度
-  series1.strokes.template.set("strokeWidth", 1);
+  series1.strokes.template.set("strokeWidth", 2);
 
-  //設定框框內容
-  series1.get("tooltip").label.set("text", "[bold]{name}[/]\n{valueX.formatDate()}\nNT.{valueY}")
-  series1.data.setAll(data);
+  //設定線上框框的圖式--start
+  let tooltip = am5.Tooltip.new(root, {
+    getFillFromSprite: false,
+    labelText: "NT.{price}"
+  });
 
-  let legend = chart.children.push(am5.Legend.new(root, {}));
+  tooltip.get("background").setAll({
+    fill: am5.color(0xFFFFFF),
+    fillOpacity: 1
+  });
+  series1.set("tooltip", tooltip);
+  //設定線上框框的圖式--end
+
+  //設定下面圖式--start
+  let legend = chart.children.push(am5.Legend.new(root, {
+    y: am5.percent(110),
+    x:am5.percent(10),
+  }));
   legend.data.setAll(chart.series.values);
-
+  //設定下面圖式--end
   // Add cursor
   chart.set('cursor', am5xy.XYCursor.new(root, {}));
   console.log(data);
@@ -586,22 +708,39 @@ onBeforeUnmount(() => {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+th, td {
+  border-bottom: 1px solid #ddd;
+}
+
+.fontawesome{
+  background-color: rgba(0, 0, 0, 0);
+  border: 0px solid black;
+}
+.nowrap {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 10px;
+  /* text-align: left; */
+}
+
 .carousel__item {
-  min-height: 200px;
+  height: 180px;
+  padding: 10px;
   width: 100%;
   background-color: #0f1c27;
   color: var(--vc-clr-white);
   font-size: 20px;
   border-radius: 8px;
-  display: flex;
+  /* display: flex;
   Flex-direction:column;
   align-items: center;
-  justify-content:Space-between;
+  justify-content:Space-between; */
 }
 
 .carousel__slide {
   width: 100%;
-  padding: 10px;
+  padding: 2.5px;
 }
 
 .carousel__prev,
@@ -619,7 +758,7 @@ onBeforeUnmount(() => {
   color: gray
 }
 .leftbox{
- background: #0f1c27;  /* fallback for old browsers */
+ background: #313131;  /* fallback for old browsers */
 }
 .hello {
   width: 100%;

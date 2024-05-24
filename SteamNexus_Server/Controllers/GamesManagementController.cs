@@ -788,6 +788,25 @@ namespace SteamNexus.Areas.Administrator.Controllers
             // 返回 JSON 結果
             return Json(GameTagSameData);
         }
+
+        //(前台)拿取相關遊戲
+        [HttpGet("GetGamePricelowestData")]
+        public async Task<JsonResult> GetGamePricelowestData(int id)
+        {
+            var threeMonthsAgo = DateTime.Now.AddMonths(-3);
+            var lowestData = _context.PriceHistories
+                .Where(pc => pc.GameId == id && pc.Date >= threeMonthsAgo)
+                .OrderBy(record => record.Price)
+                .Select(group => new
+                {
+                    Date=group.Date,
+                    LowestPrice = group.Price
+                }).FirstOrDefault();
+                
+
+            // 返回 JSON 結果
+            return Json(lowestData);
+        }
     }
 }
 
