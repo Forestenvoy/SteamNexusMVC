@@ -7,22 +7,21 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SteamNexus_Server.Models;
 
-public partial class GameTracking
+public partial class TrackedGame
 {
     [Key]
-    public int GameTrackingId { get; set; }
+    public int TrackedGameId { get; set; }
 
-    [Required]
     public int UserId { get; set; }
 
-    public virtual User User { get; set; }
+    public int GamesId { get; set; }
 
-    [Required]
-    public int GameId { get; set; }
+    [MaxLength(500)]
+    public string Title { get; set; }
 
-    public virtual Game Game { get; set; }
+    public virtual ICollection<Game> Game { get; set; }
 
-    // 追蹤日期(自動)
-    public DateTime TrackingDate { get; set; } = DateTime.Now;
+    public virtual ICollection<User> Users { get; set; }
+
 
 }
