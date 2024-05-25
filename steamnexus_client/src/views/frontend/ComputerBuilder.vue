@@ -3,8 +3,8 @@
   <hero-banner></hero-banner>
   <!-- 組裝之旅 -->
   <build-journey></build-journey>
-  <!-- 產品列表 -->
   <!-- 菜單系統 -->
+  <!-- 產品列表 -->
   <!-- <menu-slider></menu-slider> -->
   <!-- Hardware Matching Game Ratio -->
   <game-ratio></game-ratio>

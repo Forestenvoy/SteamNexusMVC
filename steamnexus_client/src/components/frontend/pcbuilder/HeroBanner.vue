@@ -65,6 +65,7 @@ onMounted(() => {
 .banner {
   margin-top: 0;
   padding: 80px 0 0 0;
+  height: 85vh;
 }
 
 .banner h1 {

@@ -1,7 +1,7 @@
 <template>
   <CRow>
     <!-- 左側 -->
-    <CCol xs="12" md="6" class="mb-5 mb-md-0">
+    <CCol xs="12" md="6" class="mb-5 mb-md-0 d-flex flex-column justify-content-center">
       <!-- 標題 -->
       <h3 class="title text-center">主機板</h3>
       <!-- 圖片 -->
@@ -11,7 +11,7 @@
     </CCol>
     <!-- 右側 -->
     <CCol xs="12" md="6">
-      <!-- Filter 製造商 -->
+      <!-- Filter 品牌 -->
       <CRow>
         <CCol xs="12" class="text-center mb-3">
           <h3>品牌</h3>
@@ -174,6 +174,9 @@
 <script setup>
 // vue
 import { ref, onMounted } from 'vue'
+
+// core UI
+import { CRow, CCol, CForm } from '@coreui/vue'
 
 // pinia
 import { useBuilderStore } from '@/stores/builder.js'

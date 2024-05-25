@@ -1,7 +1,7 @@
 <template>
   <CRow>
     <!-- 左側 -->
-    <CCol xs="12" md="6" class="mb-5 mb-md-0">
+    <CCol xs="12" md="6" class="mb-5 mb-md-0 d-flex flex-column justify-content-center">
       <!-- 標題 -->
       <h3 class="title text-center">中央處理器</h3>
       <!-- 圖片 -->

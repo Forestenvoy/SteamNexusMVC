@@ -32,6 +32,8 @@ import { CContainer, CRow, CCol } from '@coreui/vue'
 import LinearProgress from '@/components/frontend/pcbuilder/LinearProgress.vue'
 import CentralProcessingUnit from '@/components/frontend/pcbuilder/section/CentralProcessingUnit.vue'
 import MotherBoard from '@/components/frontend/pcbuilder/section/MotherBoard.vue'
+import RandomAccessMemory from '@/components/frontend/pcbuilder/section/RandomAccessMemory.vue'
+import GraphicsProcessingUnit from '@/components/frontend/pcbuilder/section/GraphicsProcessingUnit.vue'
 
 // pinia
 import { useBuilderStore } from '@/stores/builder.js'
@@ -41,9 +43,17 @@ const builderStore = useBuilderStore()
 const currentStepComponent = computed(() => {
   switch (builderStore.getCurrentStep) {
     case 0:
+      // 中央處理器
       return CentralProcessingUnit
     case 1:
+      // 主機板
       return MotherBoard
+    case 2:
+      // 記憶體
+      return RandomAccessMemory
+    case 3:
+      // 顯示卡
+      return GraphicsProcessingUnit
     default:
       return CentralProcessingUnit
   }
@@ -53,12 +63,6 @@ const currentStepComponent = computed(() => {
 <style scoped>
 #buildJourney {
   padding-top: 80px;
-}
-.container {
   background-color: #202020;
-}
-
-.system {
-  background-color: #4d4c4c;
 }
 </style>
