@@ -6,12 +6,7 @@
           <h1 class="display-1 mb-5" :data-aos="animation" data-aos-duration="1000">Game PC</h1>
           <h1 class="display-1 mb-5" :data-aos="animation" data-aos-duration="1000">Builder</h1>
           <div class="d-flex justify-content-center align-items-center">
-            <a
-              class="button"
-              href="#systemIntroduction"
-              :data-aos="animation"
-              data-aos-duration="1000"
-            >
+            <a class="button" href="#buildJourney" :data-aos="animation" data-aos-duration="1000">
               開始
               <svg fill="currentColor" viewBox="0 0 24 24" class="icon">
                 <path
@@ -39,6 +34,7 @@ import 'aos/dist/aos.css'
 // vue module
 import { ref, onMounted } from 'vue'
 
+// Core UI
 import { CContainer, CRow, CCol } from '@coreui/vue'
 
 let animation = ref('zoom-in')
@@ -68,7 +64,7 @@ onMounted(() => {
 
 .banner {
   margin-top: 0;
-  padding: 80px 0 80px 0;
+  padding: 80px 0 0 0;
 }
 
 .banner h1 {

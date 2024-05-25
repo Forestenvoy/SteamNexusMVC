@@ -1,10 +1,11 @@
 <template>
-  <!-- 開頭動畫 -->
-  <opening-animation></opening-animation>
+  <!-- 英雄橫幅旗幟 -->
+  <hero-banner></hero-banner>
+  <!-- 組裝之旅 -->
+  <build-journey></build-journey>
+  <!-- 產品列表 -->
   <!-- 菜單系統 -->
-  <menu-slider></menu-slider>
-  <!-- 電腦配單系統 -->
-  <main-system></main-system>
+  <!-- <menu-slider></menu-slider> -->
   <!-- Hardware Matching Game Ratio -->
   <game-ratio></game-ratio>
   <!-- 系統介紹 -->
@@ -20,9 +21,10 @@ import 'aos/dist/aos.css'
 import { onMounted } from 'vue'
 
 // 頁面元件
-import OpeningAnimation from '@/components/frontend/pcbuilder/OpeningAnimation.vue'
-import MenuSlider from '@/components/frontend/pcbuilder/MenuSlider.vue'
-import MainSystem from '@/components/frontend/pcbuilder/MainSystem.vue'
+import HeroBanner from '@/components/frontend/pcbuilder/HeroBanner.vue'
+import BuildJourney from '@/components/frontend/pcbuilder/BuildJourney.vue'
+
+// import MenuSlider from '@/components/frontend/pcbuilder/MenuSlider.vue'
 import GameRatio from '@/components/frontend/pcbuilder/GameRatio.vue'
 import SystemIntroduction from '@/components/frontend/pcbuilder/SystemIntroduction.vue'
 onMounted(() => {
