@@ -37,6 +37,8 @@ import GraphicsProcessingUnit from '@/components/frontend/pcbuilder/section/Grap
 import CoolerSlot from '@/components/frontend/pcbuilder/section/CoolerSlot.vue'
 import SolidStateDisk from '@/components/frontend/pcbuilder/section/SolidStateDisk.vue'
 import HardDiskDrive from '@/components/frontend/pcbuilder/section/HardDiskDrive.vue'
+import PowerSupply from '@/components/frontend/pcbuilder/section/PowerSupply.vue'
+import ComputerCase from '@/components/frontend/pcbuilder/section/ComputerCase.vue'
 
 // pinia
 import { useBuilderStore } from '@/stores/builder.js'
@@ -64,8 +66,14 @@ const currentStepComponent = computed(() => {
       // 固態硬碟
       return SolidStateDisk
     case 6:
-      // 傳統硬碟
+      // 機械硬碟
       return HardDiskDrive
+    case 7:
+      // 電源供應器
+      return PowerSupply
+    case 8:
+      // 電腦機殼
+      return ComputerCase
     default:
       return CentralProcessingUnit
   }
