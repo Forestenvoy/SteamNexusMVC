@@ -31,6 +31,8 @@ import { CContainer, CRow, CCol } from '@coreui/vue'
 // MyComponents
 import LinearProgress from '@/components/frontend/pcbuilder/LinearProgress.vue'
 import CentralProcessingUnit from '@/components/frontend/pcbuilder/section/CentralProcessingUnit.vue'
+import MotherBoard from '@/components/frontend/pcbuilder/section/MotherBoard.vue'
+
 // pinia
 import { useBuilderStore } from '@/stores/builder.js'
 const builderStore = useBuilderStore()
@@ -40,6 +42,8 @@ const currentStepComponent = computed(() => {
   switch (builderStore.getCurrentStep) {
     case 0:
       return CentralProcessingUnit
+    case 1:
+      return MotherBoard
     default:
       return CentralProcessingUnit
   }

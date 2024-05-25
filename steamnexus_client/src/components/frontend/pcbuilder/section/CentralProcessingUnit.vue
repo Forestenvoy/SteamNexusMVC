@@ -92,29 +92,24 @@
             @change="selectedProduct"
           >
             <option :value="0" disabled selected hidden>---- 請選擇硬體 ----</option>
-            <optgroup :label="groupName" v-for="(group, groupName) in SortGroups" :key="groupName">
-              <!-- <option
-                v-for="item in group"
-                :value="item.id"
-                :key="item.id"
-                :data-price="item.price"
-                :data-wattage="item.wattage"
-                :data-recommend="item.recommend"
-              >
-                {{ item.name }} {{ item.specification }}
-                <option disabled>${{ item.price }}</option>
-              </option> -->
+            <optgroup
+              :label="groupName"
+              v-for="(group, groupName) in SortGroups"
+              :key="groupName"
+              style="color: #f3ae0b"
+            >
               <template v-for="item in group" :key="item.id">
                 <option
                   :value="item.id"
                   :data-price="item.price"
                   :data-wattage="item.wattage"
                   :data-recommend="item.recommend"
+                  style="color: #fff"
                 >
                   {{ item.name }} {{ item.specification }}
                 </option>
                 <!-- 在每个项目的选项下方添加价格选项 -->
-                <option disabled style="color: #fff">${{ item.price }}</option>
+                <option disabled style="color: #00ff00">${{ item.price }}</option>
               </template>
             </optgroup>
           </select>
@@ -331,6 +326,18 @@ onMounted(() => {
 </script>
 
 <style scoped>
+/* 隱藏數字增減按鈕 */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type='number'] {
+  -webkit-appearance: textfield; /* Safari */
+  -moz-appearance: textfield; /* Firefox */
+  appearance: textfield;
+}
 /* 標題 */
 .title {
   font-size: 2.5rem;
@@ -540,6 +547,10 @@ button > svg {
   width: 34px;
   margin-left: 10px;
   transition: transform 0.3s ease-in-out;
+}
+
+.back-btn:hover svg {
+  transform: translateX(-5px);
 }
 
 .next-btn:hover svg {
