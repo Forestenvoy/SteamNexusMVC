@@ -40,6 +40,12 @@ export const useBuilderStore = defineStore('builder', () => {
       // 刪除風冷散熱器
       productList.value = productList.value.filter((p) => p.type !== 'AirCooler')
     }
+    // SSD、HDD 可重複
+    if (type === 'SSD' || type === 'HDD') {
+      // 加入新產品
+      productList.value.push(product)
+      return
+    }
     // 檢查有沒有重複產品
     if (productList.value.find((p) => p.type === type)) {
       // 刪除重複產品

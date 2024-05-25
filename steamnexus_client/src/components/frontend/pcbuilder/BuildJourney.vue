@@ -35,6 +35,8 @@ import MotherBoard from '@/components/frontend/pcbuilder/section/MotherBoard.vue
 import RandomAccessMemory from '@/components/frontend/pcbuilder/section/RandomAccessMemory.vue'
 import GraphicsProcessingUnit from '@/components/frontend/pcbuilder/section/GraphicsProcessingUnit.vue'
 import CoolerSlot from '@/components/frontend/pcbuilder/section/CoolerSlot.vue'
+import SolidStateDisk from '@/components/frontend/pcbuilder/section/SolidStateDisk.vue'
+import HardDiskDrive from '@/components/frontend/pcbuilder/section/HardDiskDrive.vue'
 
 // pinia
 import { useBuilderStore } from '@/stores/builder.js'
@@ -58,6 +60,12 @@ const currentStepComponent = computed(() => {
     case 4:
       // 散熱器
       return CoolerSlot
+    case 5:
+      // 固態硬碟
+      return SolidStateDisk
+    case 6:
+      // 傳統硬碟
+      return HardDiskDrive
     default:
       return CentralProcessingUnit
   }
