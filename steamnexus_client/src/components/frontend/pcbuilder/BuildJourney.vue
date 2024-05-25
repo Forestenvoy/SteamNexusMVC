@@ -34,6 +34,7 @@ import CentralProcessingUnit from '@/components/frontend/pcbuilder/section/Centr
 import MotherBoard from '@/components/frontend/pcbuilder/section/MotherBoard.vue'
 import RandomAccessMemory from '@/components/frontend/pcbuilder/section/RandomAccessMemory.vue'
 import GraphicsProcessingUnit from '@/components/frontend/pcbuilder/section/GraphicsProcessingUnit.vue'
+import CoolerSlot from '@/components/frontend/pcbuilder/section/CoolerSlot.vue'
 
 // pinia
 import { useBuilderStore } from '@/stores/builder.js'
@@ -54,6 +55,9 @@ const currentStepComponent = computed(() => {
     case 3:
       // 顯示卡
       return GraphicsProcessingUnit
+    case 4:
+      // 散熱器
+      return CoolerSlot
     default:
       return CentralProcessingUnit
   }

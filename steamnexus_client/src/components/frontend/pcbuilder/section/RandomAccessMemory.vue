@@ -118,7 +118,7 @@
         </CCol>
       </CRow>
       <!-- 選單 -->
-      <CRow class="mb-4">
+      <CRow class="mb-5">
         <CCol xs="12" class="d-flex justify-content-center align-items-center">
           <select
             name="RAM"
