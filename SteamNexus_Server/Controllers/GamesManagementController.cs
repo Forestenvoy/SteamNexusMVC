@@ -31,11 +31,36 @@ namespace SteamNexus.Areas.Administrator.Controllers
        
         //GameDataTable設定
         [HttpGet("IndexJson")]
-        public JsonResult IndexJson()
+        public async Task<JsonResult> IndexJson()
         {
             return Json(_context.Games);
         }
-      
+
+        //GameDataTable設定
+        [HttpGet("TagData")]
+        public async Task<JsonResult> TagData()
+        {
+            var tagData = from a in _context.TagGroups
+                          join b in _context.Tags on a.TagId equals b.TagId
+                          select new
+                          {
+                              gameId = a.GameId,
+                              name = b.Name
+                          };
+
+            // 分組並轉換結果
+            var groupedData = tagData
+                              .GroupBy(t => t.gameId)
+                              .Select(g => new
+                              {
+                                  gameId = g.Key,
+                                  tags = g.Select(t => new { Name = t.name }).ToList()
+                              })
+                      .ToList();
+
+            return Json(groupedData);
+        }
+
         [HttpPost("PostCreatPartialToDB")]
         //[ValidateAntiForgeryToken]
         public async Task<string> PostCreatPartialToDB(CreateViewModel Create)
