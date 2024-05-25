@@ -198,6 +198,7 @@ label div:nth-child(2) {
 .sticky {
   padding: 5px 100px;
   background:linear-gradient(to bottom, #F3AE0B, rgb(239, 155, 0));
+  box-shadow: 2px 0px 30px 2px #000;
 }
 
 @media screen and (max-width: 1400px) {

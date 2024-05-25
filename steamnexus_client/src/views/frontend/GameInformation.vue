@@ -3,8 +3,8 @@
     <div class="position-absolute top-0 start-50 translate-middle-x" :style="ImageBackground"></div>
     <div style="margin-top: 200px;">
       <div class="fs-6 row" data-aos="fade-in">
-        <div class="col-xl-1"></div>
-        <div class="col-xl-3 leftbox" style="height: 100%;" data-aos="fade-right">
+        <div class="col-xl-1 "></div>
+        <div class="col-xl-3  leftbox" style="height: 100%;" data-aos="fade-right">
           <img :src="ImagePath" class="w-100" alt="">
           
           <div class="p-3">
