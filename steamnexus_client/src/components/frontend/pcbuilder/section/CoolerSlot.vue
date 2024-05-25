@@ -32,11 +32,15 @@
       </div>
     </CCol>
     <!-- 右側 -->
-    <CCol xs="12" md="6">
+    <CCol xs="12" md="6" class="d-flex flex-column justify-content-center">
       <!-- 風冷散熱器 -->
-      <!-- <air-cooler :default-selected="A" @selected="updateA"></air-cooler> -->
+      <div v-show="!toggle">
+        <air-cooler :default-selected="A" @selected="updateA"></air-cooler>
+      </div>
       <!-- 水冷散熱器 -->
-      <!-- <liquid-cooler :default-selected="L" @selected="updateL"></liquid-cooler> -->
+      <div v-show="toggle">
+        <liquid-cooler :default-selected="L" @selected="updateL"></liquid-cooler>
+      </div>
       <!-- 換頁 -->
       <CRow class="mb-3">
         <CCol xs="6" class="d-flex justify-content-center">
@@ -115,6 +119,27 @@ const updateL = (newValue) => {
 </script>
 
 <style scoped>
+/* 標題 */
+.title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  margin-bottom: 40px;
+}
+
+/* 圖片 */
+.image {
+  width: 300px;
+  height: 300px;
+}
+
+@media screen and (max-width: 576px) {
+  .image {
+    width: 200px;
+    height: 200px;
+  }
+}
+
 /* 風冷、水冷 切換 */
 .checkbox {
   width: 223px;

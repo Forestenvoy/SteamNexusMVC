@@ -1,63 +1,100 @@
 <template>
   <!-- 過濾 -->
+  <!-- Filter 品牌 -->
   <CRow>
-    <CCol xs="12" md="6">
-      <h3>廠牌</h3>
+    <CCol xs="12" class="text-center mb-3">
+      <h3>品牌</h3>
     </CCol>
-    <CCol xs="12" md="6">
-      <CForm @change="filter">
-        <CFormCheck type="radio" inline label="全部" value="All" v-model="brand" />
-        <CFormCheck
-          type="radio"
-          inline
-          v-for="item in brandGroups"
-          :key="item"
-          :label="item"
-          :value="item"
-          v-model="brand"
-        />
+    <CCol xs="12" class="d-flex justify-content-center">
+      <select
+        name="brand"
+        class="form-select"
+        style="width: 150px"
+        v-model="brand"
+        @change="filter"
+      >
+        <option value="All" selected>全部</option>
+        <option :value="item.value" v-for="item in brandList" :key="item.id">
+          {{ item.name }}
+        </option>
+      </select>
+    </CCol>
+  </CRow>
+  <!-- Filter 價格 -->
+  <CRow class="mb-3">
+    <CCol xs="12" class="mb-4">
+      <CForm @input="filter">
+        <CRow>
+          <CCol xs="5" class="d-flex justify-content-end align-items-center">
+            <div class="form__group field">
+              <input type="number" class="form__field" placeholder="最低價格" v-model="min" />
+              <label for="min" class="form__label">最低價格</label>
+            </div>
+          </CCol>
+          <CCol xs="2" class="d-flex justify-content-center align-items-end">
+            <label style="font-size: 30px">~</label>
+          </CCol>
+          <CCol xs="5" class="d-flex justify-content-start align-items-center">
+            <div class="form__group field">
+              <input type="number" class="form__field" placeholder="最低價格" v-model="max" />
+              <label for="max" class="form__label">最高價格</label>
+            </div>
+          </CCol>
+        </CRow>
       </CForm>
     </CCol>
   </CRow>
-  <CRow>
-    <CCol xs="12" md="6">
-      <h3>價格</h3>
+  <!-- Filter 關鍵字 -->
+  <CRow class="mb-4">
+    <CCol
+      xs="5"
+      md="6"
+      class="d-flex justify-content-center justify-content-md-end align-items-center"
+    >
+      <h3 class="m-0 pe-0 pe-md-2">產品選擇</h3>
     </CCol>
-    <CCol xs="12" md="6">
-      <CForm @input="filter">
-        <label>$</label>
-        <input type="number" placeholder="請輸入最低價格" v-model="min" />
-        <label>以上 ~ $</label>
-        <input type="number" placeholder="請輸入最高價格" v-model="max" />
-        <label>以下</label>
-      </CForm>
+    <CCol xs="7" md="6" class="d-flex justify-content-start">
+      <div class="input-wrapper">
+        <input
+          class="input-box text-center"
+          type="text"
+          placeholder="&#x1F50D;&#xFE0E;  請輸入關鍵字"
+          v-model="keyword"
+          @input="filter"
+        />
+        <span class="underline"></span>
+      </div>
     </CCol>
   </CRow>
   <!-- 選單 -->
-  <CRow>
-    <CCol xs="12" md="6">
-      <h3>LiquidCooler</h3>
-    </CCol>
-    <CCol xs="12" md="6">
+  <CRow class="mb-5">
+    <CCol xs="12" class="d-flex justify-content-center align-items-center">
       <select
         name="LiquidCooler"
-        class="form-select"
+        class="form-select product"
         v-model="selectedLiquidCooler"
         @change="selectedProduct"
       >
         <option :value="0" disabled selected hidden>---- 請選擇硬體 ----</option>
-        <optgroup :label="groupName" v-for="(group, groupName) in SortGroups" :key="groupName">
-          <option
-            v-for="item in group"
-            :value="item.id"
-            :key="item.id"
-            :data-price="item.price"
-            :data-wattage="item.wattage"
-            :data-recommend="item.recommend"
-            :data-size="item.size"
-          >
-            {{ item.name }} {{ item.specification }} ,${{ item.price }}
-          </option>
+        <optgroup
+          :label="groupName"
+          v-for="(group, groupName) in SortGroups"
+          :key="groupName"
+          style="color: #f3ae0b"
+        >
+          <template v-for="item in group" :key="item.id">
+            <option
+              :value="item.id"
+              :data-price="item.price"
+              :data-wattage="item.wattage"
+              :data-recommend="item.recommend"
+              style="color: #fff"
+            >
+              {{ item.name }} {{ item.specification }}
+            </option>
+            <!-- 在每个项目的选项下方添加价格选项 -->
+            <option disabled style="color: #00ff00">${{ item.price }}</option>
+          </template>
         </optgroup>
       </select>
     </CCol>
@@ -69,7 +106,7 @@
 import { ref, onMounted, watch } from 'vue'
 
 // core UI
-import { CRow, CCol, CForm, CFormCheck } from '@coreui/vue'
+import { CRow, CCol, CForm } from '@coreui/vue'
 
 // pinia
 import { useBuilderStore } from '@/stores/builder.js'
@@ -93,33 +130,34 @@ const emits = defineEmits(['selected'])
 // Selected Product
 const selectedLiquidCooler = ref(props.defaultSelected)
 
-const brandGroups = ref([
-  '華碩',
-  '微星',
-  '美洲獅',
-  'abee',
-  '追風者',
-  '喬思伯',
-  '安耐美',
-  '九州風神',
-  'ID-COOLING',
-  '安鈦克',
-  '旋剛',
-  '酷碼',
-  '恩傑',
-  '大飛',
-  '首利',
-  '銀欣',
-  '利民',
-  '海盜船',
-  '技嘉',
-  '聯力'
+// 品牌清單
+const brandList = ref([
+  { id: 'liquid_asus', name: '華碩', value: '華碩' },
+  { id: 'liquid_american_shark', name: '美洲獅', value: '美洲獅' },
+  { id: 'liquid_abee', name: 'abee', value: 'abee' },
+  { id: 'liquid_ace', name: '追風者', value: '追風者' },
+  { id: 'liquid_koshibo', name: '喬思伯', value: '喬思伯' },
+  { id: 'liquid_anima', name: '安耐美', value: '安耐美' },
+  { id: 'liquid_deepcool', name: '九洲', value: '九洲' },
+  { id: 'liquid_id_cooling', name: 'ID-COOLING', value: 'ID-COOLING' },
+  { id: 'liquid_anjingke', name: '安鈦克', value: '安鈦克' },
+  { id: 'liquid_fengge', name: '旋剛', value: '旋剛' },
+  { id: 'liquid_koocode', name: '酷碼', value: '酷碼' },
+  { id: 'liquid_enji', name: '恩傑', value: '恩傑' },
+  { id: 'liquid_daxi', name: '大飛', value: '大飛' },
+  { id: 'liquid_shouli', name: '首利', value: '首利' },
+  { id: 'liquid_silicon_motion', name: '銀欣', value: '銀欣' },
+  { id: 'liquid_limin', name: '利民', value: '利民' },
+  { id: 'liquid_sea_thief', name: '海盜船', value: '海盜船' },
+  { id: 'liquid_gigabyte', name: '技嘉', value: '技嘉' },
+  { id: 'liquid_lianli', name: '聯力', value: '聯力' }
 ])
 
 // filter ref
 const brand = ref('All')
 const min = ref('')
 const max = ref('')
+const keyword = ref('')
 
 // (Async) get LiquidCooler Data
 const getData = async () => {
@@ -162,6 +200,7 @@ const classification = (data) => {
 const filter = () => {
   filterByBrand()
   filterByPrice()
+  filterByKeyword()
 }
 
 // Filter By Brand
@@ -197,6 +236,23 @@ const filterByPrice = () => {
   if (max.value !== '') {
     const filteredGroups = Object.keys(SortGroups.value).reduce((result, key) => {
       const filteredProducts = SortGroups.value[key].filter((product) => product.price <= max.value)
+      if (filteredProducts.length > 0) {
+        result[key] = filteredProducts
+      }
+      return result
+    }, {})
+    SortGroups.value = filteredGroups
+  }
+}
+
+// Filter By Keyword
+const filterByKeyword = () => {
+  // 過濾關鍵字
+  if (keyword.value !== '') {
+    const filteredGroups = Object.keys(SortGroups.value).reduce((result, key) => {
+      const filteredProducts = SortGroups.value[key].filter((product) =>
+        product.name.includes(keyword.value)
+      )
       if (filteredProducts.length > 0) {
         result[key] = filteredProducts
       }
