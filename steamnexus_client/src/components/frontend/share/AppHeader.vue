@@ -21,9 +21,7 @@
             <CNavLink class="nLink" href="#" @click="$router.push('/')"> 首頁 </CNavLink>
           </CNavItem>
           <CNavItem>
-            <CNavLink class="nLink" href="#" @click="$router.push('/pc-builder')">
-              硬體估價
-            </CNavLink>
+            <CNavLink class="nLink" href="#" @click="$router.push('/pc-builder')"> GCB </CNavLink>
           </CNavItem>
         </CNavbarNav>
         <CNavbarNav class="me-0 me-lg-2 order-3 text-center" v-if="store.getUserRole === 'Admin'">
@@ -33,7 +31,7 @@
         </CNavbarNav>
         <CNavbarNav class="ms-0 ms-lg-2 mb-2 mb-lg-0 order-5" v-if="!store.getIsLogin">
           <CNavItem>
-            <CNavLink 
+            <CNavLink
               class="text-center CNavLink"
               :class="{ nLink: canToggle, login_btn: !canToggle }"
               href="#"
@@ -48,12 +46,13 @@
             class="form-control me-2 input-search"
             placeholder="請輸入遊戲關鍵字"
           />
-          <CButton style="border: 0px;"
+          <CButton
+            style="border: 0px"
             :color="buttonColor"
             variant="outline"
             @click.prevent="$router.push('/searchSystem')"
-            ><i class="fa-solid fa-magnifying-glass"></i></CButton
-          >
+            ><i class="fa-solid fa-magnifying-glass"></i
+          ></CButton>
         </CForm>
       </CCollapse>
     </CContainer>
@@ -285,7 +284,6 @@ label div:nth-child(2) {
 
 /* 底線效果 */
 
-
 .nLink::after {
   content: '';
   position: absolute;
@@ -294,7 +292,7 @@ label div:nth-child(2) {
   left: 0;
   bottom: 0;
   background: #fff;
-  
+
   transform: scale(0, 1);
   transition: transform 0.3s ease;
 }
@@ -325,7 +323,6 @@ label div:nth-child(2) {
 .login_btn span {
   font-size: 25px;
   z-index: 1;
-  
 }
 
 .login_btn::before {
@@ -333,14 +330,13 @@ label div:nth-child(2) {
   width: 0%;
   height: 100%;
   position: absolute;
-  background-color:#F3AE0B;
+  background-color: #f3ae0b;
   border-radius: 8px;
   top: 0;
   left: 0;
   z-index: -1;
   transition: 0.3s ease-in-out;
 }
-
 
 .login_btn:hover {
   color: #000;
@@ -351,7 +347,6 @@ label div:nth-child(2) {
   width: 100%;
   height: 100%;
   position: absolute;
-  
 }
 
 .sticky .login_btn {

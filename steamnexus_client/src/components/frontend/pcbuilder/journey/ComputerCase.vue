@@ -3,10 +3,10 @@
     <!-- 左側 -->
     <CCol xs="12" md="6" class="mb-5 mb-md-0 d-flex flex-column justify-content-center">
       <!-- 標題 -->
-      <h3 class="title text-center">電源供應器</h3>
+      <h3 class="title text-center">電源機殼</h3>
       <!-- 圖片 -->
       <div class="d-flex justify-content-center align-items-center">
-        <img src="@/assets/images/builder/psu.png" alt="PSU" class="image" />
+        <img src="@/assets/images/builder/case.png" alt="CASE" class="image" />
       </div>
     </CCol>
     <!-- 右側 -->
@@ -81,9 +81,9 @@
       <CRow class="mb-5">
         <CCol xs="12" class="d-flex justify-content-center align-items-center">
           <select
-            name="PSU"
+            name="CASE"
             class="form-select product"
-            v-model="selectedPSU"
+            v-model="selectedCASE"
             @change="selectedProduct"
           >
             <option :value="0" disabled selected hidden>---- 請選擇硬體 ----</option>
@@ -170,36 +170,43 @@ const builderStore = useBuilderStore()
 const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
 // Original Data : CPU Products (Classified)
-const PSUGroups = ref({})
+const CASEGroups = ref({})
 
 // Sort Data
 const SortGroups = ref({})
 
 // Selected Product
-const selectedPSU = ref(0)
+const selectedCASE = ref(0)
 
 // 品牌清單
 const brandList = [
   { name: '華碩', value: '華碩' },
-  { name: '海韻', value: '海韻' },
-  { name: '全漢', value: '全漢' },
-  { name: '酷碼', value: '酷碼' },
   { name: '技嘉', value: '技嘉' },
-  { name: '曜越', value: '曜越' },
-  { name: '台達', value: '台達' },
-  { name: '銀欣', value: '銀欣' },
+  { name: '微星', value: '微星' },
   { name: '保銳', value: '安耐美' },
-  { name: '振華', value: '振華' },
-  { name: '首利', value: '首利' },
-  { name: 'Be quiet!', value: 'be quiet' },
-  { name: '美洲獅', value: '美洲獅' },
+  { name: '酷碼', value: '酷碼' },
+  { name: '銀欣', value: '銀欣' },
+  { name: '全漢', value: '全漢' },
+  { name: '曜越', value: '曜越' },
+  { name: '旋剛', value: '旋剛' },
+  { name: '迎廣', value: '迎廣' },
+  { name: '聯立', value: '聯立' },
+  { name: '賽德斯', value: '賽德斯' },
+  { name: '喬思伯', value: '喬思伯' },
+  { name: '安鈦克', value: 'Antec' },
+  { name: '視博通', value: '視博通' },
+  { name: '海盜船', value: '海盜船' },
+  { name: 'Apexgaming', value: 'Apexgaming' },
+  { name: 'be quiet!', value: 'be quiet' },
+  { name: 'BitFenix', value: 'BitFenix' },
+  { name: '美洲獅', value: 'COUGAR' },
+  { name: '大飛', value: 'darkFlash' },
+  { name: 'Fractal Design', value: 'Fractal' },
   { name: '君主', value: 'Montech' },
   { name: 'NZXT', value: 'NZXT' },
-  { name: '追風者', value: 'Phantek' },
+  { name: '追風者', value: 'Phanteks' },
+  { name: 'SSUPD', value: 'SSUPD' },
   { name: '威剛', value: 'XPG' },
-  { name: '微星', value: '微星' },
-  { name: '海盜船', value: '海盜船' },
-  { name: '安鈦克', value: 'Antec' }
 ]
 
 // filter ref
@@ -208,10 +215,10 @@ const min = ref('')
 const max = ref('')
 const keyword = ref('')
 
-// (Async) get PSU Data
+// (Async) get CASE Data
 const getData = async () => {
-  console.log('Get PSU Data...')
-  await fetch(`${apiUrl}/api/PcBuilder?type=10009`, {
+  console.log('Get CASE Data...')
+  await fetch(`${apiUrl}/api/PcBuilder?type=10008`, {
     method: 'GET'
   })
     .then((response) => {
@@ -235,14 +242,14 @@ const getData = async () => {
 const classification = (data) => {
   data.forEach((item) => {
     const className = item.classification
-    if (!PSUGroups.value[className]) {
-      PSUGroups.value[className] = []
+    if (!CASEGroups.value[className]) {
+      CASEGroups.value[className] = []
     }
-    PSUGroups.value[className].push(item)
+    CASEGroups.value[className].push(item)
   })
   // 將資料存入 session storage
-  sessionStorage.setItem('PSUList', JSON.stringify(PSUGroups.value))
-  SortGroups.value = PSUGroups.value
+  sessionStorage.setItem('CASEList', JSON.stringify(CASEGroups.value))
+  SortGroups.value = CASEGroups.value
 }
 
 // Filter
@@ -256,8 +263,8 @@ const filter = () => {
 const filterByBrand = () => {
   if (brand.value !== 'All') {
     // 過濾名稱內含有該品牌的資料
-    const filteredGroups = Object.keys(PSUGroups.value).reduce((result, key) => {
-      const filteredProducts = PSUGroups.value[key].filter((product) =>
+    const filteredGroups = Object.keys(CASEGroups.value).reduce((result, key) => {
+      const filteredProducts = CASEGroups.value[key].filter((product) =>
         product.name.includes(brand.value)
       )
       if (filteredProducts.length > 0) {
@@ -267,7 +274,7 @@ const filterByBrand = () => {
     }, {})
     SortGroups.value = filteredGroups
   } else {
-    SortGroups.value = PSUGroups.value
+    SortGroups.value = CASEGroups.value
   }
 }
 
@@ -322,22 +329,22 @@ const selectedProduct = (event) => {
   const Price = event.target.options[event.target.selectedIndex].getAttribute('data-price')
   const Wattage = event.target.options[event.target.selectedIndex].getAttribute('data-wattage')
   const Product = {
-    type: 'PSU',
+    type: 'CASE',
     id: Id,
     name: Name,
     price: Price,
     wattage: Wattage
   }
   // 加入至產品清單
-  builderStore.addProduct('PSU', Product)
+  builderStore.addProduct('CASE', Product)
 }
 
 onMounted(() => {
   // 檢查 session storage 是否有資料
-  const storedData = sessionStorage.getItem('PSUList')
+  const storedData = sessionStorage.getItem('CASEList')
   if (storedData !== null && storedData !== undefined) {
-    PSUGroups.value = JSON.parse(storedData)
-    SortGroups.value = PSUGroups.value
+    CASEGroups.value = JSON.parse(storedData)
+    SortGroups.value = CASEGroups.value
   } else {
     getData()
   }

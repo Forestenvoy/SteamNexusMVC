@@ -87,8 +87,8 @@
 </template>
 
 <script setup>
-import AirCooler from '@/components/frontend/pcbuilder/section/AirCooler.vue'
-import LiquidCooler from '@/components/frontend/pcbuilder/section/LiquidCooler.vue'
+import AirCooler from '@/components/frontend/pcbuilder/journey/AirCooler.vue'
+import LiquidCooler from '@/components/frontend/pcbuilder/journey/LiquidCooler.vue'
 
 // vue
 import { ref } from 'vue'
