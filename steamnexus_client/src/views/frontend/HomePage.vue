@@ -1,12 +1,12 @@
 <template>
   <div class="container p-2">
-    <ad-carousel data-aos="fade-up" class="mb-2 mt-3"></ad-carousel>
+    <ad-carousel class="mb-2 mt-3"></ad-carousel>
     <div class="row">
       <div class="col-xl-2 "></div>
       <div class="col-xl-8 mt-3 ">
-        <span data-aos="fade-up" class="fs-2 text-center d-block">依類別瀏覽</span>
+        <span class="fs-2 text-center d-block">依類別瀏覽</span>
         <!-- 推薦遊戲 -->
-        <div  data-aos="fade-up"  data-aos-duration="500">
+        <div  data-aos="fade-left"  data-aos-duration="500">
           <Carousel  :items-to-show="5">
           <Slide v-for="slide in tags" :key="slide" >
       <div class="carousel__item d-flex align-items-end p-3 fs-3" :style="`background-image: linear-gradient(to bottom, rgba(0, 0, 0,0)50%, rgba(0, 0, 0, 1) 80% ),url(${slide.img});background-size: cover;background-position: center;`" ><span style="">{{ slide.name }}</span></div>
@@ -19,8 +19,8 @@
         </div>
        
         <!-- carousel -->
-        <span data-aos="fade-up" class="fs-2 text-center d-block mb-2">熱門遊戲</span>
-          <div data-aos="fade-up" v-for="game in gameLozad" :key="game.gameId" class="mb-2 videoFather rounded " style="background-color: #0f1c27;" @mouseover="showPopup(game.gameId)" @mouseleave="hidePopup">
+        <span class="fs-2 text-center d-block mb-2">熱門遊戲</span>
+          <div v-for="game in gameLozad" :key="game.gameId" class="mb-2 videoFather rounded " style="background-color: #0f1c27;" @mouseover="showPopup(game.gameId)" @mouseleave="hidePopup">
             <div v-if="isPopupVisible==game.gameId" style="background-color:#2A3741;z-index: 2;width: 30%;" class="videoKid p-3 rounded" @mouseover="showPopup(game.gameId)">
                     <video v-if="game.videoPath!=''" :src="game.videoPath" autoplay class="" style="width: 100%;"></video>
                     <span class="fs-4 d-flex justify-content-center align-items-center" v-else style="background-color: black;height: 150px;text-align: center;"><span>未提供遊戲影片</span></span>
@@ -65,8 +65,6 @@
   <div style="height: 500px; width: 100px"></div>
 </template>
 <script setup>
-import AOS from 'aos'
-import 'aos/dist/aos.css'
 import AdCarousel from '@/components/frontend/home/AdCarousel.vue'
 import  { ref, onMounted, onBeforeUnmount,reactive,watch , defineComponent } from 'vue';
 import lozad from 'lozad';
@@ -242,7 +240,6 @@ const observer = lozad();
 
 
 onMounted(() => {
-  AOS.init()
   AllGameTagData();
   GetGameData();
   TagsData();
@@ -306,7 +303,7 @@ a:hover{
 }
 
 .tagClass{
-  color: white;
+  color: wheat;
 }
 
 .tagClass:hover{
