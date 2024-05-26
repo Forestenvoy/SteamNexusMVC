@@ -1,6 +1,6 @@
 <template>
   <div class="container p-2">
-    <ad-carousel class="mb-2"></ad-carousel>
+    <ad-carousel class="mb-2 mt-3"></ad-carousel>
     <div class="row">
       <div class="col-xl-1 "></div>
       <div class="col-xl-10 mt-3 ">
@@ -13,24 +13,24 @@
     </Slide>
 
           <template #addons>
-            <Navigation class="text-danger fw-bold" />
+            <Navigation class="fw-bold"/>
           </template>
         </Carousel>
         </div>
        
         <!-- carousel -->
         <span class="fs-2 text-center d-block mb-2">熱門遊戲</span>
-          <div v-for="game in gameLozad" :key="game.gameId" class="mb-2 videoFather rounded " style="background-color: #0f1c27;">
-            <div v-if="isPopupVisible==game.gameId" style="background-color:#2A3741;z-index: 2;width: 30%;" class="videoKid p-3 rounded" >
+          <div v-for="game in gameLozad" :key="game.gameId" class="mb-2 videoFather rounded " style="background-color: #0f1c27;" @mouseover="showPopup(game.gameId)" @mouseleave="hidePopup">
+            <div v-if="isPopupVisible==game.gameId" style="background-color:#2A3741;z-index: 2;width: 30%;" class="videoKid p-3 rounded" @mouseover="showPopup(game.gameId)">
                     <video v-if="game.videoPath!=''" :src="game.videoPath" autoplay class="" style="width: 100%;"></video>
                     <span class="fs-4 d-flex justify-content-center align-items-center" v-else style="background-color: black;height: 150px;text-align: center;"><span>未提供遊戲影片</span></span>
                     <span class="fs-4 nowrap d-block">{{game.name}}</span>
                     <div>
-          <img  :src="game.ageRating=='18+'?'https://www.gamerating.org.tw/Content/img/index_icon_05.jpg':AgeRating=='15+'?'https://www.gamerating.org.tw/Content/img/index_icon_04.jpg':AgeRating=='12+'?'https://www.gamerating.org.tw/Content/img/index_icon_03.jpg':AgeRating=='6+'?'https://www.gamerating.org.tw/Content/img/index_icon_02.jpg':'https://www.gamerating.org.tw/Content/img/index_icon_01.jpg'" alt="" class="w-25 m-1"><span class="fs-5">遊戲分級： {{game.ageRating}}</span>
+          <img  :src="game.ageRating=='18+'?'https://www.gamerating.org.tw/Content/img/index_icon_05.jpg':AgeRating=='15+'?'https://www.gamerating.org.tw/Content/img/index_icon_04.jpg':AgeRating=='12+'?'https://www.gamerating.org.tw/Content/img/index_icon_03.jpg':AgeRating=='6+'?'https://www.gamerating.org.tw/Content/img/index_icon_02.jpg':'https://www.gamerating.org.tw/Content/img/index_icon_01.jpg'" alt="" class="m-1" style="width: 20%;"><span class="fs-6">遊戲分級： {{game.ageRating}}</span>
         </div>
-                    <span class="fs-5">{{game.description}}</span>
+                    <span class="fs-6">{{game.description}}</span>
                 </div>
-              <a :href="`http://localhost:5173/game/${game.gameId}`" class="row m-0 rounded" style="color: white;text-decoration: none;" @mouseover="showPopup(game.gameId)" @mouseleave="hidePopup">
+              <a :href="`http://localhost:5173/game/${game.gameId}`" target="_blank" class="row m-0 rounded" :style="{ backgroundColor: isPopupVisible === game.gameId ? '#2A3741' : '' }" style="color: white;text-decoration: none;">
               <div class="col-3 px-0 videoFather">
                 <img :src="game.imagePath " style="width: 100%;" class="rounded" alt="">
               </div>
@@ -82,8 +82,8 @@ defineComponent({
 })
 var isPopupVisible=ref(0)
 function showPopup(gameId){
-  
   isPopupVisible.value=gameId
+  console.log(this);
 }
 
 function hidePopup(){
@@ -163,8 +163,6 @@ function getTagNames(tags){
   // tags.forEach(element => {
   //   tag.push(element.name)
   // });
-
-  console.log(tag);
   return tag
 }
 
@@ -210,11 +208,9 @@ function TagsData(){
     })
     .then((val) => {
       val.forEach((element,i)=> {
-        console.log(tags.value[i].img);
         tags.value[i].name=element.name;
       });
       // tags.value=val
-      console.log(tags.value);
     })
     .catch((error) => {
       alert(error)
@@ -271,8 +267,8 @@ io.observe(loadingElement);
 }
 .videoKid{
   position: absolute;
-  /* right: 0; */
-  left: 100%;
+  right: 0;
+  /* left: 100%; */
   /* top: 100%; */
 }
 .carousel__item {
@@ -295,7 +291,12 @@ io.observe(loadingElement);
 .carousel__prev,
 .carousel__next {
   box-sizing: content-box;
-  border: 5px solid white;
+  color:#F3AE0B;
+  font-weight: bolder;
+  stroke: #F3AE0B;
+  stroke-width:5;
+  z-index: 2px;
+  opacity: 1;
 } 
 a:hover{
   background-color:#2A3741
