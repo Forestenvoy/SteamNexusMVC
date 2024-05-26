@@ -31,6 +31,8 @@ export const useBuilderStore = defineStore('builder', () => {
   // action
   // 加入產品
   const addProduct = (type, product) => {
+    // 關閉遊戲匹配系統
+    showMatchSystem.value = false
     // 風冷散熱器、水冷散熱器，兩者只能擇一
     if (type === 'AirCooler') {
       // 刪除水冷散熱器
@@ -61,6 +63,9 @@ export const useBuilderStore = defineStore('builder', () => {
 
   // 刪除產品
   const removeProduct = (id) => {
+    // 關閉遊戲匹配系統
+    showMatchSystem.value = false
+    // 刪除產品
     productList.value = productList.value.filter((p) => p.id !== id)
   }
 
@@ -102,6 +107,19 @@ export const useBuilderStore = defineStore('builder', () => {
     memory.value = value
   }
 
+  // 顯示遊戲匹配系統
+  // state
+  const showMatchSystem = ref(false)
+  // getter
+  const isShowMatchSystem = computed(() => showMatchSystem.value)
+  // action
+  const showMatch = () => {
+    showMatchSystem.value = true
+  }
+  const hideMatch = () => {
+    showMatchSystem.value = false
+  }
+
   return {
     getCurrentStep,
     setCurrentStep,
@@ -115,6 +133,9 @@ export const useBuilderStore = defineStore('builder', () => {
     getSocket,
     setSocket,
     getMemory,
-    setMemory
+    setMemory,
+    isShowMatchSystem,
+    showMatch,
+    hideMatch
   }
 })

@@ -266,6 +266,7 @@ const matchGame = () => {
     return
   }
   // 遊戲核對
+  builderStore.showMatch()
 }
 </script>
 
