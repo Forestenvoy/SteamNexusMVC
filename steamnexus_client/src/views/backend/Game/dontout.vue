@@ -1,15 +1,15 @@
 <template>
   <div class="container p-2">
-    <ad-carousel class="mb-2"></ad-carousel>
+    <ad-carousel></ad-carousel>
     <div class="row">
       <div class="col-xl-1 "></div>
       <div class="col-xl-10 mt-3 ">
-        <span class="fs-2 text-center d-block">依類別瀏覽</span>
-        <!-- 推薦遊戲 -->
+        <div class="row">
+          <!-- 推薦遊戲 -->
         <div  data-aos="fade-left"  data-aos-duration="500">
           <Carousel  :items-to-show="5">
-          <Slide v-for="slide in tags" :key="slide" >
-      <div class="carousel__item d-flex align-items-end p-3 fs-3" :style="`background-image: linear-gradient(to bottom, rgba(0, 0, 0,0)50%, rgba(0, 0, 0, 1) 80% ),url(${slide.img});background-size: cover;background-position: center;`" ><span style="">{{ slide.name }}</span></div>
+          <Slide v-for="slide in tags" :key="slide">
+      <div class="carousel__item" :style="`background-image: url(${slide.img});background-size: cover;background-position: center;`" >{{ slide.name }}</div>
     </Slide>
 
           <template #addons>
@@ -19,25 +19,22 @@
         </div>
        
         <!-- carousel -->
-        <span class="fs-2 text-center d-block mb-2">熱門遊戲</span>
-          <div v-for="game in gameLozad" :key="game.gameId" class="mb-2 videoFather rounded " style="background-color: #0f1c27;">
-            <div v-if="isPopupVisible==game.gameId" style="background-color:#2A3741;z-index: 2;width: 30%;" class="videoKid p-3 rounded" >
-                    <video v-if="game.videoPath!=''" :src="game.videoPath" autoplay class="" style="width: 100%;"></video>
-                    <span class="fs-4 d-flex justify-content-center align-items-center" v-else style="background-color: black;height: 150px;text-align: center;"><span>未提供遊戲影片</span></span>
-                    <span class="fs-4 nowrap d-block">{{game.name}}</span>
-                    <div>
-          <img  :src="game.ageRating=='18+'?'https://www.gamerating.org.tw/Content/img/index_icon_05.jpg':AgeRating=='15+'?'https://www.gamerating.org.tw/Content/img/index_icon_04.jpg':AgeRating=='12+'?'https://www.gamerating.org.tw/Content/img/index_icon_03.jpg':AgeRating=='6+'?'https://www.gamerating.org.tw/Content/img/index_icon_02.jpg':'https://www.gamerating.org.tw/Content/img/index_icon_01.jpg'" alt="" class="w-25 m-1"><span class="fs-5">遊戲分級： {{game.ageRating}}</span>
         </div>
-                    <span class="fs-5">{{game.description}}</span>
-                </div>
-              <a :href="`http://localhost:5173/game/${game.gameId}`" class="row m-0 rounded" style="color: white;text-decoration: none;" @mouseover="showPopup(game.gameId)" @mouseleave="hidePopup">
-              <div class="col-3 px-0 videoFather">
-                <img :src="game.imagePath " style="width: 100%;" class="rounded" alt="">
+        <div class="row">
+          <div class="col-8">
+            <div v-for="game in gameLozad" :key="game.gameId" class="mb-2 videoFather" style="background-color: #0f1c27;" >
+              <div :id="game.gameId" v-if="isPopupVisible==game.gameId&&game.videoPath!=''" style="background-color:#0f1c27;width: 50%;" class="videoKid p-2">
+                  <video :src="game.videoPath" class="w-100" autoplay></video>
+                </div>  
+              <a :href="`http://localhost:5173/game/${game.gameId}`" class="row m-0 " style="color: white;text-decoration: none;" @mouseover="showPopup(game.gameId)" >
+              <div class="col-3 px-0 ">
+                <img :src="game.imagePath " style="width: 100%;" class="" alt="">
+                
               </div>
               <div class="col-6 d-flex flex-column justify-content-between">
                 <span class="d-block mt-1 nowrap fs-3" style="">{{ game.name}}</span>
                 <div v-for="tagGroup in TagGroupDataLozad.filter(tg => tg.gameId === game.gameId)" :key="tagGroup.id" class="mb-3">
-                  <a href="" v-for="tag in getTagNames(tagGroup.tags)"  :key="tag" style="font-size: 16px;text-decoration: none; border:1px solid white" class="m-1 px-2 rounded tagClass" >{{tag}}</a>
+                  <a href="" v-for="tag in getTagNames(tagGroup.tags)"  :key="tag" style="font-size: 16px;color: white;text-decoration: none; border:1px solid white" class="m-1 px-2 rounded" >{{tag}}</a>
                   <!-- <button @click.capture.stop=""  v-for="tag in getTagNames(tagGroup.tags)" :key="tag" style="font-size: 12px;" class="m-1">{{tag}}</button> -->
                 </div>
               </div>
@@ -48,14 +45,21 @@
                     <span  class="d-block text-decoration-line-through me-3" style="font-size: 15px">NT.{{game.originalPrice}}</span>
                     <span  class="fs-4 d-inline me-3" style="color: #F3AE0B">NT.{{game.currentPrice}}</span>
                   </div>
+                  
                 </div>
               <div v-else>
                  <span  class="fs-4 me-3">{{game.currentPrice==0?"免費":"NT."+ game.currentPrice}}</span>
               </div>
+              
               </div>
               </a>
               
           </div>
+          </div>
+          <div class="col-4" style="background-color:#0f1c27;">
+          </div>
+        </div>
+          
       </div>
       <div class="col-xl-1 "></div>
       <div ref="loading" class="loading">Loading...</div>
@@ -82,8 +86,12 @@ defineComponent({
 })
 var isPopupVisible=ref(0)
 function showPopup(gameId){
-  
   isPopupVisible.value=gameId
+  var triggerElement = event.currentTarget;
+    var rect = triggerElement.getBoundingClientRect();
+  var popup = document.getElementById(gameId);
+  
+  console.log(popup);
 }
 
 function hidePopup(){
@@ -164,7 +172,6 @@ function getTagNames(tags){
   //   tag.push(element.name)
   // });
 
-  console.log(tag);
   return tag
 }
 
@@ -242,7 +249,6 @@ const loadMoreTagGroup = () => {
 
 const observer = lozad();
 
-
 onMounted(() => {
   AllGameTagData();
   GetGameData();
@@ -269,12 +275,15 @@ io.observe(loadingElement);
 .videoFather{
   position: relative;
 }
+.videoFather{
+  position: relative;
+}
+
 .videoKid{
   position: absolute;
-  /* right: 0; */
-  left: 100%;
-  /* top: 100%; */
+  right: -370px;
 }
+
 .carousel__item {
   min-height: 150px;
   width: 100%;
@@ -298,17 +307,7 @@ io.observe(loadingElement);
   border: 5px solid white;
 } 
 a:hover{
-  background-color:#2A3741
-}
-
-.tagClass{
-  color: wheat;
-}
-
-.tagClass:hover{
-  background-color: rgba(255, 255 , 255, 0.6);
-  color: #2A3741;
-  font-weight: bold;
+  background-color: rgba(255, 255, 255,0.1)
 }
 .nowrap {
   white-space: nowrap;

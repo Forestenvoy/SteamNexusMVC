@@ -36,9 +36,9 @@ namespace SteamNexus.Areas.Administrator.Controllers
             return Json(_context.Games);
         }
 
-        //GameDataTable設定
-        [HttpGet("TagData")]
-        public async Task<JsonResult> TagData()
+        //拿取全部遊戲的Tag
+        [HttpGet("AllGameTagData")]
+        public async Task<JsonResult> AllGameTagData()
         {
             var tagData = from a in _context.TagGroups
                           join b in _context.Tags on a.TagId equals b.TagId
@@ -230,7 +230,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
                                 //_context.Entry(game).State = EntityState.Modified;
                                 _context.Update(game);
                                 _context.PriceHistories.Add(PriceHistory);
-                                //await _context.SaveChangesAsync();
+                                await _context.SaveChangesAsync();
                             }
                             catch (DbUpdateConcurrencyException)
                             {
@@ -301,7 +301,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
                                 //_context.Entry(game).State = EntityState.Modified;
                                 _context.Update(game);
                                 _context.PriceHistories.Add(PriceHistory);
-                                //await _context.SaveChangesAsync();
+                                await _context.SaveChangesAsync();
                             }
                             catch (DbUpdateConcurrencyException)
                             {
@@ -324,7 +324,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
                             PriceHistory.Price = (int)game.OriginalPrice;
                             //_context.Entry(game).State = EntityState.Modified;
                             _context.PriceHistories.Add(PriceHistory);
-                            //await _context.SaveChangesAsync();
+                            await _context.SaveChangesAsync();
                         }
                         catch (DbUpdateConcurrencyException)
                         {
@@ -849,6 +849,13 @@ namespace SteamNexus.Areas.Administrator.Controllers
 
             // 返回 JSON 結果
             return Json(peopleData);
+        }
+
+        //GameDataTable設定
+        [HttpGet("TagsData")]
+        public async Task<JsonResult> TagsData()
+        {
+            return Json(_context.Tags.Take(20));
         }
     }
 }

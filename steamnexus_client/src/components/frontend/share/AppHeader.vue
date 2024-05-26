@@ -253,7 +253,7 @@ label div:nth-child(2) {
 .nav-link {
   position: relative;
   font-size: 18px;
-  text-decoration: none;
+  text-decoration: none;  
   color: #fff;
   letter-spacing: 2px;
   font-weight: 500px;
@@ -261,7 +261,8 @@ label div:nth-child(2) {
 }
 
 .sticky .nav-link {
-  color: #000;
+  color: #000000;
+  background-color: rgba(255 , 255, 255,0);
 }
 
 .sticky input {
