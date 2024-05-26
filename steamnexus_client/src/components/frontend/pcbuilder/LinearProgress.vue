@@ -54,8 +54,8 @@ watch(
   () => builderStore.getCurrentStep,
   (newVal, oldVal) => {
     if (timer) clearInterval(timer)
-    let start = oldVal * 10
-    let end = newVal * 10
+    let start = oldVal * 11
+    let end = newVal * 11
     if (newVal >= 0) {
       if (newVal > oldVal) {
         timer = setInterval(() => {

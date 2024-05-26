@@ -59,6 +59,29 @@ export const useBuilderStore = defineStore('builder', () => {
     }
   }
 
+  // 刪除產品
+  const removeProduct = (id) => {
+    productList.value = productList.value.filter((p) => p.id !== id)
+  }
+
+  // 總瓦數計算
+  const totalWattage = computed(() => {
+    let total = 0
+    productList.value.forEach((p) => {
+      total += Number(p.wattage)
+    })
+    return total
+  })
+
+  // 總價格計算
+  const totalPrice = computed(() => {
+    let total = 0
+    productList.value.forEach((p) => {
+      total += Number(p.price)
+    })
+    return total
+  })
+
   // CPU 腳位
   // state
   const socket = ref('')
@@ -86,6 +109,9 @@ export const useBuilderStore = defineStore('builder', () => {
     next,
     getProductList,
     addProduct,
+    removeProduct,
+    totalWattage,
+    totalPrice,
     getSocket,
     setSocket,
     getMemory,

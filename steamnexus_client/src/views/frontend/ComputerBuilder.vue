@@ -4,8 +4,9 @@
   <!-- 組裝之旅 -->
   <build-journey></build-journey>
   <!-- 菜單系統 -->
-  <!-- 產品列表 -->
   <!-- <menu-slider></menu-slider> -->
+  <!-- 產品列表 -->
+  <product-list></product-list>
   <!-- Hardware Matching Game Ratio -->
   <game-ratio></game-ratio>
   <!-- 系統介紹 -->
@@ -23,6 +24,8 @@ import { onMounted } from 'vue'
 // 頁面元件
 import HeroBanner from '@/components/frontend/pcbuilder/HeroBanner.vue'
 import BuildJourney from '@/components/frontend/pcbuilder/BuildJourney.vue'
+
+import ProductList from '@/components/frontend/pcbuilder/ProductList.vue'
 
 // import MenuSlider from '@/components/frontend/pcbuilder/MenuSlider.vue'
 import GameRatio from '@/components/frontend/pcbuilder/GameRatio.vue'
