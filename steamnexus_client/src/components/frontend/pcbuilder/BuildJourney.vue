@@ -39,6 +39,7 @@ import SolidStateDisk from '@/components/frontend/pcbuilder/journey/SolidStateDi
 import HardDiskDrive from '@/components/frontend/pcbuilder/journey/HardDiskDrive.vue'
 import PowerSupply from '@/components/frontend/pcbuilder/journey/PowerSupply.vue'
 import ComputerCase from '@/components/frontend/pcbuilder/journey/ComputerCase.vue'
+import OperatingSystem from '@/components/frontend/pcbuilder/journey/OperatingSystem.vue'
 
 // pinia
 import { useBuilderStore } from '@/stores/builder.js'
@@ -74,6 +75,9 @@ const currentStepComponent = computed(() => {
     case 8:
       // 電腦機殼
       return ComputerCase
+    case 9:
+      // 操作系統
+      return OperatingSystem
     default:
       return CentralProcessingUnit
   }
