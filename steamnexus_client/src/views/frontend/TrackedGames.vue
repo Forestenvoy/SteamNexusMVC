@@ -12,7 +12,7 @@
           <div class="face face2">
             <div class="content">
               <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-              <a href="#" type="button">Read More</a>
+              <a href="#" type="button">取消追蹤</a>
             </div>
           </div>
         </div>

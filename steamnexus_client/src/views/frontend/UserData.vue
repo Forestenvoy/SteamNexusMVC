@@ -21,14 +21,14 @@
               <!-- 左邊部分：大頭貼 -->
               <div class="col-md-4">
                 <div class="form-group">
-                  <label for="avatar">大頭貼</label>
-                  <input type="file" class="form-control" id="avatar" @change="onAvatarChange" />
+                  <!-- <label for="avatar">大頭貼</label> -->
                   <img
                     v-if="profile.photo || profile.previewPhoto"
                     :src="profile.previewPhoto || profile.photo"
                     alt="大頭貼"
                     class="img-thumbnail mt-2"
                   />
+                  <input type="file" class="form-control mt-2" id="avatar" @change="onAvatarChange" />
                 </div>
               </div>
               <!-- 右邊部分：其他資料 -->
@@ -332,5 +332,12 @@ onMounted(() => {
 <style scoped>
 .list-group-container {
   margin-right: 50px; /* 可以根據需要調整數值 */
+}
+
+.img-thumbnail {
+  border-radius: 50%;
+  width: 200px; /* 可以根據需要調整大小 */
+  height: 200px; /* 確保寬高相等，形成正方形 */
+  object-fit: cover; /* 確保圖片能夠完整顯示在圓形內 */
 }
 </style>
