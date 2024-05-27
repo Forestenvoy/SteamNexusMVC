@@ -74,7 +74,7 @@ import AOS from 'aos'
 import 'aos/dist/aos.css'
 
 // vue
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 
 // Core UI
 import { CContainer, CRow, CCol } from '@coreui/vue'
@@ -96,9 +96,27 @@ const startRec = ref(0)
 const NumberCounter = (target, counter) => {
   if (counter.value < target) {
     counter.value++
-    setTimeout(() => NumberCounter(target, counter), 25)
+    NumberCounter(target, counter)
   }
 }
+
+// watch 目標進度值
+watch(
+  () => builderStore.getMinRatio,
+  (newValue) => {
+    startMin.value = 0
+    targetMin.value = newValue
+    NumberCounter(targetMin.value, startMin)
+  }
+)
+watch(
+  () => builderStore.getRecRatio,
+  (newValue) => {
+    startRec.value = 0
+    targetRec.value = newValue
+    NumberCounter(targetRec.value, startRec)
+  }
+)
 
 onMounted(() => {
   AOS.init({

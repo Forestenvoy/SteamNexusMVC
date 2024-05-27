@@ -2,6 +2,20 @@ import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 
 export const useBuilderStore = defineStore('builder', () => {
+  // 模式
+  // state
+  const mode = ref('build')
+  // getter
+  const getMode = computed(() => mode.value)
+  // action
+  const setMode = (value) => {
+    if (typeof value === 'string') {
+      mode.value = value
+    } else {
+      console.warn('Invalid Mode value')
+    }
+  }
+
   // 階段
   // state
   const currentStep = ref(0)
@@ -29,6 +43,10 @@ export const useBuilderStore = defineStore('builder', () => {
   // getter
   const getProductList = computed(() => productList.value)
   // action
+  // 提供清單
+  const setProductList = (value) => {
+    productList.value = value
+  }
   // 加入產品
   const addProduct = (type, product) => {
     // 關閉遊戲匹配系統
@@ -166,12 +184,21 @@ export const useBuilderStore = defineStore('builder', () => {
     recRatio.value = 0
   }
 
+  // 清空產品清單
+  const clearProductList = () => {
+    productList.value = []
+  }
+
+
   return {
+    getMode,
+    setMode,
     getCurrentStep,
     setCurrentStep,
     prev,
     next,
     getProductList,
+    setProductList,
     addProduct,
     removeProduct,
     totalWattage,
@@ -189,6 +216,7 @@ export const useBuilderStore = defineStore('builder', () => {
     setRecRatio,
     isShowMatchSystem,
     showMatch,
-    hideMatch
+    hideMatch,
+    clearProductList
   }
 })

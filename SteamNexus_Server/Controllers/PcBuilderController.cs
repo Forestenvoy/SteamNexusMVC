@@ -137,6 +137,75 @@ public class PcBuilderController : ControllerBase
 
     }
 
+    // 菜單產品資料
+    public class MenuProductDto
+    {
+        public string? Type { get; set; }
+        public int Id { get; set; }
+        public string? Name { get; set; }
+        public int Price { get; set; }
+        public int Wattage { get; set; }
+    }
+
+
+    // 回傳菜單產品資料
+    // GET: api/PcBuilder/GetProductList?MenuId=10000
+    [HttpGet("GetProductList")]
+    public ActionResult<IEnumerable<MenuProductDto>> GetProductList(int MenuId)
+    {
+        try
+        {
+            // 利用導覽屬性 獲取 產品的 TypeId
+            var MenuDetailSet = _context.MenuDetails.Where(m => m.MenuId == MenuId).Include(md => md.ProductInformation).ThenInclude(pi => pi.ComponentClassification).ThenInclude(cc => cc.ComputerPartCategory);
+
+            if (MenuDetailSet == null)
+            {
+                // 找不到回傳 404 
+                return NotFound("Data not found.");
+            }
+
+            var resultList = new List<MenuProductDto>();
+
+            foreach (var menuDetail in MenuDetailSet)
+            {
+                if (menuDetail != null && menuDetail.ProductInformation != null)
+                {
+                    var componentClassification = menuDetail.ProductInformation.ComponentClassification;
+                    if (componentClassification != null)
+                    {
+                        string typeName = componentClassification.ComputerPartCategory.Name;
+                        string type = "";
+                        if (typeName != null)
+                        {
+                            int end = typeName.IndexOf(" ", StringComparison.Ordinal);
+                            type = typeName.Substring(0, end);
+                        }
+
+                        MenuProductDto menuProductDto = new MenuProductDto
+                        {
+                            Type = type,
+                            Id = menuDetail.ProductInformation.ProductInformationId,
+                            Name = menuDetail.ProductInformation.Name + menuDetail.ProductInformation.Specification,
+                            Price = menuDetail.ProductInformation.Price,
+                            Wattage = menuDetail.ProductInformation.Wattage
+                        };
+                        resultList.Add(menuProductDto);
+                    }
+                }
+            }
+            return Ok(resultList);
+        }
+        catch (Exception error)
+        {
+            // 未來考慮引用日誌框架如 Serilog 記錄異常 
+            Console.WriteLine(error.Message);
+
+            // 未來考慮引用中介軟體 RequestDelegate 做 例外處理
+            return StatusCode(500, "An internal server error occurred. Please try again later.");
+        }
+    }
+
+
     // 計算比例需求資料
     public class RatioDataDto
     {

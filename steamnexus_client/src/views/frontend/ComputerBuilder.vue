@@ -4,9 +4,9 @@
   <!-- 子系統切換 -->
   <switch-mode></switch-mode>
   <!-- 組裝之旅 -->
-  <build-journey></build-journey>
+  <build-journey v-if="builderStore.getMode === 'build'"></build-journey>
   <!-- 菜單系統 -->
-  <!-- <menu-slider></menu-slider> -->
+  <menu-slider v-if="builderStore.getMode === 'menu'"></menu-slider>
   <!-- 產品列表 -->
   <product-list v-if="showProductList"></product-list>
   <!-- 遊戲匹配系統  -->
@@ -31,7 +31,7 @@ const builderStore = useBuilderStore()
 import HeroBanner from '@/components/frontend/pcbuilder/HeroBanner.vue'
 import SwitchMode from '@/components/frontend/pcbuilder/SwitchMode.vue'
 import BuildJourney from '@/components/frontend/pcbuilder/BuildJourney.vue'
-// import MenuSlider from '@/components/frontend/pcbuilder/MenuSlider.vue'
+import MenuSlider from '@/components/frontend/pcbuilder/MenuSlider.vue'
 import ProductList from '@/components/frontend/pcbuilder/ProductList.vue'
 import GameRatio from '@/components/frontend/pcbuilder/GameRatio.vue'
 

@@ -1,61 +1,105 @@
 <template>
-  <CContainer>
-    <CRow>
-      <CCol xs="12">
-        <span>組裝系統</span>
-        <!-- 切換按鈕 -->
-        <label class="bb8-toggle">
-          <input class="bb8-toggle__checkbox" type="checkbox" />
-          <div class="bb8-toggle__container">
-            <div class="bb8-toggle__scenery">
-              <div class="bb8-toggle__star"></div>
-              <div class="bb8-toggle__star"></div>
-              <div class="bb8-toggle__star"></div>
-              <div class="bb8-toggle__star"></div>
-              <div class="bb8-toggle__star"></div>
-              <div class="bb8-toggle__star"></div>
-              <div class="bb8-toggle__star"></div>
-              <div class="tatto-1"></div>
-              <div class="tatto-2"></div>
-              <div class="gomrassen"></div>
-              <div class="hermes"></div>
-              <div class="chenini"></div>
-              <div class="bb8-toggle__cloud"></div>
-              <div class="bb8-toggle__cloud"></div>
-              <div class="bb8-toggle__cloud"></div>
-            </div>
-            <div class="bb8">
-              <div class="bb8__head-container">
-                <div class="bb8__antenna"></div>
-                <div class="bb8__antenna"></div>
-                <div class="bb8__head"></div>
+  <section id="SwitchMode">
+    <CContainer>
+      <CRow>
+        <CCol xs="12" class="d-flex justify-content-center align-items-center">
+          <span class="system build" :class="{ active: !mode }">組裝系統</span>
+          <!-- 切換按鈕 -->
+          <label class="bb8-toggle">
+            <input
+              class="bb8-toggle__checkbox"
+              type="checkbox"
+              v-model="mode"
+              @change="modeChange"
+            />
+            <div class="bb8-toggle__container">
+              <div class="bb8-toggle__scenery">
+                <div class="bb8-toggle__star"></div>
+                <div class="bb8-toggle__star"></div>
+                <div class="bb8-toggle__star"></div>
+                <div class="bb8-toggle__star"></div>
+                <div class="bb8-toggle__star"></div>
+                <div class="bb8-toggle__star"></div>
+                <div class="bb8-toggle__star"></div>
+                <div class="tatto-1"></div>
+                <div class="tatto-2"></div>
+                <div class="gomrassen"></div>
+                <div class="hermes"></div>
+                <div class="chenini"></div>
+                <div class="bb8-toggle__cloud"></div>
+                <div class="bb8-toggle__cloud"></div>
+                <div class="bb8-toggle__cloud"></div>
               </div>
-              <div class="bb8__body"></div>
+              <div class="bb8">
+                <div class="bb8__head-container">
+                  <div class="bb8__antenna"></div>
+                  <div class="bb8__antenna"></div>
+                  <div class="bb8__head"></div>
+                </div>
+                <div class="bb8__body"></div>
+              </div>
+              <div class="artificial__hidden">
+                <div class="bb8__shadow"></div>
+              </div>
             </div>
-            <div class="artificial__hidden">
-              <div class="bb8__shadow"></div>
-            </div>
-          </div>
-        </label>
-        <span>菜單系統</span>
-      </CCol>
-    </CRow>
-  </CContainer>
+          </label>
+          <span class="system menu" :class="{ active: mode }">菜單系統</span>
+        </CCol>
+      </CRow>
+    </CContainer>
+  </section>
 </template>
 
 <script setup>
+// vue
+import { ref } from 'vue'
+
 // Core UI
 import { CContainer, CRow, CCol } from '@coreui/vue'
+
+// pinia
+import { useBuilderStore } from '@/stores/builder.js'
+const builderStore = useBuilderStore()
+
+const mode = ref(false)
+
+// 模式改變
+const modeChange = () => {
+  builderStore.setMode(mode.value ? 'menu' : 'build')
+  builderStore.clearProductList()
+  builderStore.hideMatch()
+}
 </script>
 
 <style scoped>
+#SwitchMode {
+  padding: 50px 0 50px 0;
+}
+
+/* 系統文字 */
+.system {
+  font-size: 35px;
+  color: #2f2e2e;
+}
+
+.build {
+  margin-right: 15px;
+}
+
+.menu {
+  margin-left: 15px;
+}
+
+.active {
+  color: #f3ae0b;
+}
+
 /* 切換按鈕 */
 /* REMASTERED */
 /* RTX-ON */
 /* completely redone toggle and droid */
-
 .bb8-toggle {
-  --toggle-size: 16px;
+  --toggle-size: 14px;
   /* finally I removed the scale now everything depends on the font-size */
   /* --margin-top-for-head: 1.75em; */
   /* it's just in case 👆 */
@@ -68,6 +112,16 @@ import { CContainer, CRow, CCol } from '@coreui/vue'
   --transition: 0.4s;
   --accent: #de7d2f;
   --bb8-bg: #fff;
+}
+
+@media screen and (max-width: 576px) {
+  .system {
+    font-size: 25px;
+  }
+
+  .bb8-toggle {
+    --toggle-size: 8px;
+  }
 }
 
 .bb8-toggle,

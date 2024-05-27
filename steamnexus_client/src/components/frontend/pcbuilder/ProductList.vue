@@ -28,6 +28,7 @@
               class="delete d-flex justify-content-center align-items-center"
               :data-id="product.id"
               @click="deleteProduct"
+              v-if="builderStore.getMode == 'build'"
             >
               ✘
             </button>
@@ -60,7 +61,7 @@
         </CCol>
       </CRow>
       <!-- 可玩遊戲比例核對 -->
-      <CRow class="position-relative w-100">
+      <CRow class="position-relative w-100" v-if="builderStore.getMode == 'build'">
         <CCol xs="12" class="d-flex justify-content-center">
           <button class="match" @click="matchGame">
             Match
