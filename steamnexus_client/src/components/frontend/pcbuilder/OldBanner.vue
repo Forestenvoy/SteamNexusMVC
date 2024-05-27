@@ -1,5 +1,5 @@
 <template>
-  <section class="banner mb-5" data-aos="zoom-in-down" data-aos-duration="500">
+  <section class="banner mb-5 mt-3" data-aos="zoom-in-down" data-aos-duration="500">
     <CContainer>
       <CRow class="align-items-center">
         <CCol xs="12" md="6" xl="7" class="order-1 order-md-0">
@@ -59,7 +59,7 @@
         </CCol>
         <CCol xs="12" md="6" xl="5" class="d-flex justify-content-center order-0 order-md-1 mb-4">
           <img
-            src="@/assets/images/builder/banner.png"
+            src="@/assets/images/builder/computer.png"
             alt="Header-img"
             data-aos="fade-down"
             data-aos-duration="1500"

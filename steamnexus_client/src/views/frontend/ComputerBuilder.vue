@@ -1,12 +1,16 @@
 <template>
-  <!-- Main Banner -->
-  <builder-banner></builder-banner>
+  <!-- 英雄橫幅旗幟 -->
+  <hero-banner></hero-banner>
+  <!-- 組裝之旅 -->
+  <build-journey></build-journey>
   <!-- 菜單系統 -->
-  <menu-slider></menu-slider>
-  <!-- 電腦配單系統 -->
-  <main-system></main-system>
-  <!-- Hardware Matching Game Ratio -->
-  <game-ratio></game-ratio>
+  <!-- <menu-slider></menu-slider> -->
+  <!-- 產品列表 -->
+  <product-list v-if="showProductList"></product-list>
+  <!-- 遊戲匹配系統  -->
+  <game-ratio v-if="builderStore.isShowMatchSystem"></game-ratio>
+  <!-- 系統介紹 -->
+  <!-- <system-introduction></system-introduction> -->
 </template>
 
 <script setup>
@@ -15,13 +19,28 @@ import AOS from 'aos'
 import 'aos/dist/aos.css'
 
 // vue 核心模組
-import { onMounted } from 'vue'
+import { computed, onMounted } from 'vue'
+
+// pinia
+import { useBuilderStore } from '@/stores/builder.js'
+const builderStore = useBuilderStore()
 
 // 頁面元件
-import BuilderBanner from '@/components/frontend/pcbuilder/BuilderBanner.vue'
-import MenuSlider from '@/components/frontend/pcbuilder/MenuSlider.vue'
-import MainSystem from '@/components/frontend/pcbuilder/MainSystem.vue'
+import HeroBanner from '@/components/frontend/pcbuilder/HeroBanner.vue'
+import BuildJourney from '@/components/frontend/pcbuilder/BuildJourney.vue'
+// import MenuSlider from '@/components/frontend/pcbuilder/MenuSlider.vue'
+import ProductList from '@/components/frontend/pcbuilder/ProductList.vue'
 import GameRatio from '@/components/frontend/pcbuilder/GameRatio.vue'
+
+// import SystemIntroduction from '@/components/frontend/pcbuilder/SystemIntroduction.vue'
+
+// 產品列表是否顯示
+const showProductList = computed(() => {
+  if (builderStore.getProductList.length > 0) {
+    return true
+  }
+  return false
+})
 
 onMounted(() => {
   AOS.init()

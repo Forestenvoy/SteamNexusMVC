@@ -31,6 +31,8 @@ export const useBuilderStore = defineStore('builder', () => {
   // action
   // 加入產品
   const addProduct = (type, product) => {
+    // 關閉遊戲匹配系統
+    showMatchSystem.value = false
     // 風冷散熱器、水冷散熱器，兩者只能擇一
     if (type === 'AirCooler') {
       // 刪除水冷散熱器
@@ -39,6 +41,12 @@ export const useBuilderStore = defineStore('builder', () => {
     if (type === 'LiquidCooler') {
       // 刪除風冷散熱器
       productList.value = productList.value.filter((p) => p.type !== 'AirCooler')
+    }
+    // SSD、HDD 可重複
+    if (type === 'SSD' || type === 'HDD') {
+      // 加入新產品
+      productList.value.push(product)
+      return
     }
     // 檢查有沒有重複產品
     if (productList.value.find((p) => p.type === type)) {
@@ -52,6 +60,32 @@ export const useBuilderStore = defineStore('builder', () => {
       productList.value.push(product)
     }
   }
+
+  // 刪除產品
+  const removeProduct = (id) => {
+    // 關閉遊戲匹配系統
+    showMatchSystem.value = false
+    // 刪除產品
+    productList.value = productList.value.filter((p) => p.id !== id)
+  }
+
+  // 總瓦數計算
+  const totalWattage = computed(() => {
+    let total = 0
+    productList.value.forEach((p) => {
+      total += Number(p.wattage)
+    })
+    return total
+  })
+
+  // 總價格計算
+  const totalPrice = computed(() => {
+    let total = 0
+    productList.value.forEach((p) => {
+      total += Number(p.price)
+    })
+    return total
+  })
 
   // CPU 腳位
   // state
@@ -73,6 +107,19 @@ export const useBuilderStore = defineStore('builder', () => {
     memory.value = value
   }
 
+  // 顯示遊戲匹配系統
+  // state
+  const showMatchSystem = ref(false)
+  // getter
+  const isShowMatchSystem = computed(() => showMatchSystem.value)
+  // action
+  const showMatch = () => {
+    showMatchSystem.value = true
+  }
+  const hideMatch = () => {
+    showMatchSystem.value = false
+  }
+
   return {
     getCurrentStep,
     setCurrentStep,
@@ -80,9 +127,15 @@ export const useBuilderStore = defineStore('builder', () => {
     next,
     getProductList,
     addProduct,
+    removeProduct,
+    totalWattage,
+    totalPrice,
     getSocket,
     setSocket,
     getMemory,
-    setMemory
+    setMemory,
+    isShowMatchSystem,
+    showMatch,
+    hideMatch
   }
 })
