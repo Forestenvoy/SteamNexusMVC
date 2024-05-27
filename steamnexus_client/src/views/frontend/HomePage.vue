@@ -295,7 +295,7 @@ function holdUp(tagId, name) {
         console.log(gameData.value)
       })
       .catch((error) => {
-        alert(error)
+        console.error('Error:', error)
       })
     console.log(timeStart.value)
     console.log(timeEnd.value)
@@ -329,7 +329,7 @@ function holdUp(tagId, name) {
 //       console.log(gameData.value);
 //     })
 //     .catch((error) => {
-//       alert(error)
+//       console.error('Error:', error)
 //     })
 // }
 
@@ -367,7 +367,7 @@ function GetGameData() {
       loadMoreGames()
     })
     .catch((error) => {
-      alert(error)
+      console.error('Error:', error)
     })
 }
 
@@ -400,7 +400,7 @@ function AllGameTagData() {
       console.log('1-2')
     })
     .catch((error) => {
-      alert(error)
+      console.error('Error:', error)
     })
 }
 
@@ -424,7 +424,7 @@ function TagsData() {
       console.log(val)
     })
     .catch((error) => {
-      alert(error)
+      console.error('Error:', error)
     })
 }
 
