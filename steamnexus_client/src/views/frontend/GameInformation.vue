@@ -1,10 +1,10 @@
 <template>
-  <div class="mt-5 container-sm mb-2 text-white">
+  <div class="mt-5 container mb-2  text-white">
     <div class="position-absolute top-0 start-50 translate-middle-x" :style="ImageBackground"></div>
     <div style="margin-top: 200px;">
-      <div class="fs-6 row " data-aos="fade-in">
-        <div class="col-xl-4 leftbox" style="height: 100%;" data-aos="fade-right">
-          
+      <div class="fs-6 row" data-aos="fade-in">
+        <div class="col-xl-1 "></div>
+        <div class="col-xl-3  leftbox" style="height: 100%;" data-aos="fade-right">
           <img :src="ImagePath" class="w-100" alt="">
           
           <div class="p-3">
@@ -20,29 +20,45 @@
             <p class=" mt-2">{{Description}}</p>
           </div>
         </div>
-        <div class="col-xl-8 p-1 ">
-        <h1 class="shadow-sm ms-4 mt-2" :key="Name" data-aos="fade-left" style="color: #F3AE0B; text-shadow: 2px 2px 4px #000000;">{{Name}} <button class="fontawesome" @click="love">
+        <div class="col-xl-7 p-1">
+          <div class="d-flex">
+            <span class="fs-1 shadow-sm ms-4 nowrap d-block" :key="Name" data-aos="fade-left" style="color: #F3AE0B; text-shadow: 2px 2px 4px #000000;width: 100%;">{{Name}} </span>
+        <button class="fontawesome fs-1 shadow-sm" @click="love">
           <i v-if="loveclick==true" class="fa-regular fa-heart"></i>
           <i v-else class="fa-solid fa-heart "></i>
-        </button></h1>
+        </button>
+          </div>
+        
         <hr style="height: 2px; background-color:white; border: none;opacity: 1;"  class="mt-3 mb-4 ms-3" data-aos="fade-left">
         <div class="d-flex justify-content-between "  style="text-shadow: 2px 2px 4px #000000;">
           <span class="ms-4 fs-1 fw-bold" data-aos="fade-left">歷史價格分析</span>
           <div class="d-flex"  data-aos="fade-left">
+            <span class="fs-5 my-auto">目前價格：</span>
             <span class="fs-2 mt-auto mb-auto"  data-aos="fade-in">{{OriginalPrice==0?"免費":`NT.${OriginalPrice}`}}</span>
             <a :href="steamWeb" target="_blank" :title="steamWebtitle" class=" mt-auto mb-auto"><button style="background-color: #F3AE0B;color: black ;border: 0px;font-weight:500" type="button" class="btn btn-primary ms-3 ">前往Steam購買</button></a>
           </div>  
         </div>
+        
         <!-- 圖表開始 -->
         <div data-aos="fade-left" data-aos-duration="500">
-          <div class="hello ms-4" ref="chartdiv"></div>
+          <div class="hello ms-4 position-relative" ref="chartdiv">
+            <span class="text-end d-block position-absolute bottom-0 end-0 pe-3">
+              <span class="badge">目前在線人數 <span  style="color: #F3AE0B; font-weight: 500">{{playerData}}人</span></span>
+              <span class="badge">三個月內最低價格 <span  style="color: #F3AE0B; font-weight: 500">NT.{{PricelowestData}}</span></span>
+            </span>
+            
+          </div>
+          
         </div>
+        
         <!-- 圖表結束 -->
+        
       </div>
+      <div class="col-xl-1"></div>
       </div>
-      
        <div class="fs-6 row " data-aos="fade-in">
-      <div class="col-xl-4  leftbox" data-aos="fade-right">
+        <div class="col-xl-1"></div>
+      <div class="col-xl-3  leftbox" data-aos="fade-right">
         
         <div class="p-3">
          
@@ -74,7 +90,7 @@
         </div>
         </div>
       </div>
-      <div class="col-xl-8 p-1 ">
+      <div class="col-xl-7 p-1 ">
         <span class="ms-3 fs-1 mt-4 fw-bold" data-aos="fade-left">遊玩門檻</span >
         <div class="d-flex ps-2">
           <div class="leftbox p-3 rounded m-1 " style="width: 50%;" data-aos="fade-left">
@@ -182,6 +198,7 @@
         
         <!-- carousel -->
       </div>
+      <div class="col-xl-1"></div>
     </div>  
   </div>
     </div>
@@ -247,6 +264,7 @@ var LanguageTable=ref([])
 var TagSamegamesName=ref([])
 var loveclick=ref("")
 var PricelowestData=ref("")
+var playerData=ref("")
 
 import { Carousel, Navigation, Slide } from 'vue3-carousel'
 import 'vue3-carousel/dist/carousel.css'
@@ -523,6 +541,30 @@ function GetGamePricelowestData(){
       $(this).prop('disabled', false)
     })
 }
+function GetGamePeopleData(){
+  fetch(`${apiUrl}/api/GamesManagement/GetGamePeopleData?id=${props.gameId}`, {
+    method: 'GET'
+  })
+    .then((response) => {
+      // 確保請求是否成功
+      if (!response.ok) {
+        throw new Error('Network response was not ok')
+      }
+      // 解析 html
+      return response.json()
+    })
+    .then((val) => {
+      console.log(val);
+      playerData.value=val.players
+    })
+    .catch((error) => {
+      alert(error)
+    })
+    .finally(() => {
+      // 异步操作完成后启用按钮
+      $(this).prop('disabled', false)
+    })
+}
 
 onMounted(() => {
   AOS.init()
@@ -533,6 +575,7 @@ onMounted(() => {
   getRecReqData();
   GetGameTagSameData();
   GetGamePricelowestData();
+  GetGamePeopleData();
   loveclick.value=true
 
   fetch(`${apiUrl}/api/GamesManagement/GetLineChartData?id=${props.gameId}`, {
@@ -568,14 +611,6 @@ onMounted(() => {
         layout: am5.GridLayout.new(root, {})
       })
     );
-
-    chart.children.unshift(am5.Label.new(root, {
-  html: "<span>Chart title</span>",
-  x: am5.percent(100),
-  centerX: am5.percent(100),  
-}));
-
-    
 
     var cursor = chart.set("cursor", am5xy.XYCursor.new(root, {
                   behavior: "none"
@@ -636,6 +671,14 @@ xAxis.get("renderer").labels.template.adapters.add("fontSize", function(fontSize
   return fontSize;
 });
 
+chart.zoomOutButton.get("background").setAll({
+  fill:am5.color(0x000000 ),
+  fillOpacity:1,
+  stroke:am5.color(0xF3AE0B),
+});
+root.interfaceColors.set("primaryButtonHover", am5.color(0xF3AE0B));
+root.interfaceColors.set("primaryButtonDown", am5.color(0x000000));
+
 var series1 = chart.series.push(am5xy.StepLineSeries.new(root, {
   name: "Series",
   xAxis: xAxis,
@@ -644,14 +687,19 @@ var series1 = chart.series.push(am5xy.StepLineSeries.new(root, {
   valueXField: "date"
 }));
 
-
+// 增大感應範圍
+series1.setAll({
+  snapTooltip: true // 使工具提示對齊最近的點
+});
 
   series1.data.setAll(data);
 
-chart.set("scrollbarX", am5.Scrollbar.new(root, {
-  orientation: "horizontal",
-  minHeight: 3
-}));
+
+// chart.set("scrollbarX", am5.Scrollbar.new(root, {
+//   orientation: "horizontal",
+//   minHeight: 3,
+  
+// }));
 
   //設定點點樣式
   series1.bullets.push(function() {
@@ -673,12 +721,13 @@ chart.set("scrollbarX", am5.Scrollbar.new(root, {
   //設定線上框框的圖式--start
   let tooltip = am5.Tooltip.new(root, {
     getFillFromSprite: false,
-    labelText: "NT.{price}"
+    labelText: "{date.formatDate('yyyy年MM月dd日')}\nNT.{price}",
+
   });
 
   tooltip.get("background").setAll({
     fill: am5.color(0xFFFFFF),
-    fillOpacity: 1
+    fillOpacity: 1,
   });
   series1.set("tooltip", tooltip);
   //設定線上框框的圖式--end
@@ -720,7 +769,7 @@ th, td {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  margin: 10px;
+  /* margin: 10px; */
   /* text-align: left; */
 }
 
@@ -795,4 +844,5 @@ p{
   padding-left: 0;
   padding-right: 0;
 }
+
 </style>

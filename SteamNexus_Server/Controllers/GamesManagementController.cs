@@ -31,11 +31,36 @@ namespace SteamNexus.Areas.Administrator.Controllers
        
         //GameDataTable設定
         [HttpGet("IndexJson")]
-        public JsonResult IndexJson()
+        public async Task<JsonResult> IndexJson()
         {
             return Json(_context.Games);
         }
-      
+
+        //拿取全部遊戲的Tag
+        [HttpGet("AllGameTagData")]
+        public async Task<JsonResult> AllGameTagData()
+        {
+            var tagData = from a in _context.TagGroups
+                          join b in _context.Tags on a.TagId equals b.TagId
+                          select new
+                          {
+                              gameId = a.GameId,
+                              name = b.Name
+                          };
+
+            // 分組並轉換結果
+            var groupedData = tagData
+                              .GroupBy(t => t.gameId)
+                              .Select(g => new
+                              {
+                                  gameId = g.Key,
+                                  tags = g.Select(t => new { Name = t.name }).ToList()
+                              })
+                      .ToList();
+
+            return Json(groupedData);
+        }
+
         [HttpPost("PostCreatPartialToDB")]
         //[ValidateAntiForgeryToken]
         public async Task<string> PostCreatPartialToDB(CreateViewModel Create)
@@ -205,7 +230,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
                                 //_context.Entry(game).State = EntityState.Modified;
                                 _context.Update(game);
                                 _context.PriceHistories.Add(PriceHistory);
-                                //await _context.SaveChangesAsync();
+                                await _context.SaveChangesAsync();
                             }
                             catch (DbUpdateConcurrencyException)
                             {
@@ -276,7 +301,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
                                 //_context.Entry(game).State = EntityState.Modified;
                                 _context.Update(game);
                                 _context.PriceHistories.Add(PriceHistory);
-                                //await _context.SaveChangesAsync();
+                                await _context.SaveChangesAsync();
                             }
                             catch (DbUpdateConcurrencyException)
                             {
@@ -299,7 +324,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
                             PriceHistory.Price = (int)game.OriginalPrice;
                             //_context.Entry(game).State = EntityState.Modified;
                             _context.PriceHistories.Add(PriceHistory);
-                            //await _context.SaveChangesAsync();
+                            await _context.SaveChangesAsync();
                         }
                         catch (DbUpdateConcurrencyException)
                         {
@@ -789,7 +814,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
             return Json(GameTagSameData);
         }
 
-        //(前台)拿取相關遊戲
+        //(前台)拿取最低價
         [HttpGet("GetGamePricelowestData")]
         public async Task<JsonResult> GetGamePricelowestData(int id)
         {
@@ -806,6 +831,31 @@ namespace SteamNexus.Areas.Administrator.Controllers
 
             // 返回 JSON 結果
             return Json(lowestData);
+        }
+
+        //(前台)拿取相關遊戲
+        [HttpGet("GetGamePeopleData")]
+        public async Task<JsonResult> GetGamePeopleData(int id)
+        {
+            var peopleData = _context.PlayersHistories
+                .Where(pc => pc.GameId == id)
+                .OrderByDescending(record => record.Date)
+                .Select(group => new
+                {
+                    Date = group.Date,
+                    Players = group.Players
+                }).FirstOrDefault();
+
+
+            // 返回 JSON 結果
+            return Json(peopleData);
+        }
+
+        //GameDataTable設定
+        [HttpGet("TagsData")]
+        public async Task<JsonResult> TagsData()
+        {
+            return Json(_context.Tags.Take(20));
         }
     }
 }

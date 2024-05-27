@@ -38,6 +38,7 @@
     "fuse.js": "^7.0.0",
     "jquery": "^3.7.1",
     "jwt-decode": "^4.0.0",
+    "lozad": "^1.16.0",
     "pinia": "^2.1.7",
     "sass": "^1.76.0",
     "simplebar-vue": "^2.3.3",
