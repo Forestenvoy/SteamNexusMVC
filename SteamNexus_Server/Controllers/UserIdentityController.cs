@@ -593,6 +593,7 @@ public class UserIdentityController : ControllerBase
     #endregion
 
 
+    #region EditMember
     [HttpPut("EditMember")]
     public async Task<IActionResult> EditMember([FromForm] EditUserViewModel data)
     {
@@ -672,6 +673,7 @@ public class UserIdentityController : ControllerBase
 
         return Ok("會員資料修改成功");
     }
+    #endregion
 
 
     #region 密碼加密
