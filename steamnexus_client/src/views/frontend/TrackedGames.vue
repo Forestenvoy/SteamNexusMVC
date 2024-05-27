@@ -5,14 +5,13 @@
         <div class="card">
           <div class="face face1">
             <div class="content">
-              <i :class="item.icon"></i>
-              <h3>{{ item.title }}</h3>
+              <img :src="item.imagePath" alt="Game Image" class="img-fluid" />
             </div>
           </div>
           <div class="face face2">
             <div class="content">
-              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-              <a href="#" type="button">取消追蹤</a>
+              <p>{{ item.description }}</p>
+              <a href="#" type="button" @click="untrack(item.gameTrackingId)">取消追蹤</a>
             </div>
           </div>
         </div>
@@ -32,19 +31,48 @@ import axios from 'axios'
 // 從環境變數取得 API BASE URL
 const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
-const items = [
-  { title: 'Windows', icon: 'fab fa-windows' },
-  { title: 'Apple', icon: 'fab fa-apple' },
-  { title: 'Android', icon: 'fab fa-android' },
-  { title: 'Windows', icon: 'fab fa-windows' },
-  { title: 'Apple', icon: 'fab fa-apple' },
-  { title: 'Android', icon: 'fab fa-android' },
-  { title: 'Windows', icon: 'fab fa-windows' },
-  { title: 'Apple', icon: 'fab fa-apple' },
-  { title: 'Android', icon: 'fab fa-android' }
-]
+const items = ref([])
 
-onMounted(() => {})
+//const items = [
+//  {
+//    imagePath: 'https://cdn.cloudflare.steamstatic.com/steam/apps/553850/header.jpg?t=1709666906'
+//  }
+//]
+
+const fetchTrackingList = async () => {
+  try {
+    const response = await axios.get(`${apiUrl}/api/GameTracking/GameTracking`, {
+      headers: {
+        Authorization: `Bearer ${store.token}`
+      }
+    })
+    items.value = response.data
+  } catch (error) {
+    console.error('Error fetching tracking list:', error)
+  }
+}
+
+const untrack = async (gameTrackingId) => {
+  try {
+    await axios.post(
+      `${apiUrl}/api/GameTracking/Untrack`,
+      { gameTrackingId },
+      {
+        headers: {
+          Authorization: `Bearer ${store.token}`
+        }
+      }
+    )
+    // 成功後重新獲取追蹤清單
+    fetchTrackingList()
+  } catch (error) {
+    console.error('Error untracking game:', error)
+  }
+}
+
+onMounted(() => {
+  fetchTrackingList()
+})
 </script>
 
 <style scoped>
@@ -84,15 +112,15 @@ onMounted(() => {})
 
 .card:hover .face1 {
   transform: translateY(0);
-  box-shadow:
-    inset 0 0 60px whitesmoke,
-    inset 20px 0 80px #f0f,
-    inset -20px 0 80px #0ff,
-    inset 20px 0 300px #f0f,
-    inset -20px 0 300px #0ff,
-    /* 0 0 50px #fff, */
-    /* -10px 0 80px #f0f, */
-    /* 10px 0 80px #0ff; */
+  box-shadow:;
+  /* inset 0 0 60px whitesmoke, */
+  /* inset 20px 0 80px #f0f, */
+  /* inset -20px 0 80px #0ff, */
+  /* inset 20px 0 300px #f0f, */
+  /* inset -20px 0 300px #0ff; */
+  /* 0 0 50px #fff, */
+  /* -10px 0 80px #f0f, */
+  /* 10px 0 80px #0ff; */
 }
 
 .face1 .content {

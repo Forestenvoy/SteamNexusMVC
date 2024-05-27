@@ -321,7 +321,7 @@ const submitLogin = () => {
       return axios.post(`${apiUrl}/api/UserIdentity/JwtLogin`, loginData)
     })
     .then((response) => {
-      console.log('Response received:', response)
+      console.log('IdentityModal:', response)
 
       // 檢查回應狀態和數據
       if (response.status === 200 && response.data.token) {

@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using SteamNexus_Server.Data;
 using SteamNexus_Server.Migrations;
 using SteamNexus_Server.Models;
+using System.Security.Claims;
 
 namespace SteamNexus_Server.Controllers
 {
@@ -23,7 +24,7 @@ namespace SteamNexus_Server.Controllers
 
         #region TrackingData
         [HttpGet("GameTracking")]
-        public async Task<IActionResult> GameTracking()
+        public async Task<IActionResult> GetTrackingList()
         {
             var result = await _application.GameTrackings
                 .Join(_application.Users,
@@ -66,6 +67,23 @@ namespace SteamNexus_Server.Controllers
         }
         #endregion
 
+
+        #region 取消追蹤
+        [HttpPost("Untrack")]
+        public async Task<IActionResult> Untrack([FromBody] int GameTrackingId)
+        {
+            var tracking = await _application.GameTrackings.FindAsync(GameTrackingId);
+            if (tracking == null)
+            {
+                return NotFound("未找到追蹤");
+            }
+
+            _application.GameTrackings.Remove(tracking);
+            await _application.SaveChangesAsync();
+
+            return Ok("成功移除追蹤");
+        }
+        #endregion
 
 
     }
