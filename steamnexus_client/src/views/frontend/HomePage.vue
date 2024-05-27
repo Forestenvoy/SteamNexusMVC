@@ -1,6 +1,5 @@
 <template>
   <div class="container p-2">
-    <button @click="test"></button>
     <ad-carousel class="mb-2 mt-3"></ad-carousel>
     <div class="row">
       <div class="col-xl-2 "></div>
@@ -10,7 +9,7 @@
         <div  data-aos="fade-left"  data-aos-duration="500">
           <Carousel  :items-to-show="5">
           <Slide v-for="slide in tags" :key="slide">
-      <div class="carousel__item d-flex align-items-end p-3 fs-3" :style="`background-image: linear-gradient(to bottom, rgba(0, 0, 0,0)50%, rgba(0, 0, 0, 1) 80% ),url(${slide.img});background-size: cover;background-position: center;`" @click="tagClick(slide.tagId,slide.name)" ><span style="">{{ slide.name }}</span></div>
+      <div class="carousel__item d-flex align-items-end p-3 fs-3" :style="`background-image: linear-gradient(to bottom, rgba(0, 0, 0,0)50%, rgba(0, 0, 0, 1) 80% ),url(${slide.img});background-size: cover;background-position: center;`"  @mousedown="holdDown" @mouseup="holdUp(slide.tagId,slide.name)"><span style="">{{ slide.name }}</span></div>
     </Slide>
 
           <template #addons>
@@ -131,8 +130,23 @@ var tags=ref([{"img":"https://img.freepik.com/free-photo/man-neon-suit-sits-chai
 
 const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
-function tagClick(tagId,name){
-  btnopen.value=true
+var timeStart=ref("")
+var timeEnd=ref("")
+
+function getTimeNow() {
+    var now = new Date();
+    return now.getTime();
+}
+
+function holdDown(){
+  timeStart.value = getTimeNow();
+}
+
+function holdUp(tagId,name) {
+  timeEnd.value = getTimeNow();
+  //如果此時檢測到的時間與第一次獲取的時間差有1000毫秒
+  if (timeEnd.value - timeStart.value < 100) {
+      btnopen.value=true
   hotTitle.value=`${name}相關遊戲`
   gameCount=-1
   fetch(`${apiUrl}/api/GamesManagement/GetGameSameData?tagId=${tagId}`, {
@@ -160,7 +174,42 @@ function tagClick(tagId,name){
     .catch((error) => {
       alert(error)
     })
+      console.log(timeStart.value);
+      console.log(timeEnd.value);
+      
+  }
 }
+
+// function tagClick(tagId,name){
+//   btnopen.value=true
+//   hotTitle.value=`${name}相關遊戲`
+//   gameCount=-1
+//   fetch(`${apiUrl}/api/GamesManagement/GetGameSameData?tagId=${tagId}`, {
+//     method: 'GET'
+//   })
+//     .then((response) => {
+//       // 確保請求是否成功
+//       if (!response.ok) {
+//         throw new Error('Network response was not ok')
+//       }
+      
+//       // 解析 html
+//       return response.json()
+//     })
+//     .then((val) => {
+//         gameLozad.value=[]
+//   gameData.value=[]
+//       gameData.value=val
+//       console.log(gameData.value);
+//     })
+//     .then(() => {
+//       loadMoreGames();
+//       console.log(gameData.value);
+//     })
+//     .catch((error) => {
+//       alert(error)
+//     })
+// }
 
 function hotClick(){
   btnopen.value=false
