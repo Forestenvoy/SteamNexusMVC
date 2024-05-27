@@ -5,6 +5,7 @@ using SteamNexus_Server.Data;
 using SteamNexus_Server.Models;
 using SteamNexus_Server.Dtos;
 using Microsoft.EntityFrameworkCore;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 
 namespace SteamNexus_Server.Controllers;
@@ -86,7 +87,7 @@ public class PcBuilderController : ControllerBase
     }
 
     // 回傳產品資料 RAM
-    // GET: api/PcBuilder
+    // GET: api/PcBuilder/GetRAMData
     [HttpGet("GetRAMData")]
     public ActionResult<IEnumerable<ProductDto>> GetRAMData()
     {
@@ -136,4 +137,101 @@ public class PcBuilderController : ControllerBase
 
     }
 
+    // 計算比例需求資料
+    public class RatioDataDto
+    {
+        // CPU 產品 ID
+        public int pCpuId { get; set; }
+        // GPU 產品 ID
+        public int pGpuId { get; set; }
+        // RAM 產品 ID
+        public int pRamId { get; set; }
+    }
+    // 遊戲比例
+    public class GameRatioDto
+    {
+        // 滿足最低配備的比例
+        public int min { get; set; }
+
+        // 滿足建議配備的比例
+        public int rec { get; set; }
+    }
+
+    // 計算遊戲比例
+    [HttpPost("calculateRatio")]
+    public ActionResult<GameRatioDto> calculateRatio([FromBody] RatioDataDto data)
+    {
+        // 如果驗證合法
+        if (ModelState.IsValid)
+        {
+            try
+            {
+                // 取得 CPU 跑分 joint CPU 跑分
+                int? cpuScore = _context.ProductCPUs
+                    .Join(_context.CPUs,
+                          pc => pc.CPUId,
+                          c => c.CPUId,
+                          (pc, c) => new { pc, c })
+                    .FirstOrDefault(joined => joined.pc.ProductInformationId == data.pCpuId)
+                    ?.c.Score;
+                if (cpuScore == null)
+                {
+                    return NotFound("CPU Data not found.");
+                }
+                // 取得 GPU 跑分 joint GPU 跑分
+                int? gpuScore = _context.ProductGPUs
+                    .Join(_context.GPUs,
+                          pg => pg.GPUId,
+                          g => g.GPUId,
+                          (pg, g) => new { pg, g })
+                    .FirstOrDefault(joined => joined.pg.ProductInformationId == data.pGpuId)
+                    ?.g.Score;
+                if (gpuScore == null)
+                {
+                    return NotFound("GPU Data not found.");
+                }
+                // 取得 RAM 容量
+                int? ramSize = _context.ProductRAMs
+                    .FirstOrDefault(p => p.ProductInformationId == data.pRamId)
+                    ?.Size;
+                if (ramSize == null)
+                {
+                    return NotFound("RAM Data not found.");
+                }
+
+                // 計算可玩的最低配備遊戲數量
+                var result = _context.MinimumRequirements.Where(mr => mr.CPU.Score <= cpuScore && mr.GPU.Score <= gpuScore && mr.RAM <= ramSize);
+                double minRatio = ((double)result.Count()/_context.MinimumRequirements.Count()) * 100;
+                // 無條件捨去
+                int minRatioRoundedDown = (int)Math.Floor(minRatio);
+                // 計算可玩的建議配備遊戲數量
+                var result2 = _context.RecommendedRequirements.Where(mr => mr.CPU.Score <= cpuScore && mr.GPU.Score <= gpuScore && mr.RAM <= ramSize);
+                double recRatio = ((double)result2.Count() / _context.RecommendedRequirements.Count()) * 100;
+                // 無條件捨去
+                int recRatioRoundedDown = (int)Math.Floor(recRatio);
+
+                // 回傳比例需求資料
+                var gameRatioDto = new GameRatioDto
+                {
+                    min = minRatioRoundedDown,
+                    rec = recRatioRoundedDown
+                };
+
+                return Ok(gameRatioDto);
+            }
+            catch (Exception error)
+            {
+                // 未來考慮引用日誌框架如 Serilog 記錄異常 
+                Console.WriteLine(error.Message);
+
+                // 未來考慮引用中介軟體 RequestDelegate 做 例外處理
+                return StatusCode(500, "An internal server error occurred. Please try again later.");
+            }
+        }
+        else
+        {
+            // 返回 400 狀態碼 ~ 驗證不合法，同時回傳 ErrorMessage
+            return BadRequest("Date Error !");
+        }
+    }
 }
