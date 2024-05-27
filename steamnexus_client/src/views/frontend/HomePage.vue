@@ -21,7 +21,11 @@
        
         <!-- carousel -->
         <div v-if="gameLozad.value!=[]">
-        <span class="fs-2 text-center d-block mb-2">{{hotTitle}}</span>
+        <div class=" mb-2 videoFather">
+          <span class="fs-2 text-center d-block">{{hotTitle}}</span>
+          <button v-if="btnopen==true" class="videoKid fs-6 translate-middle px-2 rounded btn" style="background-color: rgba(0, 0, 0, 0);border: 1px solid white ;top:50%;right: -50px;" @click="hotClick">回到熱門排行</button>
+        </div>
+        
           <div v-for="game in gameLozad" :key="game.gameId" class="mb-2 videoFather rounded " style="background-color: #0f1c27;" @mouseover="showPopup(game.gameId)" @mouseleave="hidePopup">
             <div v-if="isPopupVisible==game.gameId" style="background-color:#2A3741;z-index: 2;width: 30%;" class="videoKid p-3 rounded" @mouseover="showPopup(game.gameId)">
                     <video v-if="game.videoPath!=''" :src="game.videoPath" autoplay class="" style="width: 100%;"></video>
@@ -93,7 +97,7 @@ function hidePopup(){
   
   isPopupVisible.value=null
 }
-
+var btnopen=ref(false)
 var hotTitle=ref("熱門遊戲")
 var gameData=ref([])
 var gameLozad=ref([])
@@ -128,6 +132,7 @@ var tags=ref([{"img":"https://img.freepik.com/free-photo/man-neon-suit-sits-chai
 const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
 function tagClick(tagId,name){
+  btnopen.value=true
   hotTitle.value=`${name}相關遊戲`
   gameCount=-1
   fetch(`${apiUrl}/api/GamesManagement/GetGameSameData?tagId=${tagId}`, {
@@ -157,6 +162,13 @@ function tagClick(tagId,name){
     })
 }
 
+function hotClick(){
+  btnopen.value=false
+  hotTitle.value=`熱門排行`
+  gameCount=-1
+  GetGameData();
+}
+
 function bb(a,b){
   return Math.round((1-(b/a))*100)
 }
@@ -174,6 +186,8 @@ function GetGameData(){
       return response.json()
     })
     .then((val) => {
+      gameLozad.value=[]
+  gameData.value=[]
       gameData.value=val
       isGameDataLoaded.value = true;
       console.log(gameData.value);
@@ -286,6 +300,10 @@ io.observe(loadingElement);
 });
 </script>
 <style>
+.btn:hover{
+  background-color: rgba(255, 255 , 255, 0.6) !important;
+  color: black ;
+}
 .videoFather{
   position: relative;
 }
