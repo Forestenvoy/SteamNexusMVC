@@ -30,6 +30,7 @@ import axios from 'axios'
 
 // 從環境變數取得 API BASE URL
 const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
+const token = ''
 
 const items = ref([])
 
@@ -39,38 +40,59 @@ const items = ref([])
 //  }
 //]
 
+//取得全部追蹤列表
+// const TrackingList = async () => {
+//   const token = store.getToken
+//   console.log('JWT Token:', token) // 輸出 JWT Token
+//   try {
+//     const response = await axios.get(`${apiUrl}/api/GameTracking/GameTracking`, {
+//       headers: {
+//         Authorization: `Bearer ${store.token}`
+//       }
+//     })
+//     items.value = response.data
+//   } catch (error) {
+//     console.error('Error fetching tracking list:', error)
+//   }
+// }
+
+//取得會員追蹤列表
 const fetchTrackingList = async () => {
+  const token = store.getToken
+  console.log('JWT Token:', token) // 輸出 JWT Token
+
+  axios
+    .get(`${apiUrl}/api/GameTracking/GameTrackForId`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    })
+    .then((response) => {
+      console.log('Tracking Data:', response.data) // 輸出追蹤數據
+      items.value = response.data
+    })
+    .catch((error) => {
+      console.error('Failed to fetch tracking data:', error)
+    })
+}
+
+//取消追蹤
+const untrack = async (gameTrackingId) => {
   try {
-    const response = await axios.get(`${apiUrl}/api/GameTracking/GameTracking`, {
+    await axios.post(`${apiUrl}/api/GameTracking/Untrack`, gameTrackingId, {
       headers: {
         Authorization: `Bearer ${store.token}`
       }
     })
-    items.value = response.data
-  } catch (error) {
-    console.error('Error fetching tracking list:', error)
-  }
-}
-
-const untrack = async (gameTrackingId) => {
-  try {
-    await axios.post(
-      `${apiUrl}/api/GameTracking/Untrack`,
-      { gameTrackingId },
-      {
-        headers: {
-          Authorization: `Bearer ${store.token}`
-        }
-      }
-    )
-    // 成功後重新獲取追蹤清單
-    fetchTrackingList()
+    items.value = items.value.filter((item) => item.gameTrackingId !== gameTrackingId)
   } catch (error) {
     console.error('Error untracking game:', error)
   }
 }
 
 onMounted(() => {
+  // TrackingList()
   fetchTrackingList()
 })
 </script>
