@@ -16,5 +16,9 @@ export default defineConfig({
     // 小於 4KB 的資源將內聯為 base64
     assetsInlineLimit: 4096,
     chunkSizeWarningLimit: 1500
+  },
+  esbuild: {
+    pure: ['console.log'],
+    drop: ['debugger']
   }
 })

@@ -28,6 +28,7 @@
               class="delete d-flex justify-content-center align-items-center"
               :data-id="product.id"
               @click="deleteProduct"
+              v-if="builderStore.getMode == 'build'"
             >
               ✘
             </button>
@@ -60,7 +61,7 @@
         </CCol>
       </CRow>
       <!-- 可玩遊戲比例核對 -->
-      <CRow class="position-relative w-100">
+      <CRow class="position-relative w-100" v-if="builderStore.getMode == 'build'">
         <CCol xs="12" class="d-flex justify-content-center">
           <button class="match" @click="matchGame">
             Match
@@ -235,6 +236,9 @@ import { CContainer, CRow, CCol } from '@coreui/vue'
 import { useBuilderStore } from '@/stores/builder.js'
 const builderStore = useBuilderStore()
 
+// API URL
+const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
+
 // 檢驗
 let check = ref(false)
 
@@ -266,7 +270,40 @@ const matchGame = () => {
     return
   }
   // 遊戲核對
-  builderStore.showMatch()
+  calculateRatio()
+}
+
+// 發送產品ID 計算遊戲匹配比例
+const calculateRatio = async () => {
+  // post
+  await fetch(`${apiUrl}/api/PcBuilder/CalculateRatio`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      pCpuId: builderStore.getCPUId,
+      pGpuId: builderStore.getGPUId,
+      pRamId: builderStore.getRAMId
+    })
+  })
+    .then((response) => {
+      if (!response.ok) {
+        return response.text().then((errorMessage) => {
+          throw new Error(errorMessage)
+        })
+      }
+      return response.json()
+    })
+    .then((data) => {
+      console.log(data)
+      builderStore.setMinRatio(data.min)
+      builderStore.setRecRatio(data.rec)
+      builderStore.showMatch()
+    })
+    .catch((error) => {
+      console.error('Error:', error.message)
+    })
 }
 </script>
 

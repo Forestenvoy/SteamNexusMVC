@@ -8,16 +8,85 @@
       <div class="details">
         <h2>$ {{ props.menu.totalPrice }}</h2>
         <h3>{{ props.menu.name }}</h3>
-        <a href="#">Read More</a>
+        <a href="#" @click.prevent="showProductList">觀看更多</a>
       </div>
     </div>
   </div>
 </template>
+
 <script setup>
+// pinia
+import { useBuilderStore } from '@/stores/builder.js'
+const builderStore = useBuilderStore()
+
+// API URL
+const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
+
 const props = defineProps({
   menu: Object
 })
+
+// 展開產品清單
+const showProductList = () => {
+  getProductList()
+}
+
+// 獲取菜單產品資料
+const getProductList = async () => {
+  await fetch(`${apiUrl}/api/PcBuilder/GetProductList?menuId=${props.menu.id}`, {
+    method: 'GET'
+  })
+    .then((response) => {
+      if (!response.ok) {
+        return response.text().then((errorMessage) => {
+          throw new Error(errorMessage)
+        })
+      }
+      return response.json()
+    })
+    .then((data) => {
+      builderStore.setProductList(data)
+      calculateRatio()
+    })
+    .catch((error) => {
+      console.error('Error:', error.message)
+    })
+}
+
+// 發送產品ID 計算遊戲匹配比例
+const calculateRatio = async () => {
+  // post
+  await fetch(`${apiUrl}/api/PcBuilder/CalculateRatio`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      pCpuId: builderStore.getCPUId,
+      pGpuId: builderStore.getGPUId,
+      pRamId: builderStore.getRAMId
+    })
+  })
+    .then((response) => {
+      if (!response.ok) {
+        return response.text().then((errorMessage) => {
+          throw new Error(errorMessage)
+        })
+      }
+      return response.json()
+    })
+    .then((data) => {
+      console.log(data)
+      builderStore.setMinRatio(data.min)
+      builderStore.setRecRatio(data.rec)
+      builderStore.showMatch()
+    })
+    .catch((error) => {
+      console.error('Error:', error.message)
+    })
+}
 </script>
+
 <style scoped>
 * {
   margin: 0;
@@ -34,7 +103,7 @@ const props = defineProps({
   transition: 0.5s;
 }
 
-.menu:hover {
+.menu {
   height: 450px;
 }
 
@@ -59,7 +128,7 @@ const props = defineProps({
   animation-play-state: paused;
 }
 
-.menu:hover .lines::before {
+.menu .lines::before {
   animation-play-state: running;
 }
 
@@ -98,7 +167,7 @@ const props = defineProps({
   align-items: center;
 }
 
-.menu:hover .imageBox {
+.menu .imageBox {
   top: 25px;
   width: 200px;
   height: 200px;
@@ -117,7 +186,7 @@ const props = defineProps({
   animation-play-state: paused;
 }
 
-.menu:hover .imageBox::before {
+.menu .imageBox::before {
   animation-play-state: running;
 }
 
@@ -147,7 +216,7 @@ img {
   transition: 0.5s;
 }
 
-.menu:hover img {
+.menu img {
   opacity: 1;
 }
 
@@ -170,7 +239,7 @@ img {
   transform: translateY(145px);
 }
 
-.menu:hover .details {
+.menu .details {
   transform: translateY(0);
 }
 
@@ -201,8 +270,8 @@ a {
   margin-bottom: 10px;
 }
 
-.menu:hover h3,
-.menu:hover a {
+.menu h3,
+.menu a {
   opacity: 1;
 }
 </style>

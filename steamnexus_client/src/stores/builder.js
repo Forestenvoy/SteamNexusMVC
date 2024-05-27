@@ -2,6 +2,20 @@ import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 
 export const useBuilderStore = defineStore('builder', () => {
+  // 模式
+  // state
+  const mode = ref('build')
+  // getter
+  const getMode = computed(() => mode.value)
+  // action
+  const setMode = (value) => {
+    if (typeof value === 'string') {
+      mode.value = value
+    } else {
+      console.warn('Invalid Mode value')
+    }
+  }
+
   // 階段
   // state
   const currentStep = ref(0)
@@ -29,6 +43,10 @@ export const useBuilderStore = defineStore('builder', () => {
   // getter
   const getProductList = computed(() => productList.value)
   // action
+  // 提供清單
+  const setProductList = (value) => {
+    productList.value = value
+  }
   // 加入產品
   const addProduct = (type, product) => {
     // 關閉遊戲匹配系統
@@ -87,6 +105,30 @@ export const useBuilderStore = defineStore('builder', () => {
     return total
   })
 
+  // CPUId
+  // getter
+  const getCPUId = computed(() => {
+    const id = Number(productList.value.find((p) => p.type === 'CPU').id)
+    if (id) return id
+    else return 0
+  })
+
+  // GPUId
+  // getter
+  const getGPUId = computed(() => {
+    const id = Number(productList.value.find((p) => p.type === 'GPU').id)
+    if (id) return id
+    else return 0
+  })
+
+  // RAMId
+  // getter
+  const getRAMId = computed(() => {
+    const id = Number(productList.value.find((p) => p.type === 'RAM').id)
+    if (id) return id
+    else return 0
+  })
+
   // CPU 腳位
   // state
   const socket = ref('')
@@ -107,6 +149,24 @@ export const useBuilderStore = defineStore('builder', () => {
     memory.value = value
   }
 
+  // 最低配備比例
+  // state
+  const minRatio = ref(0)
+  // getter
+  const getMinRatio = computed(() => minRatio.value)
+  // action
+  const setMinRatio = (value) => {
+    minRatio.value = value
+  }
+
+  // 建議配備比例
+  const recRatio = ref(0)
+  // getter
+  const getRecRatio = computed(() => recRatio.value)
+  // action
+  const setRecRatio = (value) => {
+    recRatio.value = value
+  }
   // 顯示遊戲匹配系統
   // state
   const showMatchSystem = ref(false)
@@ -114,28 +174,49 @@ export const useBuilderStore = defineStore('builder', () => {
   const isShowMatchSystem = computed(() => showMatchSystem.value)
   // action
   const showMatch = () => {
+    // 開啟遊戲匹配系統
     showMatchSystem.value = true
   }
   const hideMatch = () => {
+    // 關閉遊戲匹配系統
     showMatchSystem.value = false
+    minRatio.value = 0
+    recRatio.value = 0
   }
 
+  // 清空產品清單
+  const clearProductList = () => {
+    productList.value = []
+  }
+
+
   return {
+    getMode,
+    setMode,
     getCurrentStep,
     setCurrentStep,
     prev,
     next,
     getProductList,
+    setProductList,
     addProduct,
     removeProduct,
     totalWattage,
     totalPrice,
+    getCPUId,
+    getGPUId,
+    getRAMId,
     getSocket,
     setSocket,
     getMemory,
     setMemory,
+    getMinRatio,
+    setMinRatio,
+    getRecRatio,
+    setRecRatio,
     isShowMatchSystem,
     showMatch,
-    hideMatch
+    hideMatch,
+    clearProductList
   }
 })

@@ -66,6 +66,10 @@ onMounted(() => {
   margin-top: 0;
   padding: 80px 0 0 0;
   height: 85vh;
+  background-image: url('@/assets/images/builder/banner-bg.jpg');
+  background-position: top center;
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 
 .banner h1 {
