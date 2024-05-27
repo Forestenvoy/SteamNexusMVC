@@ -26,7 +26,7 @@
                     <span class="fs-4 d-flex justify-content-center align-items-center" v-else style="background-color: black;height: 150px;text-align: center;"><span>未提供遊戲影片</span></span>
                     <span class="fs-4 nowrap d-block">{{game.name}}</span>
                     <div>
-          <img  :src="game.ageRating=='18+'?'https://www.gamerating.org.tw/Content/img/index_icon_05.jpg':AgeRating=='15+'?'https://www.gamerating.org.tw/Content/img/index_icon_04.jpg':AgeRating=='12+'?'https://www.gamerating.org.tw/Content/img/index_icon_03.jpg':AgeRating=='6+'?'https://www.gamerating.org.tw/Content/img/index_icon_02.jpg':'https://www.gamerating.org.tw/Content/img/index_icon_01.jpg'" alt="" class="m-1" style="width: 20%;"><span class="fs-6">遊戲分級： {{game.ageRating}}</span>
+          <img  :src="game.ageRating=='18+'?'https://www.gamerating.org.tw/Content/img/index_icon_05.jpg':game.ageRating=='15+'?'https://www.gamerating.org.tw/Content/img/index_icon_04.jpg':game.ageRating=='12+'?'https://www.gamerating.org.tw/Content/img/index_icon_03.jpg':game.ageRating=='6+'?'https://www.gamerating.org.tw/Content/img/index_icon_02.jpg':'https://www.gamerating.org.tw/Content/img/index_icon_01.jpg'" alt="" class="m-1" style="width: 20%;"><span class="fs-6">遊戲分級： {{game.ageRating}}</span>
         </div>
                     <span class="fs-6">{{game.description}}</span>
                 </div>
