@@ -857,6 +857,23 @@ namespace SteamNexus.Areas.Administrator.Controllers
         {
             return Json(_context.Tags.Take(20));
         }
+
+        //(首頁)用標籤拿取相關遊戲
+        [HttpGet("GetGameSameData")]
+        public async Task<JsonResult> GetGameSameData(int tagId)
+        {
+            var GetGameSameeData = await _context.TagGroups
+                .Where(pc => pc.TagId == tagId)
+                .Select(ph => ph.GameId).ToListAsync();
+
+            var gameTagMatches = await _context.Games
+                                              .Where(tg => GetGameSameeData.Contains(tg.GameId))
+                                              .ToListAsync();
+
+
+            // 返回 JSON 結果
+            return Json(gameTagMatches);
+        }
     }
 }
 
