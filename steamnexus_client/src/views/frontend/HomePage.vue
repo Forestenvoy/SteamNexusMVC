@@ -428,6 +428,7 @@ function TagsData() {
     })
 }
 
+
 const loadMoreGames = () => {
   console.log(gameLozad.value)
   for (let i = 0; i < 20; i++) {
