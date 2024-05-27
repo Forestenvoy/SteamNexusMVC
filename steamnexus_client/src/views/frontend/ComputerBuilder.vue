@@ -1,6 +1,8 @@
 <template>
   <!-- 英雄橫幅旗幟 -->
   <hero-banner></hero-banner>
+  <!-- 子系統切換 -->
+  <switch-mode></switch-mode>
   <!-- 組裝之旅 -->
   <build-journey></build-journey>
   <!-- 菜單系統 -->
@@ -27,6 +29,7 @@ const builderStore = useBuilderStore()
 
 // 頁面元件
 import HeroBanner from '@/components/frontend/pcbuilder/HeroBanner.vue'
+import SwitchMode from '@/components/frontend/pcbuilder/SwitchMode.vue'
 import BuildJourney from '@/components/frontend/pcbuilder/BuildJourney.vue'
 // import MenuSlider from '@/components/frontend/pcbuilder/MenuSlider.vue'
 import ProductList from '@/components/frontend/pcbuilder/ProductList.vue'
