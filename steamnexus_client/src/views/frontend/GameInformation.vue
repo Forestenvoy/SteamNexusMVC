@@ -177,8 +177,10 @@
         <div  data-aos="fade-left"  data-aos-duration="500">
           <Carousel  :items-to-show="4" class="ms-2">
           <Slide class="slide" v-for="slide in TagSamegamesName" :key="slide">
-            <div class="carousel__item">
-              <img width=" 100%" :src="slide.imagePath" alt="">
+             <a  class="carousel__item" style="text-decoration:none;" @mousedown="holdDown" @mouseup="holdUp(slide.gameId)">
+            <div >
+             
+                <img width=" 100%" :src="slide.imagePath" alt="">
               <p height= 45px class="fs-7 nowrap">{{slide.name}}</p>
               <div v-if="slide.originalPrice!=slide.currentPrice">
                 <p class="fs-6 text-decoration-line-through d-inline text-danger">NT.{{slide.originalPrice}}</p>
@@ -187,8 +189,10 @@
               <div v-else>
                  <p  class="fs-6">{{slide.currentPrice==0?"免費":"NT."+ slide.currentPrice}}</p>
               </div>
+              
+              
              
-            </div>
+            </div></a>
           </Slide>
           <template #addons>
             <Navigation class="text-danger fw-bold" />
@@ -265,11 +269,11 @@ var TagSamegamesName=ref([])
 var loveclick=ref("")
 var PricelowestData=ref("")
 var playerData=ref("")
+// var slideUrl=ref("")
 
 import { Carousel, Navigation, Slide } from 'vue3-carousel'
 import 'vue3-carousel/dist/carousel.css'
 defineComponent({
-  name: 'Breakpoints',
   components: {
     Carousel,
     Slide,
@@ -283,6 +287,28 @@ defineComponent({
     },
   }),
 })
+var timeStart=ref("")
+var timeEnd=ref("")
+
+function getTimeNow() {
+    var now = new Date();
+    return now.getTime();
+}
+
+function holdDown(){
+  timeStart.value = getTimeNow();
+}
+
+function holdUp(id) {
+  timeEnd.value = getTimeNow();
+  //如果此時檢測到的時間與第一次獲取的時間差有1000毫秒
+  if (timeEnd.value - timeStart.value < 100) {
+      location.href=`http://localhost:5173/game/${id}`;
+      console.log(timeStart.value);
+      console.log(timeEnd.value);
+      
+  }
+}
 
 var ImageBackground=reactive({
   'background-size': 'cover',
@@ -349,10 +375,6 @@ function getData(){
     .catch((error) => {
       alert(error)
     })
-    .finally(() => {
-      // 异步操作完成后启用按钮
-      $(this).prop('disabled', false)
-    })
 }
 
 function GetTagGroup(){
@@ -372,16 +394,12 @@ function GetTagGroup(){
       for (var i = 0; i < 5; i++){
         tagData.value.push(val[i])
       }
-      for (var i = 0; i < val.length; i++){
-        tagDataOpen.value.push(val[i])
+      for (var s = 0; s < val.length; s++){
+        tagDataOpen.value.push(val[s])
       }
     })
     .catch((error) => {
       alert(error)
-    })
-    .finally(() => {
-      // 异步操作完成后启用按钮
-      $(this).prop('disabled', false)
     })
 }
 
@@ -404,10 +422,6 @@ function GetLanguageGroup(){
     })
     .catch((error) => {
       alert(error)
-    })
-    .finally(() => {
-      // 异步操作完成后启用按钮
-      $(this).prop('disabled', false)
     })
 }
 
@@ -441,10 +455,6 @@ function getMinReqData(){
     .catch((error) => {
       alert(error)
     })
-    .finally(() => {
-      // 异步操作完成后启用按钮
-      $(this).prop('disabled', false)
-    })
 }
 
 function getRecReqData(){
@@ -477,12 +487,7 @@ function getRecReqData(){
     .catch((error) => {
       alert(error)
     })
-    .finally(() => {
-      // 异步操作完成后启用按钮
-      $(this).prop('disabled', false)
-    })
-}
-
+  }
 function GetGameTagSameData(){
   fetch(`${apiUrl}/api/GamesManagement/GetGameTagSameData?id=${props.gameId}`, {
     method: 'GET'
@@ -499,6 +504,7 @@ function GetGameTagSameData(){
       console.log(val);
       for (var i = 0; i < val.length; i++){
         TagSamegamesName.value.push({
+        gameId:val[i].gameId,
         name: val[i].name,
         imagePath: val[i].imagePath,
         originalPrice:val[i].originalPrice,
@@ -510,10 +516,6 @@ function GetGameTagSameData(){
     })
     .catch((error) => {
       alert(error)
-    })
-    .finally(() => {
-      // 异步操作完成后启用按钮
-      $(this).prop('disabled', false)
     })
 }
 
@@ -536,10 +538,6 @@ function GetGamePricelowestData(){
     .catch((error) => {
       alert(error)
     })
-    .finally(() => {
-      // 异步操作完成后启用按钮
-      $(this).prop('disabled', false)
-    })
 }
 function GetGamePeopleData(){
   fetch(`${apiUrl}/api/GamesManagement/GetGamePeopleData?id=${props.gameId}`, {
@@ -559,10 +557,6 @@ function GetGamePeopleData(){
     })
     .catch((error) => {
       alert(error)
-    })
-    .finally(() => {
-      // 异步操作完成后启用按钮
-      $(this).prop('disabled', false)
     })
 }
 

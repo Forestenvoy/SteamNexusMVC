@@ -220,6 +220,7 @@ label div:nth-child(2) {
   position: relative;
   letter-spacing: 2px;
   transition: 0.6s;
+    background-color: rgba(255 , 255, 255,0);
 }
 
 .brand-img {
@@ -239,6 +240,8 @@ label div:nth-child(2) {
 .sticky .brand-title {
   color: #000;
 }
+
+
 
 .navbar-nav {
   position: relative;
