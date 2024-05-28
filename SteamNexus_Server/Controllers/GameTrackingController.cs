@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using SteamNexus_Server.Data;
 using SteamNexus_Server.Migrations;
 using SteamNexus_Server.Models;
+using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
@@ -156,6 +157,56 @@ namespace SteamNexus_Server.Controllers
             }
 
             return Ok(result);
+        }
+        #endregion
+
+
+        #region GameTracking ViewModel
+        public class GameTrackingViewModel
+        {
+            [Required]
+            public int GameId { get; set; }
+        }
+        #endregion
+
+
+        #region AddGameTracking
+        [HttpPost("AddGameTracking")]
+        public async Task<IActionResult> AddGameTracking([FromBody] GameTrackingViewModel data)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            // 取得使用者 ID
+            var userId = GetUserIdFromToken();
+            if (userId == null)
+            {
+                return Unauthorized("無效的使用者憑證或使用者 ID");
+            }
+
+            // 檢查是否已存在相同的追蹤記錄
+            var existingTracking = await _application.GameTrackings
+                .FirstOrDefaultAsync(gt => gt.GameId == data.GameId && gt.UserId == userId);
+
+            if (existingTracking != null)
+            {
+                return Conflict("該遊戲已經在追蹤列表中");
+            }
+
+            // 創建新的遊戲追蹤記錄
+            var gameTracking = new SteamNexus_Server.Models.GameTracking 
+            {
+                GameId = data.GameId,
+                UserId = userId.Value,
+                TrackingDate = DateTime.UtcNow
+            };
+
+            _application.GameTrackings.Add(gameTracking);
+            await _application.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(GetGameTracking), new { id = gameTracking.GameTrackingId }, gameTracking);
         }
         #endregion
 
