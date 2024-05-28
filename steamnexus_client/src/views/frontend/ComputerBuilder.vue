@@ -23,6 +23,9 @@ import 'aos/dist/aos.css'
 // vue 核心模組
 import { computed, onMounted } from 'vue'
 
+// vue router
+import { onBeforeRouteLeave } from 'vue-router'
+
 // pinia
 import { useBuilderStore } from '@/stores/builder.js'
 const builderStore = useBuilderStore()
@@ -47,6 +50,11 @@ const showProductList = computed(() => {
 
 onMounted(() => {
   AOS.init()
+})
+
+onBeforeRouteLeave(() => {
+  builderStore.hideMatch()
+  builderStore.clearProductList()
 })
 </script>
 

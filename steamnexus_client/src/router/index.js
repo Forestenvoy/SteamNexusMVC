@@ -118,7 +118,11 @@ const router = createRouter({
       path: '/:notFound(.*)',
       redirect: '/'
     }
-  ]
+  ],
+  scrollBehavior() {
+    // 始終滾動到頂部
+    return { top: 0 }
+  }
 })
 
 export default router
