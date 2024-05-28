@@ -234,7 +234,7 @@ namespace SteamNexus_Server.Controllers
                     Phone = data.Phone,
                     Gender = data.Gender,
                     Photo = photoPath,
-                    RoleId = 10000
+                    RoleId = 10001
                 });
 
                 await _application.SaveChangesAsync();

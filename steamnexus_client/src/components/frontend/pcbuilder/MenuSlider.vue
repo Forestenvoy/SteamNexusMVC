@@ -131,7 +131,7 @@ onMounted(() => {
   transition: 0.5s;
 }
 
-.menu-slider:hover .swiper {
+.menu-slider .swiper {
   height: 500px;
 }
 

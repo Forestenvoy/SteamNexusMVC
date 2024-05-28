@@ -22,10 +22,9 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy(
         name: MyAllowSpecificOrigins,
-        policy => policy.WithOrigins("http://localhost:5173", "https://www.steamnexus.org").WithMethods("*").WithHeaders("*")
+        policy => policy.WithOrigins("https://www.steamnexus.org" , "http://localhost:5173").WithMethods("*").WithHeaders("*")
     );
 });
-
 
 #region cookie驗證
 
@@ -91,8 +90,7 @@ builder.Services.AddTransient<ScheduledTaskService>();
 
 var app = builder.Build();
 
-// 啟用 wwwroot
-app.UseStaticFiles();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -101,14 +99,19 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// 套用自定義 CORS 設定
-app.UseCors(MyAllowSpecificOrigins);
+
 
 app.UseHttpsRedirection();
+
+// 啟用 wwwroot
+app.UseStaticFiles();
 
 //cookie登入
 app.UseCookiePolicy();
 app.UseAuthentication();
+
+// 套用自定義 CORS 設定
+app.UseCors(MyAllowSpecificOrigins);
 
 app.UseAuthorization();
 

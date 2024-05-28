@@ -22,7 +22,7 @@
           <div class="ratio-card">
             <div class="rating">
               <h2>
-                <span class="counter">{{ valueMin }}</span
+                <span class="counter">{{ startMin }}</span
                 ><span class="percent">%</span>
               </h2>
               <!-- 生成進度條 -->
@@ -33,8 +33,8 @@
                 :style="{
                   transform: `rotate(${i * 3.6}deg)`,
                   animationDelay: `${i / 40}s`,
-                  backgroundColor: i <= progressMin ? '#0f0' : '#4f4d4d', // 根據進度設置顏色
-                  boxShadow: i <= progressMin ? '0 0 15px #0f0' : '0 0 15px #4f4d4d'
+                  backgroundColor: i <= targetMin ? '#0f0' : '#4f4d4d', // 根據進度設置顏色
+                  boxShadow: i <= targetMin ? '0 0 15px #0f0' : '0 0 15px #4f4d4d'
                 }"
               ></div>
             </div>
@@ -45,7 +45,7 @@
           <div class="ratio-card">
             <div class="rating">
               <h2>
-                <span class="counter">{{ valueMax }}</span
+                <span class="counter">{{ startRec }}</span
                 ><span class="percent">%</span>
               </h2>
               <!-- 生成進度條 -->
@@ -56,8 +56,8 @@
                 :style="{
                   transform: `rotate(${i * 3.6}deg)`,
                   animationDelay: `${i / 40}s`,
-                  backgroundColor: i <= progressMax ? '#0f0' : '#4f4d4d', // 根據進度設置顏色
-                  boxShadow: i <= progressMax ? '0 0 15px #0f0' : '0 0 15px #4f4d4d'
+                  backgroundColor: i <= targetRec ? '#0f0' : '#4f4d4d', // 根據進度設置顏色
+                  boxShadow: i <= targetRec ? '0 0 15px #0f0' : '0 0 15px #4f4d4d'
                 }"
               ></div>
             </div>
@@ -74,31 +74,58 @@ import AOS from 'aos'
 import 'aos/dist/aos.css'
 
 // vue
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 
 // Core UI
 import { CContainer, CRow, CCol } from '@coreui/vue'
 
-// 進度條進度
-let progressMin = ref(70)
-let valueMin = ref(0)
-const progressMax = ref(50)
-const valueMax = ref(0)
+// pinia
+import { useBuilderStore } from '@/stores/builder.js'
+const builderStore = useBuilderStore()
+
+// 最低配備 ~ 目標進度值
+let targetMin = ref(0)
+// 最低配備 ~  起始值
+let startMin = ref(0)
+// 建議配備 ~ 目標進度值
+const targetRec = ref(0)
+// 建議配備 ~ 起始值
+const startRec = ref(0)
 
 // 數字特效
 const NumberCounter = (target, counter) => {
   if (counter.value < target) {
     counter.value++
-    setTimeout(() => NumberCounter(target, counter), 25)
+    NumberCounter(target, counter)
   }
 }
+
+// watch 目標進度值
+watch(
+  () => builderStore.getMinRatio,
+  (newValue) => {
+    startMin.value = 0
+    targetMin.value = newValue
+    NumberCounter(targetMin.value, startMin)
+  }
+)
+watch(
+  () => builderStore.getRecRatio,
+  (newValue) => {
+    startRec.value = 0
+    targetRec.value = newValue
+    NumberCounter(targetRec.value, startRec)
+  }
+)
 
 onMounted(() => {
   AOS.init({
     once: true // Animation happens only once
   })
-  NumberCounter(progressMin.value, valueMin)
-  NumberCounter(progressMax.value, valueMax)
+  targetMin.value = builderStore.getMinRatio
+  targetRec.value = builderStore.getRecRatio
+  NumberCounter(targetMin.value, startMin)
+  NumberCounter(targetRec.value, startRec)
 })
 </script>
 
