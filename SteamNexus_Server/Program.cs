@@ -20,10 +20,11 @@ builder.Services.AddSwaggerGen();
 string MyAllowSpecificOrigins = "AllowAny";
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(
-        name: MyAllowSpecificOrigins,
-        policy => policy.WithOrigins("http://localhost:5173", "https://www.steamnexus.org").WithMethods("*").WithHeaders("*")
-    );
+    options.AddPolicy(MyAllowSpecificOrigins,
+                         policy =>
+                         {
+                             policy.WithOrigins("http://www.steamnexus.org");
+                         });
 });
 
 
@@ -85,8 +86,7 @@ builder.Services.AddTransient<CoolPCWebScraping>();
 
 var app = builder.Build();
 
-// 啟用 wwwroot
-app.UseStaticFiles();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -95,14 +95,21 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// 套用自定義 CORS 設定
-app.UseCors(MyAllowSpecificOrigins);
+
 
 app.UseHttpsRedirection();
+
+// 啟用 wwwroot
+app.UseStaticFiles();
 
 //cookie登入
 app.UseCookiePolicy();
 app.UseAuthentication();
+
+// 套用自定義 CORS 設定
+app.UseRouting();
+
+app.UseCors(MyAllowSpecificOrigins);
 
 app.UseAuthorization();
 
