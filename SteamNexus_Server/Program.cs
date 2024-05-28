@@ -20,13 +20,11 @@ builder.Services.AddSwaggerGen();
 string MyAllowSpecificOrigins = "AllowAny";
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(MyAllowSpecificOrigins,
-                         policy =>
-                         {
-                             policy.WithOrigins("http://www.steamnexus.org");
-                         });
+    options.AddPolicy(
+        name: MyAllowSpecificOrigins,
+        policy => policy.WithOrigins("https://www.steamnexus.org" , "http://localhost:5173").WithMethods("*").WithHeaders("*")
+    );
 });
-
 
 #region cookie驗證
 
@@ -107,8 +105,6 @@ app.UseCookiePolicy();
 app.UseAuthentication();
 
 // 套用自定義 CORS 設定
-app.UseRouting();
-
 app.UseCors(MyAllowSpecificOrigins);
 
 app.UseAuthorization();
