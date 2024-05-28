@@ -93,7 +93,8 @@
               <span class="fs-6">{{ game.description }}</span>
             </div>
             <a
-              :href="`http://localhost:5173/game/${game.gameId}`"
+              href="#"
+              @click.prevent="$router.push(`/game/${game.gameId}`)"
               target="_blank"
               class="row m-0 rounded"
               :style="{ backgroundColor: isPopupVisible === game.gameId ? '#2A3741' : '' }"
@@ -428,7 +429,6 @@ function TagsData() {
     })
 }
 
-
 const loadMoreGames = () => {
   console.log(gameLozad.value)
   for (let i = 0; i < 20; i++) {
@@ -469,7 +469,7 @@ onMounted(() => {
   io.observe(loadingElement)
 })
 </script>
-<style>
+<style scoped>
 .btn:hover {
   background-color: rgba(255, 255, 255, 0.6) !important;
   color: black;

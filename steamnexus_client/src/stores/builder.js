@@ -187,8 +187,8 @@ export const useBuilderStore = defineStore('builder', () => {
   // 清空產品清單
   const clearProductList = () => {
     productList.value = []
+    currentStep.value = 0
   }
-
 
   return {
     getMode,
