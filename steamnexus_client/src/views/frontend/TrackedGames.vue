@@ -78,9 +78,21 @@ const fetchTrackingList = async () => {
 }
 
 //取消追蹤
-const untrack = async () => {
+const untrack = async (gameTrackingId) => {
   const token = store.getToken
   console.log('JWT Token:', token) // 輸出 JWT Token
+
+  try {
+    await axios.delete(`${apiUrl}/api/GameTracking/DeleteGameTracking/${gameTrackingId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+    // 更新追蹤列表
+    fetchTrackingList()
+  } catch (error) {
+    console.error('Error untracking game:', error)
+  }
 }
 
 onMounted(() => {
