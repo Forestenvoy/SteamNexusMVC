@@ -420,6 +420,7 @@ function moreclick() {
 //  loveclick.value=false
 //}
 
+//新增遊戲追蹤
 const love = async (gameId) => {
   // 確保 gameId 是一個數字
   // gameId = Number(gameId)
