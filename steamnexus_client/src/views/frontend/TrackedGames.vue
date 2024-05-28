@@ -82,16 +82,23 @@ const untrack = async (gameTrackingId) => {
   const token = store.getToken
   console.log('JWT Token:', token) // 輸出 JWT Token
 
-  try {
-    await axios.delete(`${apiUrl}/api/GameTracking/DeleteGameTracking/${gameTrackingId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    })
-    // 更新追蹤列表
-    fetchTrackingList()
-  } catch (error) {
-    console.error('Error untracking game:', error)
+  // 使用 confirm 方法讓使用者確認是否要取消追蹤
+  const confirmation = confirm('您確定要取消追蹤這個遊戲嗎？')
+
+  if (confirmation) {
+    try {
+      await axios.delete(`${apiUrl}/api/GameTracking/DeleteGameTracking/${gameTrackingId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      // 更新追蹤列表
+      fetchTrackingList()
+    } catch (error) {
+      console.error('Error untracking game:', error)
+    }
+  } else {
+    console.log('取消追蹤操作已取消')
   }
 }
 
