@@ -206,7 +206,18 @@ namespace SteamNexus_Server.Controllers
             _application.GameTrackings.Add(gameTracking);
             await _application.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetGameTracking), new { id = gameTracking.GameTrackingId }, gameTracking);
+            //return CreatedAtAction(nameof(GetGameTracking), new { id = gameTracking.GameTrackingId }, gameTracking);
+            
+            
+            // 記錄成功訊息
+            _logger.LogInformation($"User {userId.Value} successfully added tracking for Game {data.GameId}");
+
+            return CreatedAtAction(nameof(GetGameTracking), new { id = gameTracking.GameTrackingId }, new
+            {
+                Message = "新增遊戲追蹤成功",
+                GameTracking = gameTracking
+            });
+
         }
         #endregion
 
