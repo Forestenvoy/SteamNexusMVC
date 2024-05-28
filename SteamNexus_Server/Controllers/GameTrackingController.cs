@@ -160,20 +160,31 @@ namespace SteamNexus_Server.Controllers
         #endregion
 
 
-        #region 取消追蹤
-        [HttpPost("Untrack")]
-        public async Task<IActionResult> Untrack([FromBody] int GameTrackingId)
+        #region DeleteGameTracking
+        [HttpDelete("DeleteGameTracking/{id}")]
+        public async Task<IActionResult> DeleteGameTracking(int id)
         {
-            var tracking = await _application.GameTrackings.FindAsync(GameTrackingId);
-            if (tracking == null)
+            // 取得使用者 ID
+            var userId = GetUserIdFromToken();
+            if (userId == null)
             {
-                return NotFound("未找到追蹤");
+                return Unauthorized("無效的使用者憑證或使用者 ID");
             }
 
-            _application.GameTrackings.Remove(tracking);
+            // 查找追蹤記錄
+            var gameTracking = await _application.GameTrackings
+                .FirstOrDefaultAsync(gt => gt.GameTrackingId == id && gt.UserId == userId);
+
+            if (gameTracking == null)
+            {
+                return NotFound("未找到對應的遊戲追蹤記錄");
+            }
+
+            // 刪除追蹤記錄
+            _application.GameTrackings.Remove(gameTracking);
             await _application.SaveChangesAsync();
 
-            return Ok("成功移除追蹤");
+            return NoContent(); // 返回 204 No Content 表示成功刪除
         }
         #endregion
 
