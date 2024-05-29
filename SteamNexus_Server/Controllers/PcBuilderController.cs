@@ -327,7 +327,7 @@ public class PcBuilderController : ControllerBase
 
     // 回傳遊戲列表
     [HttpPost("GetGameList")]
-    public ActionResult<IEnumerable<MatchGameDataDto>> GetGameList([FromBody] RatioDataDto data, string mode, int page)
+    public ActionResult<IEnumerable<MatchGameDataDto>> GetGameList([FromBody] RatioDataDto data, string mode, int page ,string? keyword)
     {
         // 如果驗證合法
         if (ModelState.IsValid)
@@ -382,6 +382,7 @@ public class PcBuilderController : ControllerBase
                 {
                     // 計算可玩的最低配備遊戲數量
                     var result = _context.MinimumRequirements.Where(mr => mr.CPU.Score <= cpuScore && mr.GPU.Score <= gpuScore && mr.RAM <= ramSize)
+                        .Where(mr => string.IsNullOrEmpty(keyword) || (mr.Game.Name != null && mr.Game.Name.Contains(keyword)))
                         .OrderBy(g => g.Game.GameId)
                         .Skip(skip)
                         .Take(pageSize)
@@ -399,6 +400,7 @@ public class PcBuilderController : ControllerBase
                 {
                     // 計算可玩的建議配備遊戲數量
                     var result2 = _context.RecommendedRequirements.Where(mr => mr.CPU.Score <= cpuScore && mr.GPU.Score <= gpuScore && mr.RAM <= ramSize)
+                        .Where(mr => string.IsNullOrEmpty(keyword) || (mr.Game.Name != null && mr.Game.Name.Contains(keyword)))
                         .OrderBy(g => g.Game.GameId)
                         .Skip(skip)
                         .Take(pageSize)

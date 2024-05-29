@@ -248,7 +248,7 @@ const openGameListR = () => {
 const getGameList = async () => {
   // post
   await fetch(
-    `${apiUrl}/api/PcBuilder/GetGameList?mode=${builderStore.getRatioMode}&page=${currentPage.value}`,
+    `${apiUrl}/api/PcBuilder/GetGameList?mode=${builderStore.getRatioMode}&page=${currentPage.value}&keyword=${keyword.value}`,
     {
       method: 'POST',
       headers: {
@@ -283,6 +283,7 @@ const filter = () => {
   // 切回至第一頁
   currentPage.value = 1
   reCalculatePage()
+  getGameList()
 }
 
 // 重新計算頁數
