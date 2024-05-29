@@ -12,6 +12,7 @@ using System.Linq;
 using SteamNexus_Server.Dtos.Game;
 using SteamNexus_Server.Services;
 using System.Timers;
+using System;
 
 
 namespace SteamNexus.Areas.Administrator.Controllers
@@ -694,19 +695,39 @@ namespace SteamNexus.Areas.Administrator.Controllers
 
         //(首頁)用標籤拿取相關遊戲
         [HttpGet("GetGameSameData")]
-        public async Task<JsonResult> GetGameSameData(int tagId)
+        public async Task<JsonResult> GetGameSameData(int tagId,int tagNum)
         {
+            int gameNum = 10000 + tagNum;
+
             var GetGameSameeData = await _context.TagGroups
                 .Where(pc => pc.TagId == tagId)
-                .Select(ph => ph.GameId).ToListAsync();
+                .Select(ph => ph.GameId).ToListAsync(); //拿到含有此tagId的gameId
 
-            var gameTagMatches = await _context.Games
-                                              .Where(tg => GetGameSameeData.Contains(tg.GameId))
+            var gameTagMatches = await _context.Games //再搜尋此gameId的細部資料
+                                              .Where(tg => GetGameSameeData.Contains(tg.GameId)&&tg.GameId >= gameNum)
+                                              .Skip(tagNum)
+                                              .Take(20)
                                               .ToListAsync();
 
 
             // 返回 JSON 結果
             return Json(gameTagMatches);
+        }
+
+        //GameDataTable設定
+        [HttpGet("GetGameData")]
+        public async Task<JsonResult> GetGameData(int num)
+        {
+            int gameNum = 10000 + num;
+
+
+            var GetGameData = await _context.Games
+                .Where(pc => pc.GameId >= gameNum)
+                .Take(20)
+                .ToListAsync();
+            
+
+            return Json(GetGameData);
         }
     }
 }
