@@ -158,6 +158,25 @@ export const useBuilderStore = defineStore('builder', () => {
   const setMinRatio = (value) => {
     minRatio.value = value
   }
+  // 最低配備遊戲數量
+  // state
+  const minCount = ref(0)
+  // getter
+  const getMinCount = computed(() => minCount.value)
+  // action
+  const setMinCount = (value) => {
+    minCount.value = value
+  }
+
+  // 最低、建議 配備模式辨別
+  // state
+  const ratioMode = ref('')
+  // getter
+  const getRatioMode = computed(() => ratioMode.value)
+  // action
+  const setRatioMode = (value) => {
+    ratioMode.value = value
+  }
 
   // 建議配備比例
   const recRatio = ref(0)
@@ -167,6 +186,16 @@ export const useBuilderStore = defineStore('builder', () => {
   const setRecRatio = (value) => {
     recRatio.value = value
   }
+
+  // 建議配備遊戲數量
+  const recCount = ref(0)
+  // getter
+  const getRecCount = computed(() => recCount.value)
+  // action
+  const setRecCount = (value) => {
+    recCount.value = value
+  }
+
   // 顯示遊戲匹配系統
   // state
   const showMatchSystem = ref(false)
@@ -182,6 +211,8 @@ export const useBuilderStore = defineStore('builder', () => {
     showMatchSystem.value = false
     minRatio.value = 0
     recRatio.value = 0
+    minCount.value = 0
+    recCount.value = 0
   }
 
   // 清空產品清單
@@ -212,8 +243,14 @@ export const useBuilderStore = defineStore('builder', () => {
     setMemory,
     getMinRatio,
     setMinRatio,
+    getMinCount,
+    setMinCount,
     getRecRatio,
     setRecRatio,
+    getRecCount,
+    setRecCount,
+    getRatioMode,
+    setRatioMode,
     isShowMatchSystem,
     showMatch,
     hideMatch,
