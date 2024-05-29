@@ -178,14 +178,26 @@ const checkRoleExists = async (roleName) => {
 const createRole = async () => {
   console.log('新增角色表單提交')
   if (newRoleName.value.trim() === '') {
-    alert('請輸入權限名稱')
+    // alert('請輸入權限名稱')
+    toast.error('請輸入權限名稱', {
+      theme: 'dark',
+      autoClose: 1000,
+      transition: toast.TRANSITIONS.ZOOM,
+      position: toast.POSITION.TOP_CENTER
+    })
     // return
   }
 
   const roleExists = await checkRoleExists(newRoleName.value)
   console.log('角色名稱檢查結果:', roleExists)
   if (roleExists === false) {
-    alert('角色名稱已存在')
+    // alert('角色名稱已存在')
+    toast.error('角色名稱已存在', {
+      theme: 'dark',
+      autoClose: 1000,
+      transition: toast.TRANSITIONS.ZOOM,
+      position: toast.POSITION.TOP_CENTER
+    })
     return
   }
 
@@ -210,7 +222,13 @@ const createRole = async () => {
         datatable.ajax.reload()
         isFormValid.value = false // 重置表單狀態
       } else {
-        alert('新增角色失敗，請重試')
+        // alert('新增角色失敗，請重試')
+        toast.error('新增角色失敗，請重試', {
+          theme: 'dark',
+          autoClose: 1000,
+          transition: toast.TRANSITIONS.ZOOM,
+          position: toast.POSITION.TOP_CENTER
+        })
       }
     })
     .catch((err) => {

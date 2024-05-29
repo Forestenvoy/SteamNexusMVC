@@ -28,6 +28,10 @@ const store = useIdentityStore()
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
 
+// 特殊吐司
+import { toast } from 'vue3-toastify'
+import 'vue3-toastify/dist/index.css'
+
 // 從環境變數取得 API BASE URL
 const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 const token = ''

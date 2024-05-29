@@ -37,7 +37,7 @@
               <i v-if="loveclick == true" class="fa-regular fa-heart"></i>
               <i v-else class="fa-solid fa-heart"></i>
             </button> -->
-            <button class="fontawesome fs-1 shadow-sm" @click="love(gameId)">
+            <button class="fontawesome fs-1 shadow-sm" @click="love(props.gameId)">
               <!-- @click="love(gameId) 確保 gameId 是一個數字 -->
               <i v-if="loveclick == true" class="fa-regular fa-heart"></i>
               <i v-else class="fa-solid fa-heart"></i>
@@ -423,7 +423,7 @@ function moreclick() {
 //新增遊戲追蹤
 const love = async (gameId) => {
   // 確保 gameId 是一個數字
-  // gameId = Number(gameId)
+  gameId = Number(gameId)
 
   // if (isNaN(gameId)) {
   //   console.error('Game ID 必須為數字')
@@ -456,7 +456,7 @@ const love = async (gameId) => {
         alert('該遊戲已經在追蹤列表中') // 提示用戶已經存在於追蹤列表中
       } else {
         console.error('新增遊戲追蹤失敗:', error.response.data)
-        alert('新增遊戲追蹤失敗：' + error.response.data) // 提示用戶失敗原因
+        alert('新增遊戲追蹤失敗：請先登入會員在新增') // 提示用戶失敗原因
       }
     } else if (error.request) {
       // 請求已發送但未收到回應

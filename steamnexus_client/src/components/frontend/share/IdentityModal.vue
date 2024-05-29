@@ -156,6 +156,10 @@ const store = useIdentityStore()
 import { ref, onMounted, computed } from 'vue'
 import axios from 'axios'
 
+// 特殊吐司
+import { toast } from 'vue3-toastify'
+import 'vue3-toastify/dist/index.css'
+
 // 從環境變數取得 API BASE URL
 const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
@@ -340,20 +344,47 @@ const submitLogin = () => {
         // localStorage.setItem('token', token);
 
         // 顯示登入成功訊息或進行頁面跳轉
-        alert(message) // 使用回應中的訊息
+        // alert(message) // 使用回應中的訊息
+
+        toast.success(message, {
+          theme: 'colored',
+          autoClose: 1000,
+          transition: toast.TRANSITIONS.ZOOM,
+          position: toast.POSITION.BOTTOM_CENTER
+        })
+
         closeModal()
       } else {
         console.log('Unexpected response structure:', response)
-        alert('登入過程中發生錯誤：無法獲取 token')
+        // alert('登入過程中發生錯誤：無法獲取 token')
+        toast.error('登入失敗：無法取得會員資料', {
+          theme: 'dark',
+          autoClose: 1000,
+          transition: toast.TRANSITIONS.ZOOM,
+          position: toast.POSITION.BOTTOM_CENTER
+        })
       }
     })
     .catch((error) => {
       // 處理錯誤情況，例如顯示錯誤消息
       console.error('Error occurred during login:', error)
       if (error.response && error.response.status === 400) {
-        alert('帳號或密碼錯誤')
+        // alert('帳號或密碼錯誤')
+        toast.error('帳號或密碼錯誤', {
+          theme: 'colored',
+          autoClose: 1000,
+          transition: toast.TRANSITIONS.ZOOM,
+          // position: toast.POSITION.TOP_CENTER
+          position: toast.POSITION.BOTTOM_CENTER
+        })
       } else {
-        alert('登入過程中發生錯誤')
+        // alert('登入過程中發生錯誤')
+        toast.error('登入失敗，請重新登入', {
+          theme: 'colored',
+          autoClose: 1000,
+          transition: toast.TRANSITIONS.ZOOM,
+          position: toast.POSITION.BOTTOM_CENTER
+        })
       }
     })
 }
@@ -393,13 +424,25 @@ const clearForm = () => {
 const submitRegister = async () => {
   // 檢查表單是否有效
   if (!isFirstPartValid.value) {
-    alert('請填寫完整且正確的表單資料')
+    // alert('請填寫完整且正確的表單資料')
+    toast.error('請填寫完整且正確的表單資料', {
+      theme: 'colored',
+      autoClose: 1000,
+      transition: toast.TRANSITIONS.ZOOM,
+      position: toast.POSITION.TOP_CENTER
+    })
     return
   }
 
   // 檢查密碼和確認密碼是否一致
   if (password.value !== confirmPassword.value) {
-    alert('密碼與確認密碼不一致')
+    // alert('密碼與確認密碼不一致')
+    toast.error('密碼與確認密碼不一致', {
+      theme: 'colored',
+      autoClose: 1000,
+      transition: toast.TRANSITIONS.ZOOM,
+      position: toast.POSITION.BOTTOM_CENTER
+    })
     return
   }
 
@@ -417,15 +460,33 @@ const submitRegister = async () => {
 
     // 檢查回應狀態和數據
     if (response.status === 200 && response.data.success) {
-      alert(response.data.message)
+      // alert(response.data.message)
+      toast.success(response.data.message, {
+        theme: 'colored',
+        autoClose: 1000,
+        transition: toast.TRANSITIONS.ZOOM,
+        position: toast.POSITION.BOTTOM_CENTER
+      })
       showLogin()
     } else {
-      alert(response.data.message || '註冊過程中發生錯誤')
+      // alert(response.data.message || '註冊過程中發生錯誤')
+      toast.error(response.data.message || '註冊失敗', {
+        theme: 'colored',
+        autoClose: 1000,
+        transition: toast.TRANSITIONS.ZOOM,
+        position: toast.POSITION.BOTTOM_CENTER
+      })
     }
   } catch (error) {
     // 處理錯誤情況，例如顯示錯誤消息
     console.error('Error occurred during registration:', error)
-    alert('註冊過程中發生錯誤')
+    // alert('註冊過程中發生錯誤')
+    toast.error('註冊失敗', {
+      theme: 'colored',
+      autoClose: 1000,
+      transition: toast.TRANSITIONS.ZOOM,
+      position: toast.POSITION.BOTTOM_CENTER
+    })
   }
 }
 

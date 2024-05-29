@@ -28,7 +28,12 @@
                     alt="大頭貼"
                     class="img-thumbnail mt-2"
                   />
-                  <input type="file" class="form-control mt-2" id="avatar" @change="onAvatarChange" />
+                  <input
+                    type="file"
+                    class="form-control mt-2"
+                    id="avatar"
+                    @change="onAvatarChange"
+                  />
                 </div>
               </div>
               <!-- 右邊部分：其他資料 -->
@@ -154,6 +159,10 @@ const store = useIdentityStore()
 import { onMounted, ref, computed } from 'vue'
 import axios from 'axios'
 
+// 特殊吐司
+import { toast } from 'vue3-toastify'
+import 'vue3-toastify/dist/index.css'
+
 // 從環境變數取得 API BASE URL
 const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
@@ -256,11 +265,23 @@ const changePassword = () => {
     )
     .then((response) => {
       console.log('Response:', response) // 輸出響應結果
-      alert(response.data)
+      // alert(response.data)
+      toast.success(response.data.message, {
+        theme: 'dark',
+        autoClose: 1000,
+        transition: toast.TRANSITIONS.ZOOM,
+        position: toast.POSITION.TOP_CENTER
+      })
     })
     .catch((error) => {
       console.error('Error:', error.response) // 輸出錯誤信息
-      alert('密碼修改失敗: ' + error.response.data)
+      // alert('密碼修改失敗: ' + error.response.data)
+      toast.error('密碼修改失敗: ' + error.response.data.message, {
+        theme: 'dark',
+        autoClose: 1000,
+        transition: toast.TRANSITIONS.ZOOM,
+        position: toast.POSITION.TOP_CENTER
+      })
     })
 }
 
@@ -292,7 +313,13 @@ const loadUserProfile = async () => {
     profile.value.originalPhoto = userData.photo // 存放原本的圖片路徑
   } catch (error) {
     console.error('Error loading user profile:', error)
-    alert('加載用戶資料失敗')
+    // alert('加載用戶資料失敗')
+    toast.error('讀取用戶資料失敗', {
+      theme: 'dark',
+      autoClose: 1000,
+      transition: toast.TRANSITIONS.ZOOM,
+      position: toast.POSITION.TOP_CENTER
+    })
   }
 }
 
@@ -317,10 +344,22 @@ const editUserSubmit = async () => {
         'Content-Type': 'multipart/form-data'
       }
     })
-    alert(response.data)
+    // alert(response.data)
+    toast.success(response.data.message, {
+      theme: 'dark',
+      autoClose: 1000,
+      transition: toast.TRANSITIONS.ZOOM,
+      position: toast.POSITION.TOP_CENTER
+    })
   } catch (error) {
     console.error('Error:', error.response)
-    alert('修改失敗: ' + error.response.data)
+    // alert('修改失敗: ' + error.response.data)
+    toast.error('修改失敗', {
+      theme: 'dark',
+      autoClose: 1000,
+      transition: toast.TRANSITIONS.ZOOM,
+      position: toast.POSITION.TOP_CENTER
+    })
   }
 }
 
