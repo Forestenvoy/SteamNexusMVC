@@ -74,7 +74,7 @@ import { useScraperStore } from '@/stores/scraper.js'
 // 利用 store 去訪問狀態 ✨
 const store = useScraperStore()
 
-// 拿身份驗證
+// 身份驗證
 import { useIdentityStore } from '@/stores/identity.js'
 const authStore = useIdentityStore()
 

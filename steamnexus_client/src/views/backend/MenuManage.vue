@@ -91,6 +91,10 @@ import MenuModalBodyC from '@/components/backend/hardware/menu/create/MenuModalB
 import MenuModalBodyE from '@/components/backend/hardware/menu/edit/MenuModalBodyE.vue'
 import MenuCard from '@/components/backend/hardware/MenuCard.vue'
 
+// 身份驗證
+import { useIdentityStore } from '@/stores/identity.js'
+const authStore = useIdentityStore()
+
 // 從環境變數取得 API BASE URL
 const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
@@ -203,7 +207,12 @@ function Menu_Edit(menuId, menuName, menuPrice, menuWattage) {
 
 // Get MenuDetails
 function GetAllMenuDetails(menuId) {
-  fetch(`${apiUrl}/api/HardwareManage/GetMenuDetail?MenuId=${menuId}`, { method: 'GET' })
+  fetch(`${apiUrl}/api/HardwareManage/GetMenuDetail?MenuId=${menuId}`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${authStore.getToken}`
+    }
+  })
     .then((response) => {
       if (!response.ok) {
         throw new Error('Network response was not ok')
@@ -250,7 +259,12 @@ function insertMenu(menuId) {
 
 // 獲取單一菜單資料
 function getMenu(id) {
-  fetch(`${apiUrl}/api/HardwareManage/GetMenu?MenuId=${id}`, { method: 'GET' })
+  fetch(`${apiUrl}/api/HardwareManage/GetMenu?MenuId=${id}`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${authStore.getToken}`
+    }
+  })
     .then((response) => {
       if (!response.ok) {
         throw new Error('NetworkError')
@@ -266,7 +280,12 @@ function getMenu(id) {
 }
 // 獲取菜單列表
 function getMenuList() {
-  fetch(`${apiUrl}/api/HardwareManage/GetMenuList`, { method: 'GET' })
+  fetch(`${apiUrl}/api/HardwareManage/GetMenuList`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${authStore.getToken}`
+    }
+  })
     .then((response) => {
       if (!response.ok) {
         throw new Error('NetworkError')
@@ -288,7 +307,12 @@ function deleteCard(id) {
 
 // 更新卡片菜單資訊
 function cardInfoUpdate(menuId) {
-  fetch(`${apiUrl}/api/HardwareManage/GetMenu?MenuId=${menuId}`, { method: 'GET' })
+  fetch(`${apiUrl}/api/HardwareManage/GetMenu?MenuId=${menuId}`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${authStore.getToken}`
+    }
+  })
     .then((response) => {
       if (!response.ok) {
         throw new Error('NetworkError')
