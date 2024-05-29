@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Cors;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +18,7 @@ namespace SteamNexus_Server.Controllers;
 
 // 套用 CORS 策略
 [EnableCors("AllowAny")]
+[Authorize(Roles = "Admin")]
 [Route("api/[controller]")]
 [ApiController]
 public class HardwareManageController : ControllerBase
@@ -391,6 +393,7 @@ public class HardwareManageController : ControllerBase
     }
 
     // SSE 傳送事件進度
+    [AllowAnonymous]
     [HttpGet("UpdateMessage")]
     public IActionResult UpdateMessage()
     {
