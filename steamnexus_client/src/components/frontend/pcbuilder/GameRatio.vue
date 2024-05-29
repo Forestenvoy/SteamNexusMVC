@@ -114,12 +114,19 @@
         </CCol>
         <CCol xs="12" md="6" class="d-flex justify-content-center align-items-center">
           <!-- 頁數 -->
-          <label for="gamePage" class="pe-2">頁數 : </label>
-          <select name="gamePage" v-model="currentPage" @change="pageChange">
+          <label for="gamePage" class="pe-2 h5">頁數 : </label>
+          <select
+            name="gamePage"
+            class="form-select page"
+            v-model="currentPage"
+            @change="pageChange"
+          >
             <option v-for="page in totalPages" :key="page" :value="page">
               {{ page }}
             </option>
           </select>
+          <span class="mx-3">/</span>
+          <span>{{ totalPages }}</span>
         </CCol>
       </CRow>
       <CRow>
@@ -410,5 +417,11 @@ onMounted(() => {
 
 .input-box:focus + .underline {
   transform: scaleX(1);
+}
+
+/* 頁數 */
+.page {
+  width: 80px;
+  text-align: center;
 }
 </style>
