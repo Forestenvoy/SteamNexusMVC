@@ -383,7 +383,10 @@ function holdUp(id) {
   //如果此時檢測到的時間與第一次獲取的時間差有1000毫秒
   if (timeEnd.value - timeStart.value < 100) {
     router.push({ path: '/game/' + id })
-    MountedEvent()
+    // 延遲 1 秒
+    setTimeout(function () {
+      MountedEvent()
+    }, 100)
     console.log(timeStart.value)
     console.log(timeEnd.value)
   }
@@ -477,6 +480,7 @@ const love = async (gameId) => {
 
 //拿取遊戲資料
 function getData() {
+  console.log(props.gameId)
   fetch(`${apiUrl}/api/GamesManagement/GetEditJSON?id=${props.gameId}`, {
     method: 'GET'
   })
