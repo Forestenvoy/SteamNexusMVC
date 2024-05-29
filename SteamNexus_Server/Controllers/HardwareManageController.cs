@@ -635,7 +635,9 @@ public class HardwareManageController : ControllerBase
     public IEnumerable<object>? GetMenuDetail(int MenuId)
     {
         // 利用導覽屬性 獲取 產品的 TypeId
-        var MenuDetailSet = _context.MenuDetails.Where(m => m.MenuId == MenuId).Include(md => md.ProductInformation).ThenInclude(pi => pi.ComponentClassification);
+        var MenuDetailSet = _context.MenuDetails.Where(m => m.MenuId == MenuId)
+            .Include(md => md.ProductInformation)
+            .ThenInclude(pi => pi != null ? pi.ComponentClassification : null);
 
         if (MenuDetailSet == null)
         {

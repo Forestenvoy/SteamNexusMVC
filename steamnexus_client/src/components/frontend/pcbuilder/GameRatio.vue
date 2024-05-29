@@ -85,21 +85,24 @@
   <!-- 遊戲列表互動視窗 -->
   <CModal
     alignment="center"
-    size="xl"
+    size="lg"
     :visible="visibleGameList"
     @close="
       () => {
         visibleGameList = false
+        keyword = ''
+        currentPage = 1
       }
     "
     aria-labelledby="GameListLabel"
+    style="z-index: 100000"
   >
     <CModalHeader>
       <CModalTitle id="GameListLabel">遊戲列表</CModalTitle>
     </CModalHeader>
     <!-- 列表內容 -->
     <CModalBody>
-      <CRow>
+      <CRow class="mb-3">
         <CCol xs="12" md="6" class="d-flex justify-content-center align-items-center">
           <div class="input-wrapper">
             <input
@@ -107,10 +110,10 @@
               type="text"
               placeholder="&#x1F50D;&#xFE0E;  請輸入關鍵字"
               v-model="keyword"
-              @input="filter"
             />
             <span class="underline"></span>
           </div>
+          <button class="btn-search ms-2" @click="filter">搜尋</button>
         </CCol>
         <CCol xs="12" md="6" class="d-flex justify-content-center align-items-center">
           <!-- 頁數 -->
@@ -130,7 +133,16 @@
         </CCol>
       </CRow>
       <CRow>
-        <CCol xs="12">內容</CCol>
+        <CCol xs="12">
+          <template v-for="game in gameList" :key="game.gameId">
+            <CRow class="item">
+              <CCol xs="12" class="d-flex justify-content-center align-items-center mb-3 mb-md-0">
+                <a class="name" @click="handleGameClick(game.gameId)">{{ game.name }}</a>
+              </CCol>
+            </CRow>
+            <div class="line"></div>
+          </template>
+        </CCol>
       </CRow>
     </CModalBody>
     <CModalFooter>
@@ -139,6 +151,8 @@
         @click="
           () => {
             visibleGameList = false
+            keyword = ''
+            currentPage = 1
           }
         "
       >
@@ -155,6 +169,10 @@ import 'aos/dist/aos.css'
 
 // vue
 import { ref, onMounted, watch } from 'vue'
+
+// vue router
+import { useRouter } from 'vue-router'
+const router = useRouter()
 
 // Core UI
 import { CContainer, CRow, CCol } from '@coreui/vue'
@@ -182,6 +200,8 @@ const keyword = ref('')
 // 頁數
 const totalPages = ref(0)
 const currentPage = ref(1)
+// 遊戲列表
+const gameList = ref([])
 
 // 數字特效
 const NumberCounter = (target, counter) => {
@@ -250,6 +270,7 @@ const getGameList = async () => {
       return response.json()
     })
     .then((data) => {
+      gameList.value = data
       console.log(data)
     })
     .catch((error) => {
@@ -259,12 +280,53 @@ const getGameList = async () => {
 
 // 關鍵字搜尋
 const filter = () => {
-  console.log(keyword.value)
+  // 切回至第一頁
+  currentPage.value = 1
+  reCalculatePage()
+}
+
+// 重新計算頁數
+const reCalculatePage = async () => {
+  await fetch(`${apiUrl}/api/PcBuilder/calculateQuantityByKeyword`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      pCpuId: builderStore.getCPUId,
+      pGpuId: builderStore.getGPUId,
+      pRamId: builderStore.getRAMId,
+      keyword: keyword.value,
+      mode: builderStore.getRatioMode
+    })
+  })
+    .then((response) => {
+      if (!response.ok) {
+        return response.text().then((errorMessage) => {
+          throw new Error(errorMessage)
+        })
+      }
+      return response.json()
+    })
+    .then((data) => {
+      totalPages.value = Math.floor(data.count / 10) + 1
+    })
+    .catch((error) => {
+      console.error('Error:', error.message)
+    })
 }
 
 // 頁數搜尋
 const pageChange = () => {
   getGameList()
+}
+
+// 遊戲頁面跳轉
+const handleGameClick = (gameId) => {
+  if (visibleGameList.value) {
+    visibleGameList.value = false
+  }
+  router.push(`/game/${gameId}`)
 }
 
 onMounted(() => {
@@ -423,5 +485,30 @@ onMounted(() => {
 .page {
   width: 80px;
   text-align: center;
+}
+
+/* 項目 */
+.item {
+  width: 100%;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-top: 8px;
+}
+
+/* 名稱 */
+.name {
+  font-size: 20px;
+  font-weight: 500;
+  color: #fff;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+/* 線 */
+.line {
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(to right, #313131, rgba(255, 255, 255), #313131);
+  margin-top: 5px;
 }
 </style>

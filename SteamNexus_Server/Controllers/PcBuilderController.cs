@@ -156,7 +156,10 @@ public class PcBuilderController : ControllerBase
         try
         {
             // 利用導覽屬性 獲取 產品的 TypeId
-            var MenuDetailSet = _context.MenuDetails.Where(m => m.MenuId == MenuId).Include(md => md.ProductInformation).ThenInclude(pi => pi.ComponentClassification).ThenInclude(cc => cc.ComputerPartCategory);
+            var MenuDetailSet = _context.MenuDetails.Where(m => m.MenuId == MenuId)
+                .Include(md => md.ProductInformation)
+                .ThenInclude(pi => pi != null ? pi.ComponentClassification : null)
+                .ThenInclude(cc => cc != null ? cc.ComputerPartCategory : null);
 
             if (MenuDetailSet == null)
             {
@@ -324,7 +327,7 @@ public class PcBuilderController : ControllerBase
 
     // 回傳遊戲列表
     [HttpPost("GetGameList")]
-    public ActionResult<MatchGameDataDto> GetGameList([FromBody] RatioDataDto data, string mode, int page)
+    public ActionResult<IEnumerable<MatchGameDataDto>> GetGameList([FromBody] RatioDataDto data, string mode, int page)
     {
         // 如果驗證合法
         if (ModelState.IsValid)
@@ -428,4 +431,107 @@ public class PcBuilderController : ControllerBase
             return BadRequest("Date Error !");
         }
     }
+
+    public class GameFilterDto
+    {
+        // CPU 產品 ID
+        public int pCpuId { get; set; }
+        // GPU 產品 ID
+        public int pGpuId { get; set; }
+        // RAM 產品 ID
+        public int pRamId { get; set; }
+        // 關鍵字
+        public string? keyword { get; set; }
+        // 模式
+        public string? mode { get; set; }
+    }
+
+    public class GameQualityDto
+    {
+        // 遊戲數量
+        public int count { get; set; }
+    }
+
+    // 計算遊戲數量 ~ 關鍵字搜尋
+    [HttpPost("calculateQuantityByKeyword")]
+    public ActionResult<GameQualityDto> calculateQuantityByKeyword([FromBody] GameFilterDto data)
+    {
+        // 如果驗證合法
+        if (ModelState.IsValid)
+        {
+            try
+            {
+                // 取得 CPU 跑分 joint CPU 跑分
+                int? cpuScore = _context.ProductCPUs
+                    .Join(_context.CPUs,
+                          pc => pc.CPUId,
+                          c => c.CPUId,
+                          (pc, c) => new { pc, c })
+                    .FirstOrDefault(joined => joined.pc.ProductInformationId == data.pCpuId)
+                    ?.c.Score;
+                if (cpuScore == null)
+                {
+                    return NotFound("CPU Data not found.");
+                }
+                // 取得 GPU 跑分 joint GPU 跑分
+                int? gpuScore = _context.ProductGPUs
+                    .Join(_context.GPUs,
+                          pg => pg.GPUId,
+                          g => g.GPUId,
+                          (pg, g) => new { pg, g })
+                    .FirstOrDefault(joined => joined.pg.ProductInformationId == data.pGpuId)
+                    ?.g.Score;
+                if (gpuScore == null)
+                {
+                    return NotFound("GPU Data not found.");
+                }
+                // 取得 RAM 容量
+                int? ramSize = _context.ProductRAMs
+                    .FirstOrDefault(p => p.ProductInformationId == data.pRamId)
+                    ?.Size;
+                if (ramSize == null)
+                {
+                    return NotFound("RAM Data not found.");
+                }
+
+                if (data.mode == "min" && data.keyword != null)
+                {
+                    // 計算可玩的最低配備遊戲數量
+                    var result = _context.MinimumRequirements.Where(mr => mr.CPU.Score <= cpuScore && mr.GPU.Score <= gpuScore && mr.RAM <= ramSize)
+                        .Where(mr => mr.Game.Name != null && mr.Game.Name.Contains(data.keyword));
+
+                    return Ok(new GameQualityDto { count = result.Count() });
+                }
+                else if (data.mode == "rec" && data.keyword != null)
+                {
+                    // 計算可玩的建議配備遊戲數量
+                    var result2 = _context.RecommendedRequirements.Where(mr => mr.CPU.Score <= cpuScore && mr.GPU.Score <= gpuScore && mr.RAM <= ramSize)
+                        .Where(mr => mr.Game.Name != null && mr.Game.Name.Contains(data.keyword));
+
+                    return Ok(new GameQualityDto { count = result2.Count() });
+                }
+                else
+                {
+                    return BadRequest("Mode Error !");
+                }
+
+            }
+            catch (Exception error)
+            {
+                // 未來考慮引用日誌框架如 Serilog 記錄異常 
+                Console.WriteLine(error.Message);
+
+                // 未來考慮引用中介軟體 RequestDelegate 做 例外處理
+                return StatusCode(500, "An internal server error occurred. Please try again later.");
+            }
+        }
+        else
+        {
+            // 返回 400 狀態碼 ~ 驗證不合法，同時回傳 ErrorMessage
+            return BadRequest("Date Error !");
+        }
+    }
+
+
+
 }
