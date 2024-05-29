@@ -183,12 +183,16 @@ var btnopen = ref(false)
 var hotTitle = ref('熱門遊戲')
 var gameData = ref([])
 var gameLozad = ref([])
-let gameCount = -1
+// let gameCount = -1
 let TagGroupCount = -1
 const loading = ref(null)
 var TagGroupData = ref([])
 var TagGroupDataLozad = ref([])
 var isGameDataLoaded = ref(false)
+var num=0
+var isholdClick=false
+var holdUptagId=""
+
 var tags = ref([
   {
     img: 'https://img.freepik.com/free-photo/man-neon-suit-sits-chair-with-neon-sign-that-says-word-it_188544-27011.jpg?t=st=1716706009~exp=1716709609~hmac=345cfeddc0f13b19e1184b3e34943052b5ceb18416c681523bf7d8ad64ed6a89&w=826'
@@ -258,22 +262,37 @@ var timeStart = ref('')
 var timeEnd = ref('')
 
 function getTimeNow() {
+  
   var now = new Date()
   return now.getTime()
 }
 
 function holdDown() {
+  num=0
   timeStart.value = getTimeNow()
 }
 
 function holdUp(tagId, name) {
+  holdUptagId=tagId
+  isholdClick=true
   timeEnd.value = getTimeNow()
   //如果此時檢測到的時間與第一次獲取的時間差有1000毫秒
-  if (timeEnd.value - timeStart.value < 100) {
+  if (timeEnd.value - timeStart.value < 100){
+      gameLozad.value = []
+    tagsameFatch(holdUptagId)
     btnopen.value = true
     hotTitle.value = `${name}相關遊戲`
-    gameCount = -1
-    fetch(`${apiUrl}/api/GamesManagement/GetGameSameData?tagId=${tagId}`, {
+    console.log(timeStart.value)
+    console.log(timeEnd.value)
+  } 
+}
+
+function tagsameFatch(tagId){
+  gameData.value=[];
+  console.log(gameLozad.value);
+  // console.log("gameData是0");
+  console.log(`FatchNum:${num}`)
+  fetch(`${apiUrl}/api/GamesManagement/GetGameSameData?tagId=${tagId}&tagNum=${num}`, {
       method: 'GET'
     })
       .then((response) => {
@@ -281,63 +300,29 @@ function holdUp(tagId, name) {
         if (!response.ok) {
           throw new Error('Network response was not ok')
         }
-
         // 解析 html
         return response.json()
       })
       .then((val) => {
-        gameLozad.value = []
-        gameData.value = []
         gameData.value = val
-        console.log(gameData.value)
+        // console.log(gameData.value)
       })
       .then(() => {
         loadMoreGames()
-        console.log(gameData.value)
+        // console.log(gameData.value)
       })
       .catch((error) => {
         console.error('Error:', error)
       })
-    console.log(timeStart.value)
-    console.log(timeEnd.value)
-  }
 }
 
-// function tagClick(tagId,name){
-//   btnopen.value=true
-//   hotTitle.value=`${name}相關遊戲`
-//   gameCount=-1
-//   fetch(`${apiUrl}/api/GamesManagement/GetGameSameData?tagId=${tagId}`, {
-//     method: 'GET'
-//   })
-//     .then((response) => {
-//       // 確保請求是否成功
-//       if (!response.ok) {
-//         throw new Error('Network response was not ok')
-//       }
-
-//       // 解析 html
-//       return response.json()
-//     })
-//     .then((val) => {
-//         gameLozad.value=[]
-//   gameData.value=[]
-//       gameData.value=val
-//       console.log(gameData.value);
-//     })
-//     .then(() => {
-//       loadMoreGames();
-//       console.log(gameData.value);
-//     })
-//     .catch((error) => {
-//       console.error('Error:', error)
-//     })
-// }
-
 function hotClick() {
+  num=0
+  isholdClick=false
+  gameLozad.value = []
   btnopen.value = false
   hotTitle.value = `熱門排行`
-  gameCount = -1
+  // gameCount = -1
   GetGameData()
 }
 
@@ -346,7 +331,8 @@ function bb(a, b) {
 }
 
 function GetGameData() {
-  fetch(`${apiUrl}/api/GamesManagement/IndexJson`, {
+  gameData.value = []
+  fetch(`${apiUrl}/api/GamesManagement/GetGameData?num=${num}`, {
     method: 'GET'
   })
     .then((response) => {
@@ -358,13 +344,15 @@ function GetGameData() {
       return response.json()
     })
     .then((val) => {
-      gameLozad.value = []
-      gameData.value = []
+      // gameLozad.value = []
+      
       gameData.value = val
       isGameDataLoaded.value = true
-      console.log(gameData.value)
+      // console.log(gameData.value)
+      
     })
     .then(() => {
+      // console.log('1-2')
       loadMoreGames()
     })
     .catch((error) => {
@@ -394,11 +382,10 @@ function AllGameTagData() {
     })
     .then((val) => {
       TagGroupData.value = val
-      console.log('1-1')
+      
     })
     .then(() => {
       loadMoreTagGroup()
-      console.log('1-2')
     })
     .catch((error) => {
       console.error('Error:', error)
@@ -422,7 +409,7 @@ function TagsData() {
         tags.value[i].name = element.name
         tags.value[i].tagId = element.tagId
       })
-      console.log(val)
+      // console.log(val)
     })
     .catch((error) => {
       console.error('Error:', error)
@@ -430,11 +417,12 @@ function TagsData() {
 }
 
 const loadMoreGames = () => {
-  console.log(gameLozad.value)
+  console.log("把API遊戲傳進前端")
   for (let i = 0; i < 20; i++) {
-    gameLozad.value.push(gameData.value[gameCount + 1])
-    gameCount++
-    console.log(gameData[gameCount + 1])
+    gameLozad.value.push(gameData.value[i])
+    // gameCount++
+    num++
+    // console.log(gameCount)
   }
 }
 
@@ -457,10 +445,18 @@ onMounted(() => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
         if (isGameDataLoaded.value == true) {
-          loadMoreGames()
+          if(isholdClick==true){
+            
+            console.log("isholdClick==true");
+          }else{
+            GetGameData()
+            console.log("isholdClick==false");
+          }
+          
+          // loadMoreGames()
           loadMoreTagGroup()
           observer.observe()
-          console.log('123')
+          // console.log('123')
         }
       }
     })

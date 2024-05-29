@@ -36,9 +36,8 @@ namespace SteamNexus_Server.Controllers
 
         #region UserData
         [HttpGet("GetUsersWithRoles")]
-        //[AllowAnonymous] //允許匿名登入
-        //[Authorize(Roles = "Member")]
-        //[Authorize]
+        //[Authorize(Roles = "Member")] //有登入就可以看(系統管理員)
+        //[Authorize] //有登入就可以看(一般會員)
         public IEnumerable<object> GetUsersWithRoles()
         {
             var result = _application.Users

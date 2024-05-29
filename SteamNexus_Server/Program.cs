@@ -79,8 +79,14 @@ var SteamNexusConnectionString = builder.Configuration.GetConnectionString("Stea
 // Add SteamNexusDbContext
 builder.Services.AddDbContext<SteamNexusDbContext>(options => options.UseSqlServer(SteamNexusConnectionString));
 
+
 // Add CoolPCWebScrabing Service
 builder.Services.AddTransient<CoolPCWebScraping>();
+builder.Services.AddTransient<GamePriceToDB>();
+
+// 註冊計時器服務
+builder.Services.AddTransient<ScheduledTaskService>();
+
 
 var app = builder.Build();
 
@@ -110,5 +116,6 @@ app.UseCors(MyAllowSpecificOrigins);
 app.UseAuthorization();
 
 app.MapControllers();
+
 
 app.Run();
