@@ -270,7 +270,7 @@ public class PcBuilderController : ControllerBase
 
                 // 計算可玩的最低配備遊戲數量
                 var result = _context.MinimumRequirements.Where(mr => mr.CPU.Score <= cpuScore && mr.GPU.Score <= gpuScore && mr.RAM <= ramSize);
-                double minRatio = ((double)result.Count()/_context.MinimumRequirements.Count()) * 100;
+                double minRatio = ((double)result.Count() / _context.MinimumRequirements.Count()) * 100;
                 // 無條件捨去
                 int minRatioRoundedDown = (int)Math.Floor(minRatio);
                 // 計算可玩的建議配備遊戲數量
@@ -287,6 +287,113 @@ public class PcBuilderController : ControllerBase
                 };
 
                 return Ok(gameRatioDto);
+            }
+            catch (Exception error)
+            {
+                // 未來考慮引用日誌框架如 Serilog 記錄異常 
+                Console.WriteLine(error.Message);
+
+                // 未來考慮引用中介軟體 RequestDelegate 做 例外處理
+                return StatusCode(500, "An internal server error occurred. Please try again later.");
+            }
+        }
+        else
+        {
+            // 返回 400 狀態碼 ~ 驗證不合法，同時回傳 ErrorMessage
+            return BadRequest("Date Error !");
+        }
+    }
+
+    // 遊戲資料 Dto
+    public class MatchGameDataDto
+    {
+
+        public int? AppId { get; set; }
+
+        // 滿足建議配備的比例
+        public string? Name { get; set; }
+    }
+
+    // 回傳遊戲列表
+    [HttpPost("GetGameList")]
+    public ActionResult<MatchGameDataDto> GetGameList([FromBody] RatioDataDto data, string mode)
+    {
+        // 如果驗證合法
+        if (ModelState.IsValid)
+        {
+            try
+            {
+                if(mode != "min" && mode != "rec")
+                {
+                    return BadRequest("Mode Error !");
+                }
+                
+                
+                // 取得 CPU 跑分 joint CPU 跑分
+                int? cpuScore = _context.ProductCPUs
+                    .Join(_context.CPUs,
+                          pc => pc.CPUId,
+                          c => c.CPUId,
+                          (pc, c) => new { pc, c })
+                    .FirstOrDefault(joined => joined.pc.ProductInformationId == data.pCpuId)
+                    ?.c.Score;
+                if (cpuScore == null)
+                {
+                    return NotFound("CPU Data not found.");
+                }
+                // 取得 GPU 跑分 joint GPU 跑分
+                int? gpuScore = _context.ProductGPUs
+                    .Join(_context.GPUs,
+                          pg => pg.GPUId,
+                          g => g.GPUId,
+                          (pg, g) => new { pg, g })
+                    .FirstOrDefault(joined => joined.pg.ProductInformationId == data.pGpuId)
+                    ?.g.Score;
+                if (gpuScore == null)
+                {
+                    return NotFound("GPU Data not found.");
+                }
+                // 取得 RAM 容量
+                int? ramSize = _context.ProductRAMs
+                    .FirstOrDefault(p => p.ProductInformationId == data.pRamId)
+                    ?.Size;
+                if (ramSize == null)
+                {
+                    return NotFound("RAM Data not found.");
+                }
+
+                // 根據模式吐出遊戲列表
+                if (mode == "min")
+                {
+                    // 計算可玩的最低配備遊戲數量
+                    var result = _context.MinimumRequirements.Where(mr => mr.CPU.Score <= cpuScore && mr.GPU.Score <= gpuScore && mr.RAM <= ramSize)
+                        .Select(g => new MatchGameDataDto { AppId = g.Game.AppId, Name = g.Game.Name });
+                    if (result.Any())
+                    {
+                        return Ok(result);
+                    }
+                    else
+                    {
+                        return NotFound("No game found.");
+                    }
+                }
+                else if (mode == "rec")
+                {
+                    // 計算可玩的建議配備遊戲數量
+                    var result2 = _context.RecommendedRequirements.Where(mr => mr.CPU.Score <= cpuScore && mr.GPU.Score <= gpuScore && mr.RAM <= ramSize)
+                        .Select(g => new MatchGameDataDto { AppId = g.Game.AppId, Name = g.Game.Name });
+                    if (result2.Any())
+                    {
+                        return Ok(result2);
+                    }
+                    else
+                    {
+                        return NotFound("No game found.");
+                    }
+                }
+
+
+                return BadRequest("Mode Error !");
             }
             catch (Exception error)
             {
