@@ -252,8 +252,6 @@ namespace SteamNexus_Server.Controllers
 
 
         #region DeleteUser
-
-
         //[HttpDelete("{id}")]
         [HttpPost("DeleteUser")]
         public async Task<IActionResult> DeleteUser(int id)
