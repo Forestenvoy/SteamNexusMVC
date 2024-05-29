@@ -79,6 +79,8 @@ const calculateRatio = async () => {
       console.log(data)
       builderStore.setMinRatio(data.min)
       builderStore.setRecRatio(data.rec)
+      builderStore.setMinCount(data.minCount)
+      builderStore.setRecCount(data.recCount)
       builderStore.showMatch()
     })
     .catch((error) => {

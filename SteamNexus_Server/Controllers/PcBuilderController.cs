@@ -222,8 +222,14 @@ public class PcBuilderController : ControllerBase
         // 滿足最低配備的比例
         public int min { get; set; }
 
+        // 最低配備遊戲數量
+        public int minCount { get; set; }
+
         // 滿足建議配備的比例
         public int rec { get; set; }
+
+        // 建議配備遊戲數量
+        public int recCount { get; set; }
     }
 
     // 計算遊戲比例
@@ -283,7 +289,9 @@ public class PcBuilderController : ControllerBase
                 var gameRatioDto = new GameRatioDto
                 {
                     min = minRatioRoundedDown,
-                    rec = recRatioRoundedDown
+                    minCount = result.Count(),
+                    rec = recRatioRoundedDown,
+                    recCount = result2.Count()
                 };
 
                 return Ok(gameRatioDto);
@@ -307,8 +315,8 @@ public class PcBuilderController : ControllerBase
     // 遊戲資料 Dto
     public class MatchGameDataDto
     {
-
-        public int? AppId { get; set; }
+        // 遊戲 ID
+        public int? GameId { get; set; }
 
         // 滿足建議配備的比例
         public string? Name { get; set; }
@@ -323,12 +331,12 @@ public class PcBuilderController : ControllerBase
         {
             try
             {
-                if(mode != "min" && mode != "rec")
+                if (mode != "min" && mode != "rec")
                 {
                     return BadRequest("Mode Error !");
                 }
-                
-                
+
+
                 // 取得 CPU 跑分 joint CPU 跑分
                 int? cpuScore = _context.ProductCPUs
                     .Join(_context.CPUs,
@@ -367,7 +375,7 @@ public class PcBuilderController : ControllerBase
                 {
                     // 計算可玩的最低配備遊戲數量
                     var result = _context.MinimumRequirements.Where(mr => mr.CPU.Score <= cpuScore && mr.GPU.Score <= gpuScore && mr.RAM <= ramSize)
-                        .Select(g => new MatchGameDataDto { AppId = g.Game.AppId, Name = g.Game.Name });
+                        .Select(g => new MatchGameDataDto { GameId = g.Game.GameId, Name = g.Game.Name });
                     if (result.Any())
                     {
                         return Ok(result);
@@ -381,7 +389,7 @@ public class PcBuilderController : ControllerBase
                 {
                     // 計算可玩的建議配備遊戲數量
                     var result2 = _context.RecommendedRequirements.Where(mr => mr.CPU.Score <= cpuScore && mr.GPU.Score <= gpuScore && mr.RAM <= ramSize)
-                        .Select(g => new MatchGameDataDto { AppId = g.Game.AppId, Name = g.Game.Name });
+                        .Select(g => new MatchGameDataDto { GameId = g.Game.GameId, Name = g.Game.Name });
                     if (result2.Any())
                     {
                         return Ok(result2);

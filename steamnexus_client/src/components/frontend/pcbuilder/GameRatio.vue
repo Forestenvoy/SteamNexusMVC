@@ -100,11 +100,30 @@
     <!-- 列表內容 -->
     <CModalBody>
       <CRow>
-        <CCol xs="12" md="6"> 關鍵字搜尋 </CCol>
-        <CCol xs="12" md="6"> 頁數 </CCol>
+        <CCol xs="12" md="6" class="d-flex justify-content-center align-items-center">
+          <div class="input-wrapper">
+            <input
+              class="input-box text-center"
+              type="text"
+              placeholder="&#x1F50D;&#xFE0E;  請輸入關鍵字"
+              v-model="keyword"
+              @input="filter"
+            />
+            <span class="underline"></span>
+          </div>
+        </CCol>
+        <CCol xs="12" md="6" class="d-flex justify-content-center align-items-center">
+          <!-- 頁數 -->
+          <label for="gamePage" class="pe-2">頁數 : </label>
+          <select name="gamePage">
+            <option v-for="page in totalPages" :key="page" :value="page">
+              {{ page }}
+            </option>
+          </select>
+        </CCol>
       </CRow>
       <CRow>
-        <CCOl xs="12">內容</CCOl>
+        <CCol xs="12">內容</CCol>
       </CRow>
     </CModalBody>
     <CModalFooter>
@@ -151,6 +170,10 @@ const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
 // 遊戲列表互動視窗
 const visibleGameList = ref(false)
+// 關鍵字
+const keyword = ref('')
+// 頁數
+const totalPages = ref(0)
 
 // 數字特效
 const NumberCounter = (target, counter) => {
@@ -182,11 +205,13 @@ watch(
 const openGameListM = () => {
   visibleGameList.value = true
   getGameList('min')
+  totalPages.value = Math.floor(builderStore.getMinCount / 10) + 1
 }
 // 打開建議配備遊戲選單
 const openGameListR = () => {
   visibleGameList.value = true
   getGameList('rec')
+  totalPages.value = Math.floor(builderStore.getRecCount / 10) + 1
 }
 
 // 獲取遊戲列表內容
@@ -217,6 +242,11 @@ const getGameList = async (mode) => {
     .catch((error) => {
       console.error('Error:', error.message)
     })
+}
+
+// 關鍵字搜尋
+const filter = () => {
+  console.log(keyword.value)
 }
 
 onMounted(() => {
@@ -332,5 +362,42 @@ onMounted(() => {
 .GameList:hover {
   box-shadow: none;
   opacity: 80%;
+}
+
+/* 關鍵字 */
+.input-wrapper {
+  position: relative;
+  width: 180px;
+}
+
+.input-box {
+  font-size: 16px;
+  padding: 5px 0;
+  border: none;
+  border-bottom: 2px solid #ccc;
+  color: #fff;
+  width: 100%;
+  background-color: transparent;
+  transition: border-color 0.3s ease-in-out;
+}
+
+.underline {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 180px;
+  height: 2px;
+  background-color: #f3ae0b;
+  transform: scaleX(0);
+  transition: transform 0.3s ease-in-out;
+}
+
+.input-box:focus {
+  border-color: #a47609;
+  outline: none;
+}
+
+.input-box:focus + .underline {
+  transform: scaleX(1);
 }
 </style>
