@@ -390,6 +390,8 @@ function GetTagGroup(){
       return response.json()
     })
     .then((val) => {
+      tagData.value=[]
+      tagDataOpen.value=[]
       console.log(val);
       for (var i = 0; i < 5; i++){
         tagData.value.push(val[i])
@@ -416,6 +418,7 @@ function GetLanguageGroup(){
       return response.json()
     })
     .then((val) => {
+      LanguageTable.value=[]
       for (var i = 0; i < val.length; i++){
         LanguageTable.value.push(val[i])
       }
@@ -502,6 +505,7 @@ function GetGameTagSameData(){
     })
     .then((val) => {
       console.log(val);
+      TagSamegamesName.value=[]
       for (var i = 0; i < val.length; i++){
         TagSamegamesName.value.push({
         gameId:val[i].gameId,
@@ -588,6 +592,10 @@ onMounted(() => {
     data.forEach(function(item) {
       item.date = new Date(item.date).getTime();
     });
+
+    if(root){
+      root=null
+    }
 
     root = am5.Root.new(chartdiv.value);
     root.setThemes([Dark.new(root)]);

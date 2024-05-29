@@ -183,7 +183,7 @@ var btnopen = ref(false)
 var hotTitle = ref('熱門遊戲')
 var gameData = ref([])
 var gameLozad = ref([])
-let gameCount = -1
+// let gameCount = -1
 let TagGroupCount = -1
 const loading = ref(null)
 var TagGroupData = ref([])
@@ -273,21 +273,18 @@ function holdDown() {
 }
 
 function holdUp(tagId, name) {
-  gameLozad.value = []
   holdUptagId=tagId
   isholdClick=true
   timeEnd.value = getTimeNow()
   //如果此時檢測到的時間與第一次獲取的時間差有1000毫秒
-  if (timeEnd.value - timeStart.value < 100) {
+  if (timeEnd.value - timeStart.value < 100){
+      gameLozad.value = []
+    tagsameFatch(holdUptagId)
     btnopen.value = true
     hotTitle.value = `${name}相關遊戲`
-    gameCount = -1
-    console.log(gameData.value)
-    console.log(gameLozad.value)
-    // tagsameFatch(holdUptagId);
-    // console.log(timeStart.value)
-    // console.log(timeEnd.value)
-  }
+    console.log(timeStart.value)
+    console.log(timeEnd.value)
+  } 
 }
 
 function tagsameFatch(tagId){
@@ -325,7 +322,7 @@ function hotClick() {
   gameLozad.value = []
   btnopen.value = false
   hotTitle.value = `熱門排行`
-  gameCount = -1
+  // gameCount = -1
   GetGameData()
 }
 
@@ -449,7 +446,7 @@ onMounted(() => {
       if (entry.isIntersecting) {
         if (isGameDataLoaded.value == true) {
           if(isholdClick==true){
-            tagsameFatch(holdUptagId)
+            
             console.log("isholdClick==true");
           }else{
             GetGameData()
