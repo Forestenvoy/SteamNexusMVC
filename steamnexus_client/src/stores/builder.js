@@ -168,6 +168,16 @@ export const useBuilderStore = defineStore('builder', () => {
     minCount.value = value
   }
 
+  // 最低、建議 配備模式辨別
+  // state
+  const ratioMode = ref('')
+  // getter
+  const getRatioMode = computed(() => ratioMode.value)
+  // action
+  const setRatioMode = (value) => {
+    ratioMode.value = value
+  }
+
   // 建議配備比例
   const recRatio = ref(0)
   // getter
@@ -239,6 +249,8 @@ export const useBuilderStore = defineStore('builder', () => {
     setRecRatio,
     getRecCount,
     setRecCount,
+    getRatioMode,
+    setRatioMode,
     isShowMatchSystem,
     showMatch,
     hideMatch,

@@ -324,7 +324,7 @@ public class PcBuilderController : ControllerBase
 
     // 回傳遊戲列表
     [HttpPost("GetGameList")]
-    public ActionResult<MatchGameDataDto> GetGameList([FromBody] RatioDataDto data, string mode)
+    public ActionResult<MatchGameDataDto> GetGameList([FromBody] RatioDataDto data, string mode, int page)
     {
         // 如果驗證合法
         if (ModelState.IsValid)
@@ -370,11 +370,18 @@ public class PcBuilderController : ControllerBase
                     return NotFound("RAM Data not found.");
                 }
 
+                // 頁數計算
+                int pageSize = 10;
+                int skip = (page - 1) * pageSize;
+
                 // 根據模式吐出遊戲列表
                 if (mode == "min")
                 {
                     // 計算可玩的最低配備遊戲數量
                     var result = _context.MinimumRequirements.Where(mr => mr.CPU.Score <= cpuScore && mr.GPU.Score <= gpuScore && mr.RAM <= ramSize)
+                        .OrderBy(g => g.Game.GameId)
+                        .Skip(skip)
+                        .Take(pageSize)
                         .Select(g => new MatchGameDataDto { GameId = g.Game.GameId, Name = g.Game.Name });
                     if (result.Any())
                     {
@@ -389,6 +396,9 @@ public class PcBuilderController : ControllerBase
                 {
                     // 計算可玩的建議配備遊戲數量
                     var result2 = _context.RecommendedRequirements.Where(mr => mr.CPU.Score <= cpuScore && mr.GPU.Score <= gpuScore && mr.RAM <= ramSize)
+                        .OrderBy(g => g.Game.GameId)
+                        .Skip(skip)
+                        .Take(pageSize)
                         .Select(g => new MatchGameDataDto { GameId = g.Game.GameId, Name = g.Game.Name });
                     if (result2.Any())
                     {

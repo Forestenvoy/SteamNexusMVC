@@ -115,7 +115,7 @@
         <CCol xs="12" md="6" class="d-flex justify-content-center align-items-center">
           <!-- 頁數 -->
           <label for="gamePage" class="pe-2">頁數 : </label>
-          <select name="gamePage">
+          <select name="gamePage" v-model="currentPage" @change="pageChange">
             <option v-for="page in totalPages" :key="page" :value="page">
               {{ page }}
             </option>
@@ -174,6 +174,7 @@ const visibleGameList = ref(false)
 const keyword = ref('')
 // 頁數
 const totalPages = ref(0)
+const currentPage = ref(1)
 
 // 數字特效
 const NumberCounter = (target, counter) => {
@@ -204,30 +205,35 @@ watch(
 // 打開最低配備遊戲選單
 const openGameListM = () => {
   visibleGameList.value = true
-  getGameList('min')
+  builderStore.setRatioMode('min')
+  getGameList()
   totalPages.value = Math.floor(builderStore.getMinCount / 10) + 1
 }
 // 打開建議配備遊戲選單
 const openGameListR = () => {
   visibleGameList.value = true
-  getGameList('rec')
+  builderStore.setRatioMode('rec')
+  getGameList()
   totalPages.value = Math.floor(builderStore.getRecCount / 10) + 1
 }
 
 // 獲取遊戲列表內容
-const getGameList = async (mode) => {
+const getGameList = async () => {
   // post
-  await fetch(`${apiUrl}/api/PcBuilder/GetGameList?mode=${mode}`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      pCpuId: builderStore.getCPUId,
-      pGpuId: builderStore.getGPUId,
-      pRamId: builderStore.getRAMId
-    })
-  })
+  await fetch(
+    `${apiUrl}/api/PcBuilder/GetGameList?mode=${builderStore.getRatioMode}&page=${currentPage.value}`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        pCpuId: builderStore.getCPUId,
+        pGpuId: builderStore.getGPUId,
+        pRamId: builderStore.getRAMId
+      })
+    }
+  )
     .then((response) => {
       if (!response.ok) {
         return response.text().then((errorMessage) => {
@@ -247,6 +253,11 @@ const getGameList = async (mode) => {
 // 關鍵字搜尋
 const filter = () => {
   console.log(keyword.value)
+}
+
+// 頁數搜尋
+const pageChange = () => {
+  getGameList()
 }
 
 onMounted(() => {
