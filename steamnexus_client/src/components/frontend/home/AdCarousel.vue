@@ -1,21 +1,27 @@
 <template>
-  <swiper
-    :slidesPerView="1"
-    :spaceBetween="0"
-    :autoplay="true"
-    :pagination="pagination"
-    :navigation="true"
-    :modules="modules"
-  >
-    <swiper-slide v-for="(slide, index) in slides" :key="index"
-      ><a :href="slide.url"
-        ><img :src="slide.imagePath" :alt="slide.title" />
-        <div class="description">
-          <p>{{ slide.description }}</p>
-        </div>
-      </a></swiper-slide
-    >
-  </swiper>
+  <CContainer>
+    <CRow>
+      <CCol xs="12">
+        <swiper
+          :slidesPerView="1"
+          :spaceBetween="0"
+          :autoplay="true"
+          :pagination="pagination"
+          :navigation="true"
+          :modules="modules"
+        >
+          <swiper-slide v-for="(slide, index) in slides" :key="index"
+            ><a :href="slide.url"
+              ><img :src="slide.imagePath" :alt="slide.title" />
+              <div class="description">
+                <p>{{ slide.description }}</p>
+              </div>
+            </a></swiper-slide
+          >
+        </swiper>
+      </CCol>
+    </CRow>
+  </CContainer>
 </template>
 <script setup>
 // Import Swiper Vue.js components
@@ -32,6 +38,8 @@ import 'swiper/css/navigation'
 // import required modules
 import { Pagination, Navigation, Autoplay } from 'swiper/modules'
 
+// Core UI
+import { CContainer, CRow, CCol } from '@coreui/vue'
 // 從環境變數取得 API BASE URL
 const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
@@ -62,8 +70,7 @@ onMounted(() => {
 <style scoped>
 .swiper {
   /* 輪播範圍設定 */
-  width: 1000px;
-  height: 500px;
+  max-width: 1000px;
   margin: 0 auto;
   border-radius: 15px;
 
