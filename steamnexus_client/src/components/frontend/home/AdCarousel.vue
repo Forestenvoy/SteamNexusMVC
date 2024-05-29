@@ -1,56 +1,63 @@
 <template>
-  <swiper :slidesPerView="1" :spaceBetween="0" :loop="true" :autoplay="true" :pagination="pagination" :navigation="true"
-    :modules="modules">
-    <swiper-slide v-for="(slide, index) in slides" :key="index"><a :href="slide.url"><img :src="slide.imagePath"
-          :alt="slide.title" />
+  <swiper
+    :slidesPerView="1"
+    :spaceBetween="0"
+    :autoplay="true"
+    :pagination="pagination"
+    :navigation="true"
+    :modules="modules"
+  >
+    <swiper-slide v-for="(slide, index) in slides" :key="index"
+      ><a :href="slide.url"
+        ><img :src="slide.imagePath" :alt="slide.title" />
         <div class="description">
           <p>{{ slide.description }}</p>
         </div>
-      </a></swiper-slide>
+      </a></swiper-slide
+    >
   </swiper>
 </template>
 <script setup>
 // Import Swiper Vue.js components
-import { Swiper, SwiperSlide } from 'swiper/vue';
+import { Swiper, SwiperSlide } from 'swiper/vue'
 
-import { ref, onMounted } from 'vue';
+import { ref, onMounted } from 'vue'
 
 // Import Swiper styles
-import 'swiper/css';
+import 'swiper/css'
 
-import 'swiper/css/pagination';
-import 'swiper/css/navigation';
-
+import 'swiper/css/pagination'
+import 'swiper/css/navigation'
 
 // import required modules
-import { Pagination, Navigation, Autoplay } from 'swiper/modules';
+import { Pagination, Navigation, Autoplay } from 'swiper/modules'
 
 // 從環境變數取得 API BASE URL
 const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
-const modules = ref([Pagination, Navigation, Autoplay]);
+const modules = ref([Pagination, Navigation, Autoplay])
 const pagination = ref({
-  clickable: true,
-});
-const slides = ref([]);
+  clickable: true
+})
+const slides = ref([])
 
 async function fetchSlides() {
   fetch(`${apiUrl}/api/Advertisement/GetAdSlides`, {
-    method: 'GET',
+    method: 'GET'
   })
-    .then(response => response.json())
-    .then(data => {
-      console.log(data);
-      slides.value = data;
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data)
+      slides.value = data
     })
-    .catch(error => {
-      console.error('Failed to fetch slides:', error);
-    });
+    .catch((error) => {
+      console.error('Failed to fetch slides:', error)
+    })
 }
 
 onMounted(() => {
-  fetchSlides();
-});
+  fetchSlides()
+})
 </script>
 <style scoped>
 .swiper {
@@ -100,6 +107,5 @@ p {
   margin: 20px;
   text-align: center;
   justify-content: center;
-
 }
 </style>
