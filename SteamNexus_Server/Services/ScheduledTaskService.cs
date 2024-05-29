@@ -108,14 +108,20 @@ namespace SteamNexus_Server.Services
         }
         private void setNumberOfCommentsDailyTimer()
         {
-            double halfHourInterval = TimeSpan.FromMinutes(30).TotalMilliseconds;
-            _NumberOfCommentsDailyTimer = new System.Timers.Timer(halfHourInterval);
+            DateTime now = DateTime.Now;
+            DateTime nextRun = DateTime.Today.AddHours(2).AddMinutes(1); // 今天的下午6:28
+            if (now > nextRun)
+            {
+                nextRun = nextRun.AddDays(1); // 如果已经过了今天的时间，就设置为明天的6:28
+            }
+
+            double firstInterval = (nextRun - now).TotalMilliseconds;
+            _NumberOfCommentsDailyTimer = new System.Timers.Timer(firstInterval);
             _NumberOfCommentsDailyTimer.Elapsed += async (sender, e) => await NumberOfCommentsDailyTimerTimedEvent(sender, e);
             _NumberOfCommentsDailyTimer.AutoReset = true; // 設置為 true，以便每半小時自動重置
             _NumberOfCommentsDailyTimer.Start();
 
-            // 手動調用一次，立即執行第一次
-            Task.Run(async () => await NumberOfCommentsDailyTimerTimedEvent(null, null));
+            
         }
         private async Task NumberOfCommentsDailyTimerTimedEvent(object source, ElapsedEventArgs e)
         {
@@ -125,6 +131,9 @@ namespace SteamNexus_Server.Services
                 {
                     var gamePriceToDB = scope.ServiceProvider.GetRequiredService<GameTimer>();
                     await gamePriceToDB.GetNumberOfCommentsDataToDB();
+
+                    _priceDailyTimer.Interval = TimeSpan.FromHours(24).TotalMilliseconds; //設定下一次的時間
+                    _priceDailyTimer.Start();
                 }
             }
             catch (Exception ex)
