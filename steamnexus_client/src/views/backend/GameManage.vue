@@ -1,5 +1,5 @@
 <template>
-  <div style="margin-left: 20px">
+  <div class="p-3" style="margin-left: 20px">
     <h1>
       全部遊戲<img
         src="/public/img/loading-block-white.gif"
@@ -166,8 +166,6 @@
       </CModalFooter>
     </CModal>
   </Form>
-
-  <Button type="button" @click="GetLineChartData" color="primary">測試</Button>
   <!--Form End-->
   <CToaster class="p-3" placement="top-end">
     <CToast
@@ -188,6 +186,10 @@
 </template>
 
 <script setup>
+// 使用 Pinia，利用 store 去訪問狀態
+import { useIdentityStore } from '@/stores/identity.js'
+const authStore = useIdentityStore()
+
 import { CToaster, CToast } from '@coreui/vue'
 import $ from 'jquery'
 import DataTable from 'datatables.net-dt'
@@ -196,13 +198,13 @@ import 'datatables.net-rowgroup-dt'
 import 'datatables.net-buttons-dt'
 import 'datatables.net-responsive-dt'
 
-import '@/assets/css/dataTables.datatables.min.css';
-import '@/assets/css/fixedHeader.dataTables.min.css';
-import '@/assets/css/rowGroup.dataTables.min.css';
-import '@/assets/css/buttons.dataTables.min.css';
-import '@/assets/css/responsive.dataTables.min.css';
+import '@/assets/css/dataTables.datatables.min.css'
+import '@/assets/css/fixedHeader.dataTables.min.css'
+import '@/assets/css/rowGroup.dataTables.min.css'
+import '@/assets/css/buttons.dataTables.min.css'
+import '@/assets/css/responsive.dataTables.min.css'
 
-import { ref, onMounted, onUpdated } from 'vue'
+import { ref, onMounted } from 'vue'
 import { onBeforeRouteLeave } from 'vue-router'
 import { toast } from 'vue3-toastify'
 import 'vue3-toastify/dist/index.css'
@@ -210,16 +212,16 @@ import 'vue3-toastify/dist/index.css'
 import {
   GetGamePriceDataToDB,
   GetOnlineUsersDataToDB,
-  GetNumberOfCommentsDataToDB,
-  GetMinDataToDB,
-  GetRecDataToDB
+  GetNumberOfCommentsDataToDB
+  // GetMinDataToDB,
+  // GetRecDataToDB
 } from '@/components/backend/Game/topBtnFetch.js'
 import Swal from 'sweetalert2'
 // 從環境變數取得 API BASE URL
 const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
 //後端執行次數
-var priceProgress = false
+// var priceProgress = false
 var progressNum = 0
 
 // 初始化 DataTables
@@ -239,7 +241,6 @@ import { defineRule, Form, Field, ErrorMessage, configure } from 'vee-validate'
 import { required, between, confirmed, numeric, url } from '@vee-validate/rules'
 import { localize } from '@vee-validate/i18n'
 import zh_TW from '@/components/backend/Game/zh_TW.json'
-import { CAlert } from '@coreui/vue'
 import dataTableLanguage from '@/components/backend/hardware/dataTableLanguage.js'
 
 defineRule('required', required)
@@ -267,7 +268,7 @@ function ImageChange(event) {
   if (event.target.value != '') {
     var img = new Image()
     img.onload = function () {
-      imagesrc = event.target.value
+      imagesrc.value = event.target.value
     }
     img.onerror = function () {
       // 如果網址有效但沒有圖片，顯示預設圖片
@@ -282,7 +283,7 @@ function ImageChange(event) {
 //影片更新事件
 function VideoChange(event) {
   if (event.target.value != '') {
-    videosrc = event.target.value
+    videosrc.value = event.target.value
   }
 }
 
@@ -305,12 +306,12 @@ configure({
 
 //編輯事件
 $(document).on('click', 'button[id$="edit_button"]', function (event) {
-  gameGameId = $(this).attr('data-GameId')
+  gameGameId.value = $(this).attr('data-GameId')
   event.preventDefault()
   event.stopPropagation()
-  Title = '編輯遊戲'
+  Title.value = '編輯遊戲'
   //優先載入js 在執行fetch
-  fetch(`${apiUrl}/api/GamesManagement/GetEditJSON?id=${gameGameId}`, {
+  fetch(`${apiUrl}/api/GamesManagement/GetEditJSON?id=${gameGameId.value}`, {
     method: 'GET'
   })
     .then((response) => {
@@ -322,15 +323,15 @@ $(document).on('click', 'button[id$="edit_button"]', function (event) {
       return response.json()
     })
     .then((val) => {
-      AppId = val.appId
-      Name = val.name
-      OriginalPrice = val.originalPrice
-      AgeRating = val.ageRating
-      ReleaseDate = val.releaseDate
-      Publisher = val.publisher
-      Description = val.description
-      ImagePath = val.imagePath
-      VideoPath = val.videoPath
+      AppId.value = val.appId
+      Name.value = val.name
+      OriginalPrice.value = val.originalPrice
+      AgeRating.value = val.ageRating
+      ReleaseDate.value = val.releaseDate
+      Publisher.value = val.publisher
+      Description.value = val.description
+      ImagePath.value = val.imagePath
+      VideoPath.value = val.videoPath
       imagesrc.value = val.imagePath
       videosrc.value = val.videoPath
       handleClick()
@@ -373,7 +374,10 @@ $(document).on('click', 'button[id$="delete_button"]', function (event) {
       if (result.isConfirmed) {
         $.ajax({
           type: 'GET',
-          url: `${apiUrl}/api/GamesManagement/PostDeletePartialToDB?id=${deleteGameId}`
+          url: `${apiUrl}/api/GamesManagement/PostDeletePartialToDB?id=${deleteGameId}`,
+          headers: {
+            Authorization: `Bearer ${authStore.getToken}` // 確保 token 正確傳遞
+          }
         })
           .done((data) => {
             console.log(data)
@@ -382,6 +386,7 @@ $(document).on('click', 'button[id$="delete_button"]', function (event) {
               text: '此操作無法復原',
               icon: 'success'
             })
+            getdatatableData()
           })
           .fail((data) => {
             $('#systemLoading').hide()
@@ -401,30 +406,33 @@ $(document).on('click', 'button[id$="delete_button"]', function (event) {
 })
 
 //資料發送事件
-function onSubmit(event) {
-  var action = Title == '新增遊戲' ? 'PostCreatPartialToDB' : 'PostEditPartialToDB'
+function onSubmit() {
+  var action = Title.value == '新增遊戲' ? 'PostCreatPartialToDB' : 'PostEditPartialToDB'
 
   $.ajax({
     type: 'POST',
     contentType: 'application/json',
     data: JSON.stringify({
-      gameId: gameGameId,
-      appId: AppId,
-      name: Name,
-      originalPrice: OriginalPrice,
-      ageRating: AgeRating,
-      releaseDate: ReleaseDate == '' ? null : ReleaseDate,
-      publisher: Publisher,
-      description: Description,
-      imagePath: ImagePath,
-      videoPath: VideoPath
+      gameId: gameGameId.value,
+      appId: AppId.value,
+      name: Name.value,
+      originalPrice: OriginalPrice.value,
+      ageRating: AgeRating.value,
+      releaseDate: ReleaseDate.value == '' ? null : ReleaseDate.value,
+      publisher: Publisher.value,
+      description: Description.value,
+      imagePath: ImagePath.value,
+      videoPath: VideoPath.value
     }),
-    url: `${apiUrl}/api/GamesManagement/${action}`
+    url: `${apiUrl}/api/GamesManagement/${action}`,
+    headers: {
+      Authorization: `Bearer ${authStore.getToken}` // 確保 token 正確傳遞
+    }
   })
     .done((data) => {
       console.log(data)
       visibleVerticallyCenteredScrollableDemo.value = false
-      toast.success(Title == '新增遊戲' ? `已新增 ${Name}` : `已編輯 ${Name}`, {
+      toast.success(Title.value == '新增遊戲' ? `已新增 ${Name.value}` : `已編輯 ${Name.value}`, {
         theme: 'dark',
         autoClose: 2000,
         transition: toast.TRANSITIONS.ZOOM,
@@ -443,7 +451,10 @@ function onSubmit(event) {
 function getdatatableData() {
   // 發送非同步GET請求
   fetch(`${apiUrl}/api/GamesManagement/IndexJson`, {
-    method: 'GET'
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${authStore.getToken}` // 確保 token 正確傳遞
+    }
   })
     .then((result) => {
       // 此時 result 是一個請求結果的物件
@@ -473,7 +484,7 @@ onMounted(() => {
         data: 'imagePath',
         width: '5%',
         className: 'text-center',
-        render: function (data, type, row) {
+        render: function (data) {
           return '<img src="' + data + '" alt="圖片" style="width:150px">'
         },
         responsivePriority: 1
@@ -493,7 +504,7 @@ onMounted(() => {
         width: '5%',
         className: 'text-center',
         // 按鈕 自定義
-        render: function (data, type, row, meta) {
+        render: function (data, type, row) {
           // 取得 productId
           let name = row.name
           let GameId = row.gameId
@@ -532,23 +543,23 @@ onMounted(() => {
     layout: {
       topMiddle: {
         buttons: [
-          {
-            text: '新增遊戲',
-            // 按鈕點擊事件
-            action: function () {
-              Title = '新增遊戲'
-              AppId = ''
-              Name = ''
-              OriginalPrice = ''
-              AgeRating = ''
-              ReleaseDate = ''
-              Publisher = ''
-              Description = ''
-              ImagePath = ''
-              VideoPath = ''
-              handleClick()
-            }
-          },
+          // {
+          //   text: '新增遊戲',
+          //   // 按鈕點擊事件
+          //   action: function () {
+          //     Title.value = '新增遊戲'
+          //     AppId.value = ''
+          //     Name.value = ''
+          //     OriginalPrice.value = ''
+          //     AgeRating.value = ''
+          //     ReleaseDate.value = ''
+          //     Publisher.value = ''
+          //     Description.value = ''
+          //     ImagePath.value = ''
+          //     VideoPath.value = ''
+          //     handleClick()
+          //   }
+          // },
           {
             text: '更新全部價格',
             // 按鈕點擊事件
@@ -559,16 +570,16 @@ onMounted(() => {
                 visible: true,
                 Progress: progressNum
               })
-
-              if (priceProgress == false) {
-                priceProgress = true
-                const source = new EventSource(`${apiUrl}/api/GamesManagement/GamePriceProgress`)
-                source.onmessage = (event) => {
-                  console.log('Received event with id:', event.lastEventId)
-                  progressNum = event.data
-                }
-                GetGamePriceDataToDB()
-              }
+              GetGamePriceDataToDB()
+              // if (priceProgress == false) {
+              //   priceProgress = true
+              //   const source = new EventSource(`${apiUrl}/api/GamesManagement/GamePriceProgress`)
+              //   source.onmessage = (event) => {
+              //     console.log('Received event with id:', event.lastEventId)
+              //     progressNum = event.data
+              //   }
+              // GetGamePriceDataToDB()
+              // }
             }
           },
           {
@@ -584,21 +595,21 @@ onMounted(() => {
             action: function () {
               GetNumberOfCommentsDataToDB()
             }
-          },
-          {
-            text: '抓取最低配備',
-            // 按鈕點擊事件
-            action: function (e, dt, node, config) {
-              GetMinDataToDB()
-            }
-          },
-          {
-            text: '抓取最高配備',
-            // 按鈕點擊事件
-            action: function () {
-              GetRecDataToDB()
-            }
           }
+          // {
+          //   text: '抓取最低配備',
+          //   // 按鈕點擊事件
+          //   action: function () {
+          //     GetMinDataToDB()
+          //   }
+          // },
+          // {
+          //   text: '抓取最高配備',
+          //   // 按鈕點擊事件
+          //   action: function () {
+          //     GetRecDataToDB()
+          //   }
+          // }
         ]
       }
     }
@@ -618,6 +629,9 @@ onBeforeRouteLeave(() => {
 </script>
 
 <style>
+.dt-button {
+  background-color: #313131 !important;
+}
 /* @import 'bootstrap/dist/css/bootstrap.min.css'; */
 /* datatables 頂部布局調整 */
 #GameManageTable_wrapper .dt-end .dt-search {

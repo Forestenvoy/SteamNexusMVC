@@ -510,6 +510,7 @@ public class UserIdentityController : ControllerBase
 
     #region ChangePassword
     [HttpPost("ChangePassword")]
+    [Authorize]
     public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordViewModel data)
     {
         if (!ModelState.IsValid)
@@ -595,6 +596,7 @@ public class UserIdentityController : ControllerBase
 
     #region EditMember
     [HttpPut("EditMember")]
+    [Authorize]
     public async Task<IActionResult> EditMember([FromForm] EditUserViewModel data)
     {
         if (!ModelState.IsValid)

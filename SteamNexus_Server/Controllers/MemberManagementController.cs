@@ -20,6 +20,7 @@ namespace SteamNexus_Server.Controllers
     [EnableCors("AllowAny")]
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
     public class MemberManagementController : ControllerBase
     {
         private readonly ILogger<MemberManagementController> _logger;
@@ -251,8 +252,6 @@ namespace SteamNexus_Server.Controllers
 
 
         #region DeleteUser
-
-
         //[HttpDelete("{id}")]
         [HttpPost("DeleteUser")]
         public async Task<IActionResult> DeleteUser(int id)

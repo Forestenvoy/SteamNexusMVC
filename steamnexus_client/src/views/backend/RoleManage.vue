@@ -83,6 +83,10 @@ import axios from 'axios'
 import dataTableLanguage from '@/components/backend/hardware/dataTableLanguage.js' //i18n
 import { onBeforeRouteLeave } from 'vue-router' //datatables off
 
+// 使用 Pinia，利用 store 去訪問狀態
+import { useIdentityStore } from '@/stores/identity.js'
+const store = useIdentityStore()
+
 // 特殊吐司
 import { toast } from 'vue3-toastify'
 import 'vue3-toastify/dist/index.css'
@@ -133,22 +137,28 @@ const checkRole = async () => {
     return
   }
 
+  store.getToken
+  console.log('JWT DatatablesToken:', store.getToken) // 輸出 JWT Token
+
   try {
     const response = await axios.get(`${apiUrl}/api/MemberManagement/CheckRolesExists`, {
-      params: { rolename: roleValue }
+      params: { rolename: roleValue },
+      headers: {
+        Authorization: `Bearer ${store.getToken}` // 使用獲取的 JWT Token
+      }
     })
     rolesExists.value = !response.data
     const feedbackElement = $('#roleFeedback')
     if (response.data) {
       feedbackElement
-        .text('此名稱 可以使用')
+        .text('此 名稱 可以使用')
         .removeClass('invalid-feedback')
         .addClass('valid-feedback')
       $('#RoleName').removeClass('is-invalid').addClass('is-valid')
       isFormValid.value = true
     } else {
       feedbackElement
-        .text('該名稱 已被使用，請更換名稱')
+        .text('該 名稱 已被使用，請更換 名稱')
         .removeClass('valid-feedback')
         .addClass('invalid-feedback')
       $('#RoleName').removeClass('is-valid').addClass('is-invalid')
@@ -163,20 +173,26 @@ const checkRole = async () => {
 
 // 檢查權限名稱是否存在
 const checkRoleExists = async (roleName) => {
+  store.getToken
+  console.log('JWT DatatablesToken:', store.getToken) // 輸出 JWT Token
+
   try {
     const response = await axios.get(`${apiUrl}/api/MemberManagement/CheckRolesExists`, {
-      params: { rolename: roleName }
+      params: { rolename: roleName },
+      headers: {
+        Authorization: `Bearer ${store.getToken}` // 使用獲取的 JWT Token
+      }
     })
     return response.data
   } catch (error) {
-    console.error('檢查角色名稱失敗：', error)
+    console.error('檢查權限名稱失敗：', error)
     return false
   }
 }
 
 // 新增角色
 const createRole = async () => {
-  console.log('新增角色表單提交')
+  console.log('新增權限表單提交')
   if (newRoleName.value.trim() === '') {
     // alert('請輸入權限名稱')
     toast.error('請輸入權限名稱', {
@@ -189,10 +205,10 @@ const createRole = async () => {
   }
 
   const roleExists = await checkRoleExists(newRoleName.value)
-  console.log('角色名稱檢查結果:', roleExists)
+  console.log('權限名稱檢查結果:', roleExists)
   if (roleExists === false) {
     // alert('角色名稱已存在')
-    toast.error('角色名稱已存在', {
+    toast.error('權限名稱已存在', {
       theme: 'dark',
       autoClose: 1000,
       transition: toast.TRANSITIONS.ZOOM,
@@ -205,8 +221,16 @@ const createRole = async () => {
   const formData = new FormData()
   formData.append('RoleName', newRoleName.value)
 
+  store.getToken
+  console.log('JWT DatatablesToken:', store.getToken) // 輸出 JWT Token
+
   axios
-    .post(`${apiUrl}/api/MemberManagement/CreateRole`, formData)
+    .post(`${apiUrl}/api/MemberManagement/CreateRole`, formData, {
+      headers: {
+        Authorization: `Bearer ${store.getToken}`, // 使用獲取的 JWT Token
+        'Content-Type': 'multipart/form-data'
+      }
+    })
     .then((response) => {
       if (response.data && response.data.message) {
         //
@@ -223,7 +247,7 @@ const createRole = async () => {
         isFormValid.value = false // 重置表單狀態
       } else {
         // alert('新增角色失敗，請重試')
-        toast.error('新增角色失敗，請重試', {
+        toast.error('新增權限失敗，請重試', {
           theme: 'dark',
           autoClose: 1000,
           transition: toast.TRANSITIONS.ZOOM,
@@ -241,7 +265,7 @@ const createRole = async () => {
           position: toast.POSITION.TOP_CENTER
         })
       } else {
-        toast.error('新增腳色失敗，請重新測試', {
+        toast.error('新增權限失敗，請重新測試', {
           theme: 'dark',
           autoClose: 1000,
           transition: toast.TRANSITIONS.ZOOM,
@@ -253,12 +277,19 @@ const createRole = async () => {
 
 // 刪除角色
 const deleteRole = (roleId) => {
+  store.getToken
+  console.log('JWT DatatablesToken:', store.getToken) // 輸出 JWT Token
   axios
-    .post(`${apiUrl}/api/MemberManagement/DeleteRole?id=${roleId}`, {
-      headers: {
-        'Content-Type': 'application/json'
+    .post(
+      `${apiUrl}/api/MemberManagement/DeleteRole?id=${roleId}`,
+      {}, // 這裡可以留空或傳遞需要的數據
+      {
+        headers: {
+          Authorization: `Bearer ${store.getToken}`,
+          'Content-Type': 'application/json'
+        }
       }
-    })
+    )
     .then((response) => {
       // alert(response.data.message)
       toast.success(response.data.message, {
@@ -283,12 +314,18 @@ const deleteRole = (roleId) => {
 
 onMounted(() => {
   // 初始化 Datatables
+  store.getToken
+  console.log('JWT DatatablesToken:', store.getToken) // 輸出 JWT Token
   datatable = new DataTable('#RolesManageTable', {
     ajax: {
       type: 'GET',
       url: `${apiUrl}/api/MemberManagement/RolesData`,
       dataSrc: function (json) {
         return json
+      },
+      headers: {
+        Authorization: `Bearer ${store.getToken}`,
+        'Content-Type': 'application/json'
       }
     },
     // column 定義
@@ -335,7 +372,7 @@ onMounted(() => {
   // 綁定刪除按鈕的點擊事件
   $('#RolesManageTable').on('click', '.del-btn', function () {
     const roleId = $(this).data('roleid')
-    if (confirm('確定要刪除此角色嗎？')) {
+    if (confirm('確定要刪除此權限嗎？')) {
       deleteRole(roleId)
     }
   })

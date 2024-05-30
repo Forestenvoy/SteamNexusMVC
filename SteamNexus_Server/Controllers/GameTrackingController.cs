@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Cors;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -108,6 +109,7 @@ namespace SteamNexus_Server.Controllers
 
         #region TrackingDataForId
         [HttpGet("GameTrackForId")]
+        [Authorize]
         public async Task<IActionResult> GetGameTracking()
         {
             // 取得使用者 ID
@@ -224,6 +226,7 @@ namespace SteamNexus_Server.Controllers
 
         #region DeleteGameTracking
         [HttpDelete("DeleteGameTracking/{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteGameTracking(int id)
         {
             // 取得使用者 ID

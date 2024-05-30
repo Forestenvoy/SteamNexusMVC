@@ -437,16 +437,20 @@ import 'datatables.net-fixedheader-dt'
 import 'datatables.net-buttons-dt'
 import 'datatables.net-responsive-dt'
 
-import '@/assets/css/dataTables.datatables.min.css';
-import '@/assets/css/fixedHeader.dataTables.min.css';
-import '@/assets/css/buttons.dataTables.min.css';
-import '@/assets/css/responsive.dataTables.min.css';
+import '@/assets/css/dataTables.datatables.min.css'
+import '@/assets/css/fixedHeader.dataTables.min.css'
+import '@/assets/css/buttons.dataTables.min.css'
+import '@/assets/css/responsive.dataTables.min.css'
 
 import { ref, onMounted, computed } from 'vue'
 import { CModal, CModalHeader, CModalTitle, CModalBody, CModalFooter, CButton } from '@coreui/vue'
 import axios from 'axios'
 import dataTableLanguage from '@/components/backend/hardware/dataTableLanguage.js' //i18n
 import { onBeforeRouteLeave } from 'vue-router' //datatables off
+
+// 使用 Pinia，利用 store 去訪問狀態
+import { useIdentityStore } from '@/stores/identity.js'
+const store = useIdentityStore()
 
 // 特殊吐司
 import { toast } from 'vue3-toastify'
@@ -507,21 +511,27 @@ const closeCreateUserModal = () => {
 const checkEmail = async () => {
   const emailValue = email.value
   if (emailValue) {
+    store.getToken
+    console.log('JWT DatatablesToken:', store.getToken) // 輸出 JWT Token
     try {
       const response = await axios.get(`${apiUrl}/api/MemberManagement/CheckEmailExists`, {
-        params: { email: email.value }
+        params: { email: email.value },
+        headers: {
+          Authorization: `Bearer ${store.getToken}`, // 使用獲取的 JWT Token
+          'Content-Type': 'application/json'
+        }
       })
       emailExists.value = !response.data
       const feedbackElement = $('#emailFeedback')
       if (response.data) {
         feedbackElement
-          .text('此Email 可以使用')
+          .text('此 Email 可以使用')
           .removeClass('invalid-feedback')
           .addClass('valid-feedback')
         $('#email').removeClass('is-invalid').addClass('is-valid')
       } else {
         feedbackElement
-          .text('該 Email 已被使用，請更換Email')
+          .text('該 Email 已被使用,請更換Email')
           .removeClass('valid-feedback')
           .addClass('invalid-feedback')
         $('#email').removeClass('is-valid').addClass('is-invalid')
@@ -656,9 +666,13 @@ const submitForm = async () => {
     formData.append('Photo', photo.value)
   }
 
+  store.getToken
+  console.log('JWT DatatablesToken:', store.getToken) // 輸出 JWT Token
+
   axios
     .post(`${apiUrl}/api/MemberManagement/CreateMember`, formData, {
       headers: {
+        Authorization: `Bearer ${store.getToken}`, // 使用獲取的 JWT Token
         'Content-Type': 'multipart/form-data'
       }
     })
@@ -707,12 +721,21 @@ const clearForm = () => {
 
 // 刪除使用者
 const deleteUser = (userId) => {
+  store.getToken
+  console.log('JWT DatatablesToken:', store.getToken) // 輸出 JWT Token
+  console.log('userId:', userId)
   axios
-    .post(`${apiUrl}/api/MemberManagement/DeleteUser?id=${userId}`, {
-      headers: {
-        'Content-Type': 'application/json'
+    // .delete(`${apiUrl}/api/MemberManagement/DeleteUser`, {
+    .post(
+      `${apiUrl}/api/MemberManagement/DeleteUser?id=${userId}`,
+      {}, // 這裡可以留空或傳遞需要的數據
+      {
+        headers: {
+          Authorization: `Bearer ${store.getToken}`, // 使用獲取的 JWT Token
+          'Content-Type': 'application/json'
+        }
       }
-    })
+    )
     .then((response) => {
       //alert('使用者刪除成功')
       toast.success(response.data.message, {
@@ -767,9 +790,13 @@ const submitEditForm = async () => {
     formData.append('Photo', photo.value)
   }
 
+  store.getToken
+  console.log('JWT DatatablesToken:', store.getToken) // 輸出 JWT Token
+
   try {
     const response = await axios.post(`${apiUrl}/api/MemberManagement/EditUser`, formData, {
       headers: {
+        Authorization: `Bearer ${store.getToken}`, // 使用獲取的 JWT Token
         'Content-Type': 'multipart/form-data'
       }
     })
@@ -804,12 +831,18 @@ const submitEditForm = async () => {
 
 onMounted(() => {
   // 初始化 Datatables
+  store.getToken
+  console.log('JWT DatatablesToken:', store.getToken) // 輸出 JWT Token
   datatable = new DataTable('#MemberManageTable', {
     ajax: {
       type: 'GET',
       url: `${apiUrl}/api/MemberManagement/GetUsersWithRoles`,
       dataSrc: function (json) {
         return json
+      },
+      headers: {
+        Authorization: `Bearer ${store.getToken}`,
+        'Content-Type': 'application/json'
       }
     },
     // column 定義

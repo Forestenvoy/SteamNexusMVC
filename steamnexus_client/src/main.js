@@ -22,16 +22,21 @@ app.component('CIcon', CIcon)
 // 路由守衛
 router.beforeEach((to, from, next) => {
   const identityStore = useIdentityStore()
-  // 如果事後台
   if (to.path.startsWith('/admin')) {
-    // 驗證是否登入管理員
+    // 後台驗證是否登入管理員
     if (identityStore.getUserRole === 'Admin') {
       next()
     } else {
       next('/')
     }
+  } else if (to.path.startsWith('/userData') || to.path.startsWith('/trackedGames')) {
+    // 會員驗證是否登入會員
+    if (identityStore.getUserRole === 'Member' || identityStore.getUserRole === 'Admin') {
+      next()
+    } else {
+      next('/')
+    }
   } else {
-    console.log('Hello Front')
     next()
   }
 })
