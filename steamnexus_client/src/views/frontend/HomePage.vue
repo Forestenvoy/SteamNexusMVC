@@ -146,7 +146,7 @@
             </a>
           </div>
         </div>
-        <div ref="loading" class="loading">Loading...</div>
+        <div ref="loading" class="loading"></div>
       </div>
       <div class="col-xl-2"></div>
     </div>
