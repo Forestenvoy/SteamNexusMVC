@@ -76,9 +76,7 @@
               <img :src="game.imagePath" style="width: 100%" class="rounded" alt="" />
             </div>
             <div class="col-6 d-flex flex-column justify-content-between">
-              <span class="d-block mt-1 nowrap fs-4" style=""
-                >{{ game.gameId }}{{ game.name }}</span
-              >
+              <span class="d-block mt-1 nowrap fs-4" style="">{{ game.name }}</span>
               <div
                 v-for="tagGroup in TagGroupDataLozad.filter((tg) => tg.gameId === game.gameId)"
                 :key="tagGroup.id"
@@ -350,8 +348,10 @@ const loadMoreGames = () => {
     gameLozad.value.push(gameData.value[i])
     // gameCount++
     num++
-    // console.log(gameCount)
   }
+  console.log(gameData.value)
+  console.log(gameLozad.value)
+  console.log(num)
 }
 
 const loadMoreTagGroup = () => {
@@ -373,7 +373,7 @@ onMounted(() => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
         if (isGameDataLoaded.value == true) {
-          if (num == 20) {
+          if (num >= 20) {
             if (isholdClick == true) {
               inputChangSeach()
               console.log('isholdClick==true')
@@ -382,11 +382,7 @@ onMounted(() => {
               console.log('isholdClick==false')
             }
           }
-
-          // loadMoreGames()
           loadMoreTagGroup()
-
-          // console.log('123')
         }
       }
     })
