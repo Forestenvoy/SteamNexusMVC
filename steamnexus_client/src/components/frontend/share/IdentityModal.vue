@@ -231,7 +231,7 @@ const checkEmail = async () => {
   const emailValue = email.value
   if (emailValue) {
     try {
-      const response = await axios.get(`${apiUrl}/api/MemberManagement/CheckEmailExists`, {
+      const response = await axios.get(`${apiUrl}/api/UserIdentity/CheckEmailExists`, {
         params: { email: email.value }
       })
       emailExists.value = !response.data

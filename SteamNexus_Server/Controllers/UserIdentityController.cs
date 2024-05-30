@@ -690,4 +690,14 @@ public class UserIdentityController : ControllerBase
     }
     #endregion
 
+
+    #region Check Email
+    [HttpGet("CheckEmailExists")]
+    public async Task<IActionResult> CheckEmailExists([FromQuery] string email)
+    {
+        bool exists = await _application.Users.AnyAsync(u => u.Email == email);
+        return Ok(!exists);  // 返回 false 表示 Email 已存在，true表示Email不存在
+    }
+    #endregion
+
 }
