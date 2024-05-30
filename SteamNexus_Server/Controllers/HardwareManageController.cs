@@ -37,6 +37,7 @@ public class HardwareManageController : ControllerBase
 
     // 回傳硬體產品種類
     // GET: api/HardwareManage/GetComputerParts
+    [AllowAnonymous]
     [HttpGet("GetComputerParts")]
     public IEnumerable<object> GetComputerParts()
     {

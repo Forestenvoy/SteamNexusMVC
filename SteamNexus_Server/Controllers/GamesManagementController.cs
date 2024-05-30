@@ -36,7 +36,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
         public GamesManagementController(SteamNexusDbContext context, GameTimer GamePriceToDB, ScheduledTaskService scheduledTaskService)
         {
             _context = context;
-            _GamePriceToDB= GamePriceToDB;
+            _GamePriceToDB = GamePriceToDB;
             _scheduledTaskService = scheduledTaskService ?? throw new ArgumentNullException(nameof(scheduledTaskService));
         }
 
@@ -192,7 +192,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetGamePriceDataToDB()
         {
-            if (isPriceDataUsing==false)
+            if (isPriceDataUsing == false)
             {
                 isPriceDataUsing = true;
                 try
@@ -222,8 +222,8 @@ namespace SteamNexus.Areas.Administrator.Controllers
                 }
                 return Ok("價格計時器已關閉");
             }
-               
-            
+
+
 
         }
 
@@ -243,19 +243,19 @@ namespace SteamNexus.Areas.Administrator.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetOnlineUsersDataToDB()
         {
-             if (isOnlineUserUsing == false)
-             {
-                  isOnlineUserUsing = true;
-                   try
-                   {
-                      _scheduledTaskService.StartPeopleTimer();
-                   }
-                   catch (Exception ex)
-                   {
-                      Console.WriteLine($"An error occurred: {ex.Message}");
-                      Console.WriteLine($"Stack Trace: {ex.StackTrace}");
-                      return StatusCode(500, "Internal server error");
-                   }
+            if (isOnlineUserUsing == false)
+            {
+                isOnlineUserUsing = true;
+                try
+                {
+                    _scheduledTaskService.StartPeopleTimer();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"An error occurred: {ex.Message}");
+                    Console.WriteLine($"Stack Trace: {ex.StackTrace}");
+                    return StatusCode(500, "Internal server error");
+                }
                 return Ok("在線人數計時器已啟動");
             }
             else
@@ -271,7 +271,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
                     Console.WriteLine($"Stack Trace: {ex.StackTrace}");
                     return StatusCode(500, "Internal server error");
                 }
-                
+
                 return Ok("在線人數計時器已關閉");
             }
         }
@@ -489,7 +489,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
             }
             return "總次數:" + allNum + "\nAPI找不到次數:" + APIerr + "\n欄位錯誤:" + errNum;
         }
-        
+
         //(前台)拿取價格
         [HttpGet("GetLineChartData")]
         public async Task<JsonResult> GetLineChartData(int id)
@@ -511,7 +511,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
                                .Where(ph => ph.GameId == id)
                                .Select(ph => new { ph.TagId })
                                .ToListAsync();
-    
+
             var tagIds = TagGroupFind.Select(t => t.TagId).ToList();
 
             var tags = await _context.Tags
@@ -620,10 +620,10 @@ namespace SteamNexus.Areas.Administrator.Controllers
                 .OrderBy(record => record.Price)
                 .Select(group => new
                 {
-                    Date=group.Date,
+                    Date = group.Date,
                     LowestPrice = group.Price
                 }).FirstOrDefault();
-                
+
 
             // 返回 JSON 結果
             return Json(lowestData);
@@ -656,7 +656,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
 
         //(首頁)用標籤拿取相關遊戲
         [HttpGet("GetGameSameData")]
-        public async Task<JsonResult> GetGameSameData(int tagId,int tagNum)
+        public async Task<JsonResult> GetGameSameData(int tagId, int tagNum)
         {
             int gameNum = 10000 + tagNum;
 
@@ -665,7 +665,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
                 .Select(ph => ph.GameId).ToListAsync(); //拿到含有此tagId的gameId
 
             var gameTagMatches = await _context.Games //再搜尋此gameId的細部資料
-                                              .Where(tg => GetGameSameeData.Contains(tg.GameId)&&tg.GameId >= gameNum)
+                                              .Where(tg => GetGameSameeData.Contains(tg.GameId) && tg.GameId >= gameNum)
                                               .Skip(tagNum)
                                               .Take(20)
                                               .ToListAsync();
@@ -686,10 +686,26 @@ namespace SteamNexus.Areas.Administrator.Controllers
                 .Where(pc => pc.GameId >= gameNum)
                 .Take(20)
                 .ToListAsync();
-            
+
 
             return Json(GetGameData);
         }
+
+        //GameDataTable設定
+        [HttpGet("inputChangSeach")]
+        public JsonResult inputChangSeach(string input, int num)
+        {
+            var SeachData = _context.Games //再搜尋此gameId的細部資料
+                                          .Where(tg => tg.Name.Contains(input))
+                                          .OrderBy(game => game.GameId)
+                                          .ThenBy(game => game.Name)
+                                          .Skip(num)
+                                          .Take(20);
+
+            return Json(SeachData);
+        }
+
+        
     }
 }
 

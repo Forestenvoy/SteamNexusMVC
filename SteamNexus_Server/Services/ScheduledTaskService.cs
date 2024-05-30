@@ -79,6 +79,7 @@ namespace SteamNexus_Server.Services
                 Console.WriteLine($"Stack Trace: {ex.StackTrace}");
             }
         }
+
         private void setPeopleHalfHourTimer()
         {
             double halfHourInterval = TimeSpan.FromMinutes(30).TotalMilliseconds;
@@ -106,6 +107,7 @@ namespace SteamNexus_Server.Services
                 Console.WriteLine($"Stack Trace: {ex.StackTrace}");
             }
         }
+
         private void setNumberOfCommentsDailyTimer()
         {
             DateTime now = DateTime.Now;
