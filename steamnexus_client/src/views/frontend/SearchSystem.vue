@@ -118,9 +118,9 @@
           </a>
         </div>
       </div>
-      <div ref="loading" class="loading">Loading...</div>
+      <div ref="loading" class="loading"></div>
     </div>
-    <div class="col-xl-2"></div>
+    <div class="col-xl-2 fs-4 mx-auto" style="text-align: center">{{ loadingfont }}</div>
   </div>
 </template>
 <script setup>
@@ -151,6 +151,7 @@ var isGameDataLoaded = ref(false)
 var num = 0
 var isholdClick = false
 var inputText = ''
+var loadingfont = ref('')
 // var loadingif = false
 
 var tags = ref([
@@ -246,6 +247,9 @@ function inputChangSeach() {
       return response.json()
     })
     .then((val) => {
+      if (val == '') {
+        loadingfont.value = '查無此遊戲'
+      }
       gameData.value = val
       console.log(val)
     })
