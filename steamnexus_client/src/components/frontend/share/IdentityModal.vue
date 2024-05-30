@@ -22,9 +22,12 @@
         </div>
         <!-- 密碼 -->
         <div class="input-box">
+          <span class="icon-eye" @click="togglePasswordVisibility('loginPassword')">
+            <i :class="loginPasswordType === 'password' ? 'fas fa-eye' : 'fas fa-eye-slash'"></i>
+          </span>
           <span class="icon"><i class="fas fa-lock"></i></span>
           <input
-            type="password"
+            :type="loginPasswordType"
             class="mx-2"
             required
             v-model="loginPassword"
@@ -33,11 +36,12 @@
           />
           <label>Password</label>
         </div>
+
         <!-- 記住我 -->
         <div class="remember-forgot">
           <label
-            ><input type="checkbox" v-model="rememberMe" :tabindex="loginTabIndex" /> 記住我 </label
-          >
+            ><input type="checkbox" v-model="rememberMe" :tabindex="loginTabIndex" /> 記住我
+          </label>
           <!-- 忘記密碼 -->
           <a href="#" :tabindex="loginTabIndex">忘記密碼?</a>
         </div>
@@ -90,9 +94,12 @@
         </div>
         <!-- 密碼 -->
         <div class="input-box mt-5">
+          <span class="icon-eye" @click="togglePasswordVisibility('password')">
+            <i :class="passwordType === 'password' ? 'fas fa-eye' : 'fas fa-eye-slash'"></i>
+          </span>
           <span class="icon"><i class="fas fa-lock"></i></span>
           <input
-            type="password"
+            :type="passwordType"
             class="mx-2"
             id="Password"
             required
@@ -105,9 +112,12 @@
         </div>
         <!-- 確認密碼 -->
         <div class="input-box">
+          <span class="icon-eye" @click="togglePasswordVisibility('confirmPassword')">
+            <i :class="confirmPasswordType === 'password' ? 'fas fa-eye' : 'fas fa-eye-slash'"></i>
+          </span>
           <span class="icon"><i class="fas fa-lock"></i></span>
           <input
-            type="password"
+            :type="confirmPasswordType"
             class="mx-2"
             id="ConfirmPassword"
             required
@@ -122,8 +132,9 @@
         <!-- 註冊前確認規定同意書 -->
         <div class="remember-forgot mt-3">
           <label
-            ><input type="checkbox" required :tabindex="registerTabIndex" v-model="agree" /> 我同意條款與條件 </label
-          >
+            ><input type="checkbox" required :tabindex="registerTabIndex" v-model="agree" />
+            我同意條款與條件
+          </label>
         </div>
         <!-- 註冊按鈕 -->
         <button
@@ -177,6 +188,10 @@ const loginForm = ref(null)
 const registerForm = ref(null)
 const loginTabIndex = ref(0)
 const registerTabIndex = ref(-1)
+
+const loginPasswordType = ref('password')
+const passwordType = ref('password')
+const confirmPasswordType = ref('password')
 
 const closeModal = () => {
   // 隱藏登入畫面
@@ -488,6 +503,16 @@ const submitRegister = async () => {
   }
 }
 
+const togglePasswordVisibility = (field) => {
+  if (field === 'loginPassword') {
+    loginPasswordType.value = loginPasswordType.value === 'password' ? 'text' : 'password'
+  } else if (field === 'password') {
+    passwordType.value = passwordType.value === 'password' ? 'text' : 'password'
+  } else if (field === 'confirmPassword') {
+    confirmPasswordType.value = confirmPasswordType.value === 'password' ? 'text' : 'password'
+  }
+}
+
 onMounted(() => {
   showLogin()
 })
@@ -660,5 +685,14 @@ onMounted(() => {
 
 .login-register p a:hover {
   text-decoration: underline;
+}
+
+.input-box .icon-eye {
+  position: absolute;
+  right: 35px; /* 調整眼睛圖標的位置 */
+  color: white;
+  font-size: 1.2em;
+  line-height: 57px;
+  cursor: pointer;
 }
 </style>
