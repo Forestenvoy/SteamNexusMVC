@@ -146,9 +146,9 @@
             </a>
           </div>
         </div>
+        <div ref="loading" class="loading">Loading...</div>
       </div>
       <div class="col-xl-2"></div>
-      <div ref="loading" class="loading">Loading...</div>
     </div>
   </div>
 
@@ -189,9 +189,9 @@ const loading = ref(null)
 var TagGroupData = ref([])
 var TagGroupDataLozad = ref([])
 var isGameDataLoaded = ref(false)
-var num=0
-var isholdClick=false
-var holdUptagId=""
+var num = 0
+var isholdClick = false
+var holdUptagId = ''
 
 var tags = ref([
   {
@@ -262,63 +262,62 @@ var timeStart = ref('')
 var timeEnd = ref('')
 
 function getTimeNow() {
-  
   var now = new Date()
   return now.getTime()
 }
 
 function holdDown() {
-  num=0
+  num = 0
   timeStart.value = getTimeNow()
 }
 
 function holdUp(tagId, name) {
-  holdUptagId=tagId
-  isholdClick=true
+  holdUptagId = tagId
+  isholdClick = true
   timeEnd.value = getTimeNow()
   //如果此時檢測到的時間與第一次獲取的時間差有1000毫秒
-  if (timeEnd.value - timeStart.value < 100){
-      gameLozad.value = []
+  if (timeEnd.value - timeStart.value < 100) {
+    gameLozad.value = []
     tagsameFatch(holdUptagId)
     btnopen.value = true
     hotTitle.value = `${name}相關遊戲`
     console.log(timeStart.value)
     console.log(timeEnd.value)
-  } 
+  }
 }
 
-function tagsameFatch(tagId){
-  gameData.value=[];
-  console.log(gameLozad.value);
+function tagsameFatch(tagId) {
+  gameData.value = []
+  console.log(gameLozad.value)
   // console.log("gameData是0");
   console.log(`FatchNum:${num}`)
   fetch(`${apiUrl}/api/GamesManagement/GetGameSameData?tagId=${tagId}&tagNum=${num}`, {
-      method: 'GET'
+    method: 'GET'
+  })
+    .then((response) => {
+      // 確保請求是否成功
+      if (!response.ok) {
+        throw new Error('Network response was not ok')
+      }
+      // 解析 html
+      return response.json()
     })
-      .then((response) => {
-        // 確保請求是否成功
-        if (!response.ok) {
-          throw new Error('Network response was not ok')
-        }
-        // 解析 html
-        return response.json()
-      })
-      .then((val) => {
-        gameData.value = val
-        // console.log(gameData.value)
-      })
-      .then(() => {
-        loadMoreGames()
-        // console.log(gameData.value)
-      })
-      .catch((error) => {
-        console.error('Error:', error)
-      })
+    .then((val) => {
+      gameData.value = val
+      // console.log(gameData.value)
+    })
+    .then(() => {
+      loadMoreGames()
+      // console.log(gameData.value)
+    })
+    .catch((error) => {
+      console.error('Error:', error)
+    })
 }
 
 function hotClick() {
-  num=0
-  isholdClick=false
+  num = 0
+  isholdClick = false
   gameLozad.value = []
   btnopen.value = false
   hotTitle.value = `熱門排行`
@@ -345,11 +344,10 @@ function GetGameData() {
     })
     .then((val) => {
       // gameLozad.value = []
-      
+
       gameData.value = val
       isGameDataLoaded.value = true
       // console.log(gameData.value)
-      
     })
     .then(() => {
       // console.log('1-2')
@@ -382,7 +380,6 @@ function AllGameTagData() {
     })
     .then((val) => {
       TagGroupData.value = val
-      
     })
     .then(() => {
       loadMoreTagGroup()
@@ -417,7 +414,7 @@ function TagsData() {
 }
 
 const loadMoreGames = () => {
-  console.log("把API遊戲傳進前端")
+  console.log('把API遊戲傳進前端')
   for (let i = 0; i < 20; i++) {
     gameLozad.value.push(gameData.value[i])
     // gameCount++
@@ -445,14 +442,13 @@ onMounted(() => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
         if (isGameDataLoaded.value == true) {
-          if(isholdClick==true){
-            
-            console.log("isholdClick==true");
-          }else{
+          if (isholdClick == true) {
+            console.log('isholdClick==true')
+          } else {
             GetGameData()
-            console.log("isholdClick==false");
+            console.log('isholdClick==false')
           }
-          
+
           // loadMoreGames()
           loadMoreTagGroup()
           observer.observe()
