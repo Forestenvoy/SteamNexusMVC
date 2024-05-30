@@ -21,7 +21,9 @@
             <CNavLink class="nLink" href="#" @click="$router.push('/')"> 首頁 </CNavLink>
           </CNavItem>
           <CNavItem>
-            <CNavLink class="nLink" href="#" @click="$router.push('/pc-builder')"> GCB </CNavLink>
+            <CNavLink class="nLink" href="#" @click="$router.push('/pc-builder')">
+              遊戲電腦組裝
+            </CNavLink>
           </CNavItem>
         </CNavbarNav>
         <CNavbarNav class="me-0 me-lg-2 order-3 text-center" v-if="store.getUserRole === 'Admin'">
@@ -196,7 +198,7 @@ label div:nth-child(2) {
 
 .sticky {
   padding: 5px 100px;
-  background:linear-gradient(to bottom, #F3AE0B, rgb(239, 155, 0));
+  background: linear-gradient(to bottom, #f3ae0b, rgb(239, 155, 0));
   box-shadow: 2px 0px 30px 2px #000;
 }
 
@@ -220,7 +222,7 @@ label div:nth-child(2) {
   position: relative;
   letter-spacing: 2px;
   transition: 0.6s;
-    background-color: rgba(255 , 255, 255,0);
+  background-color: rgba(255, 255, 255, 0);
 }
 
 .brand-img {
@@ -241,8 +243,6 @@ label div:nth-child(2) {
   color: #000;
 }
 
-
-
 .navbar-nav {
   position: relative;
 }
@@ -255,7 +255,7 @@ label div:nth-child(2) {
 .nav-link {
   position: relative;
   font-size: 18px;
-  text-decoration: none;  
+  text-decoration: none;
   color: #fff;
   letter-spacing: 2px;
   font-weight: 500px;
@@ -264,11 +264,11 @@ label div:nth-child(2) {
 
 .sticky .nav-link {
   color: #000000;
-  background-color: rgba(255 , 255, 255,0);
+  background-color: rgba(255, 255, 255, 0);
 }
 
 .sticky input {
-  background-color: rgba(255 , 255, 255,0.6);
+  background-color: rgba(255, 255, 255, 0.6);
   border: 0px;
 }
 
@@ -297,7 +297,7 @@ label div:nth-child(2) {
   height: 0.175rem;
   left: 0;
   bottom: 0;
-  background: #F3AE0B;
+  background: #f3ae0b;
   transform: scale(0, 1);
   transition: transform 0.3s ease;
 }

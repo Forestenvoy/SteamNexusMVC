@@ -52,12 +52,11 @@ import 'datatables.net-rowgroup-dt'
 import 'datatables.net-buttons-dt'
 import 'datatables.net-responsive-dt'
 
-import '@/assets/css/dataTables.datatables.min.css';
-import '@/assets/css/fixedHeader.dataTables.min.css';
-import '@/assets/css/rowGroup.dataTables.min.css';
-import '@/assets/css/buttons.dataTables.min.css';
-import '@/assets/css/responsive.dataTables.min.css';
-
+import '@/assets/css/dataTables.datatables.min.css'
+import '@/assets/css/fixedHeader.dataTables.min.css'
+import '@/assets/css/rowGroup.dataTables.min.css'
+import '@/assets/css/buttons.dataTables.min.css'
+import '@/assets/css/responsive.dataTables.min.css'
 
 import { ref, onMounted } from 'vue'
 import { onBeforeRouteLeave } from 'vue-router'
@@ -74,6 +73,10 @@ import {
 import { useScraperStore } from '@/stores/scraper.js'
 // 利用 store 去訪問狀態 ✨
 const store = useScraperStore()
+
+// 身份驗證
+import { useIdentityStore } from '@/stores/identity.js'
+const authStore = useIdentityStore()
 
 // 從環境變數取得 API BASE URL
 const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
@@ -145,7 +148,10 @@ function getDataTableData() {
   const hardwareId = selectedItem.value
   // 發送非同步GET請求
   fetch(`${apiUrl}/api/HardwareManage/GetProductData?Type=${hardwareId}`, {
-    method: 'GET'
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${authStore.getToken}`
+    }
   })
     .then((result) => {
       // 此時 result 是一個請求結果的物件
@@ -283,7 +289,8 @@ onMounted(() => {
         method: 'POST',
         body: JSON.stringify(data),
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authStore.getToken}`
         }
       })
         .then((result) => {
@@ -372,7 +379,6 @@ onBeforeRouteLeave(() => {
   $(document).off('click', '.Edit-btn')
 })
 </script>
-
 
 <style>
 /* datatables 頂部布局調整 */
