@@ -82,7 +82,7 @@ builder.Services.AddDbContext<SteamNexusDbContext>(options => options.UseSqlServ
 
 // Add CoolPCWebScrabing Service
 builder.Services.AddTransient<CoolPCWebScraping>();
-builder.Services.AddTransient<GamePriceToDB>();
+builder.Services.AddTransient<GameTimer>();
 
 // 註冊計時器服務
 builder.Services.AddTransient<ScheduledTaskService>();
