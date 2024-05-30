@@ -5,7 +5,7 @@
     </span>
 
     <div class="form-box login" ref="loginForm">
-      <h2>Login</h2>
+      <h2>會員登入</h2>
       <form @submit.prevent="submitLogin">
         <!-- 信箱 -->
         <div class="input-box">
@@ -36,26 +36,25 @@
         <!-- 記住我 -->
         <div class="remember-forgot">
           <label
-            ><input type="checkbox" v-model="rememberMe" :tabindex="loginTabIndex" /> Remember
-            me</label
+            ><input type="checkbox" v-model="rememberMe" :tabindex="loginTabIndex" /> 記住我 </label
           >
           <!-- 忘記密碼 -->
-          <a href="#" :tabindex="loginTabIndex">Forgot password?</a>
+          <a href="#" :tabindex="loginTabIndex">忘記密碼?</a>
         </div>
         <!-- 登入按鈕 -->
-        <button type="submit" class="btn" :tabindex="loginTabIndex">Login</button>
+        <button type="submit" class="btn" :tabindex="loginTabIndex">登入</button>
         <!-- 註冊按鈕 -->
         <div class="login-register">
           <p>
-            Don't have an account?
-            <a href="#" @click.prevent="showRegister" :tabindex="loginTabIndex"> Register</a>
+            沒有帳戶?
+            <a href="#" @click.prevent="showRegister" :tabindex="loginTabIndex">會員註冊</a>
           </p>
         </div>
       </form>
     </div>
 
     <div class="form-box register" ref="registerForm">
-      <h2>Registration</h2>
+      <h2>會員註冊</h2>
       <form @submit.prevent="submitRegister">
         <!-- 名字 -->
         <div class="input-box">
@@ -123,8 +122,7 @@
         <!-- 註冊前確認規定同意書 -->
         <div class="remember-forgot mt-3">
           <label
-            ><input type="checkbox" required :tabindex="registerTabIndex" v-model="agree" /> I agree
-            to the terms & conditions</label
+            ><input type="checkbox" required :tabindex="registerTabIndex" v-model="agree" /> 我同意條款與條件 </label
           >
         </div>
         <!-- 註冊按鈕 -->
@@ -139,8 +137,8 @@
         <!-- 登入按鈕 -->
         <div class="login-register">
           <p>
-            Already have an account?
-            <a href="#" @click.prevent="showLogin" :tabindex="registerTabIndex"> Login</a>
+            已經有帳戶了嗎?
+            <a href="#" @click.prevent="showLogin" :tabindex="registerTabIndex"> 會員登入 </a>
           </p>
         </div>
       </form>

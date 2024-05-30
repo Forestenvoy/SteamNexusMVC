@@ -97,7 +97,7 @@
           </form>
         </div>
         <!-- 密碼修改表單 -->
-        <div v-else-if="activeItem === 'password'">
+        <!-- <div v-else-if="activeItem === 'password'">
           <h2>密碼修改</h2>
           <form @submit.prevent="changePassword" autocomplete="off">
             <div class="form-group mb-3">
@@ -146,6 +146,92 @@
             </div>
             <button type="submit" class="btn btn-primary mt-2">儲存修改</button>
           </form>
+        </div> -->
+        <div v-else-if="activeItem === 'password'">
+          <h2>密碼修改</h2>
+          <form @submit.prevent="changePassword" autocomplete="off">
+            <div class="form-group mb-3">
+              <label for="oldPassword">舊密碼</label>
+              <div class="input-group">
+                <input
+                  :type="oldPasswordVisible ? 'text' : 'password'"
+                  class="form-control"
+                  id="oldPassword"
+                  v-model="oldPassword"
+                  required
+                />
+                <button
+                  class="btn btn-outline-secondary"
+                  type="button"
+                  @click="toggleOldPasswordVisibility"
+                >
+                  <i :class="oldPasswordVisible ? 'fa fa-eye' : 'fa fa-eye-slash'"></i>
+                </button>
+              </div>
+            </div>
+            <div class="form-group mb-3">
+              <label for="confirmOldPassword">確認舊密碼</label>
+              <div class="input-group">
+                <input
+                  :type="confirmOldPasswordVisible ? 'text' : 'password'"
+                  class="form-control"
+                  id="confirmOldPassword"
+                  v-model="confirmOldPassword"
+                  required
+                  @input="validatePasswords"
+                />
+                <button
+                  class="btn btn-outline-secondary"
+                  type="button"
+                  @click="toggleConfirmOldPasswordVisibility"
+                >
+                  <i :class="confirmOldPasswordVisible ? 'fa fa-eye' : 'fa fa-eye-slash'"></i>
+                </button>
+              </div>
+              <div id="oldPasswordFeedback" class="invalid-feedback">密碼與確認密碼不一致</div>
+            </div>
+            <div class="form-group mb-3">
+              <label for="newPassword">新密碼</label>
+              <div class="input-group">
+                <input
+                  :type="newPasswordVisible ? 'text' : 'password'"
+                  class="form-control"
+                  id="newPassword"
+                  v-model="newPassword"
+                  required
+                />
+                <button
+                  class="btn btn-outline-secondary"
+                  type="button"
+                  @click="toggleNewPasswordVisibility"
+                >
+                  <i :class="newPasswordVisible ? 'fa fa-eye' : 'fa fa-eye-slash'"></i>
+                </button>
+              </div>
+            </div>
+            <div class="form-group mb-3">
+              <label for="confirmNewPassword">確認新密碼</label>
+              <div class="input-group">
+                <input
+                  :type="confirmNewPasswordVisible ? 'text' : 'password'"
+                  class="form-control"
+                  id="confirmNewPassword"
+                  v-model="confirmNewPassword"
+                  required
+                  @input="validateNewPasswords"
+                />
+                <button
+                  class="btn btn-outline-secondary"
+                  type="button"
+                  @click="toggleConfirmNewPasswordVisibility"
+                >
+                  <i :class="confirmNewPasswordVisible ? 'fa fa-eye' : 'fa fa-eye-slash'"></i>
+                </button>
+              </div>
+              <div id="newPasswordFeedback" class="invalid-feedback">密碼與確認密碼不一致</div>
+            </div>
+            <button type="submit" class="btn btn-primary mt-2">儲存修改</button>
+          </form>
         </div>
       </div>
     </div>
@@ -183,6 +269,28 @@ const oldPassword = ref('')
 const confirmOldPassword = ref('')
 const newPassword = ref('')
 const confirmNewPassword = ref('')
+
+const oldPasswordVisible = ref(false)
+const confirmOldPasswordVisible = ref(false)
+const newPasswordVisible = ref(false)
+const confirmNewPasswordVisible = ref(false)
+
+// 切換密碼可見性
+const toggleOldPasswordVisibility = () => {
+  oldPasswordVisible.value = !oldPasswordVisible.value
+}
+
+const toggleConfirmOldPasswordVisibility = () => {
+  confirmOldPasswordVisible.value = !confirmOldPasswordVisible.value
+}
+
+const toggleNewPasswordVisibility = () => {
+  newPasswordVisible.value = !newPasswordVisible.value
+}
+
+const toggleConfirmNewPasswordVisibility = () => {
+  confirmNewPasswordVisible.value = !confirmNewPasswordVisible.value
+}
 
 // 切換顯示的表單
 const showProfile = () => {
