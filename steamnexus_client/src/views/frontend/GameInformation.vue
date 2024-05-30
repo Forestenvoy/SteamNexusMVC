@@ -285,6 +285,10 @@ import { ref, onMounted, onBeforeUnmount, reactive, watch, defineComponent } fro
 import * as am5 from '@amcharts/amcharts5'
 import * as am5xy from '@amcharts/amcharts5/xy'
 
+// vue router
+import { useRouter } from 'vue-router'
+const router = useRouter()
+
 import am5locales_zh_Hant from '@amcharts/amcharts5/locales/zh_Hant'
 import Dark from '@amcharts/amcharts5/themes/Dark'
 import AOS from 'aos'
@@ -378,7 +382,11 @@ function holdUp(id) {
   timeEnd.value = getTimeNow()
   //如果此時檢測到的時間與第一次獲取的時間差有1000毫秒
   if (timeEnd.value - timeStart.value < 100) {
-    location.href = `http://localhost:5173/game/${id}`
+    router.push({ path: '/game/' + id })
+    // 延遲 1 秒
+    setTimeout(function () {
+      MountedEvent()
+    }, 100)
     console.log(timeStart.value)
     console.log(timeEnd.value)
   }
@@ -472,6 +480,7 @@ const love = async (gameId) => {
 
 //拿取遊戲資料
 function getData() {
+  console.log(props.gameId)
   fetch(`${apiUrl}/api/GamesManagement/GetEditJSON?id=${props.gameId}`, {
     method: 'GET'
   })
@@ -692,8 +701,8 @@ function GetGamePeopleData() {
     })
 }
 
-onMounted(() => {
-  AOS.init()
+// 撈資料
+const MountedEvent = () => {
   getData()
   GetTagGroup()
   GetLanguageGroup()
@@ -721,7 +730,8 @@ onMounted(() => {
         item.date = new Date(item.date).getTime()
       })
 
-      if (root) {
+      if (root !== null) {
+        root.dispose()
         root = null
       }
 
@@ -835,7 +845,6 @@ onMounted(() => {
       // chart.set("scrollbarX", am5.Scrollbar.new(root, {
       //   orientation: "horizontal",
       //   minHeight: 3,
-
       // }));
 
       //設定點點樣式
@@ -884,6 +893,12 @@ onMounted(() => {
     .catch((error) => {
       alert(error)
     })
+}
+
+onMounted(() => {
+  AOS.init()
+
+  MountedEvent()
 })
 
 onBeforeUnmount(() => {

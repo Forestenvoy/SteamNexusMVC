@@ -2,6 +2,10 @@
 import $ from 'jquery'
 import { ref } from 'vue'
 
+// 拿身份驗證
+import { useIdentityStore } from '@/stores/identity.js'
+const authStore = useIdentityStore()
+
 // 從環境變數取得 API BASE URL
 const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
@@ -10,7 +14,12 @@ const HardwareSelect = ref([])
 // 取得硬體選單資料
 export function getHardwareSelect() {
   // 發送非同步 GET 請求
-  fetch(`${apiUrl}/api/HardwareManage/GetComputerParts`, { method: 'GET' })
+  fetch(`${apiUrl}/api/HardwareManage/GetComputerParts`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${authStore.getToken}`
+    }
+  })
     .then((response) => {
       if (!response.ok) {
         throw new Error('Network response was not ok')

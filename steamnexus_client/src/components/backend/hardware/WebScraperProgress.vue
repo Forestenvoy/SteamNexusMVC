@@ -29,6 +29,10 @@ import { useScraperStore } from '@/stores/scraper.js'
 // 利用 store 去訪問狀態 ✨
 const store = useScraperStore()
 
+// 拿身份驗證
+import { useIdentityStore } from '@/stores/identity.js'
+const authStore = useIdentityStore()
+
 // 從環境變數取得 API BASE URL
 const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
@@ -57,7 +61,8 @@ function UpdateOneHardware() {
       Type: store.getHardwareId
     }),
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${authStore.getToken}`
     }
   })
     .then((response) => {
@@ -88,7 +93,8 @@ function UpdateAllHardware() {
   fetch(`${apiUrl}/api/HardwareManage/UpdateHardwareAll`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${authStore.getToken}`
     }
   })
     .then((response) => {

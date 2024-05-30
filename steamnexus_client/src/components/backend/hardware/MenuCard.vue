@@ -42,6 +42,10 @@ import { ref } from 'vue'
 import { toast } from 'vue3-toastify'
 import 'vue3-toastify/dist/index.css'
 
+// 身份驗證
+import { useIdentityStore } from '@/stores/identity.js'
+const authStore = useIdentityStore()
+
 // 從環境變數取得 API BASE URL
 const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
@@ -69,7 +73,8 @@ const onMenuActive = () => {
   fetch(`${apiUrl}/api/HardwareManage/MenuActive`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${authStore.getToken}`
     },
     body: JSON.stringify({
       MenuId: props.menuId
@@ -106,7 +111,8 @@ const onMenuDelete = () => {
   fetch(`${apiUrl}/api/HardwareManage/DeleteMenu`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${authStore.getToken}`
     },
     body: JSON.stringify({
       MenuId: props.menuId

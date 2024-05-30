@@ -37,6 +37,10 @@
 <script setup>
 import { CRow, CCol } from '@coreui/vue'
 import { ref, onMounted } from 'vue'
+// 身份驗證
+import { useIdentityStore } from '@/stores/identity.js'
+const authStore = useIdentityStore()
+
 // 從環境變數取得 API BASE URL
 const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
@@ -61,7 +65,12 @@ let typeGroups = ref({})
 
 // 取得全部產品資料
 function getProducts(type) {
-  fetch(`${apiUrl}/api/HardwareManage/GetProductData?Type=${type}`, { method: 'GET' })
+  fetch(`${apiUrl}/api/HardwareManage/GetProductData?Type=${type}`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${authStore.getToken}`
+    }
+  })
     .then((response) => {
       return response.json()
     })

@@ -1,12 +1,12 @@
 <template>
   <!-- 英雄橫幅旗幟 -->
   <hero-banner></hero-banner>
-  <!-- 子系統切換 -->
-  <switch-mode></switch-mode>
   <!-- 組裝之旅 -->
   <build-journey v-if="builderStore.getMode === 'build'"></build-journey>
   <!-- 菜單系統 -->
   <menu-slider v-if="builderStore.getMode === 'menu'"></menu-slider>
+  <!-- 子系統切換 -->
+  <switch-mode></switch-mode>
   <!-- 產品列表 -->
   <product-list v-if="showProductList"></product-list>
   <!-- 遊戲匹配系統  -->

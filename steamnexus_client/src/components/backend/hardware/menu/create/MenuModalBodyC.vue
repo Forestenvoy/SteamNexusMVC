@@ -55,6 +55,10 @@ import { ref } from 'vue'
 
 import SelectList from '@/components/backend/hardware/menu/create/SelectList.vue'
 
+// 身份驗證
+import { useIdentityStore } from '@/stores/identity.js'
+const authStore = useIdentityStore()
+
 // 從環境變數取得 API BASE URL
 const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
@@ -132,7 +136,8 @@ function createMenuData() {
   fetch(`${apiUrl}/api/HardwareManage/CreateMenu`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${authStore.getToken}`
     },
     body: JSON.stringify({
       Name: menuName.value,
@@ -172,7 +177,8 @@ function createMenuDetails(id) {
     fetch(`${apiUrl}/api/HardwareManage/CreateMenuDetail`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${authStore.getToken}`
       },
       body: JSON.stringify({
         MenuId: menuId,
@@ -212,6 +218,8 @@ function onMenuCreate() {
 
   let SSDValue = 0
   let HDDValue = 0
+  let AirCoolerValue = 0
+  let LiquidCoolerValue = 0
   let isLoopFinish = true
 
   for (let i = 0; i < selectLists.value.length; i++) {
@@ -222,7 +230,13 @@ function onMenuCreate() {
     const selectedValue = selectElement.value // 获取 select 元素的值
     const selectName = selectElement.getAttribute('name')
 
-    if (selectName !== 'SSD' && selectName !== 'HDD' && selectedValue === '0') {
+    if (
+      selectName !== 'SSD' &&
+      selectName !== 'HDD' &&
+      selectName !== 'AirCooler' &&
+      selectName !== 'LiquidCooler' &&
+      selectedValue === '0'
+    ) {
       errorMessage.value = `請選擇 ${selectName}`
       isLoopFinish = false
       break
@@ -235,11 +249,24 @@ function onMenuCreate() {
       HDDValue = Number(selectedValue)
     }
 
+    if (selectName === 'AirCooler') {
+      AirCoolerValue = Number(selectedValue)
+    }
+
+    if (selectName === 'LiquidCooler') {
+      LiquidCoolerValue = Number(selectedValue)
+    }
+
     errorMessage.value = ''
   }
 
   if (SSDValue === 0 && HDDValue === 0 && isLoopFinish) {
     errorMessage.value = 'SSD 和 HDD 請至少選擇一項'
+    return
+  }
+
+  if (AirCoolerValue === 0 && LiquidCoolerValue === 0 && isLoopFinish) {
+    errorMessage.value = 'AirCooler 和 LiquidCooler 請至少選擇一項'
     return
   }
 

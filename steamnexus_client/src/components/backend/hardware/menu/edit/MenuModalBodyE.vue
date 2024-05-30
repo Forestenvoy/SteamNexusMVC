@@ -74,6 +74,10 @@ import 'vue3-toastify/dist/index.css'
 
 import SelectList from '@/components/backend/hardware/menu/edit/SelectList.vue'
 
+// 身份驗證
+import { useIdentityStore } from '@/stores/identity.js'
+const authStore = useIdentityStore()
+
 // 從環境變數取得 API BASE URL
 const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
@@ -167,7 +171,8 @@ async function updateMenuDetails() {
     await fetch(`${apiUrl}/api/HardwareManage/UpdateMenuDetail`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${authStore.getToken}`
       },
       body: JSON.stringify({
         MenuId: finalList[i].menuId,
@@ -205,7 +210,8 @@ function updateMenuData() {
   fetch(`${apiUrl}/api/HardwareManage/UpdateMenu`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${authStore.getToken}`
     },
     body: JSON.stringify({
       MenuId: props.menuId,
