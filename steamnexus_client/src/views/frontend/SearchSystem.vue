@@ -129,6 +129,9 @@ import lozad from 'lozad'
 
 import 'vue3-carousel/dist/carousel.css'
 
+import { useSearchStore } from '@/stores/search.js'
+const searchStore = useSearchStore()
+
 var isPopupVisible = ref(0)
 function showPopup(gameId) {
   isPopupVisible.value = gameId
@@ -150,7 +153,7 @@ var TagGroupDataLozad = ref([])
 var isGameDataLoaded = ref(false)
 var num = 0
 var isholdClick = false
-var inputText = ''
+var inputText = ref(searchStore.getKeyword)
 var loadingfont = ref('')
 // var loadingif = false
 
@@ -161,7 +164,7 @@ const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 function inputChang() {
   num = 0
   gameData.value = []
-  if (inputText == '') {
+  if (inputText.value == '') {
     GetGameData()
     gameLozad.value = []
     isholdClick = false
@@ -174,7 +177,7 @@ function inputChang() {
 
 function inputChangSeach() {
   gameData.value = []
-  fetch(`${apiUrl}/api/GamesManagement/inputChangSeach?input=${inputText}&num=${num}`, {
+  fetch(`${apiUrl}/api/GamesManagement/inputChangSeach?input=${inputText.value}&num=${num}`, {
     method: 'GET'
   })
     .then((response) => {
@@ -307,8 +310,9 @@ const loadMoreTagGroup = () => {
 const observer = lozad()
 
 onMounted(() => {
+  console.log('Hi search')
   AllGameTagData()
-  GetGameData()
+  inputChang()
   TagsData()
   observer.observe()
   const loadingElement = loading.value

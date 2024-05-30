@@ -47,12 +47,13 @@
             type="text"
             class="form-control me-2 input-search"
             placeholder="請輸入遊戲關鍵字"
+            v-model="keyword"
           />
           <CButton
             style="border: 0px"
             :color="buttonColor"
             variant="outline"
-            @click.prevent="$router.push('/searchSystem')"
+            @click.prevent="SearchKeyword"
             ><i class="fa-solid fa-magnifying-glass"></i
           ></CButton>
         </CForm>
@@ -71,11 +72,25 @@ import AccountDropdown from '@/components/frontend/share/AccountDropdown.vue'
 import { useIdentityStore } from '@/stores/identity.js'
 const store = useIdentityStore()
 
+// vue router
+import { useRouter } from 'vue-router'
+const router = useRouter()
+
+import { useSearchStore } from '@/stores/search.js'
+const searchStore = useSearchStore()
+
 const visible = ref(false)
 
 const isScrolled = ref(false)
 const buttonColor = ref('light')
 const canToggle = ref(false)
+const keyword = ref('')
+
+// 搜尋關鍵字
+const SearchKeyword = () => {
+  searchStore.setKeyword(keyword.value)
+  router.push('/searchSystem')
+}
 
 // 偵測滾動事件
 window.addEventListener('scroll', () => {
