@@ -36,8 +36,8 @@
         <!-- 記住我 -->
         <div class="remember-forgot">
           <label
-            ><input type="checkbox" v-model="rememberMe" :tabindex="loginTabIndex" /> 記住我 </label
-          >
+            ><input type="checkbox" v-model="rememberMe" :tabindex="loginTabIndex" /> 記住我
+          </label>
           <!-- 忘記密碼 -->
           <a href="#" :tabindex="loginTabIndex">忘記密碼?</a>
         </div>
@@ -122,8 +122,9 @@
         <!-- 註冊前確認規定同意書 -->
         <div class="remember-forgot mt-3">
           <label
-            ><input type="checkbox" required :tabindex="registerTabIndex" v-model="agree" /> 我同意條款與條件 </label
-          >
+            ><input type="checkbox" required :tabindex="registerTabIndex" v-model="agree" />
+            我同意條款與條件
+          </label>
         </div>
         <!-- 註冊按鈕 -->
         <button
@@ -147,6 +148,7 @@
 </template>
 
 <script setup>
+import $ from 'jquery'
 // 使用 Pinia，利用 store 去訪問狀態
 import { useIdentityStore } from '@/stores/identity.js'
 const store = useIdentityStore()
@@ -166,7 +168,6 @@ const loginEmail = ref('')
 const loginPassword = ref('')
 const rememberMe = ref(false)
 
-const userid = ref(0)
 const name = ref('')
 const email = ref('')
 const emailExists = ref(false) //確認電子信箱是否重複
@@ -338,7 +339,8 @@ const submitLogin = () => {
         // 紀錄登入狀態
         store.Login()
 
-        // 儲存至 localStorage ~ 記住登入(可關閉瀏覽器) (未實作)
+        // 儲存至 SessionStorage ~ 記住登入(可關閉瀏覽器)
+        sessionStorage.setItem('token', token)
         // localStorage.setItem('token', token);
 
         // 顯示登入成功訊息或進行頁面跳轉

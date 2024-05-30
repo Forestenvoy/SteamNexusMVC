@@ -228,7 +228,7 @@ public class UserIdentityController : ControllerBase
                         issuer: _configuration["Jwt:Issuer"],
                         audience: _configuration["Jwt:Audience"],
                         claims: claims,
-                        expires: DateTime.UtcNow.AddMinutes(10), // 登入過期時間
+                        expires: DateTime.UtcNow.AddDays(1),// 登入過期時間
                         signingCredentials: signIn);
 
             //直接回傳結果

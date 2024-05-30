@@ -8,6 +8,9 @@ import { useColorModes } from '@coreui/vue'
 
 import { useThemeStore } from '@/stores/theme.js'
 
+import { useIdentityStore } from '@/stores/identity.js'
+const authStore = useIdentityStore()
+
 const { isColorModeSet, setColorMode } = useColorModes('coreui-free-vue-admin-template-theme')
 const currentTheme = useThemeStore()
 
@@ -41,6 +44,16 @@ onMounted(() => {
     const animationJS = document.querySelector('script[src="/js/webAnimation.js"]')
     animationJS.remove()
   }, 2100)
+
+  // 從 session storage 獲取 token
+  const token = sessionStorage.getItem('token')
+
+  if (token) {
+    // 儲存 token 到 Pinia store
+    authStore.setToken(token)
+    // 紀錄登入狀態
+    authStore.Login()
+  }
 })
 </script>
 
