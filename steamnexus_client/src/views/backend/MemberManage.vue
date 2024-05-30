@@ -748,7 +748,7 @@ const deleteUser = (userId) => {
     })
     .catch((err) => {
       //alert('使用者刪除失敗')
-      toast.error('使用者刪除失敗', {
+      toast.error('資料已有關聯紀錄，刪除失敗', {
         theme: 'dark',
         autoClose: 1000,
         transition: toast.TRANSITIONS.ZOOM,

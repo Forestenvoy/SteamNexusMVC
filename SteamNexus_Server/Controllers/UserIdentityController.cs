@@ -483,7 +483,7 @@ public class UserIdentityController : ControllerBase
                 Email = data.Email,
                 Password = HashPassword(data.Password),
                 Photo = photoPath,
-                RoleId = 10000
+                RoleId = 10001
             });
 
             await _application.SaveChangesAsync();
