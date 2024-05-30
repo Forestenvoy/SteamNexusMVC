@@ -188,6 +188,8 @@ function inputChangSeach() {
     .then((val) => {
       if (val == '') {
         loadingfont.value = '查無此遊戲'
+      } else {
+        loadingfont.value = ''
       }
       gameData.value = val
       console.log(val)
@@ -292,6 +294,7 @@ const loadMoreGames = () => {
     // gameCount++
     num++
   }
+
   console.log(gameData.value)
   console.log(gameLozad.value)
   console.log(num)
