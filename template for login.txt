@@ -1,0 +1,147 @@
+<template>
+  <div class="LRModal" ref="LRModal" v-if="store.getShowLogin">
+    <span class="icon-close" @click="closeModal">
+      <i class="fa fa-times" aria-hidden="true"></i>
+    </span>
+
+    <div class="form-box login" ref="loginForm">
+      <h2>會員登入</h2>
+      <form @submit.prevent="submitLogin">
+        <!-- 信箱 -->
+        <div class="input-box">
+          <span class="icon"><i class="fas fa-envelope"></i></span>
+          <input
+            type="text"
+            class="mx-2"
+            required
+            v-model="loginEmail"
+            autocomplete="off"
+            :tabindex="loginTabIndex"
+          />
+          <label>Email</label>
+        </div>
+        <!-- 密碼 -->
+        <div class="input-box">
+          <span class="icon"><i class="fas fa-lock"></i></span>
+          <input
+            type="password"
+            class="mx-2"
+            required
+            v-model="loginPassword"
+            autocomplete="off"
+            :tabindex="loginTabIndex"
+          />
+          <label>Password</label>
+        </div>
+        <!-- 記住我 -->
+        <div class="remember-forgot">
+          <label
+            ><input type="checkbox" v-model="rememberMe" :tabindex="loginTabIndex" /> 記住我 </label
+          >
+          <!-- 忘記密碼 -->
+          <a href="#" :tabindex="loginTabIndex">忘記密碼?</a>
+        </div>
+        <!-- 登入按鈕 -->
+        <button type="submit" class="btn" :tabindex="loginTabIndex">登入</button>
+        <!-- 註冊按鈕 -->
+        <div class="login-register">
+          <p>
+            沒有帳戶?
+            <a href="#" @click.prevent="showRegister" :tabindex="loginTabIndex">會員註冊</a>
+          </p>
+        </div>
+      </form>
+    </div>
+
+    <div class="form-box register" ref="registerForm">
+      <h2>會員註冊</h2>
+      <form @submit.prevent="submitRegister">
+        <!-- 名字 -->
+        <div class="input-box">
+          <span class="icon"><i class="fa fa-user" aria-hidden="true"></i></span>
+          <input
+            type="text"
+            class="mx-2"
+            id="name"
+            required
+            v-model="name"
+            autocomplete="off"
+            :tabindex="registerTabIndex"
+            @input="validatename"
+          />
+          <label>Name</label>
+          <div id="nameFeedback" class="invalid-feedback">此為必填欄位</div>
+        </div>
+        <!-- 信箱 -->
+        <div class="input-box mt-5">
+          <span class="icon"><i class="fas fa-envelope"></i></span>
+          <input
+            type="email"
+            class="mx-2"
+            id="email"
+            required
+            v-model="email"
+            autocomplete="off"
+            :tabindex="registerTabIndex"
+            @input="checkEmail"
+          />
+          <label>Email</label>
+          <div id="emailFeedback" class="invalid-feedback mb-3"></div>
+        </div>
+        <!-- 密碼 -->
+        <div class="input-box mt-5">
+          <span class="icon"><i class="fas fa-lock"></i></span>
+          <input
+            type="password"
+            class="mx-2"
+            id="Password"
+            required
+            v-model="password"
+            autocomplete="off"
+            :tabindex="registerTabIndex"
+            @input="validatePasswords"
+          />
+          <label>Password</label>
+        </div>
+        <!-- 確認密碼 -->
+        <div class="input-box">
+          <span class="icon"><i class="fas fa-lock"></i></span>
+          <input
+            type="password"
+            class="mx-2"
+            id="ConfirmPassword"
+            required
+            v-model="confirmPassword"
+            autocomplete="off"
+            :tabindex="registerTabIndex"
+            @input="validatePasswords"
+          />
+          <label>Confirm Password</label>
+          <div id="passwordMismatchFeedback" class="invalid-feedback">密碼與確認密碼不一致</div>
+        </div>
+        <!-- 註冊前確認規定同意書 -->
+        <div class="remember-forgot mt-3">
+          <label
+            ><input type="checkbox" required :tabindex="registerTabIndex" v-model="agree" /> 我同意條款與條件 </label
+          >
+        </div>
+        <!-- 註冊按鈕 -->
+        <button
+          type="submit"
+          class="btn"
+          :tabindex="registerTabIndex"
+          :disabled="!isFirstPartValid"
+        >
+          Register
+        </button>
+        <!-- 登入按鈕 -->
+        <div class="login-register">
+          <p>
+            已經有帳戶了嗎?
+            <a href="#" @click.prevent="showLogin" :tabindex="registerTabIndex"> 會員登入 </a>
+          </p>
+        </div>
+      </form>
+    </div>
+  </div>
+</template>

@@ -97,7 +97,7 @@ const untrack = async (gameTrackingId) => {
         }
       })
       // 更新追蹤列表
-      fetchTrackingList()
+      await fetchTrackingList()
     } catch (error) {
       console.error('Error untracking game:', error)
     }
