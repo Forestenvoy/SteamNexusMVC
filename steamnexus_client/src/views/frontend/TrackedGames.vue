@@ -142,7 +142,7 @@ onMounted(() => {
 }
 
 .face1 {
-  background: #333;
+  /* background: #333; */
   z-index: 1;
   transform: translateY(100px);
 }
@@ -161,7 +161,7 @@ onMounted(() => {
 }
 
 .face1 .content {
-  opacity: 0.2;
+  /* opacity: 0.2; */
   transition: 0.5s;
   text-align: center;
 }
@@ -186,10 +186,12 @@ onMounted(() => {
   transform: translateY(-100px);
   padding: 20px;
   box-sizing: border-box;
+  opacity: 0;
 }
 
 .card:hover .face2 {
   transform: translateY(0);
+  opacity: 1;
 }
 
 .face2 .content p {
