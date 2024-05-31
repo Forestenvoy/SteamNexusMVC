@@ -205,9 +205,11 @@ public class UserIdentityController : ControllerBase
             new Claim(ClaimTypes.Name, user.Name),
             new Claim(ClaimTypes.Role, user.Role.RoleName),
 
+
             //new Claim("UserId", user.UserId.ToString()),
             new Claim("FullName", user.Name),
             //new Claim("Roles", user.Role.RoleName),
+            new Claim("image",user.Photo),
                         
         };
 

@@ -65,5 +65,28 @@ export const useIdentityStore = defineStore('identity', () => {
     return userRole.value
   })
 
-  return { getShowLogin, show, hide, getToken, setToken, getUserRole, getIsLogin, Login, Logout }
+  // 使用者大頭照
+  // state
+  const userPhoto = ref('')
+  // getter
+  const getUserPhoto = computed(() => {
+    if (token.value) {
+      try {
+        const decodedToken = jwtDecode(token.value)
+        userPhoto.value =
+          decodedToken['image']
+      } catch (error) {
+        console.error('Invalid token:', error)
+        userPhoto.value = ''
+      }
+    } else {
+      userPhoto.value = ''
+    }
+    return userPhoto.value
+  })
+
+
+
+
+  return { getShowLogin, show, hide, getToken, setToken, getUserRole,getUserPhoto , getIsLogin, Login, Logout }
 })
