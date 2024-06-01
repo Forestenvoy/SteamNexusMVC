@@ -130,7 +130,6 @@ namespace SteamNexus_Server.Services
             {
                 allNum++;
                 Console.WriteLine(GameId);
-                Console.WriteLine("價格");
                 //await Task.Delay(1400);
                 var game = await _context.Games.FindAsync(GameId);
                 if (game == null)
