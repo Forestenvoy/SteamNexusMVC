@@ -190,7 +190,7 @@ namespace SteamNexus.Areas.Administrator.Controllers
         //(API)Game-Price抓取寫回程式庫(更新)
         [HttpGet("GetGamePriceDataToDB")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> GetGamePriceDataToDB()
+        public async Task<string> GetGamePriceDataToDB()
         {
             if (isPriceDataUsing == false)
             {
@@ -198,14 +198,16 @@ namespace SteamNexus.Areas.Administrator.Controllers
                 try
                 {
                     _scheduledTaskService.StartPriceDailyTimer();
+
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine($"An error occurred: {ex.Message}");
                     Console.WriteLine($"Stack Trace: {ex.StackTrace}");
-                    return StatusCode(500, "Internal server error");
+                    return "500 Internal server error";
                 }
-                return Ok("價格計時器已啟動");
+                Console.WriteLine("價格計時器開啟");
+                return $"{isPriceDataUsing}";
             }
             else
             {
@@ -218,30 +220,40 @@ namespace SteamNexus.Areas.Administrator.Controllers
                 {
                     Console.WriteLine($"An error occurred: {ex.Message}");
                     Console.WriteLine($"Stack Trace: {ex.StackTrace}");
-                    return StatusCode(500, "Internal server error");
+                    return "500 Internal server error";
                 }
-                return Ok("價格計時器已關閉");
+                Console.WriteLine("價格計時器關閉");
+                return $"{isPriceDataUsing}";
             }
 
 
 
         }
 
-        ////(前台)進度條
-        //[HttpGet("GamePriceProgress")]
-        //public IActionResult GamePriceProgress()
-        //{
-        //    string progressData = "";
-        //    progressData += $"id={Guid.NewGuid()}\n";
-        //    progressData += "retry:1000\n";
-        //    progressData += $"data:{progressNum}\n\n";
-        //    return Content($"{progressData}", "text/event-stream", Encoding.UTF8);
-        //}
+        //(前台)進度條
+        [HttpGet("GamePriceProgress")]
+        public IActionResult GamePriceProgress()
+        {
+            string progressData = "";
+            progressData += $"id={Guid.NewGuid()}\n";
+            progressData += "retry:1000\n";
+            progressData += $"data:{GameTimer.progressNum}\n\n";
+            return Content($"{progressData}", "text/event-stream", Encoding.UTF8);
+        }
+
+        ////(後台)拿取是否開啟
+        [HttpGet("isTimeOpen")]
+        public async Task<JsonResult> isTimeOpen()
+        {
+            string[] array;
+            array = [ $"{isPriceDataUsing}", $"{isOnlineUserUsing}", $"{isNumberOfCommentsDataUsing}" ];
+            return Json(array);
+        }
 
         //(API)拿取在線人數(新增)
         [HttpGet("GetOnlineUsersDataToDB")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> GetOnlineUsersDataToDB()
+        public async Task<string> GetOnlineUsersDataToDB()
         {
             if (isOnlineUserUsing == false)
             {
@@ -254,9 +266,10 @@ namespace SteamNexus.Areas.Administrator.Controllers
                 {
                     Console.WriteLine($"An error occurred: {ex.Message}");
                     Console.WriteLine($"Stack Trace: {ex.StackTrace}");
-                    return StatusCode(500, "Internal server error");
+                    return "500 Internal server error";
                 }
-                return Ok("在線人數計時器已啟動");
+                Console.WriteLine("在線人數計時器開啟");
+                return $"{isOnlineUserUsing}";
             }
             else
             {
@@ -269,17 +282,17 @@ namespace SteamNexus.Areas.Administrator.Controllers
                 {
                     Console.WriteLine($"An error occurred: {ex.Message}");
                     Console.WriteLine($"Stack Trace: {ex.StackTrace}");
-                    return StatusCode(500, "Internal server error");
+                    return "500 Internal server error";
                 }
-
-                return Ok("在線人數計時器已關閉");
+                Console.WriteLine("在線人數計時器關閉");
+                return $"{isOnlineUserUsing}";
             }
         }
 
         //(API)拿取評論(更新)
         [HttpGet("GetNumberOfCommentsDataToDB")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> GetNumberOfCommentsDataToDB()
+        public async Task<string> GetNumberOfCommentsDataToDB()
         {
             if (isNumberOfCommentsDataUsing == false)
             {
@@ -292,9 +305,10 @@ namespace SteamNexus.Areas.Administrator.Controllers
                 {
                     Console.WriteLine($"An error occurred: {ex.Message}");
                     Console.WriteLine($"Stack Trace: {ex.StackTrace}");
-                    return StatusCode(500, "Internal server error");
+                    return "500 Internal server error";
                 }
-                return Ok("評論計時器已啟動");
+                Console.WriteLine("評論計時器關閉");
+                return $"{isNumberOfCommentsDataUsing}";
             }
             else
             {
@@ -307,10 +321,10 @@ namespace SteamNexus.Areas.Administrator.Controllers
                 {
                     Console.WriteLine($"An error occurred: {ex.Message}");
                     Console.WriteLine($"Stack Trace: {ex.StackTrace}");
-                    return StatusCode(500, "Internal server error");
+                    return "500 Internal server error";
                 }
-
-                return Ok("評論計時器已關閉");
+                Console.WriteLine("評論計時器關閉");
+                return $"{isNumberOfCommentsDataUsing}";
             }
         }
 

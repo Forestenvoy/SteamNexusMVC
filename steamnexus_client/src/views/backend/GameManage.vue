@@ -1,13 +1,56 @@
 <template>
   <div class="p-3" style="margin-left: 20px">
-    <h1>
-      全部遊戲<img
-        src="/public/img/loading-block-white.gif"
-        style="margin: 20px; width: 30px; height: 30px; display: none"
-        id="GameIndexLoading"
-      />
-    </h1>
-    <table id="GameManageTable" class="display" style="width: 100%">
+    <div class="d-flex justify-content-between align-items-center">
+      <h1>
+        全部遊戲<img
+          src="/public/img/loading-block-white.gif"
+          style="margin: 20px; width: 30px; height: 30px; display: none"
+          id="GameIndexLoading"
+        />
+      </h1>
+      <div class="d-flex">
+        <div class="d-flex align-items-center border border-white rounded-pill p-1 mx-1">
+          <input id="checkbox" type="checkbox" v-model="btnPrice" />
+          <label class="switch" for="checkbox0" @click="btnOnlinePriceClick">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="slider">
+              <path
+                d="M288 32c0-17.7-14.3-32-32-32s-32 14.3-32 32V256c0 17.7 14.3 32 32 32s32-14.3 32-32V32zM143.5 120.6c13.6-11.3 15.4-31.5 4.1-45.1s-31.5-15.4-45.1-4.1C49.7 115.4 16 181.8 16 256c0 132.5 107.5 240 240 240s240-107.5 240-240c0-74.2-33.8-140.6-86.6-184.6c-13.6-11.3-33.8-9.4-45.1 4.1s-9.4 33.8 4.1 45.1c38.9 32.3 63.5 81 63.5 135.4c0 97.2-78.8 176-176 176s-176-78.8-176-176c0-54.4 24.7-103.1 63.5-135.4z"
+              ></path>
+            </svg>
+          </label>
+          <span class="mx-2" @click="btnOnlinePriceClick" style="cursor: pointer"
+            >{{ btnPriceFont }}更新當前價格</span
+          >
+        </div>
+        <div class="d-flex align-items-center border border-white rounded-pill p-1 mx-1">
+          <input id="checkbox" type="checkbox" v-model="btnOnlineUsers" />
+          <label class="switch" for="checkbox1" @click="btnOnlineUsersClick">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="slider">
+              <path
+                d="M288 32c0-17.7-14.3-32-32-32s-32 14.3-32 32V256c0 17.7 14.3 32 32 32s32-14.3 32-32V32zM143.5 120.6c13.6-11.3 15.4-31.5 4.1-45.1s-31.5-15.4-45.1-4.1C49.7 115.4 16 181.8 16 256c0 132.5 107.5 240 240 240s240-107.5 240-240c0-74.2-33.8-140.6-86.6-184.6c-13.6-11.3-33.8-9.4-45.1 4.1s-9.4 33.8 4.1 45.1c38.9 32.3 63.5 81 63.5 135.4c0 97.2-78.8 176-176 176s-176-78.8-176-176c0-54.4 24.7-103.1 63.5-135.4z"
+              ></path>
+            </svg>
+          </label>
+          <span class="mx-2" @click="btnOnlineUsersClick" style="cursor: pointer"
+            >{{ btnOnlineUsersFont }}更新在線人數</span
+          >
+        </div>
+        <div class="d-flex align-items-center border border-white rounded-pill p-1 mx-1">
+          <input id="checkbox" type="checkbox" v-model="btnNumberOfComments" />
+          <label class="switch" for="checkbox2" @click="btnNumberOfCommentsClick">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="slider">
+              <path
+                d="M288 32c0-17.7-14.3-32-32-32s-32 14.3-32 32V256c0 17.7 14.3 32 32 32s32-14.3 32-32V32zM143.5 120.6c13.6-11.3 15.4-31.5 4.1-45.1s-31.5-15.4-45.1-4.1C49.7 115.4 16 181.8 16 256c0 132.5 107.5 240 240 240s240-107.5 240-240c0-74.2-33.8-140.6-86.6-184.6c-13.6-11.3-33.8-9.4-45.1 4.1s-9.4 33.8 4.1 45.1c38.9 32.3 63.5 81 63.5 135.4c0 97.2-78.8 176-176 176s-176-78.8-176-176c0-54.4 24.7-103.1 63.5-135.4z"
+              ></path>
+            </svg>
+          </label>
+          <span class="mx-2" @click="btnNumberOfCommentsClick" style="cursor: pointer"
+            >{{ btnNumberOfCommentsFont }}更新當前評論</span
+          >
+        </div>
+      </div>
+    </div>
+    <table id="GameManageTable" class="display" style="width: 100% !important">
       <thead>
         <tr>
           <th></th>
@@ -167,15 +210,16 @@
     </CModal>
   </Form>
   <!--Form End-->
-  <CToaster class="p-3" placement="top-end">
+  <CToaster class="p-3" placement="top-end" style="height: 10%">
     <CToast
       v-for="(toast, index) in toasts"
       visible
       :key="index"
       class="text-white align-items-center custom-toast"
+      :autohide="false"
     >
       <CToastHeader closeButton>
-        <span class="me-auto fw-bold">{{ toast.title }}</span>
+        <span class="me-auto fw-bold">更新全部價格進度: {{ progressNum }}%</span>
         <!-- <small>7 min ago</small> -->
       </CToastHeader>
       <CToastBody>
@@ -222,7 +266,7 @@ const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
 //後端執行次數
 // var priceProgress = false
-var progressNum = 0
+var progressNum = ref(0)
 
 // 初始化 DataTables
 let dataTable = null
@@ -262,6 +306,140 @@ var Publisher = ref('')
 var Description = ref('')
 var ImagePath = ref('')
 var VideoPath = ref('')
+
+var btnPrice = ref(false)
+var btnOnlineUsers = ref(false)
+var btnNumberOfComments = ref(false)
+
+var btnPriceFont = ref('開啟')
+var btnOnlineUsersFont = ref('開啟')
+var btnNumberOfCommentsFont = ref('開啟')
+
+// this.toasts[0].visible = false
+
+//更新人數
+function isTimeOpen() {
+  fetch(`${apiUrl}/api/GamesManagement/isTimeOpen`, {
+    method: 'GET'
+  })
+    .then((result) => {
+      // 此時 result 是一個請求結果的物件
+      // 注意傳回值型態，字串用 text()，JSON 用 json()
+      if (result.ok) {
+        return result.json()
+      }
+    })
+    .then((data) => {
+      btnPrice.value = data[0].toLowerCase()
+      btnOnlineUsers.value = data[1].toLowerCase()
+      btnNumberOfComments.value = data[2].toLowerCase()
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+}
+
+//更新價格
+function btnOnlinePriceClick() {
+  fetch(`${apiUrl}/api/GamesManagement/GetGamePriceDataToDB`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${authStore.getToken}` // 確保 token 正確傳遞
+    }
+  })
+    .then((result) => {
+      // 此時 result 是一個請求結果的物件
+      // 注意傳回值型態，字串用 text()，JSON 用 json()
+      if (result.ok) {
+        return result.text()
+      }
+    })
+    .then((data) => {
+      if (data == 'True') {
+        btnPrice.value = true
+        btnPriceFont.value = '關閉'
+      } else {
+        btnPrice.value = false
+        btnPriceFont.value = '開啟'
+      }
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+  // btnPrice.value = true
+}
+//更新人數
+function btnOnlineUsersClick() {
+  toasts.value.push({
+    // title: `更新全部價格進度:${progressNum.value}%`,
+    content: 'Toast Content',
+    visible: true,
+    Progress: progressNum
+  })
+  const source = new EventSource(`${apiUrl}/api/GamesManagement/GamePriceProgress`)
+  source.onmessage = (event) => {
+    console.log('Received event with id:', event.lastEventId)
+    progressNum.value = event.data
+    toasts.value = [...toasts.value]
+    // toasts.value.forEach((toast) => {
+    //   toast.progress = progressNum.value
+    // })
+  }
+
+  fetch(`${apiUrl}/api/GamesManagement/GetOnlineUsersDataToDB`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${authStore.getToken}` // 確保 token 正確傳遞
+    }
+  })
+    .then((result) => {
+      // 此時 result 是一個請求結果的物件
+      // 注意傳回值型態，字串用 text()，JSON 用 json()
+      if (result.ok) {
+        return result.text()
+      }
+    })
+    .then((data) => {
+      if (data == 'True') {
+        btnOnlineUsers.value = true
+        btnOnlineUsersFont.value = '關閉'
+      } else {
+        btnOnlineUsers.value = false
+        btnOnlineUsersFont.value = '開啟'
+      }
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+}
+//更新評論
+function btnNumberOfCommentsClick() {
+  fetch(`${apiUrl}/api/GamesManagement/GetNumberOfCommentsDataToDB`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${authStore.getToken}` // 確保 token 正確傳遞
+    }
+  })
+    .then((result) => {
+      // 此時 result 是一個請求結果的物件
+      // 注意傳回值型態，字串用 text()，JSON 用 json()
+      if (result.ok) {
+        return result.text()
+      }
+    })
+    .then((data) => {
+      if (data == 'True') {
+        btnNumberOfComments.value = true
+        btnNumberOfCommentsFont.value = '關閉'
+      } else {
+        btnNumberOfComments.value = false
+        btnNumberOfCommentsFont.value = '開啟'
+      }
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+}
 
 //照片更新事件
 function ImageChange(event) {
@@ -476,6 +654,7 @@ function getdatatableData() {
 }
 
 onMounted(() => {
+  isTimeOpen()
   getdatatableData()
   dataTable = new DataTable('#GameManageTable', {
     // ...dataTableConfig,
@@ -489,8 +668,8 @@ onMounted(() => {
         },
         responsivePriority: 1
       },
-      { data: 'gameId', width: '5%' },
-      { data: 'appId', width: '5%' },
+      { data: 'gameId', width: '1%' },
+      { data: 'appId', width: '1%' },
       { data: 'name', responsivePriority: 1, width: '5%' },
       { data: 'originalPrice', width: '2%' },
       { data: 'currentPrice', responsivePriority: 2, width: '2%' },
@@ -514,14 +693,14 @@ onMounted(() => {
             GameId +
             '"  data-name="' +
             name +
-            '" @click="edit_button" id="edit_button" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-pen-to-square"></i></button>'
+            '" @click="edit_button" class="mx-1" id="edit_button" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-pen-to-square"></i></button>'
           // 刪除按鈕
           let deleteEle =
             '<button data-GameId="' +
             GameId +
             '"  data-name="' +
             name +
-            '" id="delete_button" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-trash"></i></button>'
+            '" id="delete_button" class="mx-1" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-trash"></i></button>'
           if (type === 'display') {
             return `${editEle}${deleteEle}`
           }
@@ -539,80 +718,7 @@ onMounted(() => {
     autoWidth: true,
     // 資料載入中 gif
     processing: true,
-    buttons: ['copy', 'excel', 'pdf'],
-    layout: {
-      topMiddle: {
-        buttons: [
-          // {
-          //   text: '新增遊戲',
-          //   // 按鈕點擊事件
-          //   action: function () {
-          //     Title.value = '新增遊戲'
-          //     AppId.value = ''
-          //     Name.value = ''
-          //     OriginalPrice.value = ''
-          //     AgeRating.value = ''
-          //     ReleaseDate.value = ''
-          //     Publisher.value = ''
-          //     Description.value = ''
-          //     ImagePath.value = ''
-          //     VideoPath.value = ''
-          //     handleClick()
-          //   }
-          // },
-          {
-            text: '更新全部價格',
-            // 按鈕點擊事件
-            action: function () {
-              toasts.value.push({
-                title: `更新全部價格進度:${progressNum}%`,
-                content: 'Toast Content',
-                visible: true,
-                Progress: progressNum
-              })
-              GetGamePriceDataToDB()
-              // if (priceProgress == false) {
-              //   priceProgress = true
-              //   const source = new EventSource(`${apiUrl}/api/GamesManagement/GamePriceProgress`)
-              //   source.onmessage = (event) => {
-              //     console.log('Received event with id:', event.lastEventId)
-              //     progressNum = event.data
-              //   }
-              // GetGamePriceDataToDB()
-              // }
-            }
-          },
-          {
-            text: '更新目前在線人數',
-            // 按鈕點擊事件
-            action: function () {
-              GetOnlineUsersDataToDB()
-            }
-          },
-          {
-            text: '更新目前所有評論',
-            // 按鈕點擊事件
-            action: function () {
-              GetNumberOfCommentsDataToDB()
-            }
-          }
-          // {
-          //   text: '抓取最低配備',
-          //   // 按鈕點擊事件
-          //   action: function () {
-          //     GetMinDataToDB()
-          //   }
-          // },
-          // {
-          //   text: '抓取最高配備',
-          //   // 按鈕點擊事件
-          //   action: function () {
-          //     GetRecDataToDB()
-          //   }
-          // }
-        ]
-      }
-    }
+    buttons: ['copy', 'excel', 'pdf']
   })
 })
 
@@ -629,6 +735,59 @@ onBeforeRouteLeave(() => {
 </script>
 
 <style>
+#checkbox {
+  display: none;
+}
+
+.switch {
+  position: relative;
+  width: 30px;
+  height: 30px;
+  background-color: rgb(99, 99, 99);
+  border-radius: 50%;
+  z-index: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid rgb(126, 126, 126);
+  box-shadow: 0px 0px 3px rgb(2, 2, 2) inset;
+}
+.switch svg {
+  width: 1em;
+}
+.switch svg path {
+  fill: rgb(48, 48, 48);
+}
+#checkbox:checked + .switch {
+  box-shadow:
+    0px 0px 1px green inset,
+    0px 0px 2px rgb(151, 243, 255) inset,
+    0px 0px 10px green inset,
+    0px 0px 40px rgb(151, 243, 255),
+    0px 0px 100px green,
+    0px 0px 5px green;
+  border: 2px solid rgb(255, 255, 255);
+  background-color: rgb(100, 245, 150);
+}
+#checkbox:checked + .switch svg {
+  filter: drop-shadow(0px 0px 5px green);
+}
+#checkbox:checked + .switch svg path {
+  fill: rgb(255, 255, 255);
+}
+
+.mx-1 {
+  border: 0px solid white;
+  background-color: grey;
+  color: black;
+  border-radius: 5px;
+}
+
+.mx-1:hover {
+  background-color: rgb(145, 145, 145);
+}
+
 .dt-button {
   background-color: #313131 !important;
 }
