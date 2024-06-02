@@ -108,7 +108,7 @@ namespace SteamNexus_Server.Controllers
 
 
         #region TrackingDataForId 移除最後一筆資料會出現錯誤
-        //[HttpGet("GameTrackForId")]
+        //[HttpGet("GameTrack")]
         //[Authorize]
         //public async Task<IActionResult> GetGameTracking()
         //{

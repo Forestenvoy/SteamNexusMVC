@@ -66,7 +66,7 @@ const items = ref([])
 //   console.log('JWT Token:', token) // 輸出 JWT Token
 
 //   axios
-//     .get(`${apiUrl}/api/GameTracking/GameTrackForId`, {
+//     .get(`${apiUrl}/api/GameTracking/GameTrack`, {
 //       headers: {
 //         Authorization: `Bearer ${token}`,
 //         'Content-Type': 'application/json'
@@ -81,14 +81,15 @@ const items = ref([])
 //     })
 // }
 
+//取得會員追蹤列表
 const fetchTrackingList = async () => {
-  const token = store.getToken
-  console.log('JWT Token:', token) // 輸出 JWT Token
+  store.getToken
+  console.log('JWT Token:', store.getToken) // 輸出 JWT Token
 
   try {
     const response = await axios.get(`${apiUrl}/api/GameTracking/GameTrackForId`, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${store.getToken}`,
         'Content-Type': 'application/json'
       }
     })
