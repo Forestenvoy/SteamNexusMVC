@@ -55,7 +55,10 @@ onMounted(() => {
 onBeforeRouteLeave(() => {
   builderStore.hideMatch()
   builderStore.clearProductList()
+  builderStore.setMode('build')
 })
 </script>
 
-<style scoped></style>
+<style scoped>
+
+</style>

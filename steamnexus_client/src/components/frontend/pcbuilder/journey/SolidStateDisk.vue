@@ -319,8 +319,7 @@ const filterByKeyword = () => {
 let Product = {}
 const selectedProduct = (event) => {
   const Id = event.target.value
-  const endIndex = event.target.options[event.target.selectedIndex].text.indexOf(',')
-  const Name = event.target.options[event.target.selectedIndex].text.slice(0, endIndex)
+  const Name = event.target.options[event.target.selectedIndex].text
   const Price = event.target.options[event.target.selectedIndex].getAttribute('data-price')
   const Wattage = event.target.options[event.target.selectedIndex].getAttribute('data-wattage')
   Product = {
