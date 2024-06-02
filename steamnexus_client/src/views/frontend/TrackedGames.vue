@@ -110,9 +110,19 @@ const fetchTrackingList = async () => {
 
     // 檢查是否為 404 錯誤
     if (error.response && error.response.status === 404) {
-      toast.error('未找到追蹤資料')
+      toast.error('未找到追蹤資料', {
+        theme: 'colored',
+        autoClose: 1000,
+        transition: toast.TRANSITIONS.ZOOM,
+        position: toast.POSITION.BOTTOM_CENTER
+      })
     } else {
-      toast.error('無法獲取追蹤資料，請稍後再試')
+      toast.error('無法獲取追蹤資料，請稍後再試', {
+        theme: 'colored',
+        autoClose: 1000,
+        transition: toast.TRANSITIONS.ZOOM,
+        position: toast.POSITION.BOTTOM_CENTER
+      })
     }
   }
 }

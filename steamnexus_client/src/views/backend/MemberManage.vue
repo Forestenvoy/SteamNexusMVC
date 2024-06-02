@@ -680,9 +680,9 @@ const submitForm = async () => {
       if (response.data.success) {
         toast.success(response.data.message, {
           theme: 'colored',
-          autoClose: 1000,
+           autoClose: 1000,
           transition: toast.TRANSITIONS.ZOOM,
-          position: toast.POSITION.TOP_CENTER
+          position: toast.POSITION.BOTTOM_CENTER
         })
         datatable.ajax.reload()
         createUserModal.value = false
@@ -690,9 +690,9 @@ const submitForm = async () => {
       } else {
         toast.error(response.data.message, {
           theme: 'colored',
-          autoClose: 1000,
-          transition: toast.TRANSITIONS.ZOOM,
-          position: toast.POSITION.TOP_CENTER
+           autoClose: 1000,
+           transition: toast.TRANSITIONS.ZOOM,
+           position: toast.POSITION.BOTTOM_CENTER
         })
       }
     })
@@ -701,7 +701,7 @@ const submitForm = async () => {
         theme: 'colored',
         autoClose: 1000,
         transition: toast.TRANSITIONS.ZOOM,
-        position: toast.POSITION.TOP_CENTER
+        position: toast.POSITION.BOTTOM_CENTER
       })
     })
 }
@@ -742,7 +742,7 @@ const deleteUser = (userId) => {
         theme: 'colored',
         autoClose: 1000,
         transition: toast.TRANSITIONS.ZOOM,
-        position: toast.POSITION.TOP_CENTER
+        position: toast.POSITION.BOTTOM_CENTER
       })
       datatable.ajax.reload()
     })
@@ -752,7 +752,7 @@ const deleteUser = (userId) => {
         theme: 'colored',
         autoClose: 1000,
         transition: toast.TRANSITIONS.ZOOM,
-        position: toast.POSITION.TOP_CENTER
+        position: toast.POSITION.BOTTOM_CENTER
       })
     })
 }
@@ -806,7 +806,7 @@ const submitEditForm = async () => {
         theme: 'colored',
         autoClose: 1000,
         transition: toast.TRANSITIONS.ZOOM,
-        position: toast.POSITION.TOP_CENTER
+        position: toast.POSITION.BOTTOM_CENTER
       })
       datatable.ajax.reload()
       EditUserModal.value = false
@@ -816,15 +816,15 @@ const submitEditForm = async () => {
         theme: 'colored',
         autoClose: 1000,
         transition: toast.TRANSITIONS.ZOOM,
-        position: toast.POSITION.TOP_CENTER
+        position: toast.POSITION.BOTTOM_CENTER
       })
     }
   } catch (error) {
     toast.error('更新使用者信息失敗', {
-      theme: 'colored',
-      autoClose: 1000,
-      transition: toast.TRANSITIONS.ZOOM,
-      position: toast.POSITION.TOP_CENTER
+        theme: 'colored',
+        autoClose: 1000,
+        transition: toast.TRANSITIONS.ZOOM,
+        position: toast.POSITION.BOTTOM_CENTER
     })
   }
 }

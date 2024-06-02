@@ -378,7 +378,7 @@ const changePassword = () => {
         theme: 'colored',
         autoClose: 1000,
         transition: toast.TRANSITIONS.ZOOM,
-        position: toast.POSITION.TOP_CENTER
+        position: toast.POSITION.BOTTOM_CENTER
       })
     })
     .catch((error) => {
@@ -388,7 +388,7 @@ const changePassword = () => {
         theme: 'colored',
         autoClose: 1000,
         transition: toast.TRANSITIONS.ZOOM,
-        position: toast.POSITION.TOP_CENTER
+        position: toast.POSITION.BOTTOM_CENTER
       })
     })
 }
@@ -423,10 +423,10 @@ const loadUserProfile = async () => {
     console.error('Error loading user profile:', error)
     // alert('加載用戶資料失敗')
     toast.error('讀取用戶資料失敗', {
-      theme: 'colored',
-      autoClose: 1000,
-      transition: toast.TRANSITIONS.ZOOM,
-      position: toast.POSITION.TOP_CENTER
+        theme: 'colored',
+        autoClose: 1000,
+        transition: toast.TRANSITIONS.ZOOM,
+        position: toast.POSITION.BOTTOM_CENTER
     })
   }
 }
@@ -454,19 +454,19 @@ const editUserSubmit = async () => {
     })
     // alert(response.data)
     toast.success(response.data.message, {
-      theme: 'colored',
-      autoClose: 1000,
-      transition: toast.TRANSITIONS.ZOOM,
-      position: toast.POSITION.TOP_CENTER
+        theme: 'colored',
+        autoClose: 1000,
+        transition: toast.TRANSITIONS.ZOOM,
+        position: toast.POSITION.BOTTOM_CENTER
     })
   } catch (error) {
     console.error('Error:', error.response)
     // alert('修改失敗: ' + error.response.data)
     toast.error('修改失敗', {
-      theme: 'colored',
-      autoClose: 1000,
-      transition: toast.TRANSITIONS.ZOOM,
-      position: toast.POSITION.TOP_CENTER
+        theme: 'colored',
+        autoClose: 1000,
+        transition: toast.TRANSITIONS.ZOOM,
+        position: toast.POSITION.BOTTOM_CENTER
     })
   }
 }

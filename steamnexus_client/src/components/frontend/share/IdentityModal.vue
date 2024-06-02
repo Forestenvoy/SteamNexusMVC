@@ -439,10 +439,10 @@ const submitRegister = async () => {
   if (!isFirstPartValid.value) {
     // alert('請填寫完整且正確的表單資料')
     toast.error('請填寫完整且正確的表單資料', {
-      theme: 'colored',
-      autoClose: 1000,
-      transition: toast.TRANSITIONS.ZOOM,
-      position: toast.POSITION.TOP_CENTER
+        theme: 'colored',
+        autoClose: 1000,
+        transition: toast.TRANSITIONS.ZOOM,
+        position: toast.POSITION.BOTTOM_CENTER
     })
     return
   }
@@ -450,7 +450,7 @@ const submitRegister = async () => {
   // 檢查密碼和確認密碼是否一致
   if (password.value !== confirmPassword.value) {
     // alert('密碼與確認密碼不一致')
-    toast.error('密碼與確認密碼不一致', {
+      toast.error('密碼與確認密碼不一致', {
       theme: 'colored',
       autoClose: 1000,
       transition: toast.TRANSITIONS.ZOOM,
@@ -474,7 +474,7 @@ const submitRegister = async () => {
     // 檢查回應狀態和數據
     if (response.status === 200 && response.data.success) {
       // alert(response.data.message)
-      toast.success(response.data.message, {
+        toast.success(response.data.message, {
         theme: 'colored',
         autoClose: 1000,
         transition: toast.TRANSITIONS.ZOOM,
@@ -483,7 +483,7 @@ const submitRegister = async () => {
       showLogin()
     } else {
       // alert(response.data.message || '註冊過程中發生錯誤')
-      toast.error(response.data.message || '註冊失敗', {
+        toast.error(response.data.message || '註冊失敗', {
         theme: 'colored',
         autoClose: 1000,
         transition: toast.TRANSITIONS.ZOOM,
@@ -494,7 +494,7 @@ const submitRegister = async () => {
     // 處理錯誤情況，例如顯示錯誤消息
     console.error('Error occurred during registration:', error)
     // alert('註冊過程中發生錯誤')
-    toast.error('註冊失敗', {
+      toast.error('註冊失敗', {
       theme: 'colored',
       autoClose: 1000,
       transition: toast.TRANSITIONS.ZOOM,

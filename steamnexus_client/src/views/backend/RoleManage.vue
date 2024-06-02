@@ -196,10 +196,10 @@ const createRole = async () => {
   if (newRoleName.value.trim() === '') {
     // alert('請輸入權限名稱')
     toast.error('請輸入權限名稱', {
-      theme: 'colored',
-      autoClose: 1000,
-      transition: toast.TRANSITIONS.ZOOM,
-      position: toast.POSITION.TOP_CENTER
+        theme: 'colored',
+        autoClose: 1000,
+        transition: toast.TRANSITIONS.ZOOM,
+        position: toast.POSITION.BOTTOM_CENTER
     })
     // return
   }
@@ -209,10 +209,10 @@ const createRole = async () => {
   if (roleExists === false) {
     // alert('角色名稱已存在')
     toast.error('權限名稱已存在', {
-      theme: 'colored',
-      autoClose: 1000,
-      transition: toast.TRANSITIONS.ZOOM,
-      position: toast.POSITION.TOP_CENTER
+        theme: 'colored',
+        autoClose: 1000,
+        transition: toast.TRANSITIONS.ZOOM,
+        position: toast.POSITION.BOTTOM_CENTER
     })
     return
   }
@@ -238,7 +238,7 @@ const createRole = async () => {
           theme: 'colored',
           autoClose: 1000,
           transition: toast.TRANSITIONS.ZOOM,
-          position: toast.POSITION.TOP_CENTER
+          position: toast.POSITION.BOTTOM_CENTER
         })
         //
         newRoleName.value = ''
@@ -251,7 +251,7 @@ const createRole = async () => {
           theme: 'colored',
           autoClose: 1000,
           transition: toast.TRANSITIONS.ZOOM,
-          position: toast.POSITION.TOP_CENTER
+           position: toast.POSITION.BOTTOM_CENTER
         })
       }
     })
@@ -261,15 +261,15 @@ const createRole = async () => {
         toast.error('請確認是否輸入英文大小寫', {
           theme: 'colored',
           autoClose: 1000,
-          transition: toast.TRANSITIONS.ZOOM,
-          position: toast.POSITION.TOP_CENTER
+           transition: toast.TRANSITIONS.ZOOM,
+           position: toast.POSITION.BOTTOM_CENTER
         })
       } else {
         toast.error('新增權限失敗，請重新測試', {
           theme: 'colored',
           autoClose: 1000,
           transition: toast.TRANSITIONS.ZOOM,
-          position: toast.POSITION.TOP_CENTER
+          position: toast.POSITION.BOTTOM_CENTER
         })
       }
     })
@@ -296,7 +296,7 @@ const deleteRole = (roleId) => {
         theme: 'colored',
         autoClose: 1000,
         transition: toast.TRANSITIONS.ZOOM,
-        position: toast.POSITION.TOP_CENTER
+        position: toast.POSITION.BOTTOM_CENTER
       })
       // 重新加載表格數據
       datatable.ajax.reload()
@@ -307,7 +307,7 @@ const deleteRole = (roleId) => {
         theme: 'colored',
         autoClose: 1000,
         transition: toast.TRANSITIONS.ZOOM,
-        position: toast.POSITION.TOP_CENTER
+        position: toast.POSITION.BOTTOM_CENTER
       })
     })
 }
