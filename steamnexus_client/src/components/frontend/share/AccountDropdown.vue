@@ -1,7 +1,7 @@
 <template>
   <CDropdown placement="bottom-end" variant="nav-item">
     <CDropdownToggle class="py-0 pe-0" :caret="false">
-      <CAvatar :src="avatar" size="md" />
+      <CAvatar :src="headPhoto" size="md" />
     </CDropdownToggle>
     <CDropdownMenu class="pt-0">
       <CDropdownHeader
@@ -29,8 +29,15 @@
 import { useIdentityStore } from '@/stores/identity.js'
 const store = useIdentityStore()
 
-import avatar from '@/assets/images/avatars/2.jpg'
+// 從環境變數取得 API BASE URL
+const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
+// import avatar from '@/assets/images/avatars/2.jpg'
+import { ref, onMounted } from 'vue'
 
+const headPhoto = ref('')
 
+onMounted(() => {
+  headPhoto.value = `${apiUrl}/images/headshots/${store.getUserPhoto}`
+})
 </script>

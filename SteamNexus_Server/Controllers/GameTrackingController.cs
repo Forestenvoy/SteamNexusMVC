@@ -107,19 +107,73 @@ namespace SteamNexus_Server.Controllers
         #endregion
 
 
-        #region TrackingDataForId
+        #region TrackingDataForId 移除最後一筆資料會出現錯誤
+        //[HttpGet("GameTrack")]
+        //[Authorize]
+        //public async Task<IActionResult> GetGameTracking()
+        //{
+        //    // 取得使用者 ID
+        //    var userId = GetUserIdFromToken();
+        //    if (userId == null)
+        //    {
+        //        return Unauthorized("無效的使用者憑證或使用者 ID");
+        //    }
+
+        //    // 根據使用者 ID 獲取追蹤數據
+        //    var result = await _application.GameTrackings
+        //        .Where(r => r.UserId == userId)
+        //        .Join(_application.Users,
+        //              r => r.UserId,
+        //              u => u.UserId,
+        //              (r, u) => new { r, u })
+        //        .Join(_application.Games,
+        //              a => a.r.GameId,
+        //              g => g.GameId,
+        //              (a, g) => new
+        //              {
+        //                  a.r.GameTrackingId,
+        //                  a.r.UserId,
+        //                  UserName = a.u.Name,
+        //                  g.GameId,
+        //                  g.Name,
+        //                  g.OriginalPrice,
+        //                  g.CurrentPrice,
+        //                  g.LowestPrice,
+        //                  g.AgeRating,
+        //                  g.Comment,
+        //                  g.CommentNum,
+        //                  g.ReleaseDate,
+        //                  g.Publisher,
+        //                  g.Description,
+        //                  g.Players,
+        //                  g.PeakPlayers,
+        //                  g.ImagePath,
+        //                  g.VideoPath,
+        //                  a.r.TrackingDate
+        //              })
+        //        .ToListAsync();
+
+        //    if (result == null || !result.Any())
+        //    {
+        //        return NotFound("未找到追蹤資料");
+        //    }
+
+        //    return Ok(result);
+        //}
+        #endregion
+
+
+        #region TrackGameDataForId
         [HttpGet("GameTrackForId")]
         [Authorize]
         public async Task<IActionResult> GetGameTracking()
         {
-            // 取得使用者 ID
             var userId = GetUserIdFromToken();
             if (userId == null)
             {
                 return Unauthorized("無效的使用者憑證或使用者 ID");
             }
 
-            // 根據使用者 ID 獲取追蹤數據
             var result = await _application.GameTrackings
                 .Where(r => r.UserId == userId)
                 .Join(_application.Users,
@@ -153,9 +207,10 @@ namespace SteamNexus_Server.Controllers
                       })
                 .ToListAsync();
 
+            // 如果沒有找到任何數據，返回空的結果而不是 404
             if (result == null || !result.Any())
             {
-                return NotFound("未找到追蹤資料");
+                return Ok(new List<object>());
             }
 
             return Ok(result);
