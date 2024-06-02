@@ -679,7 +679,7 @@ const submitForm = async () => {
     .then((response) => {
       if (response.data.success) {
         toast.success(response.data.message, {
-          theme: 'dark',
+          theme: 'colored',
           autoClose: 1000,
           transition: toast.TRANSITIONS.ZOOM,
           position: toast.POSITION.TOP_CENTER
@@ -689,7 +689,7 @@ const submitForm = async () => {
         clearForm()
       } else {
         toast.error(response.data.message, {
-          theme: 'dark',
+          theme: 'colored',
           autoClose: 1000,
           transition: toast.TRANSITIONS.ZOOM,
           position: toast.POSITION.TOP_CENTER
@@ -698,7 +698,7 @@ const submitForm = async () => {
     })
     .catch((error) => {
       toast.error('新增使用者失敗：姓名未填寫', {
-        theme: 'dark',
+        theme: 'colored',
         autoClose: 1000,
         transition: toast.TRANSITIONS.ZOOM,
         position: toast.POSITION.TOP_CENTER
@@ -739,7 +739,7 @@ const deleteUser = (userId) => {
     .then((response) => {
       //alert('使用者刪除成功')
       toast.success(response.data.message, {
-        theme: 'dark',
+        theme: 'colored',
         autoClose: 1000,
         transition: toast.TRANSITIONS.ZOOM,
         position: toast.POSITION.TOP_CENTER
@@ -749,7 +749,7 @@ const deleteUser = (userId) => {
     .catch((err) => {
       //alert('使用者刪除失敗')
       toast.error('資料已有關聯紀錄，刪除失敗', {
-        theme: 'dark',
+        theme: 'colored',
         autoClose: 1000,
         transition: toast.TRANSITIONS.ZOOM,
         position: toast.POSITION.TOP_CENTER
@@ -803,7 +803,7 @@ const submitEditForm = async () => {
 
     if (response.status === 204) {
       toast.success('使用者信息已成功更新', {
-        theme: 'dark',
+        theme: 'colored',
         autoClose: 1000,
         transition: toast.TRANSITIONS.ZOOM,
         position: toast.POSITION.TOP_CENTER
@@ -813,7 +813,7 @@ const submitEditForm = async () => {
       // 在這裡刷新數據表格，例如使用 emit 事件通知父組件
     } else {
       toast.error('更新使用者信息失敗', {
-        theme: 'dark',
+        theme: 'colored',
         autoClose: 1000,
         transition: toast.TRANSITIONS.ZOOM,
         position: toast.POSITION.TOP_CENTER
@@ -821,7 +821,7 @@ const submitEditForm = async () => {
     }
   } catch (error) {
     toast.error('更新使用者信息失敗', {
-      theme: 'dark',
+      theme: 'colored',
       autoClose: 1000,
       transition: toast.TRANSITIONS.ZOOM,
       position: toast.POSITION.TOP_CENTER

@@ -169,7 +169,7 @@
                 </button>
               </div>
             </div>
-            <div class="form-group mb-3">
+            <!-- <div class="form-group mb-3">
               <label for="confirmOldPassword">確認舊密碼</label>
               <div class="input-group">
                 <input
@@ -189,7 +189,7 @@
                 </button>
               </div>
               <div id="oldPasswordFeedback" class="invalid-feedback">密碼與確認密碼不一致</div>
-            </div>
+            </div> -->
             <div class="form-group mb-3">
               <label for="newPassword">新密碼</label>
               <div class="input-group">
@@ -266,12 +266,12 @@ const profile = ref({
   originalPhoto: null // 存放原本的圖片路徑
 })
 const oldPassword = ref('')
-const confirmOldPassword = ref('')
+// const confirmOldPassword = ref('')
 const newPassword = ref('')
 const confirmNewPassword = ref('')
 
 const oldPasswordVisible = ref(false)
-const confirmOldPasswordVisible = ref(false)
+// const confirmOldPasswordVisible = ref(false)
 const newPasswordVisible = ref(false)
 const confirmNewPasswordVisible = ref(false)
 
@@ -280,9 +280,9 @@ const toggleOldPasswordVisibility = () => {
   oldPasswordVisible.value = !oldPasswordVisible.value
 }
 
-const toggleConfirmOldPasswordVisibility = () => {
-  confirmOldPasswordVisible.value = !confirmOldPasswordVisible.value
-}
+// const toggleConfirmOldPasswordVisibility = () => {
+//   confirmOldPasswordVisible.value = !confirmOldPasswordVisible.value
+// }
 
 const toggleNewPasswordVisibility = () => {
   newPasswordVisible.value = !newPasswordVisible.value
@@ -315,17 +315,17 @@ const onAvatarChange = (event) => {
 }
 
 // 檢查舊密碼是否一致
-const validatePasswords = () => {
-  const passwordValue = $('#oldPassword').val()
-  const confirmPasswordValue = $('#confirmOldPassword').val()
-  if (passwordValue !== confirmPasswordValue) {
-    $('#oldPasswordFeedback').show()
-    $('#confirmOldPassword').addClass('is-invalid')
-  } else {
-    $('#oldPasswordFeedback').hide()
-    $('#confirmOldPassword').removeClass('is-invalid').addClass('is-valid')
-  }
-}
+// const validatePasswords = () => {
+//   const passwordValue = $('#oldPassword').val()
+//   const confirmPasswordValue = $('#confirmOldPassword').val()
+//   if (passwordValue !== confirmPasswordValue) {
+//     $('#oldPasswordFeedback').show()
+//     $('#confirmOldPassword').addClass('is-invalid')
+//   } else {
+//     $('#oldPasswordFeedback').hide()
+//     $('#confirmOldPassword').removeClass('is-invalid').addClass('is-valid')
+//   }
+// }
 
 // 檢查新密碼是否一致
 const validateNewPasswords = () => {
@@ -375,7 +375,7 @@ const changePassword = () => {
       console.log('Response:', response) // 輸出響應結果
       // alert(response.data)
       toast.success(response.data.message, {
-        theme: 'dark',
+        theme: 'colored',
         autoClose: 1000,
         transition: toast.TRANSITIONS.ZOOM,
         position: toast.POSITION.TOP_CENTER
@@ -385,7 +385,7 @@ const changePassword = () => {
       console.error('Error:', error.response) // 輸出錯誤信息
       // alert('密碼修改失敗: ' + error.response.data)
       toast.error('密碼修改失敗: ' + error.response.data.message, {
-        theme: 'dark',
+        theme: 'colored',
         autoClose: 1000,
         transition: toast.TRANSITIONS.ZOOM,
         position: toast.POSITION.TOP_CENTER
@@ -423,7 +423,7 @@ const loadUserProfile = async () => {
     console.error('Error loading user profile:', error)
     // alert('加載用戶資料失敗')
     toast.error('讀取用戶資料失敗', {
-      theme: 'dark',
+      theme: 'colored',
       autoClose: 1000,
       transition: toast.TRANSITIONS.ZOOM,
       position: toast.POSITION.TOP_CENTER
@@ -454,7 +454,7 @@ const editUserSubmit = async () => {
     })
     // alert(response.data)
     toast.success(response.data.message, {
-      theme: 'dark',
+      theme: 'colored',
       autoClose: 1000,
       transition: toast.TRANSITIONS.ZOOM,
       position: toast.POSITION.TOP_CENTER
@@ -463,7 +463,7 @@ const editUserSubmit = async () => {
     console.error('Error:', error.response)
     // alert('修改失敗: ' + error.response.data)
     toast.error('修改失敗', {
-      theme: 'dark',
+      theme: 'colored',
       autoClose: 1000,
       transition: toast.TRANSITIONS.ZOOM,
       position: toast.POSITION.TOP_CENTER

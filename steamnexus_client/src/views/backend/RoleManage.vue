@@ -196,7 +196,7 @@ const createRole = async () => {
   if (newRoleName.value.trim() === '') {
     // alert('請輸入權限名稱')
     toast.error('請輸入權限名稱', {
-      theme: 'dark',
+      theme: 'colored',
       autoClose: 1000,
       transition: toast.TRANSITIONS.ZOOM,
       position: toast.POSITION.TOP_CENTER
@@ -209,7 +209,7 @@ const createRole = async () => {
   if (roleExists === false) {
     // alert('角色名稱已存在')
     toast.error('權限名稱已存在', {
-      theme: 'dark',
+      theme: 'colored',
       autoClose: 1000,
       transition: toast.TRANSITIONS.ZOOM,
       position: toast.POSITION.TOP_CENTER
@@ -235,7 +235,7 @@ const createRole = async () => {
       if (response.data && response.data.message) {
         //
         toast.success(response.data.message, {
-          theme: 'dark',
+          theme: 'colored',
           autoClose: 1000,
           transition: toast.TRANSITIONS.ZOOM,
           position: toast.POSITION.TOP_CENTER
@@ -248,7 +248,7 @@ const createRole = async () => {
       } else {
         // alert('新增角色失敗，請重試')
         toast.error('新增權限失敗，請重試', {
-          theme: 'dark',
+          theme: 'colored',
           autoClose: 1000,
           transition: toast.TRANSITIONS.ZOOM,
           position: toast.POSITION.TOP_CENTER
@@ -259,14 +259,14 @@ const createRole = async () => {
       console.error('新增角色失敗，錯誤詳情：', err)
       if (err.response) {
         toast.error('請確認是否輸入英文大小寫', {
-          theme: 'dark',
+          theme: 'colored',
           autoClose: 1000,
           transition: toast.TRANSITIONS.ZOOM,
           position: toast.POSITION.TOP_CENTER
         })
       } else {
         toast.error('新增權限失敗，請重新測試', {
-          theme: 'dark',
+          theme: 'colored',
           autoClose: 1000,
           transition: toast.TRANSITIONS.ZOOM,
           position: toast.POSITION.TOP_CENTER
@@ -293,7 +293,7 @@ const deleteRole = (roleId) => {
     .then((response) => {
       // alert(response.data.message)
       toast.success(response.data.message, {
-        theme: 'dark',
+        theme: 'colored',
         autoClose: 1000,
         transition: toast.TRANSITIONS.ZOOM,
         position: toast.POSITION.TOP_CENTER
@@ -304,7 +304,7 @@ const deleteRole = (roleId) => {
     .catch(() => {
       //alert('資料已有關聯紀錄，刪除失敗')
       toast.error('資料已有關聯紀錄，刪除失敗', {
-        theme: 'dark',
+        theme: 'colored',
         autoClose: 1000,
         transition: toast.TRANSITIONS.ZOOM,
         position: toast.POSITION.TOP_CENTER
