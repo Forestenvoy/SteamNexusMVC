@@ -61,24 +61,59 @@ const items = ref([])
 // }
 
 //取得會員追蹤列表
+// const fetchTrackingList = async () => {
+//   const token = store.getToken
+//   console.log('JWT Token:', token) // 輸出 JWT Token
+
+//   axios
+//     .get(`${apiUrl}/api/GameTracking/GameTrackForId`, {
+//       headers: {
+//         Authorization: `Bearer ${token}`,
+//         'Content-Type': 'application/json'
+//       }
+//     })
+//     .then((response) => {
+//       console.log('Tracking Data:', response.data) // 輸出追蹤數據
+//       items.value = response.data
+//     })
+//     .catch((error) => {
+//       console.error('Failed to fetch tracking data:', error)
+//     })
+// }
+
 const fetchTrackingList = async () => {
   const token = store.getToken
   console.log('JWT Token:', token) // 輸出 JWT Token
 
-  axios
-    .get(`${apiUrl}/api/GameTracking/GameTrackForId`, {
+  try {
+    const response = await axios.get(`${apiUrl}/api/GameTracking/GameTrackForId`, {
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json'
       }
     })
-    .then((response) => {
-      console.log('Tracking Data:', response.data) // 輸出追蹤數據
-      items.value = response.data
-    })
-    .catch((error) => {
-      console.error('Failed to fetch tracking data:', error)
-    })
+    console.log('Tracking Data:', response.data) // 輸出追蹤數據
+    items.value = response.data
+
+    // 檢查是否有數據
+    if (items.value.length === 0) {
+      toast.success('目前沒有任何追蹤資料', {
+        theme: 'colored',
+        autoClose: 1000,
+        transition: toast.TRANSITIONS.ZOOM,
+        position: toast.POSITION.BOTTOM_CENTER
+      })
+    }
+  } catch (error) {
+    console.error('Failed to fetch tracking data:', error)
+
+    // 檢查是否為 404 錯誤
+    if (error.response && error.response.status === 404) {
+      toast.error('未找到追蹤資料')
+    } else {
+      toast.error('無法獲取追蹤資料，請稍後再試')
+    }
+  }
 }
 
 //取消追蹤
