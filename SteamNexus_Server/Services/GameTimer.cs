@@ -38,11 +38,7 @@ namespace SteamNexus_Server.Services
 
                 for (var GameId = 10000; GameId <= num; GameId++)
                 {
-                    var testNum = GameId - 9999;
-                    var testprogressNum = Math.Round(((double)testNum / 1198) * 100, 2);
-                    progressNum = (int)testprogressNum;
-                    Console.WriteLine(testprogressNum);
-                    Console.WriteLine(progressNum);
+                    
                     Console.WriteLine(GameId);
 
                     await Task.Delay(1400);
@@ -128,6 +124,11 @@ namespace SteamNexus_Server.Services
 
             for (int GameId = 10000; GameId <= num; GameId++)
             {
+                var testNum = GameId - 9999;
+                var testprogressNum = Math.Round(((double)testNum / 1198) * 100, 2);
+                progressNum = (int)testprogressNum;
+                Console.WriteLine(testprogressNum);
+                Console.WriteLine(progressNum);
                 allNum++;
                 Console.WriteLine(GameId);
                 //await Task.Delay(1400);

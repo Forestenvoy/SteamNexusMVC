@@ -210,15 +210,16 @@
     </CModal>
   </Form>
   <!--Form End-->
-  <CToaster class="p-3" placement="top-end">
+  <CToaster class="p-3" placement="top-end" style="height: 10%">
     <CToast
       v-for="(toast, index) in toasts"
       visible
       :key="index"
       class="text-white align-items-center custom-toast"
+      :autohide="false"
     >
       <CToastHeader closeButton>
-        <span class="me-auto fw-bold">{{ toast.title }}</span>
+        <span class="me-auto fw-bold">更新全部價格進度: {{ progressNum }}%</span>
         <!-- <small>7 min ago</small> -->
       </CToastHeader>
       <CToastBody>
@@ -265,7 +266,7 @@ const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
 //後端執行次數
 // var priceProgress = false
-var progressNum = 0
+var progressNum = ref(0)
 
 // 初始化 DataTables
 let dataTable = null
@@ -313,6 +314,8 @@ var btnNumberOfComments = ref(false)
 var btnPriceFont = ref('開啟')
 var btnOnlineUsersFont = ref('開啟')
 var btnNumberOfCommentsFont = ref('開啟')
+
+// this.toasts[0].visible = false
 
 //更新人數
 function isTimeOpen() {
@@ -367,6 +370,22 @@ function btnOnlinePriceClick() {
 }
 //更新人數
 function btnOnlineUsersClick() {
+  toasts.value.push({
+    // title: `更新全部價格進度:${progressNum.value}%`,
+    content: 'Toast Content',
+    visible: true,
+    Progress: progressNum
+  })
+  const source = new EventSource(`${apiUrl}/api/GamesManagement/GamePriceProgress`)
+  source.onmessage = (event) => {
+    console.log('Received event with id:', event.lastEventId)
+    progressNum.value = event.data
+    toasts.value = [...toasts.value]
+    // toasts.value.forEach((toast) => {
+    //   toast.progress = progressNum.value
+    // })
+  }
+
   fetch(`${apiUrl}/api/GamesManagement/GetOnlineUsersDataToDB`, {
     method: 'GET',
     headers: {
@@ -731,13 +750,7 @@ onMounted(() => {
                 Progress: progressNum
               })
               GetGamePriceDataToDB()
-              // if (priceProgress == false) {
-              //   priceProgress = true
-              //   const source = new EventSource(`${apiUrl}/api/GamesManagement/GamePriceProgress`)
-              //   source.onmessage = (event) => {
-              //     console.log('Received event with id:', event.lastEventId)
-              //     progressNum = event.data
-              //   }
+
               // GetGamePriceDataToDB()
               // }
             }
