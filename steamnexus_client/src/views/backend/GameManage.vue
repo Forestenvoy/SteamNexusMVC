@@ -668,8 +668,8 @@ onMounted(() => {
         },
         responsivePriority: 1
       },
-      { data: 'gameId', width: '5%' },
-      { data: 'appId', width: '5%' },
+      { data: 'gameId', width: '1%' },
+      { data: 'appId', width: '1%' },
       { data: 'name', responsivePriority: 1, width: '5%' },
       { data: 'originalPrice', width: '2%' },
       { data: 'currentPrice', responsivePriority: 2, width: '2%' },
@@ -693,14 +693,14 @@ onMounted(() => {
             GameId +
             '"  data-name="' +
             name +
-            '" @click="edit_button" id="edit_button" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-pen-to-square"></i></button>'
+            '" @click="edit_button" class="mx-1" id="edit_button" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-pen-to-square"></i></button>'
           // 刪除按鈕
           let deleteEle =
             '<button data-GameId="' +
             GameId +
             '"  data-name="' +
             name +
-            '" id="delete_button" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-trash"></i></button>'
+            '" id="delete_button" class="mx-1" data-bs-toggle="popover" data-bs-content="nothing"><i class="fa-solid fa-trash"></i></button>'
           if (type === 'display') {
             return `${editEle}${deleteEle}`
           }
@@ -718,74 +718,7 @@ onMounted(() => {
     autoWidth: true,
     // 資料載入中 gif
     processing: true,
-    buttons: ['copy', 'excel', 'pdf'],
-    layout: {
-      topMiddle: {
-        buttons: [
-          // {
-          //   text: '新增遊戲',
-          //   // 按鈕點擊事件
-          //   action: function () {
-          //     Title.value = '新增遊戲'
-          //     AppId.value = ''
-          //     Name.value = ''
-          //     OriginalPrice.value = ''
-          //     AgeRating.value = ''
-          //     ReleaseDate.value = ''
-          //     Publisher.value = ''
-          //     Description.value = ''
-          //     ImagePath.value = ''
-          //     VideoPath.value = ''
-          //     handleClick()
-          //   }
-          // },
-          {
-            text: '更新全部價格',
-            // 按鈕點擊事件
-            action: function () {
-              toasts.value.push({
-                title: `更新全部價格進度:${progressNum}%`,
-                content: 'Toast Content',
-                visible: true,
-                Progress: progressNum
-              })
-              GetGamePriceDataToDB()
-
-              // GetGamePriceDataToDB()
-              // }
-            }
-          },
-          {
-            text: '更新目前在線人數',
-            // 按鈕點擊事件
-            action: function () {
-              GetOnlineUsersDataToDB()
-            }
-          },
-          {
-            text: '更新目前所有評論',
-            // 按鈕點擊事件
-            action: function () {
-              GetNumberOfCommentsDataToDB()
-            }
-          }
-          // {
-          //   text: '抓取最低配備',
-          //   // 按鈕點擊事件
-          //   action: function () {
-          //     GetMinDataToDB()
-          //   }
-          // },
-          // {
-          //   text: '抓取最高配備',
-          //   // 按鈕點擊事件
-          //   action: function () {
-          //     GetRecDataToDB()
-          //   }
-          // }
-        ]
-      }
-    }
+    buttons: ['copy', 'excel', 'pdf']
   })
 })
 
