@@ -453,7 +453,8 @@ const editUserSubmit = async () => {
       }
     })
     // alert(response.data)
-    toast.success(response.data.message, {
+    // toast.success(response.data.message, {
+      toast.success('基本資料修改成功', {
         theme: 'colored',
         autoClose: 1000,
         transition: toast.TRANSITIONS.ZOOM,

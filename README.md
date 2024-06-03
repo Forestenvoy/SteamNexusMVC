@@ -225,24 +225,118 @@ SteamNexus 是一個單頁應用 (SPA)，旨在為用戶提供市面上數位遊
 #### 前台
 
 1. 導覽列上方點擊"登入"。
+
 ![登入一般使用者](ReadmeFiles/Member/Login.png)
 
 2. 在使用者登入畫面中，有設置簡易的會員註冊，所以使用者若沒有會員時，可以註冊後再使用。
 
+![登入與註冊畫面](ReadmeFiles/Member/LoginandcreateModel.gif)
 
 3. 會員註冊時，帳號是使用Email進行註冊，當使用者輸入時，會即時比對資料庫，帳號是否已被使用；密碼有設置顯示/隱藏密碼功能，密碼與確認密碼即時比對的功能；在註冊按鈕有設定，若資料有錯誤無法點擊註冊案有。
 
-4. 在註冊時是簡易註冊，會員登入後，可以至會員中心修改會員資料、大頭貼、密碼等資訊，另外會員登入後，會提醒使用者已經登入。
+   3.1 點擊註冊時，註冊按鈕預設是不能進行點擊。
 
-   4.1 
+   ![會員註冊](ReadmeFiles/Member/create-1.png)
 
-   4.2 會員密碼修改需要先輸入舊密碼與新密碼才能夠修改；密碼也都附有顯示/隱藏密碼的功能。
+   3.2 姓名是必填欄位，當使用者未輸入時，會即時提醒使用者。
 
+   ![會員註冊](ReadmeFiles/Member/create-2.png)
 
+   3.3 註冊的Email即時與資料庫比對，並提醒使用者是否可以使用。
 
+   ![會員註冊](ReadmeFiles/Member/create-3.png)
 
+   ![會員註冊](ReadmeFiles/Member/create-4.png)
 
+   3.4 即時比對密碼與確認密碼是否一致。
 
+   ![會員註冊](ReadmeFiles/Member/create-5.png)
+
+   3.5 當有即時訊息有出現錯誤時，無法點擊註冊按鈕
+
+   ![會員註冊](ReadmeFiles/Member/create-6.png)
+
+   ![會員註冊](ReadmeFiles/Member/create-7.png)
+
+   ![會員註冊](ReadmeFiles/Member/create-8.png)
+
+   3.6 密碼欄位設定顯示/隱藏功能。
+
+   ![會員註冊](ReadmeFiles/Member/passwordeyes.gif)
+
+   3.7 會員註冊後，畫面會跳轉到登入畫面，利於使用者註冊完成後即可進行登入，並會有提示說明註冊已成功。
+
+   ![會員註冊](ReadmeFiles/Member/create-9.gif)
+
+   ![會員註冊](ReadmeFiles/Member/create-10.png)
+
+4. 會員登入畫面，在密碼欄位設置顯示/隱藏密碼功能，另當使用者登入時，會顯示使用者登入的訊息。
+
+使用者登入畫面：
+
+![會員登入](ReadmeFiles/Member/Loginpasswordeyes.gif)
+
+使用者登入提醒：
+
+![會員登入](ReadmeFiles/Member/create-11.png)
+
+5. 在註冊時是簡易註冊，會員登入後，可以至會員中心修改會員資料、大頭貼、密碼等資訊，另外會員登入後，會提醒使用者已經登入。
+
+點擊大頭貼圖示，進入會員中心。
+
+![會員中心](ReadmeFiles/Member/create-12.png)
+
+會員基本資料更改畫面：
+
+基本資料修改：
+
+![會員基本資料修改](ReadmeFiles/Member/edit-1.png)
+
+密碼修改：
+
+![會員基本資料修改](ReadmeFiles/Member/edit-2.png)
+
+   5.1 大頭照註冊時是使用預設圖片，所以註冊後可以到會員中心進行修改；另外的基本資料也都可以在這邊進行修正。
+
+   ![會員基本資料修改](ReadmeFiles/Member/edit-3.png)
+
+   5.1.1 登入的大頭照一開始是使用預設，如有變更大頭照，導覽列的大頭照也會進行改變。
+
+   ![會員基本資料修改](ReadmeFiles/Member/edit-5.png)
+
+   5.2 會員密碼修改需要先輸入舊密碼與新密碼才能夠修改；密碼也都附有顯示/隱藏密碼的功能。
+
+   5.2.1 新密碼與舊密碼設置即時比對。
+
+   ![會員基本資料修改](ReadmeFiles/Member/edit-6.png)
+
+   5.2.2 密碼都設有顯示/隱藏功能。
+
+   ![會員基本資料修改](ReadmeFiles/Member/editpasswordeyes.gif)
+
+6. 會員遊戲收藏功能
+
+   6.1 進入遊戲內容點選收藏功能。
+
+   ![遊戲追蹤](ReadmeFiles/Member/GameTracking-1.png)
+
+   6.2 取消追蹤時，會再次提醒使用者是否要取消追蹤，當使用者選擇確定取消追蹤時，會再追蹤列表中進行刪除，並即時更新畫面；當使用者選擇取消時，則不進行刪除。
+
+   ![遊戲追蹤](ReadmeFiles/Member/GameTracking-2.png)
+
+   ![遊戲追蹤](ReadmeFiles/Member/DeleteGameTracking.gif)
+
+7. 會員設置一般會員與系統管理者，所以在導覽列進行登入時，當登入者為一般會員時，則會隱藏"後台系統"；反之若登入的為系統管理者，則會顯示"後臺系統"。
+
+   7.1 一般會員導覽列
+
+   ![權限](ReadmeFiles/Member/RolesLayout-1.png)
+
+   7.2 系統管理者導覽列
+
+   ![權限](ReadmeFiles/Member/RolesLayout-2.png)
+
+#### 後台
 
 ## 未來展望
 
