@@ -253,13 +253,6 @@ import { onBeforeRouteLeave } from 'vue-router'
 import { toast } from 'vue3-toastify'
 import 'vue3-toastify/dist/index.css'
 
-import {
-  GetGamePriceDataToDB,
-  GetOnlineUsersDataToDB,
-  GetNumberOfCommentsDataToDB
-  // GetMinDataToDB,
-  // GetRecDataToDB
-} from '@/components/backend/Game/topBtnFetch.js'
 import Swal from 'sweetalert2'
 // 從環境變數取得 API BASE URL
 const apiUrl = import.meta.env.VITE_APP_API_BASE_URL

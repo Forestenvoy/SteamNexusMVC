@@ -37,10 +37,21 @@
               <i v-if="loveclick == true" class="fa-regular fa-heart"></i>
               <i v-else class="fa-solid fa-heart"></i>
             </button> -->
-            <button class="fontawesome fs-1 shadow-sm" @click="love(props.gameId)">
+            <button
+              v-show="loveclick == false"
+              class="fontawesome fs-1 shadow-sm"
+              @click="love(props.gameId)"
+            >
               <!-- @click="love(gameId) 確保 gameId 是一個數字 -->
-              <i v-if="loveclick == true" class="fa-regular fa-heart"></i>
-              <i v-else class="fa-solid fa-heart"></i>
+              <i v-show="loveclick == false" class="fa-regular fa-heart"></i>
+            </button>
+            <button
+              v-show="loveclick == true"
+              class="fontawesome fs-1 shadow-sm"
+              @click="love(props.gameId)"
+            >
+              <!-- @click="love(gameId) 確保 gameId 是一個數字 -->
+              <i style="color: red" class="fa-solid fa-heart"></i>
             </button>
           </div>
 
@@ -279,15 +290,11 @@
 <script setup>
 // 使用 Pinia，利用 store 去訪問狀態，JWT使用者資訊
 import { useIdentityStore } from '@/stores/identity.js'
-const store = useIdentityStore()
+const authStore = useIdentityStore()
 
 import { ref, onMounted, onBeforeUnmount, reactive, watch, defineComponent } from 'vue'
 import * as am5 from '@amcharts/amcharts5'
 import * as am5xy from '@amcharts/amcharts5/xy'
-
-// vue router
-import { useRouter } from 'vue-router'
-const router = useRouter()
 
 import am5locales_zh_Hant from '@amcharts/amcharts5/locales/zh_Hant'
 import Dark from '@amcharts/amcharts5/themes/Dark'
@@ -344,7 +351,7 @@ var tagShow = ref(true)
 var LanguageTable = ref([])
 var TagSamegamesName = ref([])
 // var loveclick = ref('')
-const loveclick = ref(false)
+var loveclick = ref(false)
 
 var PricelowestData = ref('')
 var playerData = ref('')
@@ -382,11 +389,7 @@ function holdUp(id) {
   timeEnd.value = getTimeNow()
   //如果此時檢測到的時間與第一次獲取的時間差有1000毫秒
   if (timeEnd.value - timeStart.value < 100) {
-    router.push({ path: '/game/' + id })
-    // 延遲 1 秒
-    setTimeout(function () {
-      MountedEvent()
-    }, 100)
+    location.href = `http://localhost:5173/game/${id}`
     console.log(timeStart.value)
     console.log(timeEnd.value)
   }
@@ -432,15 +435,16 @@ function moreclick() {
 const love = async (gameId) => {
   // 確保 gameId 是一個數字
   gameId = Number(gameId)
-
+  loveclick.value = !loveclick.value
+  console.log(loveclick.value)
   // if (isNaN(gameId)) {
   //   console.error('Game ID 必須為數字')
   //   return
   // }
 
   // 從 store 中取得 JWT Token
-  const token = store.getToken // 假設 getToken 是一個屬性
-  console.log('JWT Token:', token) // 輸出 JWT Token
+  // 假設 getToken 是一個屬性
+  console.log('JWT Token:', authStore) // 輸出 JWT Token
 
   try {
     const response = await axios.post(
@@ -448,7 +452,7 @@ const love = async (gameId) => {
       { GameId: gameId }, // 這是請求的資料
       {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${authStore}`,
           'Content-Type': 'application/json'
         }
       }
@@ -480,9 +484,11 @@ const love = async (gameId) => {
 
 //拿取遊戲資料
 function getData() {
-  console.log(props.gameId)
   fetch(`${apiUrl}/api/GamesManagement/GetEditJSON?id=${props.gameId}`, {
-    method: 'GET'
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${authStore.getToken}` // 確保 token 正確傳遞
+    }
   })
     .then((response) => {
       // 確保請求是否成功
@@ -701,8 +707,8 @@ function GetGamePeopleData() {
     })
 }
 
-// 撈資料
-const MountedEvent = () => {
+onMounted(() => {
+  AOS.init()
   getData()
   GetTagGroup()
   GetLanguageGroup()
@@ -711,7 +717,6 @@ const MountedEvent = () => {
   GetGameTagSameData()
   GetGamePricelowestData()
   GetGamePeopleData()
-  loveclick.value = true
 
   fetch(`${apiUrl}/api/GamesManagement/GetLineChartData?id=${props.gameId}`, {
     method: 'GET'
@@ -730,8 +735,7 @@ const MountedEvent = () => {
         item.date = new Date(item.date).getTime()
       })
 
-      if (root !== null) {
-        root.dispose()
+      if (root) {
         root = null
       }
 
@@ -845,6 +849,7 @@ const MountedEvent = () => {
       // chart.set("scrollbarX", am5.Scrollbar.new(root, {
       //   orientation: "horizontal",
       //   minHeight: 3,
+
       // }));
 
       //設定點點樣式
@@ -893,12 +898,6 @@ const MountedEvent = () => {
     .catch((error) => {
       alert(error)
     })
-}
-
-onMounted(() => {
-  AOS.init()
-
-  MountedEvent()
 })
 
 onBeforeUnmount(() => {
