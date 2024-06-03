@@ -151,8 +151,6 @@
       <div class="col-xl-2"></div>
     </div>
   </div>
-
-  <div style="height: 500px; width: 100px"></div>
 </template>
 <script setup>
 import AdCarousel from '@/components/frontend/home/AdCarousel.vue'
@@ -360,7 +358,10 @@ function GetGameData() {
 
 function getTagNames(tags) {
   var tag = []
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < tags.length; i++) {
+    if(i>=5){
+      break;
+    }
     tag.push(tags[i].name)
   }
   return tag
@@ -427,6 +428,7 @@ const loadMoreTagGroup = () => {
   for (let i = 0; i < 20; i++) {
     TagGroupDataLozad.value.push(TagGroupData.value[TagGroupCount + 1])
     TagGroupCount++
+    console.log(TagGroupData.value[TagGroupCount + 1]);
   }
 }
 
