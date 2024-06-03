@@ -43,7 +43,10 @@ export function GetOnlineUsersDataToDB(){
 
 export function GetNumberOfCommentsDataToDB(){
     fetch(`${apiUrl}/api/GamesManagement/GetNumberOfCommentsDataToDB`, {
-        method: "GET"
+        method: "GET",
+          headers: {
+            Authorization: `Bearer ${authStore.getToken}` // 確保 token 正確傳遞
+          }
     }).then(result => {
         // 此時 result 是一個請求結果的物件
         // 注意傳回值型態，字串用 text()，JSON 用 json()
