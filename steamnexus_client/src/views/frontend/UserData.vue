@@ -374,7 +374,7 @@ const changePassword = () => {
     .then((response) => {
       console.log('Response:', response) // 輸出響應結果
       // alert(response.data)
-      toast.success(response.data.message, {
+      toast.success('密碼修改成功', {
         theme: 'colored',
         autoClose: 1000,
         transition: toast.TRANSITIONS.ZOOM,
