@@ -354,6 +354,132 @@ SteamNexus 是一個單頁應用 (SPA)，旨在為用戶提供市面上數位遊
 
 #### 後台
 
+1. 管理者登入系統後，選擇"後台系統"進入後台頁面。
+
+![後台登入](ReadmeFiles/Member/RolesAdminLogin.png)
+
+2. 會員管理系統區分為會員管理與權限管理。
+
+![後台會員系統](ReadmeFiles/Member/SystemMember-1.png)
+
+![後台會員系統](ReadmeFiles/Member/SystemMember-2.png)
+
+3. 會員管理系統可以使用CRUD進行資料的編輯與刪除，在編輯畫面中，不能夠編輯會員編號與帳號，因為這兩者都是唯一值，所以不能進行變更。
+
+   3.1 會員資料列表：
+
+   ![後台會員系統](ReadmeFiles/Member/SystemMember-3.png)
+
+   3.2 會員資料編輯與刪除功能：
+
+   ![後台會員系統](ReadmeFiles/Member/SystemMember-4.png)
+
+   3.2.1 會員編輯功能：
+
+   會員編號與帳號不能夠進行編輯。
+
+   ![後台會員編輯](ReadmeFiles/Member/SysteamEdit-1.gif)
+
+   會員資料編輯與編輯成功訊息
+
+   ![後台會員編輯](ReadmeFiles/Member/SysteamEdit-2.png)
+
+   ![後台會員編輯](ReadmeFiles/Member/SysteamEdit-3.png)
+
+   3.2.2 會員刪除功能：
+
+   刪除使用者時，會先提醒系統管理員是否要刪除使用者。
+
+   ![後台會員刪除](ReadmeFiles/Member/SysteamDelete-1.png)
+
+   刪除成功時，提醒訊息。
+
+   ![後台會員刪除](ReadmeFiles/Member/SysteamDelete-2.png)
+
+   3.3 新增會員功能：
+
+   註冊畫面分為兩部分：第一部分：帳號與密碼資料、第二部分：基本資料的填寫，但是除了姓名要填寫外，其餘資料皆可不用填寫。
+
+   3.3.1 第一部分：未填寫資料時，不能點擊按鈕進入第二部分。
+
+   ![後台新增會員](ReadmeFiles/Member/SystemMemberCreate-1.png)
+
+   Email即時比對資料庫，是否已經有人使用
+
+   ![後台新增會員](ReadmeFiles/Member/SystemMemberCreate-2.png)
+
+   ![後台新增會員](ReadmeFiles/Member/SystemMemberCreate-3.png)
+
+   密碼與確認密碼即時比對是否一致
+
+   ![後台新增會員](ReadmeFiles/Member/SystemMemberCreate-4.png)
+
+   當Email與密碼其中一個有錯誤訊息時，無法點擊下一頁
+
+   ![後台新增會員](ReadmeFiles/Member/SystemMemberCreate-5.png)
+
+   ![後台新增會員](ReadmeFiles/Member/SystemMemberCreate-6.png)
+
+   當沒有錯誤訊息時，方可點擊下一頁，進入第二部分的基本資料填寫
+
+   ![後台新增會員](ReadmeFiles/Member/SystemMemberCreate-7.png)
+
+   第二部分基本資料填寫時，若姓名未填寫當管理員選擇新增時，會提醒管理員要填寫姓名，其餘資料皆可不用填寫。
+
+   ![後台新增會員](ReadmeFiles/Member/SystemMemberCreate-8.png)
+
+   新增使用者後提示訊息
+
+   ![後台新增會員](ReadmeFiles/Member/SystemMemberCreate-9.png)
+
+   ![後台新增會員](ReadmeFiles/Member/SystemMemberCreate-10.png)
+
+4. 權限管理可以進行新增與刪除功能，但是在刪除功能若有資料關聯性，則不能進行刪除。
+
+   4.1 權限管理列表：
+
+   ![後台權限系統](ReadmeFiles/Member/SystemRoles-1.png)
+
+   4.2 權限刪除功能：
+
+   ![後台權限系統](ReadmeFiles/Member/SystemRoles-2.png)
+
+   4.2.1 當管理者刪除權限時，會先提醒管理者是否要刪除此權限；倘若此權限有關連性時，也不能夠進行刪除。
+
+   再次確認是否要刪除權限。
+
+   ![後台權限刪除](ReadmeFiles/Member/SystemRolesDelete-1.png)
+
+   提醒管理者權限有關聯性，故無法刪除權限。
+
+   ![後台權限刪除](ReadmeFiles/Member/SystemRolesDelete-2.png)
+
+   刪除權限成功時，提醒使用者刪除成功訊息
+
+   ![後台權限刪除](ReadmeFiles/Member/SystemRolesDelete-3.png)
+
+   4.3 權限新增功能：
+
+   ![後台權限系統](ReadmeFiles/Member/SystemRoles-3.png)
+
+   4.3.1 新增權限時，管理者未輸入資料時，不能夠點擊新增按鈕。
+
+   ![後台權限系統](ReadmeFiles/Member/SystemRolesCreate-1.png)
+
+   4.3.2 當權限輸入非英文時，會提醒使用者請輸入英文。
+
+   ![後台權限系統](ReadmeFiles/Member/SystemRolesCreate-2.png)
+
+   4.3.3 當權限輸入英文時，則會即時比對資料庫名稱是否可以使用，不區分大小寫。
+
+   ![後台權限系統](ReadmeFiles/Member/SystemRolesCreate-3.png)
+
+   ![後台權限系統](ReadmeFiles/Member/SystemRolesCreate-4.png)
+
+   4.3.4 權限新增成功訊息。
+
+   ![後台權限系統](ReadmeFiles/Member/SystemRolesCreate-5.png)
+
 ## 未來展望
 
 - 優化前後端性能，縮短響應時間
