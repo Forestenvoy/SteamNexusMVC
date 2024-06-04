@@ -172,6 +172,9 @@ namespace SteamNexus.Areas.Administrator.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<string> PostDeletePartialToDB(int id)
         {
+            var historiesToDelete = _context.PlayersHistories.Where(ph => ph.GameId == id);
+            _context.PlayersHistories.RemoveRange(historiesToDelete);
+
             var game = _context.Games.FindAsync(id).Result;
             if (game != null)
             {
