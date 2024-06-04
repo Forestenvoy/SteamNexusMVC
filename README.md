@@ -300,7 +300,11 @@ SteamNexus 是一個單頁應用 (SPA)，旨在為用戶提供市面上數位遊
 
    ![會員基本資料修改](ReadmeFiles/Member/edit-3.png)
 
-   5.1.1 登入的大頭照一開始是使用預設，如有變更大頭照，導覽列的大頭照也會進行改變。
+   5.1.1 會員修改成功後提示訊息。
+
+   ![會員基本資料修改](ReadmeFiles/Member/edit-7.png)
+
+   5.1.2 登入的大頭照一開始是使用預設，如有變更大頭照，導覽列的大頭照也會進行改變。
 
    ![會員基本資料修改](ReadmeFiles/Member/edit-5.png)
 
@@ -308,17 +312,29 @@ SteamNexus 是一個單頁應用 (SPA)，旨在為用戶提供市面上數位遊
 
    5.2.1 新密碼與舊密碼設置即時比對。
 
-   ![會員基本資料修改](ReadmeFiles/Member/edit-6.png)
+   ![密碼修改](ReadmeFiles/Member/edit-6.png)
 
    5.2.2 密碼都設有顯示/隱藏功能。
 
-   ![會員基本資料修改](ReadmeFiles/Member/editpasswordeyes.gif)
+   ![密碼修改](ReadmeFiles/Member/editpasswordeyes.gif)
+
+   5.2.3 修改完成後提示訊息。
+
+   ![密碼修改](ReadmeFiles/Member/edit-8.png)
 
 6. 會員遊戲收藏功能
 
    6.1 進入遊戲內容點選收藏功能。
 
    ![遊戲追蹤](ReadmeFiles/Member/GameTracking-1.png)
+
+   6.1.1 新增追蹤後提示訊息。
+
+   ![遊戲追蹤](ReadmeFiles/Member/GameTracking-3.png)
+
+   6.1.2 重複追蹤提示訊息。
+
+   ![遊戲追蹤](ReadmeFiles/Member/GameTracking-4.png)
 
    6.2 取消追蹤時，會再次提醒使用者是否要取消追蹤，當使用者選擇確定取消追蹤時，會再追蹤列表中進行刪除，並即時更新畫面；當使用者選擇取消時，則不進行刪除。
 
