@@ -374,7 +374,7 @@ const changePassword = () => {
     .then((response) => {
       console.log('Response:', response) // 輸出響應結果
       // alert(response.data)
-      toast.success(response.data.message, {
+      toast.success('密碼修改成功', {
         theme: 'colored',
         autoClose: 1000,
         transition: toast.TRANSITIONS.ZOOM,
@@ -453,7 +453,8 @@ const editUserSubmit = async () => {
       }
     })
     // alert(response.data)
-    toast.success(response.data.message, {
+    // toast.success(response.data.message, {
+      toast.success('基本資料修改成功', {
         theme: 'colored',
         autoClose: 1000,
         transition: toast.TRANSITIONS.ZOOM,
@@ -462,7 +463,7 @@ const editUserSubmit = async () => {
   } catch (error) {
     console.error('Error:', error.response)
     // alert('修改失敗: ' + error.response.data)
-    toast.error('修改失敗', {
+    toast.error('基本資料修改失敗', {
         theme: 'colored',
         autoClose: 1000,
         transition: toast.TRANSITIONS.ZOOM,
