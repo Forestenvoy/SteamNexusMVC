@@ -444,7 +444,7 @@ const love = async (gameId) => {
 
   // 從 store 中取得 JWT Token
   // 假設 getToken 是一個屬性
-  console.log('JWT Token:', authStore) // 輸出 JWT Token
+  console.log('JWT Token:', authStore.getToken) // 輸出 JWT Token
 
   try {
     const response = await axios.post(
@@ -452,7 +452,7 @@ const love = async (gameId) => {
       { GameId: gameId }, // 這是請求的資料
       {
         headers: {
-          Authorization: `Bearer ${authStore}`,
+          Authorization: `Bearer ${authStore.getToken}`,
           'Content-Type': 'application/json'
         }
       }

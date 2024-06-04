@@ -17,7 +17,7 @@
         <CIcon icon="cilGamepad" class="me-2" /> 遊戲追蹤
       </CDropdownItem>
       <CDropdownDivider />
-      <CDropdownItem @click="store.Logout()">
+      <CDropdownItem @click="logout">
         <CIcon icon="cil-lock-locked" class="me-2" /> 登出
       </CDropdownItem>
     </CDropdownMenu>
@@ -35,7 +35,17 @@ const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 // import avatar from '@/assets/images/avatars/2.jpg'
 import { ref, onMounted } from 'vue'
 
+// vue router
+import { useRouter } from 'vue-router'
+const router = useRouter()
+
 const headPhoto = ref('')
+
+// 登出
+const logout = () => {
+  store.Logout()
+  router.push('/')
+}
 
 onMounted(() => {
   headPhoto.value = `${apiUrl}/images/headshots/${store.getUserPhoto}`
