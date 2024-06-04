@@ -463,7 +463,7 @@ const editUserSubmit = async () => {
   } catch (error) {
     console.error('Error:', error.response)
     // alert('修改失敗: ' + error.response.data)
-    toast.error('修改失敗', {
+    toast.error('基本資料修改失敗', {
         theme: 'colored',
         autoClose: 1000,
         transition: toast.TRANSITIONS.ZOOM,

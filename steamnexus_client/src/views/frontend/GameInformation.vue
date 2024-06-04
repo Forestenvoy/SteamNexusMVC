@@ -454,57 +454,26 @@ const love = async (gameId) => {
       }
     )
     console.log('新增遊戲追蹤成功:', response.data)
-    // alert('新增遊戲追蹤成功！') // 提示用戶成功新增
-    toast.success('新增遊戲追蹤成功！', {
-      theme: 'colored',
-      autoClose: 1000,
-      transition: toast.TRANSITIONS.ZOOM,
-      position: toast.POSITION.BOTTOM_CENTER
-    })
+    alert('新增遊戲追蹤成功！') // 提示用戶成功新增
     // loveclick.value = !loveclick.value // 更新 loveclick 的值（若需要）
   } catch (error) {
     if (error.response) {
       // 伺服器返回了狀態碼但不在 2xx 範圍內
       if (error.response.status === 409) {
         console.log('該遊戲已經在追蹤列表中')
-        // alert('該遊戲已經在追蹤列表中') // 提示用戶已經存在於追蹤列表中
-        toast.success('該遊戲已經在追蹤列表中', {
-          theme: 'colored',
-          autoClose: 1000,
-          transition: toast.TRANSITIONS.ZOOM,
-          position: toast.POSITION.BOTTOM_CENTER
-        })
+        alert('該遊戲已經在追蹤列表中') // 提示用戶已經存在於追蹤列表中
       } else {
         console.error('新增遊戲追蹤失敗:', error.response.data)
-        // alert('新增遊戲追蹤失敗：請先登入會員在新增') // 提示用戶失敗原因
-        toast.success('新增遊戲追蹤失敗：請先登入會員在新增', {
-          theme: 'colored',
-          autoClose: 1000,
-          transition: toast.TRANSITIONS.ZOOM,
-          position: toast.POSITION.BOTTOM_CENTER
-        })
+        alert('新增遊戲追蹤失敗：請先登入會員在新增') // 提示用戶失敗原因
       }
     } else if (error.request) {
       // 請求已發送但未收到回應
       console.error('未收到伺服器回應:', error.request)
-      // alert('新增遊戲追蹤失敗：' + error.response.data) // 提示用戶失敗原因
-      toast.success('新增遊戲追蹤失敗：' + error.request.data, {
-        theme: 'colored',
-        autoClose: 1000,
-        transition: toast.TRANSITIONS.ZOOM,
-        position: toast.POSITION.BOTTOM_CENTER
-      })
-
+      alert('新增遊戲追蹤失敗：' + error.response.data) // 提示用戶失敗原因
     } else {
       // 發生了一些其他的錯誤
       console.error('請求失敗:', error.message)
-      // alert('新增遊戲追蹤失敗：' + error.response.data) // 提示用戶失敗原因
-      toast.success('新增遊戲追蹤失敗：' + error.message, {
-        theme: 'colored',
-        autoClose: 1000,
-        transition: toast.TRANSITIONS.ZOOM,
-        position: toast.POSITION.BOTTOM_CENTER
-      })
+      alert('新增遊戲追蹤失敗：' + error.response.data) // 提示用戶失敗原因
     }
   }
 }
