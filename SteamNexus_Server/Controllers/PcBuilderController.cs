@@ -26,6 +26,7 @@ public class PcBuilderController : ControllerBase
         _context = context;
     }
 
+    
     // 回傳上架菜單資料
     // GET: api/PcBuilder/GetMenuList
     [HttpGet("GetMenuLists")]
@@ -44,6 +45,43 @@ public class PcBuilderController : ControllerBase
             });
 
         return menuLists;
+    }
+
+    // 回傳上架菜單資料 V2
+    // 以 IActionResult 改寫原版 並 回傳狀態碼 及 Data 
+    // GET: api/PcBuilder/GetMenuList2
+    [HttpGet("GetMenuList2")]
+    public IActionResult GetMenuList2()
+    {
+        try
+        {
+            var menuLists = _context.Menus
+                .Where(ml => ml.Active == true)
+                .OrderBy(ml => ml.TotalPrice)
+                .AsNoTracking() // 防止 EF Core 追蹤查詢結果
+                .Select(m => new MenuItemDto
+                {
+                    Id = m.MenuId,
+                    Name = m.Name,
+                    TotalPrice = m.TotalPrice,
+                    DetailCount = m.MenuDetails.Count()
+                });
+
+            if (menuLists == null || !menuLists.Any())
+            {
+                return NotFound("Data not found.");
+            }
+
+            return Ok(menuLists);
+        }
+        catch (Exception error)
+        {
+            // 未來考慮引用日誌框架如 Serilog 記錄異常 
+            Console.WriteLine(error.Message);
+
+            // 未來考慮引用中介軟體 RequestDelegate 做 例外處理
+            return StatusCode(500, "An internal server error occurred. Please try again later.");
+        }
     }
 
     // 回傳產品資料
