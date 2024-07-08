@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using SteamNexus_Server.Data;
 using SteamNexus_Server.Services;
 using System.Text;
+using SteamNexus_Server.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,7 +23,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy(
         name: MyAllowSpecificOrigins,
-        policy => policy.WithOrigins("https://www.steamnexus.org" , "http://localhost:5173").WithMethods("*").WithHeaders("*")
+        policy => policy.WithOrigins("https://www.steamnexus.org", "http://localhost:5173").WithMethods("*").WithHeaders("*")
     );
 });
 
@@ -95,27 +96,67 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    // 啟用 Swagger 說明文件
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
 
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+}
+else
+{
+    app.UseExceptionHandler("/Error");
+    app.UseHsts();
+}
 
 app.UseHttpsRedirection();
-
 // 啟用 wwwroot
 app.UseStaticFiles();
-
-//cookie登入
+// cookie登入
 app.UseCookiePolicy();
-app.UseAuthentication();
-
+// 啟用 中介軟體 路由
+app.UseRouting();
 // 套用自定義 CORS 設定
 app.UseCors(MyAllowSpecificOrigins);
-
+app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers();
+// 配置 Map 中介軟體
+app.Map("/map1", Map1);
+app.Map("/map2", Map2);
 
+//app.MapControllers();
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+});
+
+// 啟用自定義中介軟體
+app.UseCustom();
+app.Run(async context =>
+{
+    await context.Response.WriteAsync("Run \r\n");
+});
 
 app.Run();
+
+// Define Map1
+static void Map1(IApplicationBuilder app)
+{
+    app.Run(async context =>
+    {
+        await context.Response.WriteAsync("Map Test 1");
+    });
+}
+
+static void Map2(IApplicationBuilder app)
+{
+    app.Run(async context =>
+    {
+        await context.Response.WriteAsync("Map Test 2");
+    });
+}
