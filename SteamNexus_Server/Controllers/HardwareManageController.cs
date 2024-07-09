@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using SteamNexus_Server.Data;
 using SteamNexus_Server.Models;
 using SteamNexus_Server.Services;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 using static SteamNexus_Server.Controllers.HardwareManageController;
@@ -35,8 +36,11 @@ public class HardwareManageController : ControllerBase
         _coolPCWebScraping = coolPCWebScraping;
     }
 
-    // 回傳硬體產品種類
     // GET: api/HardwareManage/GetComputerParts
+    /// <summary>
+    /// 回傳硬體產品種類
+    /// </summary>
+    /// <returns></returns>
     [AllowAnonymous]
     [HttpGet("GetComputerParts")]
     public IEnumerable<object> GetComputerParts()
@@ -50,9 +54,17 @@ public class HardwareManageController : ControllerBase
         return ComputerParts;
     }
 
-    // 回傳硬體資料
     // GET: api/HardwareManage/GetProductData
+    /// <summary>
+    /// 回傳硬體資料
+    /// </summary>
+    /// <remarks>只要給我硬體ID，我會吐資料給你</remarks>
+    /// <param name="Type">硬體的ID</param>
+    /// <returns></returns>
+    /// <response code="200">回傳對應的產品資料</response>
+    /// <response code="404">找不到該型號的產品資料</response> 
     [HttpGet("GetProductData")]
+    [Produces("application/json")]
     public IEnumerable<object> GetProductData(int Type)
     {
         // 尋找特定硬體
@@ -73,13 +85,18 @@ public class HardwareManageController : ControllerBase
         return result;
     }
 
-    // 硬體產品 DTO
+    /// <summary>
+    /// 硬體產品 DTO
+    /// </summary>
     public class HardwareProduct
     {
+        /// <summary>
+        /// ID
+        /// </summary>
+        [DisplayName("產品ID")]
         [Required]
         [Range(10000, 99999)]
         public int ProductId { get; set; }
-
         [Required]
         [Range(0, 2000, ErrorMessage = "瓦數範圍介於 0 ~ 2000 之間")]
         public int Wattage { get; set; }
@@ -89,8 +106,17 @@ public class HardwareManageController : ControllerBase
         public int Recommend { get; set; }
     }
 
-    // 產品資料 Update
     // POST: api/HardwareManage/ProductDataUpdate
+    /// <summary>
+    /// 產品資料 Update
+    /// </summary>
+    /// <param name="data">硬體產品 DTO</param>
+    /// <returns></returns>
+    /// <response code="200">產品資料變更成功</response>
+    /// <response code="400">資料驗證失敗</response>
+    /// <response code="404">資料庫找不到該產品</response>
+    /// <response code="409">同時修改衝突，請重新整理後再試</response>
+    /// <response code="500">伺服器內部錯誤</response>
     [HttpPost("ProductDataUpdate")]
     public async Task<IActionResult> ProductDataUpdate([FromBody] HardwareProduct data)
     {

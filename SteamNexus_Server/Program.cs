@@ -8,6 +8,7 @@ using SteamNexus_Server.Services;
 using System.Text;
 using SteamNexus_Server.Middlewares;
 using Microsoft.OpenApi.Models;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,26 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
+    // API 服務簡介
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Version = "v1",
+        Title = "SteamNexus API",
+        Description = "SteamNexus API 說明文件",
+        //TermsOfService = new Uri("https://igouist.github.io/"),
+        //Contact = new OpenApiContact
+        //{
+        //    Name = "Igouist",
+        //    Email = string.Empty,
+        //    Url = new Uri("https://igouist.github.io/about/"),
+        //},
+        //License = new OpenApiLicense
+        //{
+        //    Name = "TEST",
+        //    Url = new Uri("https://igouist.github.io/about/"),
+        //}
+    });
+
     // JWT Token 驗證按鈕產生 自動塞入 Header  
     options.AddSecurityDefinition("Bearer",
     new OpenApiSecurityScheme
@@ -45,6 +66,11 @@ builder.Services.AddSwaggerGen(options =>
             new string[] {}
         }
     });
+
+    // 讀取 XML 檔案產生 API 說明
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    options.IncludeXmlComments(xmlPath);
 });
 
 // 加入 CORS 策略
@@ -128,7 +154,10 @@ if (app.Environment.IsDevelopment())
 {
     // 啟用 Swagger 說明文件
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "SteamNexus API");
+    });
 }
 
 

@@ -84,9 +84,14 @@ public class PcBuilderController : ControllerBase
         }
     }
 
-    // 回傳產品資料
     // GET: api/PcBuilder
+    /// <summary>
+    /// 回傳產品資料
+    /// </summary>
+    /// <param name="type"></param>
+    /// <returns></returns>
     [HttpGet]
+    [Produces("application/json")]
     public ActionResult<IEnumerable<ProductDto>> GetProductData(int type)
     {
         try
